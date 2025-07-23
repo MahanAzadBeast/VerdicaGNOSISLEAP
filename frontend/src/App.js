@@ -285,7 +285,6 @@ const ResultsDisplay = ({ results, isLoading, error, onAnalyze }) => {
             onClick={() => onAnalyze(results)}
             className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center space-x-2"
           >
-            <span>📊</span>
             <span>Analyze Results</span>
           </button>
         )}
