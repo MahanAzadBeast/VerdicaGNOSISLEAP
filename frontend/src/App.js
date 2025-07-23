@@ -213,6 +213,25 @@ const formatPredictionValue = (value, type) => {
   }
 };
 
+const formatEnhancedPrediction = (enhanced, type) => {
+  if (!enhanced || enhanced.error) return 'Error';
+  
+  switch (type) {
+    case 'bioactivity_ic50':
+      if (enhanced.pic50 && enhanced.ic50_nm) {
+        return (
+          <div className="text-xs">
+            <div>pIC₅₀: {enhanced.pic50.toFixed(2)}</div>
+            <div>{enhanced.ic50_nm.toFixed(1)} nM</div>
+          </div>
+        );
+      }
+      return 'N/A';
+    default:
+      return 'N/A';
+  }
+};
+
 const App = () => {
   const [smiles, setSmiles] = useState('');
   const [selectedTypes, setSelectedTypes] = useState(['bioactivity_ic50', 'toxicity']);
