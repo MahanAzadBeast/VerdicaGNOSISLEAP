@@ -163,10 +163,10 @@ const HomeTab = ({ setActiveTab }) => {
 // Prediction Type Selector Component
 const PredictionTypeSelector = ({ selectedTypes, onSelectionChange }) => {
   const predictionTypes = [
-    { id: 'bioactivity_ic50', label: 'IC₅₀ / Bioactivity', category: 'Bioactivity', description: 'Half-maximal inhibitory concentration', icon: '🎯' },
-    { id: 'toxicity', label: 'General Toxicity', category: 'Toxicity', description: 'Overall toxicity probability', icon: '⚡' },
-    { id: 'logP', label: 'LogP', category: 'Physicochemical', description: 'Partition coefficient (lipophilicity)', icon: '📈' },
-    { id: 'solubility', label: 'Solubility (LogS)', category: 'Physicochemical', description: 'Aqueous solubility', icon: '💧' }
+    { id: 'bioactivity_ic50', label: 'IC50 / Bioactivity', category: 'Bioactivity', description: 'Half-maximal inhibitory concentration' },
+    { id: 'toxicity', label: 'General Toxicity', category: 'Toxicity', description: 'Overall toxicity probability' },
+    { id: 'logP', label: 'LogP', category: 'Physicochemical', description: 'Partition coefficient (lipophilicity)' },
+    { id: 'solubility', label: 'Solubility (LogS)', category: 'Physicochemical', description: 'Aqueous solubility' }
   ];
 
   const handleTypeToggle = (typeId) => {
