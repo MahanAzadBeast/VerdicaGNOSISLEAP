@@ -52,7 +52,7 @@ class PredictionResult(BaseModel):
 
 class BatchPredictionResponse(BaseModel):
     results: List[PredictionResult]
-    summary: Dict[str, any]
+    summary: Dict[str, Any]
 
 # Utility Functions
 def validate_smiles(smiles: str) -> bool:
