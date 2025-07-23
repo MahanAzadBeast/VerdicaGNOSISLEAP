@@ -622,7 +622,7 @@ const AboutTab = () => {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <span className="text-white text-4xl">⚛️</span>
+            <div className="w-10 h-10 bg-white rounded-lg"></div>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
             About Veridica AI
