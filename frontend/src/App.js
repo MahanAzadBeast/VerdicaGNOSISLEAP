@@ -65,26 +65,41 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
 const HomeTab = ({ setActiveTab }) => {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <span className="text-white text-4xl">⚛️</span>
-          </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-6">
-            Advanced Molecular Prediction
-          </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-            Harness the power of AI to predict molecular properties, bioactivity, and toxicity 
-            with unprecedented accuracy using state-of-the-art ChemBERTa and Chemprop models.
-          </p>
-          <button
-            onClick={() => setActiveTab('predict')}
-            className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all shadow-2xl hover:shadow-purple-500/25"
-          >
-            Start Predicting
-          </button>
+      {/* Hero Section with Spline Background */}
+      <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Spline 3D Background */}
+        <div className="absolute inset-0 w-full h-full">
+          <iframe 
+            src='https://prod.spline.design/H7NLYib8mgHt7MGT/scene.splinecode' 
+            frameBorder='0' 
+            width='100%' 
+            height='100%'
+            className="w-full h-full object-cover"
+            title="Spline 3D Scene"
+          ></iframe>
         </div>
+        
+        {/* Overlay Content */}
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+          <div className="bg-black/20 backdrop-blur-sm rounded-3xl p-12 border border-white/10">
+            <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-6 leading-tight">
+              Advanced Molecular Prediction
+            </h1>
+            <p className="text-2xl text-gray-200 max-w-4xl mx-auto mb-10 leading-relaxed">
+              Harness the power of AI to predict molecular properties, bioactivity, and toxicity 
+              with unprecedented accuracy using state-of-the-art ChemBERTa and Chemprop models.
+            </p>
+            <button
+              onClick={() => setActiveTab('predict')}
+              className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-10 py-5 rounded-xl text-xl font-semibold transition-all shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105"
+            >
+              Start Predicting
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 py-12">
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
