@@ -193,7 +193,7 @@ const PredictionTypeSelector = ({ selectedTypes, onSelectionChange }) => {
                   onChange={() => handleTypeToggle(type.id)}
                   className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                 />
-                <span className="text-lg">{type.icon}</span>
+                <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
                 <div>
                   <div className="font-medium text-white">{type.label}</div>
                   <div className="text-sm text-gray-400">{type.description}</div>
