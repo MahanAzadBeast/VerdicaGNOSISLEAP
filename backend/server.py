@@ -255,6 +255,9 @@ async def get_prediction(prediction_id: str):
     prediction = await db.predictions.find_one({"id": prediction_id})
     if not prediction:
         raise HTTPException(status_code=404, detail="Prediction not found")
+    # Convert ObjectId to string for JSON serialization
+    if '_id' in prediction:
+        prediction['_id'] = str(prediction['_id'])
     return prediction
 
 # Include the router in the main app
