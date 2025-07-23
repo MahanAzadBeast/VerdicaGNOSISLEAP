@@ -8,10 +8,10 @@ const API = `${BACKEND_URL}/api`;
 // Navigation Component
 const Navigation = ({ activeTab, setActiveTab, health }) => {
   const tabs = [
-    { id: 'home', label: '🏠 Home' },
-    { id: 'predict', label: '🧪 Predict Properties' },
-    { id: 'analysis', label: '📊 Result Analysis' },
-    { id: 'about', label: 'ℹ️ About' }
+    { id: 'home', label: 'Home' },
+    { id: 'predict', label: 'Predict Properties' },
+    { id: 'analysis', label: 'Result Analysis' },
+    { id: 'about', label: 'About' }
   ];
 
   return (
