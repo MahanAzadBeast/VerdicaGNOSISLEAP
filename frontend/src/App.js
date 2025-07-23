@@ -658,7 +658,7 @@ const AboutTab = () => {
           </div>
 
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-white">🎯 Supported Targets</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-white">Supported Targets</h2>
             <div className="grid md:grid-cols-3 gap-4">
               {[
                 { name: 'EGFR', desc: 'Epidermal Growth Factor Receptor' },
