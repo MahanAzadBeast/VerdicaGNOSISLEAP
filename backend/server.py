@@ -89,8 +89,8 @@ async def load_molbert_model():
     try:
         if 'molbert' not in models:
             logging.info("Loading MolBERT model...")
-            tokenizer = AutoTokenizer.from_pretrained("seyonec/MolBERT")
-            model = AutoModel.from_pretrained("seyonec/MolBERT")
+            tokenizer = AutoTokenizer.from_pretrained("DeepChem/MolBERT")
+            model = AutoModel.from_pretrained("DeepChem/MolBERT")
             models['molbert'] = {'tokenizer': tokenizer, 'model': model}
             logging.info("MolBERT model loaded successfully")
         return models['molbert']
