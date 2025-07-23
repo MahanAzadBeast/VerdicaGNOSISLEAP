@@ -235,10 +235,21 @@ const formatEnhancedPrediction = (enhanced, type) => {
 const App = () => {
   const [smiles, setSmiles] = useState('');
   const [selectedTypes, setSelectedTypes] = useState(['bioactivity_ic50', 'toxicity']);
+  const [selectedTarget, setSelectedTarget] = useState('EGFR');
   const [results, setResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [health, setHealth] = useState(null);
+
+  // Available targets
+  const availableTargets = [
+    { id: 'EGFR', name: 'EGFR', description: 'Epidermal Growth Factor Receptor' },
+    { id: 'BRAF', name: 'BRAF', description: 'B-Raf Proto-Oncogene' },
+    { id: 'CDK2', name: 'CDK2', description: 'Cyclin Dependent Kinase 2' },
+    { id: 'PARP1', name: 'PARP1', description: 'Poly(ADP-ribose) Polymerase 1' },
+    { id: 'BCL2', name: 'BCL2', description: 'BCL2 Apoptosis Regulator' },
+    { id: 'VEGFR2', name: 'VEGFR2', description: 'Vascular Endothelial Growth Factor Receptor 2' }
+  ];
 
   // Example SMILES for testing
   const exampleMolecules = [
@@ -279,7 +290,8 @@ const App = () => {
     try {
       const response = await axios.post(`${API}/predict`, {
         smiles: smiles.trim(),
-        prediction_types: selectedTypes
+        prediction_types: selectedTypes,
+        target: selectedTarget
       });
       
       setResults(response.data);
@@ -341,6 +353,24 @@ const App = () => {
                 />
               </div>
 
+              {/* Target Selection */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Target Protein (for IC₅₀ predictions)
+                </label>
+                <select
+                  value={selectedTarget}
+                  onChange={(e) => setSelectedTarget(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  {availableTargets.map((target) => (
+                    <option key={target.id} value={target.id}>
+                      {target.name} - {target.description}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* Example Molecules */}
               <div className="mb-6">
                 <p className="text-sm font-medium text-gray-700 mb-2">Try these examples:</p>
@@ -391,10 +421,10 @@ const App = () => {
         <div className="mt-8 bg-blue-50 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-blue-900 mb-2">About This Platform</h3>
           <p className="text-blue-800 text-sm leading-relaxed">
-            This platform combines MolBERT (transformer-based) and Chemprop (graph neural network) models 
-            to predict molecular properties for drug discovery. Results are compared with RDKit calculations 
-            for validation. Priority predictions include bioactivity (IC₅₀), toxicity assessment, and 
-            physicochemical properties (LogP, solubility).
+            This platform combines ChemBERTa (transformer-based) and Chemprop (graph neural network) models 
+            with enhanced target-specific IC₅₀ prediction algorithms. Results include bioactivity predictions 
+            for major drug targets (EGFR, BRAF, CDK2, etc.), toxicity assessment, and physicochemical properties 
+            with confidence scoring and molecular similarity analysis.
           </p>
         </div>
       </main>
