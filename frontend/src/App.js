@@ -87,7 +87,9 @@ const ResultsDisplay = ({ results, isLoading, error }) => {
           <h4 className="font-semibold mb-2">Molecular Information</h4>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>SMILES: <span className="font-mono text-blue-600">{results.summary.molecule}</span></div>
+            <div>Target: <span className="font-semibold text-purple-600">{results.summary.target}</span></div>
             <div>Predictions: {results.summary.total_predictions}</div>
+            <div>Enhanced Models: {results.summary.enhanced_models_used ? "✅ Yes" : "❌ No"}</div>
             {results.summary.molecular_properties && (
               <>
                 <div>Molecular Weight: {results.summary.molecular_properties.molecular_weight?.toFixed(2)} g/mol</div>
@@ -107,10 +109,13 @@ const ResultsDisplay = ({ results, isLoading, error }) => {
                 Property
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                MolBERT
+                ChemBERTa
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Chemprop
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Enhanced Model
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 RDKit
@@ -132,23 +137,52 @@ const ResultsDisplay = ({ results, isLoading, error }) => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {result.chemprop_prediction ? formatPredictionValue(result.chemprop_prediction, result.prediction_type) : 'N/A'}
                 </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-blue-600">
+                  {result.enhanced_chemprop_prediction ? formatEnhancedPrediction(result.enhanced_chemprop_prediction, result.prediction_type) : 'N/A'}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {result.rdkit_value ? formatPredictionValue(result.rdkit_value, result.prediction_type) : 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    result.confidence > 0.8 ? 'bg-green-100 text-green-800' : 
-                    result.confidence > 0.6 ? 'bg-yellow-100 text-yellow-800' : 
-                    'bg-red-100 text-red-800'
-                  }`}>
-                    {(result.confidence * 100).toFixed(0)}%
-                  </span>
+                  <div className="flex flex-col">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      result.confidence > 0.8 ? 'bg-green-100 text-green-800' : 
+                      result.confidence > 0.6 ? 'bg-yellow-100 text-yellow-800' : 
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {(result.confidence * 100).toFixed(0)}%
+                    </span>
+                    {result.similarity && (
+                      <span className="text-xs text-gray-500 mt-1">
+                        Sim: {(result.similarity * 100).toFixed(0)}%
+                      </span>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Enhanced Predictions Details */}
+      {results.results.some(r => r.enhanced_chemprop_prediction) && (
+        <div className="mt-6 bg-blue-50 rounded-lg p-4">
+          <h4 className="font-semibold text-blue-900 mb-2">Enhanced IC₅₀ Prediction Details</h4>
+          {results.results.filter(r => r.enhanced_chemprop_prediction).map((result, index) => (
+            <div key={index} className="text-sm text-blue-800">
+              {result.enhanced_chemprop_prediction.pic50 && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>pIC₅₀: <span className="font-mono">{result.enhanced_chemprop_prediction.pic50.toFixed(2)}</span></div>
+                  <div>IC₅₀: <span className="font-mono">{result.enhanced_chemprop_prediction.ic50_nm?.toFixed(1)} nM</span></div>
+                  <div>Model Type: {result.enhanced_chemprop_prediction.model_type}</div>
+                  <div>Target-Specific: {result.enhanced_chemprop_prediction.target_specific ? "✅ Yes" : "❌ No"}</div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
