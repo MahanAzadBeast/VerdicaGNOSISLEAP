@@ -1,23 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
-import { 
-  Beaker, 
-  BarChart3, 
-  Home, 
-  Info, 
-  ChevronDown,
-  Download,
-  Upload,
-  Zap,
-  Target,
-  Activity,
-  Atom,
-  TrendingUp
-} from "lucide-react";
-import Plot from 'react-plotly.js';
-import { CSVLink } from "react-csv";
-import html2canvas from 'html2canvas';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -25,10 +8,10 @@ const API = `${BACKEND_URL}/api`;
 // Navigation Component
 const Navigation = ({ activeTab, setActiveTab, health }) => {
   const tabs = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'predict', label: 'Predict Properties', icon: Beaker },
-    { id: 'analysis', label: 'Result Analysis', icon: BarChart3 },
-    { id: 'about', label: 'About', icon: Info }
+    { id: 'home', label: '🏠 Home' },
+    { id: 'predict', label: '🧪 Predict Properties' },
+    { id: 'analysis', label: '📊 Result Analysis' },
+    { id: 'about', label: 'ℹ️ About' }
   ];
 
   return (
@@ -48,23 +31,19 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
 
           {/* Navigation Tabs */}
           <div className="flex space-x-1">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    activeTab === tab.id
-                      ? 'bg-purple-600 text-white shadow-lg'
-                      : 'text-gray-300 hover:text-white hover:bg-gray-800'
-                  }`}
-                >
-                  <Icon size={16} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  activeTab === tab.id
+                    ? 'bg-purple-600 text-white shadow-lg'
+                    : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
 
           {/* Status */}
@@ -90,7 +69,7 @@ const HomeTab = ({ setActiveTab }) => {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <Atom size={40} className="text-white" />
+            <span className="text-white text-4xl">⚛️</span>
           </div>
           <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-6">
             Advanced Molecular Prediction
@@ -110,21 +89,21 @@ const HomeTab = ({ setActiveTab }) => {
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-purple-500 transition-all">
-            <Target className="text-purple-400 mb-4" size={32} />
+            <div className="text-purple-400 mb-4 text-2xl">🎯</div>
             <h3 className="text-xl font-semibold mb-3">Target-Specific IC₅₀</h3>
             <p className="text-gray-400">
               Predict IC₅₀ values for specific protein targets including EGFR, BRAF, CDK2, and more.
             </p>
           </div>
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-cyan-500 transition-all">
-            <Activity className="text-cyan-400 mb-4" size={32} />
+            <div className="text-cyan-400 mb-4 text-2xl">📈</div>
             <h3 className="text-xl font-semibold mb-3">Multi-Model Analysis</h3>
             <p className="text-gray-400">
               Compare predictions from ChemBERTa, Chemprop, and enhanced RDKit-based models.
             </p>
           </div>
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-green-500 transition-all">
-            <TrendingUp className="text-green-400 mb-4" size={32} />
+            <div className="text-green-400 mb-4 text-2xl">📊</div>
             <h3 className="text-xl font-semibold mb-3">Advanced Analytics</h3>
             <p className="text-gray-400">
               Visualize results, compare compounds, and export data with our comprehensive analysis tools.
@@ -163,10 +142,10 @@ const HomeTab = ({ setActiveTab }) => {
 // Prediction Type Selector Component
 const PredictionTypeSelector = ({ selectedTypes, onSelectionChange }) => {
   const predictionTypes = [
-    { id: 'bioactivity_ic50', label: 'IC₅₀ / Bioactivity', category: 'Bioactivity', description: 'Half-maximal inhibitory concentration', icon: Target },
-    { id: 'toxicity', label: 'General Toxicity', category: 'Toxicity', description: 'Overall toxicity probability', icon: Zap },
-    { id: 'logP', label: 'LogP', category: 'Physicochemical', description: 'Partition coefficient (lipophilicity)', icon: Activity },
-    { id: 'solubility', label: 'Solubility (LogS)', category: 'Physicochemical', description: 'Aqueous solubility', icon: Activity }
+    { id: 'bioactivity_ic50', label: 'IC₅₀ / Bioactivity', category: 'Bioactivity', description: 'Half-maximal inhibitory concentration', icon: '🎯' },
+    { id: 'toxicity', label: 'General Toxicity', category: 'Toxicity', description: 'Overall toxicity probability', icon: '⚡' },
+    { id: 'logP', label: 'LogP', category: 'Physicochemical', description: 'Partition coefficient (lipophilicity)', icon: '📈' },
+    { id: 'solubility', label: 'Solubility (LogS)', category: 'Physicochemical', description: 'Aqueous solubility', icon: '💧' }
   ];
 
   const handleTypeToggle = (typeId) => {
@@ -185,24 +164,21 @@ const PredictionTypeSelector = ({ selectedTypes, onSelectionChange }) => {
         <div key={category} className="mb-4">
           <h4 className="text-md font-medium text-purple-400 mb-2">{category}</h4>
           <div className="grid grid-cols-1 gap-2">
-            {predictionTypes.filter(type => type.category === category).map(type => {
-              const Icon = type.icon;
-              return (
-                <label key={type.id} className="flex items-center space-x-3 p-3 border border-gray-600 rounded-lg hover:bg-gray-700 cursor-pointer transition-all">
-                  <input
-                    type="checkbox"
-                    checked={selectedTypes.includes(type.id)}
-                    onChange={() => handleTypeToggle(type.id)}
-                    className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
-                  />
-                  <Icon size={16} className="text-gray-400" />
-                  <div>
-                    <div className="font-medium text-white">{type.label}</div>
-                    <div className="text-sm text-gray-400">{type.description}</div>
-                  </div>
-                </label>
-              );
-            })}
+            {predictionTypes.filter(type => type.category === category).map(type => (
+              <label key={type.id} className="flex items-center space-x-3 p-3 border border-gray-600 rounded-lg hover:bg-gray-700 cursor-pointer transition-all">
+                <input
+                  type="checkbox"
+                  checked={selectedTypes.includes(type.id)}
+                  onChange={() => handleTypeToggle(type.id)}
+                  className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                />
+                <span className="text-lg">{type.icon}</span>
+                <div>
+                  <div className="font-medium text-white">{type.label}</div>
+                  <div className="text-sm text-gray-400">{type.description}</div>
+                </div>
+              </label>
+            ))}
           </div>
         </div>
       ))}
@@ -294,7 +270,7 @@ const ResultsDisplay = ({ results, isLoading, error, onAnalyze }) => {
             onClick={() => onAnalyze(results)}
             className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center space-x-2"
           >
-            <BarChart3 size={16} />
+            <span>📊</span>
             <span>Analyze Results</span>
           </button>
         )}
@@ -485,20 +461,17 @@ const PredictTab = ({ onAnalyze }) => {
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Target Protein (for IC₅₀ predictions)
                 </label>
-                <div className="relative">
-                  <select
-                    value={selectedTarget}
-                    onChange={(e) => setSelectedTarget(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white appearance-none"
-                  >
-                    {availableTargets.map((target) => (
-                      <option key={target.id} value={target.id}>
-                        {target.name} - {target.description}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                </div>
+                <select
+                  value={selectedTarget}
+                  onChange={(e) => setSelectedTarget(e.target.value)}
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white"
+                >
+                  {availableTargets.map((target) => (
+                    <option key={target.id} value={target.id}>
+                      {target.name} - {target.description}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Example Molecules */}
@@ -557,186 +530,8 @@ const PredictTab = ({ onAnalyze }) => {
   );
 };
 
-// Analysis Tab Component
-const AnalysisTab = ({ analysisData, setAnalysisData }) => {
-  const [uploadedData, setUploadedData] = useState(null);
-  const [selectedChart, setSelectedChart] = useState('bar');
-  const [sortBy, setSortBy] = useState('ic50');
-  const [filterTarget, setFilterTarget] = useState('all');
-
-  // CSV upload handler
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const csv = e.target.result;
-          const lines = csv.split('\n');
-          const headers = lines[0].split(',').map(h => h.trim());
-          const data = lines.slice(1).filter(line => line.trim()).map(line => {
-            const values = line.split(',').map(v => v.trim());
-            const obj = {};
-            headers.forEach((header, index) => {
-              obj[header] = values[index];
-            });
-            return obj;
-          });
-          setUploadedData(data);
-        } catch (error) {
-          console.error('Error parsing CSV:', error);
-        }
-      };
-      reader.readAsText(file);
-    }
-  };
-
-  // Get data for visualization
-  const getVisualizationData = () => {
-    if (uploadedData) return uploadedData;
-    if (analysisData && analysisData.results) {
-      return analysisData.results.map(result => ({
-        'Drug Name': `Compound-${result.id.slice(0, 8)}`,
-        'SMILES': result.smiles,
-        'IC50 (nM)': result.enhanced_chemprop_prediction?.ic50_nm || 0,
-        'pIC50': result.enhanced_chemprop_prediction?.pic50 || 0,
-        'Target': result.target || 'Unknown',
-        'Confidence': result.confidence,
-        'Similarity': result.similarity || 0,
-        'LogP': analysisData.summary?.molecular_properties?.logP || 0,
-        'MW': analysisData.summary?.molecular_properties?.molecular_weight || 0
-      }));
-    }
-    return [];
-  };
-
-  const data = getVisualizationData();
-  const filteredData = filterTarget === 'all' ? data : data.filter(d => d.Target === filterTarget);
-  
-  // Sort data
-  const sortedData = [...filteredData].sort((a, b) => {
-    switch (sortBy) {
-      case 'ic50':
-        return (parseFloat(a['IC50 (nM)']) || 0) - (parseFloat(b['IC50 (nM)']) || 0);
-      case 'confidence':
-        return (parseFloat(b.Confidence) || 0) - (parseFloat(a.Confidence) || 0);
-      case 'mw':
-        return (parseFloat(a.MW) || 0) - (parseFloat(b.MW) || 0);
-      default:
-        return 0;
-    }
-  });
-
-  // Get unique targets for filter
-  const targets = [...new Set(data.map(d => d.Target))];
-
-  // Chart configurations
-  const getBarChartData = () => ({
-    data: [{
-      x: sortedData.map(d => d['Drug Name'] || 'Unknown'),
-      y: sortedData.map(d => parseFloat(d['IC50 (nM)']) || 0),
-      type: 'bar',
-      marker: {
-        color: sortedData.map((_, i) => `hsl(${(i * 360) / sortedData.length}, 70%, 60%)`),
-        line: { color: 'rgba(255,255,255,0.2)', width: 1 }
-      },
-      name: 'IC₅₀ (nM)'
-    }],
-    layout: {
-      title: { text: 'IC₅₀ Values by Compound', font: { color: 'white' } },
-      xaxis: { title: 'Compounds', color: 'white', gridcolor: 'rgba(255,255,255,0.1)' },
-      yaxis: { title: 'IC₅₀ (nM)', color: 'white', gridcolor: 'rgba(255,255,255,0.1)' },
-      paper_bgcolor: 'transparent',
-      plot_bgcolor: 'transparent',
-      font: { color: 'white' }
-    },
-    config: { displayModeBar: true, displaylogo: false }
-  });
-
-  const getScatterPlotData = () => ({
-    data: [{
-      x: sortedData.map(d => parseFloat(d.MW) || 0),
-      y: sortedData.map(d => parseFloat(d['IC50 (nM)']) || 0),
-      mode: 'markers',
-      type: 'scatter',
-      marker: {
-        size: sortedData.map(d => (parseFloat(d.Confidence) || 0.5) * 30 + 5),
-        color: sortedData.map(d => parseFloat(d.LogP) || 0),
-        colorscale: 'Viridis',
-        showscale: true,
-        colorbar: { title: 'LogP' },
-        line: { color: 'white', width: 1 }
-      },
-      text: sortedData.map(d => `${d['Drug Name']}<br>MW: ${d.MW}<br>LogP: ${d.LogP}<br>Confidence: ${(parseFloat(d.Confidence) * 100).toFixed(0)}%`),
-      name: 'Compounds'
-    }],
-    layout: {
-      title: { text: 'IC₅₀ vs Molecular Weight', font: { color: 'white' } },
-      xaxis: { title: 'Molecular Weight (g/mol)', color: 'white', gridcolor: 'rgba(255,255,255,0.1)' },
-      yaxis: { title: 'IC₅₀ (nM)', color: 'white', gridcolor: 'rgba(255,255,255,0.1)' },
-      paper_bgcolor: 'transparent',
-      plot_bgcolor: 'transparent',
-      font: { color: 'white' }
-    },
-    config: { displayModeBar: true, displaylogo: false }
-  });
-
-  const getHeatmapData = () => {
-    const targets = [...new Set(sortedData.map(d => d.Target))];
-    const compounds = sortedData.map(d => d['Drug Name']);
-    const z = targets.map(target => 
-      compounds.map(compound => {
-        const item = sortedData.find(d => d['Drug Name'] === compound && d.Target === target);
-        return item ? parseFloat(item['IC50 (nM)']) || 0 : 0;
-      })
-    );
-
-    return {
-      data: [{
-        z: z,
-        x: compounds,
-        y: targets,
-        type: 'heatmap',
-        colorscale: 'Viridis',
-        showscale: true
-      }],
-      layout: {
-        title: { text: 'IC₅₀ Heatmap by Target and Compound', font: { color: 'white' } },
-        xaxis: { title: 'Compounds', color: 'white' },
-        yaxis: { title: 'Targets', color: 'white' },
-        paper_bgcolor: 'transparent',
-        plot_bgcolor: 'transparent',
-        font: { color: 'white' }
-      },
-      config: { displayModeBar: true, displaylogo: false }
-    }
-  };
-
-  // Export functions
-  const exportChart = () => {
-    const chartElement = document.querySelector('.plotly');
-    if (chartElement) {
-      html2canvas(chartElement).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `chart-${selectedChart}-${new Date().toISOString().slice(0, 10)}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-      });
-    }
-  };
-
-  const csvData = sortedData.map(d => ({
-    'Drug Name': d['Drug Name'],
-    'SMILES': d.SMILES,
-    'IC50 (nM)': d['IC50 (nM)'],
-    'pIC50': d.pIC50,
-    'Target': d.Target,
-    'Confidence': d.Confidence,
-    'Similarity': d.Similarity,
-    'LogP': d.LogP,
-    'Molecular Weight': d.MW
-  }));
-
+// Analysis Tab Component (Simplified)
+const AnalysisTab = ({ analysisData }) => {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -749,153 +544,54 @@ const AnalysisTab = ({ analysisData, setAnalysisData }) => {
           </p>
         </div>
 
-        {/* Data Input Options */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        {analysisData ? (
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Upload className="mr-2" size={20} />
-              Upload CSV Data
-            </h3>
-            <input
-              type="file"
-              accept=".csv"
-              onChange={handleFileUpload}
-              className="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700"
-            />
-            <p className="text-xs text-gray-400 mt-2">
-              Upload CSV with columns: Drug Name, SMILES, IC50 (nM), Target, etc.
-            </p>
-          </div>
-
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-4">Current Data</h3>
-            <div className="text-sm text-gray-300">
-              <div>Compounds: <span className="text-white font-semibold">{data.length}</span></div>
-              <div>Data Source: <span className="text-white font-semibold">
-                {uploadedData ? 'Uploaded CSV' : analysisData ? 'Prediction Results' : 'None'}
-              </span></div>
-            </div>
-          </div>
-        </div>
-
-        {data.length > 0 && (
-          <>
-            {/* Controls */}
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 mb-8">
-              <div className="grid md:grid-cols-4 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Chart Type</label>
-                  <select
-                    value={selectedChart}
-                    onChange={(e) => setSelectedChart(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  >
-                    <option value="bar">Bar Chart</option>
-                    <option value="scatter">Scatter Plot</option>
-                    <option value="heatmap">Heatmap</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Sort By</label>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  >
-                    <option value="ic50">IC₅₀ Value</option>
-                    <option value="confidence">Confidence</option>
-                    <option value="mw">Molecular Weight</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Filter Target</label>
-                  <select
-                    value={filterTarget}
-                    onChange={(e) => setFilterTarget(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white"
-                  >
-                    <option value="all">All Targets</option>
-                    {targets.map(target => (
-                      <option key={target} value={target}>{target}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-end space-x-2">
-                  <button
-                    onClick={exportChart}
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
-                  >
-                    <Download size={16} />
-                    <span>Export Chart</span>
-                  </button>
-                  <CSVLink
-                    data={csvData}
-                    filename={`molecular-analysis-${new Date().toISOString().slice(0, 10)}.csv`}
-                    className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
-                  >
-                    <Download size={16} />
-                    <span>Export CSV</span>
-                  </CSVLink>
-                </div>
-              </div>
+            <h3 className="text-lg font-semibold mb-4">Analysis Data Available</h3>
+            <div className="text-sm text-gray-300 space-y-2">
+              <div>Molecule: <span className="font-mono text-purple-400">{analysisData.summary?.molecule}</span></div>
+              <div>Target: <span className="text-cyan-400">{analysisData.summary?.target}</span></div>
+              <div>Predictions: <span className="text-white">{analysisData.summary?.total_predictions}</span></div>
             </div>
 
-            {/* Visualization */}
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 mb-8">
-              {selectedChart === 'bar' && <Plot {...getBarChartData()} style={{width: '100%', height: '500px'}} />}
-              {selectedChart === 'scatter' && <Plot {...getScatterPlotData()} style={{width: '100%', height: '500px'}} />}
-              {selectedChart === 'heatmap' && <Plot {...getHeatmapData()} style={{width: '100%', height: '500px'}} />}
-            </div>
-
-            {/* Data Table */}
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-              <h3 className="text-lg font-semibold mb-4">Data Table</h3>
-              <div className="overflow-x-auto">
+            {/* Simple Results Table */}
+            {analysisData.results && (
+              <div className="mt-6 overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-600">
                   <thead className="bg-gray-700">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Drug Name</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">SMILES</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">IC₅₀ (nM)</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Target</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Property</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Enhanced Prediction</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Confidence</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">LogP</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">MW</th>
                     </tr>
                   </thead>
                   <tbody className="bg-gray-800 divide-y divide-gray-600">
-                    {sortedData.slice(0, 20).map((item, index) => (
+                    {analysisData.results.map((result, index) => (
                       <tr key={index} className="hover:bg-gray-700">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{item['Drug Name']}</td>
-                        <td className="px-6 py-4 text-sm text-gray-300 font-mono max-w-xs truncate">{item.SMILES}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{parseFloat(item['IC50 (nM)']).toFixed(1)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-400">{item.Target}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{(parseFloat(item.Confidence) * 100).toFixed(0)}%</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{parseFloat(item.LogP).toFixed(2)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{parseFloat(item.MW).toFixed(1)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
+                          {result.prediction_type}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-purple-400">
+                          {result.enhanced_chemprop_prediction?.pic50 ? 
+                            `pIC₅₀: ${result.enhanced_chemprop_prediction.pic50.toFixed(2)}` : 
+                            'N/A'
+                          }
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                          {(result.confidence * 100).toFixed(0)}%
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                {sortedData.length > 20 && (
-                  <div className="mt-4 text-center text-sm text-gray-400">
-                    Showing first 20 of {sortedData.length} compounds
-                  </div>
-                )}
               </div>
-            </div>
-          </>
-        )}
-
-        {data.length === 0 && (
+            )}
+          </div>
+        ) : (
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-12 text-center">
-            <BarChart3 size={64} className="mx-auto text-gray-600 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-400 mb-2">No Data Available</h3>
+            <div className="text-4xl mb-4">📊</div>
+            <h3 className="text-xl font-semibold text-gray-400 mb-2">No Analysis Data</h3>
             <p className="text-gray-500 mb-6">
-              Upload a CSV file or run predictions to analyze molecular data
+              Run predictions first to analyze molecular data
             </p>
           </div>
         )}
@@ -911,7 +607,7 @@ const AboutTab = () => {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <Atom size={40} className="text-white" />
+            <span className="text-white text-4xl">⚛️</span>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
             About Veridica AI
@@ -926,7 +622,7 @@ const AboutTab = () => {
             <h2 className="text-2xl font-semibold mb-4 text-white">Platform Capabilities</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-lg font-semibold text-purple-400 mb-2">AI Models</h3>
+                <h3 className="text-lg font-semibold text-purple-400 mb-2">🤖 AI Models</h3>
                 <ul className="text-gray-300 space-y-1">
                   <li>• ChemBERTa (Transformer-based)</li>
                   <li>• Enhanced Chemprop (Graph Neural Network)</li>
@@ -935,7 +631,7 @@ const AboutTab = () => {
                 </ul>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-cyan-400 mb-2">Predictions</h3>
+                <h3 className="text-lg font-semibold text-cyan-400 mb-2">🧪 Predictions</h3>
                 <ul className="text-gray-300 space-y-1">
                   <li>• IC₅₀ bioactivity (6 targets)</li>
                   <li>• Toxicity assessment</li>
@@ -947,7 +643,7 @@ const AboutTab = () => {
           </div>
 
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-white">Supported Targets</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-white">🎯 Supported Targets</h2>
             <div className="grid md:grid-cols-3 gap-4">
               {[
                 { name: 'EGFR', desc: 'Epidermal Growth Factor Receptor' },
@@ -965,32 +661,8 @@ const AboutTab = () => {
             </div>
           </div>
 
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-white">Technology Stack</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-lg font-semibold text-green-400 mb-2">Frontend</h3>
-                <ul className="text-gray-300 space-y-1">
-                  <li>• React.js with modern UI components</li>
-                  <li>• Plotly.js for interactive visualizations</li>
-                  <li>• Tailwind CSS for styling</li>
-                  <li>• Responsive design</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-yellow-400 mb-2">Backend</h3>
-                <ul className="text-gray-300 space-y-1">
-                  <li>• FastAPI with async support</li>
-                  <li>• MongoDB for data persistence</li>
-                  <li>• PyTorch & Transformers</li>
-                  <li>• RDKit for molecular processing</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
           <div className="bg-gradient-to-r from-purple-900 to-cyan-900 border border-gray-600 rounded-xl p-6 text-center">
-            <h2 className="text-2xl font-semibold mb-4 text-white">Ready to Discover?</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-white">🚀 Ready to Discover?</h2>
             <p className="text-gray-300 mb-6">
               Start predicting molecular properties and accelerate your drug discovery research.
             </p>
@@ -1034,7 +706,7 @@ const App = () => {
       
       {activeTab === 'home' && <HomeTab setActiveTab={setActiveTab} />}
       {activeTab === 'predict' && <PredictTab onAnalyze={handleAnalyze} />}
-      {activeTab === 'analysis' && <AnalysisTab analysisData={analysisData} setAnalysisData={setAnalysisData} />}
+      {activeTab === 'analysis' && <AnalysisTab analysisData={analysisData} />}
       {activeTab === 'about' && <AboutTab />}
     </div>
   );
