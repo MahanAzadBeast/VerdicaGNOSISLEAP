@@ -104,21 +104,27 @@ const HomeTab = ({ setActiveTab }) => {
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-purple-500 transition-all">
-            <div className="text-purple-400 mb-4 text-2xl">🎯</div>
-            <h3 className="text-xl font-semibold mb-3">Target-Specific IC₅₀</h3>
+            <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center mb-4">
+              <div className="w-6 h-6 bg-purple-400 rounded"></div>
+            </div>
+            <h3 className="text-xl font-semibold mb-3">Target-Specific IC50</h3>
             <p className="text-gray-400">
-              Predict IC₅₀ values for specific protein targets including EGFR, BRAF, CDK2, and more.
+              Predict IC50 values for specific protein targets including EGFR, BRAF, CDK2, and more.
             </p>
           </div>
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-cyan-500 transition-all">
-            <div className="text-cyan-400 mb-4 text-2xl">📈</div>
+            <div className="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center mb-4">
+              <div className="w-6 h-6 bg-cyan-400 rounded"></div>
+            </div>
             <h3 className="text-xl font-semibold mb-3">Multi-Model Analysis</h3>
             <p className="text-gray-400">
               Compare predictions from ChemBERTa, Chemprop, and enhanced RDKit-based models.
             </p>
           </div>
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-green-500 transition-all">
-            <div className="text-green-400 mb-4 text-2xl">📊</div>
+            <div className="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center mb-4">
+              <div className="w-6 h-6 bg-green-400 rounded"></div>
+            </div>
             <h3 className="text-xl font-semibold mb-3">Advanced Analytics</h3>
             <p className="text-gray-400">
               Visualize results, compare compounds, and export data with our comprehensive analysis tools.
