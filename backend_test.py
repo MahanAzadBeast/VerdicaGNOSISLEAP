@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend Testing for Predictive Chemistry Platform
-Tests all API endpoints, model integration, and database functionality
+Comprehensive Backend Testing for Upgraded Predictive Chemistry Platform
+Tests real ChEMBL integration, IC50 predictions, and target-specific models
 """
 
 import requests
