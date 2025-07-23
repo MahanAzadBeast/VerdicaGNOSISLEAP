@@ -58,7 +58,9 @@ class BatchPredictionResponse(BaseModel):
 def validate_smiles(smiles: str) -> bool:
     """Validate if SMILES string is valid"""
     try:
-        mol = Chem.MolFromSmiles(smiles)
+        if not smiles or not smiles.strip():
+            return False
+        mol = Chem.MolFromSmiles(smiles.strip())
         return mol is not None
     except:
         return False
