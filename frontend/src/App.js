@@ -677,7 +677,7 @@ const AboutTab = () => {
           </div>
 
           <div className="bg-gradient-to-r from-purple-900 to-cyan-900 border border-gray-600 rounded-xl p-6 text-center">
-            <h2 className="text-2xl font-semibold mb-4 text-white">🚀 Ready to Discover?</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-white">Ready to Discover?</h2>
             <p className="text-gray-300 mb-6">
               Start predicting molecular properties and accelerate your drug discovery research.
             </p>
