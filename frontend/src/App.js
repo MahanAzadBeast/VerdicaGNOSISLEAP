@@ -602,7 +602,7 @@ const AnalysisTab = ({ analysisData }) => {
           </div>
         ) : (
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-12 text-center">
-            <div className="text-4xl mb-4">📊</div>
+            <div className="w-16 h-16 bg-gray-700 rounded-lg mx-auto mb-4"></div>
             <h3 className="text-xl font-semibold text-gray-400 mb-2">No Analysis Data</h3>
             <p className="text-gray-500 mb-6">
               Run predictions first to analyze molecular data
