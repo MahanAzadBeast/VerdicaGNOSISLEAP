@@ -637,7 +637,7 @@ const AboutTab = () => {
             <h2 className="text-2xl font-semibold mb-4 text-white">Platform Capabilities</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-lg font-semibold text-purple-400 mb-2">🤖 AI Models</h3>
+                <h3 className="text-lg font-semibold text-purple-400 mb-2">AI Models</h3>
                 <ul className="text-gray-300 space-y-1">
                   <li>• ChemBERTa (Transformer-based)</li>
                   <li>• Enhanced Chemprop (Graph Neural Network)</li>
@@ -646,9 +646,9 @@ const AboutTab = () => {
                 </ul>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-cyan-400 mb-2">🧪 Predictions</h3>
+                <h3 className="text-lg font-semibold text-cyan-400 mb-2">Predictions</h3>
                 <ul className="text-gray-300 space-y-1">
-                  <li>• IC₅₀ bioactivity (6 targets)</li>
+                  <li>• IC50 bioactivity (6 targets)</li>
                   <li>• Toxicity assessment</li>
                   <li>• Physicochemical properties</li>
                   <li>• Confidence scoring & similarity</li>
