@@ -30,3 +30,7 @@ torch>=2.0.0
 rdkit>=2023.9.1
 scikit-learn>=1.3.0
 scipy>=1.11.0
+# ChEMBL and dataset integration
+chembl_webresource_client>=0.10.4
+sqlite3
+joblib>=1.3.0
