@@ -85,17 +85,17 @@ def calculate_rdkit_properties(smiles: str) -> Dict[str, float]:
         return {}
 
 async def load_molbert_model():
-    """Load MolBERT model and tokenizer"""
+    """Load ChemBERTa model and tokenizer (MolBERT alternative)"""
     try:
         if 'molbert' not in models:
-            logging.info("Loading MolBERT model...")
-            tokenizer = AutoTokenizer.from_pretrained("DeepChem/MolBERT")
-            model = AutoModel.from_pretrained("DeepChem/MolBERT")
+            logging.info("Loading ChemBERTa model...")
+            tokenizer = AutoTokenizer.from_pretrained("seyonec/ChemBERTa-zinc-base-v1")
+            model = AutoModel.from_pretrained("seyonec/ChemBERTa-zinc-base-v1")
             models['molbert'] = {'tokenizer': tokenizer, 'model': model}
-            logging.info("MolBERT model loaded successfully")
+            logging.info("ChemBERTa model loaded successfully")
         return models['molbert']
     except Exception as e:
-        logging.error(f"Error loading MolBERT: {e}")
+        logging.error(f"Error loading ChemBERTa: {e}")
         return None
 
 def predict_with_molbert(smiles: str, property_type: str) -> Optional[float]:
