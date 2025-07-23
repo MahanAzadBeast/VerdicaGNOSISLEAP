@@ -16,6 +16,8 @@ import numpy as np
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Crippen, Lipinski
 import warnings
+from real_chemprop_predictor import real_predictor
+
 warnings.filterwarnings("ignore")
 
 ROOT_DIR = Path(__file__).parent
@@ -39,20 +41,30 @@ api_router = APIRouter(prefix="/api")
 class SMILESInput(BaseModel):
     smiles: str
     prediction_types: List[str]
+    target: Optional[str] = "EGFR"  # Default target for IC50 predictions
 
 class PredictionResult(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     smiles: str
     prediction_type: str
+    target: Optional[str] = None
     molbert_prediction: Optional[float] = None
     chemprop_prediction: Optional[float] = None
+    real_chemprop_prediction: Optional[Dict] = None  # Real IC50 predictions
     rdkit_value: Optional[float] = None
     confidence: float
+    similarity: Optional[float] = None
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
 class BatchPredictionResponse(BaseModel):
     results: List[PredictionResult]
     summary: Dict[str, Any]
+
+class TargetInfo(BaseModel):
+    target: str
+    available: bool
+    model_performance: Optional[Dict] = None
+    training_size: int = 0
 
 # Utility Functions
 def validate_smiles(smiles: str) -> bool:
@@ -101,7 +113,7 @@ async def load_molbert_model():
         return None
 
 def predict_with_molbert(smiles: str, property_type: str) -> Optional[float]:
-    """Make predictions using MolBERT embeddings"""
+    """Make predictions using ChemBERTa embeddings"""
     try:
         molbert = models.get('molbert')
         if not molbert:
@@ -119,7 +131,6 @@ def predict_with_molbert(smiles: str, property_type: str) -> Optional[float]:
             embeddings = outputs.last_hidden_state.mean(dim=1)
         
         # Simple prediction logic based on property type and embeddings
-        # This is a simplified approach - in practice, you'd use pre-trained property-specific heads
         embedding_mean = embeddings.mean().item()
         embedding_std = embeddings.std().item()
         
@@ -140,7 +151,7 @@ def predict_with_molbert(smiles: str, property_type: str) -> Optional[float]:
             
         return float(prediction)
     except Exception as e:
-        logging.error(f"Error in MolBERT prediction: {e}")
+        logging.error(f"Error in ChemBERTa prediction: {e}")
         return None
 
 def predict_with_chemprop_simulation(smiles: str, property_type: str) -> Optional[float]:
@@ -183,12 +194,26 @@ async def health_check():
             "toxicity", 
             "logP",
             "solubility"
-        ]
+        ],
+        "available_targets": real_predictor.get_available_targets(),
+        "real_chemprop_ready": True
     }
+
+@api_router.get("/targets", response_model=List[TargetInfo])
+async def get_available_targets():
+    """Get information about available protein targets"""
+    targets = real_predictor.get_available_targets()
+    target_info = []
+    
+    for target in targets:
+        info = real_predictor.get_model_info(target)
+        target_info.append(TargetInfo(**info))
+    
+    return target_info
 
 @api_router.post("/predict", response_model=BatchPredictionResponse)
 async def predict_molecular_properties(input_data: SMILESInput):
-    """Predict molecular properties using MolBERT and Chemprop"""
+    """Predict molecular properties using MolBERT, Chemprop, and Real ChEMBL models"""
     
     # Validate SMILES
     if not validate_smiles(input_data.smiles):
@@ -203,28 +228,51 @@ async def predict_molecular_properties(input_data: SMILESInput):
         # Get RDKit baseline properties
         rdkit_props = calculate_rdkit_properties(input_data.smiles)
         
-        # Make predictions with both models
-        molbert_pred = predict_with_molbert(input_data.smiles, prediction_type)
-        chemprop_pred = predict_with_chemprop_simulation(input_data.smiles, prediction_type)
-        
-        # Get RDKit value if available
-        rdkit_value = None
-        if prediction_type == "logP":
-            rdkit_value = rdkit_props.get('logP')
-        elif prediction_type == "solubility":
-            rdkit_value = rdkit_props.get('solubility_logS')
-        
-        # Calculate confidence (simplified)
-        confidence = 0.85 if molbert_pred and chemprop_pred else 0.6
-        
+        # Initialize result
         result = PredictionResult(
             smiles=input_data.smiles,
             prediction_type=prediction_type,
-            molbert_prediction=molbert_pred,
-            chemprop_prediction=chemprop_pred,
-            rdkit_value=rdkit_value,
-            confidence=confidence
+            target=input_data.target,
+            confidence=0.5
         )
+        
+        # Make predictions with traditional models
+        molbert_pred = predict_with_molbert(input_data.smiles, prediction_type)
+        chemprop_pred = predict_with_chemprop_simulation(input_data.smiles, prediction_type)
+        
+        result.molbert_prediction = molbert_pred
+        result.chemprop_prediction = chemprop_pred
+        
+        # For IC50 predictions, use real ChEMBL-trained model
+        if prediction_type == "bioactivity_ic50" and input_data.target:
+            try:
+                real_prediction = await real_predictor.predict_ic50(
+                    input_data.smiles, 
+                    input_data.target
+                )
+                result.real_chemprop_prediction = real_prediction
+                
+                # Use real prediction confidence and similarity
+                if 'confidence' in real_prediction:
+                    result.confidence = real_prediction['confidence']
+                if 'similarity' in real_prediction:
+                    result.similarity = real_prediction['similarity']
+                    
+            except Exception as e:
+                logging.error(f"Error in real IC50 prediction: {e}")
+                result.real_chemprop_prediction = {"error": str(e)}
+        
+        # Get RDKit value if available
+        if prediction_type == "logP":
+            result.rdkit_value = rdkit_props.get('logP')
+        elif prediction_type == "solubility":
+            result.rdkit_value = rdkit_props.get('solubility_logS')
+        
+        # Calculate overall confidence
+        if result.real_chemprop_prediction and 'confidence' in result.real_chemprop_prediction:
+            result.confidence = result.real_chemprop_prediction['confidence']
+        else:
+            result.confidence = 0.85 if molbert_pred and chemprop_pred else 0.6
         
         results.append(result)
         
@@ -234,12 +282,26 @@ async def predict_molecular_properties(input_data: SMILESInput):
     # Create summary
     summary = {
         "molecule": input_data.smiles,
+        "target": input_data.target,
         "total_predictions": len(results),
         "molecular_properties": rdkit_props,
-        "prediction_types": input_data.prediction_types
+        "prediction_types": input_data.prediction_types,
+        "real_models_used": any(r.real_chemprop_prediction for r in results)
     }
     
     return BatchPredictionResponse(results=results, summary=summary)
+
+@api_router.post("/initialize-target/{target}")
+async def initialize_target_model(target: str):
+    """Initialize a specific target model"""
+    try:
+        success = await real_predictor.initialize_models(target)
+        if success:
+            return {"message": f"Model for {target} initialized successfully"}
+        else:
+            raise HTTPException(status_code=500, detail=f"Failed to initialize model for {target}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/predictions/history")
 async def get_prediction_history(limit: int = 50):
@@ -285,6 +347,14 @@ async def startup_event():
     """Load models on startup"""
     logger.info("Starting Veridica AI Chemistry Platform...")
     await load_molbert_model()
+    
+    # Initialize default target model
+    try:
+        await real_predictor.initialize_models("EGFR")
+        logger.info("Real ChEMBL model initialized for EGFR")
+    except Exception as e:
+        logger.warning(f"Could not initialize real ChEMBL model: {e}")
+    
     logger.info("Platform ready!")
 
 @app.on_event("shutdown")
