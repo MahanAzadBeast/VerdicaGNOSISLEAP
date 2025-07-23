@@ -279,3 +279,5 @@ test_plan:
 agent_communication:
     - agent: "testing"
       message: "Comprehensive backend testing completed successfully. All 19 test cases passing with 100% success rate. Fixed 2 critical issues: 1) Switched from non-existent MolBERT model to working ChemBERTa model, 2) Fixed MongoDB ObjectId serialization. Platform ready for production use."
+    - agent: "testing"
+      message: "Enhanced predictive chemistry platform testing completed with 100% success rate (26/26 tests passed). All review requirements verified: 1) Health check with enhanced_predictions: true, 2) Target information endpoint with 6 targets, 3) Enhanced IC50 predictions with aspirin/BRAF showing target_specific: true and Enhanced RDKit-based model, 4) Multi-target comparison showing different predictions for EGFR vs BRAF, 5) Enhanced model validation with proper confidence (0.4-0.95) and similarity scoring, 6) Target-specific logic verified with different IC50 values per target, 7) All 4 prediction types working together with enhanced models. Platform fully operational with target-specific IC50 predictions."
