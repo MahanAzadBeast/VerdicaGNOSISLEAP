@@ -243,6 +243,10 @@ async def predict_molecular_properties(input_data: SMILESInput):
 async def get_prediction_history(limit: int = 50):
     """Get recent prediction history"""
     predictions = await db.predictions.find().sort("timestamp", -1).limit(limit).to_list(limit)
+    # Convert ObjectId to string for JSON serialization
+    for pred in predictions:
+        if '_id' in pred:
+            pred['_id'] = str(pred['_id'])
     return predictions
 
 @api_router.get("/predictions/{prediction_id}")
