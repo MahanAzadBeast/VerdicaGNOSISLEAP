@@ -55,7 +55,7 @@
 }
 
 .results-section tr:hover {
-  @apply bg-gradient-to-r from-blue-25 to-purple-25;
+  @apply bg-gradient-to-r from-blue-50 to-purple-50;
 }
 
 /* Loading animation */
