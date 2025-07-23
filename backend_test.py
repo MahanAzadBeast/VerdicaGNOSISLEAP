@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend Testing for Upgraded Predictive Chemistry Platform
-Tests real ChEMBL integration, IC50 predictions, and target-specific models
+Enhanced Predictive Chemistry Platform Backend Testing
+Tests target-specific IC50 predictions and enhanced model validation
 """
 
 import requests
@@ -19,7 +19,7 @@ load_dotenv('/app/frontend/.env')
 BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'http://localhost:8001')
 API_BASE = f"{BACKEND_URL}/api"
 
-class ChemistryPlatformTester:
+class EnhancedChemistryPlatformTester:
     def __init__(self):
         self.test_results = []
         self.failed_tests = []
@@ -40,31 +40,37 @@ class ChemistryPlatformTester:
         if details:
             print(f"   Details: {details}")
     
-    def test_health_endpoint_real_chembl(self):
-        """Test the /api/health endpoint for real ChEMBL integration"""
-        print("\n=== Testing Health Check with Real ChEMBL Models ===")
+    def test_health_endpoint_enhanced(self):
+        """Test the /api/health endpoint for enhanced predictions"""
+        print("\n=== Testing Health Check with Enhanced Predictions ===")
         try:
             response = requests.get(f"{API_BASE}/health", timeout=30)
             
             if response.status_code == 200:
                 data = response.json()
                 
-                # Check required fields for ChEMBL integration
-                required_fields = ['status', 'models_loaded', 'available_predictions', 'available_targets', 'real_chemprop_ready']
+                # Check required fields for enhanced predictions
+                required_fields = ['status', 'models_loaded', 'available_predictions', 'available_targets', 'enhanced_predictions']
                 missing_fields = [field for field in required_fields if field not in data]
                 
                 if missing_fields:
                     self.log_test("Health endpoint structure", False, f"Missing fields: {missing_fields}")
                     return False
                 
-                # Check ChEMBL-specific fields
+                # Check enhanced predictions availability
+                enhanced_predictions = data.get('enhanced_predictions', False)
                 available_targets = data.get('available_targets', [])
-                expected_targets = ['EGFR', 'BRAF', 'CDK2']
-                real_chemprop_ready = data.get('real_chemprop_ready', False)
+                expected_targets = ['EGFR', 'BRAF', 'CDK2', 'PARP1', 'BCL2', 'VEGFR2']
                 
                 self.log_test("Health endpoint response", True, f"Status: {data['status']}")
-                self.log_test("Real ChEMBL ready", real_chemprop_ready, f"ChEMBL integration: {real_chemprop_ready}")
-                self.log_test("Available targets", len(available_targets) > 0, f"Targets: {available_targets}")
+                self.log_test("Enhanced predictions available", enhanced_predictions, f"Enhanced predictions: {enhanced_predictions}")
+                self.log_test("Available targets", len(available_targets) >= 3, f"Targets: {available_targets}")
+                
+                # Check prediction types
+                available_predictions = data.get('available_predictions', [])
+                expected_predictions = ['bioactivity_ic50', 'toxicity', 'logP', 'solubility']
+                has_all_predictions = all(pred in available_predictions for pred in expected_predictions)
+                self.log_test("All prediction types available", has_all_predictions, f"Predictions: {available_predictions}")
                 
                 return True
             else:
@@ -94,12 +100,18 @@ class ChemistryPlatformTester:
                 
                 # Check target structure
                 for target in targets:
-                    required_fields = ['target', 'available', 'training_size']
+                    required_fields = ['target', 'available', 'description', 'model_type']
                     missing_fields = [field for field in required_fields if field not in target]
                     
                     if missing_fields:
                         self.log_test(f"Target {target.get('target', 'unknown')} structure", False, 
                                     f"Missing fields: {missing_fields}")
+                        return False
+                    
+                    # Check model type
+                    if target.get('model_type') != 'Enhanced RDKit-based':
+                        self.log_test(f"Target {target.get('target')} model type", False, 
+                                    f"Expected 'Enhanced RDKit-based', got '{target.get('model_type')}'")
                         return False
                 
                 target_names = [t['target'] for t in targets]
@@ -114,13 +126,13 @@ class ChemistryPlatformTester:
             self.log_test("Targets endpoint", False, f"Request error: {str(e)}")
             return False
     
-    def test_real_ic50_predictions(self):
-        """Test real IC50 predictions with ChEMBL data"""
-        print("\n=== Testing Real IC50 Predictions ===")
+    def test_enhanced_ic50_predictions(self):
+        """Test enhanced IC50 predictions with aspirin and BRAF target"""
+        print("\n=== Testing Enhanced IC50 Predictions ===")
         
-        # Test with ethanol as specified in the review request
-        test_smiles = "CCO"  # ethanol
-        test_target = "EGFR"
+        # Test with aspirin as specified in the review request
+        test_smiles = "CC(=O)OC1=CC=CC=C1C(=O)O"  # aspirin
+        test_target = "BRAF"
         
         try:
             payload = {
@@ -132,98 +144,78 @@ class ChemistryPlatformTester:
             response = requests.post(f"{API_BASE}/predict", 
                                    json=payload, 
                                    headers={'Content-Type': 'application/json'},
-                                   timeout=120)  # Longer timeout for real predictions
+                                   timeout=60)
             
             if response.status_code == 200:
                 data = response.json()
                 
                 if 'results' not in data or len(data['results']) == 0:
-                    self.log_test("Real IC50 prediction structure", False, "No results returned")
+                    self.log_test("Enhanced IC50 prediction structure", False, "No results returned")
                     return False
                 
                 result = data['results'][0]
                 
-                # Check for real ChEMBL prediction
-                real_prediction = result.get('real_chemprop_prediction')
-                if not real_prediction:
-                    self.log_test("Real ChEMBL prediction", False, "No real_chemprop_prediction field")
+                # Check for enhanced ChemProp prediction
+                enhanced_prediction = result.get('enhanced_chemprop_prediction')
+                if not enhanced_prediction:
+                    self.log_test("Enhanced ChemProp prediction", False, "No enhanced_chemprop_prediction field")
                     return False
                 
-                # Check required fields in real prediction
-                required_real_fields = ['pic50', 'ic50_nm', 'confidence', 'similarity']
-                missing_real_fields = [field for field in required_real_fields if field not in real_prediction]
+                # Check required fields in enhanced prediction
+                required_enhanced_fields = ['pic50', 'ic50_nm', 'confidence', 'similarity', 'target_specific', 'model_type']
+                missing_enhanced_fields = [field for field in required_enhanced_fields if field not in enhanced_prediction]
                 
-                if missing_real_fields:
-                    self.log_test("Real prediction fields", False, f"Missing: {missing_real_fields}")
+                if missing_enhanced_fields:
+                    self.log_test("Enhanced prediction fields", False, f"Missing: {missing_enhanced_fields}")
                     return False
                 
                 # Validate prediction values
-                pic50 = real_prediction.get('pic50')
-                ic50_nm = real_prediction.get('ic50_nm')
-                confidence = real_prediction.get('confidence')
-                similarity = real_prediction.get('similarity')
+                pic50 = enhanced_prediction.get('pic50')
+                ic50_nm = enhanced_prediction.get('ic50_nm')
+                confidence = enhanced_prediction.get('confidence')
+                similarity = enhanced_prediction.get('similarity')
+                target_specific = enhanced_prediction.get('target_specific')
+                model_type = enhanced_prediction.get('model_type')
                 
                 # Check value ranges
-                valid_pic50 = isinstance(pic50, (int, float)) and 3.0 <= pic50 <= 12.0
+                valid_pic50 = isinstance(pic50, (int, float)) and 4.0 <= pic50 <= 10.0
                 valid_ic50 = isinstance(ic50_nm, (int, float)) and ic50_nm > 0
-                valid_confidence = isinstance(confidence, (int, float)) and 0.0 <= confidence <= 1.0
+                valid_confidence = isinstance(confidence, (int, float)) and 0.4 <= confidence <= 0.95
                 valid_similarity = isinstance(similarity, (int, float)) and 0.0 <= similarity <= 1.0
                 
-                self.log_test("Real IC50 prediction values", 
+                self.log_test("Enhanced IC50 prediction values", 
                             valid_pic50 and valid_ic50 and valid_confidence and valid_similarity,
                             f"pIC50: {pic50}, IC50: {ic50_nm} nM, Confidence: {confidence}, Similarity: {similarity}")
                 
-                # Check for model performance data
-                model_performance = real_prediction.get('model_performance')
-                if model_performance:
-                    self.log_test("Model performance data", True, 
-                                f"R²: {model_performance.get('test_r2')}, RMSE: {model_performance.get('test_rmse')}")
+                # Check target-specific and model type
+                self.log_test("Target-specific prediction", target_specific == True, f"Target specific: {target_specific}")
+                self.log_test("Enhanced model type", model_type == "Enhanced RDKit-based", f"Model type: {model_type}")
+                
+                # Check molecular properties
+                molecular_properties = enhanced_prediction.get('molecular_properties')
+                if molecular_properties:
+                    self.log_test("Molecular properties data", True, 
+                                f"Properties: {list(molecular_properties.keys())}")
                 else:
-                    self.log_test("Model performance data", False, "No model performance metrics")
+                    self.log_test("Molecular properties data", False, "No molecular properties")
                 
                 return True
                 
             else:
-                self.log_test("Real IC50 prediction", False, f"HTTP {response.status_code}: {response.text}")
+                self.log_test("Enhanced IC50 prediction", False, f"HTTP {response.status_code}: {response.text}")
                 return False
                 
         except requests.exceptions.RequestException as e:
-            self.log_test("Real IC50 prediction", False, f"Request error: {str(e)}")
+            self.log_test("Enhanced IC50 prediction", False, f"Request error: {str(e)}")
             return False
     
-    def test_model_initialization(self):
-        """Test the /api/initialize-target/BRAF endpoint"""
-        print("\n=== Testing Model Initialization ===")
+    def test_multi_target_comparison(self):
+        """Test predictions for different targets with same molecule (EGFR vs BRAF)"""
+        print("\n=== Testing Multi-Target Comparison ===")
         
-        target = "BRAF"
-        
-        try:
-            response = requests.post(f"{API_BASE}/initialize-target/{target}", timeout=180)
-            
-            if response.status_code == 200:
-                data = response.json()
-                
-                if 'message' in data:
-                    self.log_test("BRAF model initialization", True, data['message'])
-                    return True
-                else:
-                    self.log_test("BRAF model initialization", False, "No message in response")
-                    return False
-                    
-            else:
-                self.log_test("BRAF model initialization", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-                
-        except requests.exceptions.RequestException as e:
-            self.log_test("BRAF model initialization", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_multi_target_predictions(self):
-        """Test predictions for different targets with same molecule"""
-        print("\n=== Testing Multi-Target Predictions ===")
-        
-        test_smiles = "CCO"  # ethanol
+        test_smiles = "CC(=O)OC1=CC=CC=C1C(=O)O"  # aspirin
         targets = ["EGFR", "BRAF"]
+        predictions = {}
         
         all_passed = True
         
@@ -238,21 +230,22 @@ class ChemistryPlatformTester:
                 response = requests.post(f"{API_BASE}/predict", 
                                        json=payload, 
                                        headers={'Content-Type': 'application/json'},
-                                       timeout=120)
+                                       timeout=60)
                 
                 if response.status_code == 200:
                     data = response.json()
                     
                     if 'results' in data and len(data['results']) > 0:
                         result = data['results'][0]
-                        real_prediction = result.get('real_chemprop_prediction')
+                        enhanced_prediction = result.get('enhanced_chemprop_prediction')
                         
-                        if real_prediction and 'pic50' in real_prediction:
+                        if enhanced_prediction and 'pic50' in enhanced_prediction:
+                            predictions[target] = enhanced_prediction['pic50']
                             self.log_test(f"Multi-target prediction - {target}", True, 
-                                        f"pIC50: {real_prediction['pic50']}")
+                                        f"pIC50: {enhanced_prediction['pic50']}")
                         else:
                             self.log_test(f"Multi-target prediction - {target}", False, 
-                                        "No real prediction data")
+                                        "No enhanced prediction data")
                             all_passed = False
                     else:
                         self.log_test(f"Multi-target prediction - {target}", False, "No results")
@@ -266,75 +259,33 @@ class ChemistryPlatformTester:
                 self.log_test(f"Multi-target prediction - {target}", False, f"Request error: {str(e)}")
                 all_passed = False
         
+        # Check if different targets give different predictions
+        if len(predictions) == 2:
+            egfr_pic50 = predictions.get('EGFR')
+            braf_pic50 = predictions.get('BRAF')
+            
+            if egfr_pic50 and braf_pic50:
+                different_predictions = abs(egfr_pic50 - braf_pic50) > 0.1
+                self.log_test("Target-specific logic verification", different_predictions, 
+                            f"EGFR: {egfr_pic50}, BRAF: {braf_pic50}, Difference: {abs(egfr_pic50 - braf_pic50):.3f}")
+            else:
+                self.log_test("Target-specific logic verification", False, "Missing prediction values")
+                all_passed = False
+        
         return all_passed
     
-    def test_chembl_data_integration(self):
-        """Test ChEMBL data integration verification"""
-        print("\n=== Testing ChEMBL Data Integration ===")
+    def test_all_prediction_types(self):
+        """Test all 4 prediction types working together"""
+        print("\n=== Testing All Prediction Types ===")
         
-        test_smiles = "CCO"  # ethanol
+        test_smiles = "CC(=O)OC1=CC=CC=C1C(=O)O"  # aspirin
+        prediction_types = ["bioactivity_ic50", "toxicity", "logP", "solubility"]
         
         try:
             payload = {
                 "smiles": test_smiles,
-                "prediction_types": ["bioactivity_ic50"],
-                "target": "EGFR"
-            }
-            
-            response = requests.post(f"{API_BASE}/predict", 
-                                   json=payload, 
-                                   headers={'Content-Type': 'application/json'},
-                                   timeout=120)
-            
-            if response.status_code == 200:
-                data = response.json()
-                
-                # Check summary for real models usage
-                summary = data.get('summary', {})
-                real_models_used = summary.get('real_models_used', False)
-                
-                if not real_models_used:
-                    self.log_test("ChEMBL data integration", False, "Real models not used in prediction")
-                    return False
-                
-                # Check result for ChEMBL-specific data
-                result = data['results'][0]
-                real_prediction = result.get('real_chemprop_prediction')
-                
-                if not real_prediction:
-                    self.log_test("ChEMBL data integration", False, "No real ChEMBL prediction")
-                    return False
-                
-                # Check for training size (indicates real data)
-                training_size = real_prediction.get('training_size', 0)
-                if training_size < 50:
-                    self.log_test("ChEMBL training data", False, f"Insufficient training data: {training_size}")
-                    return False
-                
-                self.log_test("ChEMBL data integration", True, 
-                            f"Real models used, training size: {training_size}")
-                return True
-                
-            else:
-                self.log_test("ChEMBL data integration", False, f"HTTP {response.status_code}")
-                return False
-                
-        except requests.exceptions.RequestException as e:
-            self.log_test("ChEMBL data integration", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_error_handling_invalid_targets(self):
-        """Test error handling with invalid targets and SMILES"""
-        print("\n=== Testing Error Handling ===")
-        
-        all_passed = True
-        
-        # Test invalid target
-        try:
-            payload = {
-                "smiles": "CCO",
-                "prediction_types": ["bioactivity_ic50"],
-                "target": "INVALID_TARGET"
+                "prediction_types": prediction_types,
+                "target": "BRAF"
             }
             
             response = requests.post(f"{API_BASE}/predict", 
@@ -342,23 +293,125 @@ class ChemistryPlatformTester:
                                    headers={'Content-Type': 'application/json'},
                                    timeout=60)
             
-            # Should still work but may have error in real_chemprop_prediction
             if response.status_code == 200:
                 data = response.json()
-                result = data['results'][0]
-                real_prediction = result.get('real_chemprop_prediction', {})
                 
-                if 'error' in real_prediction:
-                    self.log_test("Invalid target handling", True, "Error properly handled for invalid target")
-                else:
-                    self.log_test("Invalid target handling", True, "Invalid target handled gracefully")
+                if 'results' not in data or len(data['results']) != 4:
+                    self.log_test("All prediction types", False, f"Expected 4 results, got {len(data.get('results', []))}")
+                    return False
+                
+                results = data['results']
+                prediction_success = {}
+                
+                for result in results:
+                    pred_type = result.get('prediction_type')
+                    
+                    # Check basic fields
+                    has_basic_fields = all(field in result for field in ['smiles', 'prediction_type', 'confidence'])
+                    
+                    # Check model predictions
+                    has_molbert = result.get('molbert_prediction') is not None
+                    has_chemprop = result.get('chemprop_prediction') is not None
+                    
+                    # For IC50, check enhanced prediction
+                    if pred_type == "bioactivity_ic50":
+                        has_enhanced = result.get('enhanced_chemprop_prediction') is not None
+                        prediction_success[pred_type] = has_basic_fields and has_molbert and has_chemprop and has_enhanced
+                    else:
+                        prediction_success[pred_type] = has_basic_fields and has_molbert and has_chemprop
+                    
+                    self.log_test(f"Prediction type - {pred_type}", prediction_success[pred_type], 
+                                f"MolBERT: {has_molbert}, ChemProp: {has_chemprop}")
+                
+                # Check summary
+                summary = data.get('summary', {})
+                enhanced_models_used = summary.get('enhanced_models_used', False)
+                self.log_test("Enhanced models used in summary", enhanced_models_used, f"Enhanced models: {enhanced_models_used}")
+                
+                all_types_working = all(prediction_success.values())
+                self.log_test("All prediction types working", all_types_working, 
+                            f"Success: {sum(prediction_success.values())}/4")
+                
+                return all_types_working
+                
             else:
-                self.log_test("Invalid target handling", False, f"HTTP {response.status_code}")
-                all_passed = False
+                self.log_test("All prediction types", False, f"HTTP {response.status_code}: {response.text}")
+                return False
                 
         except requests.exceptions.RequestException as e:
-            self.log_test("Invalid target handling", False, f"Request error: {str(e)}")
-            all_passed = False
+            self.log_test("All prediction types", False, f"Request error: {str(e)}")
+            return False
+    
+    def test_confidence_and_similarity_ranges(self):
+        """Test that confidence scores are reasonable (0.4-0.95) and similarity is calculated"""
+        print("\n=== Testing Confidence and Similarity Ranges ===")
+        
+        test_molecules = [
+            ("CC(=O)OC1=CC=CC=C1C(=O)O", "aspirin"),
+            ("CCO", "ethanol"),
+            ("CN1C=NC2=C1C(=O)N(C(=O)N2C)C", "caffeine")
+        ]
+        
+        all_passed = True
+        
+        for smiles, name in test_molecules:
+            try:
+                payload = {
+                    "smiles": smiles,
+                    "prediction_types": ["bioactivity_ic50"],
+                    "target": "EGFR"
+                }
+                
+                response = requests.post(f"{API_BASE}/predict", 
+                                       json=payload, 
+                                       headers={'Content-Type': 'application/json'},
+                                       timeout=60)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    
+                    if 'results' in data and len(data['results']) > 0:
+                        result = data['results'][0]
+                        enhanced_prediction = result.get('enhanced_chemprop_prediction')
+                        
+                        if enhanced_prediction:
+                            confidence = enhanced_prediction.get('confidence')
+                            similarity = enhanced_prediction.get('similarity')
+                            
+                            # Check confidence range (0.4-0.95)
+                            valid_confidence = isinstance(confidence, (int, float)) and 0.4 <= confidence <= 0.95
+                            
+                            # Check similarity range (0.0-1.0)
+                            valid_similarity = isinstance(similarity, (int, float)) and 0.0 <= similarity <= 1.0
+                            
+                            self.log_test(f"Confidence range - {name}", valid_confidence, 
+                                        f"Confidence: {confidence} (valid: {valid_confidence})")
+                            self.log_test(f"Similarity calculation - {name}", valid_similarity, 
+                                        f"Similarity: {similarity} (valid: {valid_similarity})")
+                            
+                            if not (valid_confidence and valid_similarity):
+                                all_passed = False
+                        else:
+                            self.log_test(f"Enhanced prediction - {name}", False, "No enhanced prediction")
+                            all_passed = False
+                    else:
+                        self.log_test(f"Prediction result - {name}", False, "No results")
+                        all_passed = False
+                else:
+                    self.log_test(f"Prediction request - {name}", False, f"HTTP {response.status_code}")
+                    all_passed = False
+                    
+            except requests.exceptions.RequestException as e:
+                self.log_test(f"Prediction request - {name}", False, f"Request error: {str(e)}")
+                all_passed = False
+        
+        return all_passed
+    
+    def test_error_handling(self):
+        """Test error handling with invalid SMILES"""
+        print("\n=== Testing Error Handling ===")
+        
+        all_passed = True
         
         # Test invalid SMILES
         try:
@@ -383,17 +436,10 @@ class ChemistryPlatformTester:
             self.log_test("Invalid SMILES handling", False, f"Request error: {str(e)}")
             all_passed = False
         
-        return all_passed
-    
-    def test_response_validation_chembl(self):
-        """Test response validation for ChEMBL integration"""
-        print("\n=== Testing Response Validation for ChEMBL ===")
-        
-        test_smiles = "CCO"  # ethanol
-        
+        # Test empty SMILES
         try:
             payload = {
-                "smiles": test_smiles,
+                "smiles": "",
                 "prediction_types": ["bioactivity_ic50"],
                 "target": "EGFR"
             }
@@ -401,75 +447,35 @@ class ChemistryPlatformTester:
             response = requests.post(f"{API_BASE}/predict", 
                                    json=payload, 
                                    headers={'Content-Type': 'application/json'},
-                                   timeout=120)
+                                   timeout=30)
             
-            if response.status_code == 200:
-                data = response.json()
-                
-                # Check top-level structure
-                required_top_level = ['results', 'summary']
-                missing_top = [field for field in required_top_level if field not in data]
-                
-                if missing_top:
-                    self.log_test("Response validation - top level", False, f"Missing: {missing_top}")
-                    return False
-                
-                # Check results structure for ChEMBL fields
-                results = data.get('results', [])
-                if len(results) > 0:
-                    result = results[0]
-                    
-                    # Check for real_chemprop_prediction
-                    real_prediction = result.get('real_chemprop_prediction')
-                    if not real_prediction:
-                        self.log_test("Response validation - real prediction", False, "Missing real_chemprop_prediction")
-                        return False
-                    
-                    # Check real prediction structure
-                    required_real_fields = ['pic50', 'ic50_nm', 'confidence', 'similarity']
-                    missing_real = [field for field in required_real_fields if field not in real_prediction]
-                    
-                    if missing_real:
-                        self.log_test("Response validation - real fields", False, f"Missing: {missing_real}")
-                        return False
-                    
-                    # Check summary for ChEMBL-specific fields
-                    summary = data.get('summary', {})
-                    required_summary = ['molecule', 'target', 'total_predictions', 'real_models_used']
-                    missing_summary = [field for field in required_summary if field not in summary]
-                    
-                    if missing_summary:
-                        self.log_test("Response validation - summary", False, f"Missing: {missing_summary}")
-                        return False
-                    
-                    self.log_test("Response validation for ChEMBL", True, "All required ChEMBL fields present")
-                    return True
-                else:
-                    self.log_test("Response validation", False, "No results in response")
-                    return False
+            if response.status_code == 400:
+                self.log_test("Empty SMILES handling", True, "Empty SMILES properly rejected")
             else:
-                self.log_test("Response validation", False, f"HTTP {response.status_code}: {response.text}")
-                return False
+                self.log_test("Empty SMILES handling", False, f"Should return 400, got {response.status_code}")
+                all_passed = False
                 
         except requests.exceptions.RequestException as e:
-            self.log_test("Response validation", False, f"Request error: {str(e)}")
-            return False
+            self.log_test("Empty SMILES handling", False, f"Request error: {str(e)}")
+            all_passed = False
+        
+        return all_passed
     
     def run_all_tests(self):
         """Run all tests and provide summary"""
-        print(f"🧪 Starting Comprehensive Backend Testing")
+        print(f"🧪 Starting Enhanced Chemistry Platform Backend Testing")
         print(f"Backend URL: {API_BASE}")
         print("=" * 60)
         
         # Run all tests
         tests = [
-            self.test_health_endpoint,
-            self.test_smiles_validation,
-            self.test_prediction_types,
-            self.test_error_handling,
-            self.test_model_integration,
-            self.test_database_storage,
-            self.test_response_format
+            self.test_health_endpoint_enhanced,
+            self.test_targets_endpoint,
+            self.test_enhanced_ic50_predictions,
+            self.test_multi_target_comparison,
+            self.test_all_prediction_types,
+            self.test_confidence_and_similarity_ranges,
+            self.test_error_handling
         ]
         
         for test in tests:
@@ -506,7 +512,7 @@ class ChemistryPlatformTester:
         return passed_tests, failed_tests, self.test_results
 
 if __name__ == "__main__":
-    tester = ChemistryPlatformTester()
+    tester = EnhancedChemistryPlatformTester()
     passed, failed, results = tester.run_all_tests()
     
     # Exit with appropriate code
