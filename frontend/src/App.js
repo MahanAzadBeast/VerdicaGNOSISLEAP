@@ -64,28 +64,22 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
 // Home Tab Component
 const HomeTab = ({ setActiveTab }) => {
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gray-900 text-white relative">
       {/* Hero Section with Spline Background */}
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Spline 3D Background */}
-        <div className="absolute inset-0 w-full h-full">
-          <iframe 
-            src='https://prod.spline.design/H7NLYib8mgHt7MGT/scene.splinecode' 
-            frameBorder='0' 
-            width='100%' 
-            height='100%'
-            className="w-full h-full object-cover"
-            title="Spline 3D Scene"
-          ></iframe>
+        <div className="absolute inset-0 w-full h-full z-0">
+          <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.28/build/spline-viewer.js"></script>
+          <spline-viewer url="https://prod.spline.design/H7NLYib8mgHt7MGT/scene.splinecode" className="w-full h-full"></spline-viewer>
         </div>
         
         {/* Overlay Content */}
-        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-          <div className="bg-black/20 backdrop-blur-sm rounded-3xl p-12 border border-white/10">
-            <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-6 leading-tight">
+        <div className="relative z-20 text-center px-4 max-w-5xl mx-auto">
+          <div className="p-12">
+            <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-6 leading-tight drop-shadow-2xl">
               Advanced Molecular Prediction
             </h1>
-            <p className="text-2xl text-gray-200 max-w-4xl mx-auto mb-10 leading-relaxed">
+            <p className="text-2xl text-white max-w-4xl mx-auto mb-10 leading-relaxed drop-shadow-lg">
               Harness the power of AI to predict molecular properties, bioactivity, and toxicity 
               with unprecedented accuracy using state-of-the-art ChemBERTa and Chemprop models.
             </p>
