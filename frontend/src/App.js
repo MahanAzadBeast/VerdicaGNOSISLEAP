@@ -86,17 +86,35 @@ const HomeTab = ({ setActiveTab }) => {
     <div className="min-h-screen bg-gray-900 text-white relative">
       {/* Hero Section with Spline Background */}
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Spline 3D Background - Not stretched */}
-        <div className="absolute inset-0 w-full h-full z-0">
-          <div className="w-full h-full flex items-center justify-center">
-            <spline-viewer 
-              url="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
-              style={{ 
-                width: '100%', 
-                height: '100%',
-                objectFit: 'contain'
+        {/* Spline 3D Background - Enlarged but cropped to smaller area */}
+        <div className="absolute inset-0 w-full h-full z-0 flex items-center justify-center">
+          {/* Smaller container for the embedded area */}
+          <div 
+            className="relative overflow-hidden rounded-xl"
+            style={{ 
+              width: '80%', 
+              height: '70%',
+              maxWidth: '1200px',
+              maxHeight: '600px'
+            }}
+          >
+            {/* Enlarged Spline content */}
+            <div
+              style={{
+                transform: 'scale(1.8)',
+                transformOrigin: 'center center',
+                width: '100%',
+                height: '100%'
               }}
-            />
+            >
+              <spline-viewer 
+                url="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
+                style={{ 
+                  width: '100%', 
+                  height: '100%'
+                }}
+              />
+            </div>
           </div>
           
           {/* Fallback gradient background in case Spline doesn't load */}
