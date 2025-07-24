@@ -1,12 +1,11 @@
 """
 ChEMBL Data Manager for Real IC50 Prediction
-Handles downloading, processing, and caching ChEMBL bioactivity data
+Handles downloading, processing, and caching ChEMBL bioactivity data using REST API
 """
 
 import os
 import pandas as pd
-import sqlite3
-from chembl_webresource_client.new_client import new_client
+import requests
 from rdkit import Chem
 from rdkit.Chem import AllChem, DataStructs
 import numpy as np
@@ -16,22 +15,21 @@ from typing import Dict, List, Tuple, Optional
 from pathlib import Path
 import asyncio
 import aiofiles
+import json
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class ChEMBLDataManager:
-    """Manages ChEMBL data download, processing, and caching"""
+    """Manages ChEMBL data download, processing, and caching using REST API"""
     
     def __init__(self, cache_dir: str = "/app/backend/data"):
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(exist_ok=True)
         
-        # ChEMBL client setup
-        self.activity = new_client.activity
-        self.molecule = new_client.molecule
-        self.target = new_client.target
+        # ChEMBL API base URL
+        self.api_base = "https://www.ebi.ac.uk/chembl/api/data"
         
         # Target mappings for common proteins
         self.target_mappings = {
