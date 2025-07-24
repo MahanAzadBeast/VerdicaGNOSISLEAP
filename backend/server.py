@@ -471,24 +471,18 @@ logger = logging.getLogger(__name__)
 
 # Import real GNN predictor
 try:
-    from enhanced_gnn_predictor import enhanced_gnn_predictor
-    real_predictor = enhanced_gnn_predictor
-    logger.info("🧠 Enhanced GNN predictor initialized")
+    from simple_gnn_predictor import simple_gnn_predictor
+    real_predictor = simple_gnn_predictor
+    logger.info("🧠 Simple GNN predictor initialized (cost-effective choice)")
 except Exception as e:
-    logger.warning(f"Could not initialize Enhanced GNN predictor: {e}")
-    # Fallback to Simple GNN predictor
+    logger.warning(f"Could not initialize Simple GNN predictor: {e}")
+    # Fallback to Random Forest predictor
     try:
-        from simple_gnn_predictor import simple_gnn_predictor
-        real_predictor = simple_gnn_predictor
-        logger.info("🧠 Simple GNN predictor loaded as fallback")
+        from real_chemprop_predictor import real_predictor
+        logger.info("🌳 Random Forest predictor loaded as fallback")
     except Exception as e2:
-        # Fallback to Random Forest predictor
-        try:
-            from real_chemprop_predictor import real_predictor
-            logger.info("🌳 Random Forest predictor loaded as fallback")
-        except Exception as e3:
-            logger.warning(f"Could not initialize any real predictor: {e3}")
-            real_predictor = None
+        logger.warning(f"Could not initialize any real predictor: {e2}")
+        real_predictor = None
 
 @app.on_event("startup")
 async def startup_event():
