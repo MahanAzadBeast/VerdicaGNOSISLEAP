@@ -18,7 +18,41 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
     <nav className="bg-gray-900 border-b border-gray-700">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-
+          {/* Logo */}
+          <div className="flex items-center">
+            <svg
+              width="120"
+              height="32"
+              viewBox="0 0 120 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-auto"
+            >
+              {/* Background */}
+              <rect width="120" height="32" rx="6" fill="url(#gradient)" />
+              
+              {/* Logo Text */}
+              <text
+                x="60"
+                y="20"
+                textAnchor="middle"
+                fontSize="14"
+                fontWeight="600"
+                fill="white"
+                fontFamily="system-ui, -apple-system, sans-serif"
+              >
+                Veridica AI
+              </text>
+              
+              {/* Gradient Definition */}
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#8b5cf6" />
+                  <stop offset="100%" stopColor="#06b6d4" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
 
           {/* Navigation Tabs */}
           <div className="flex space-x-1">
