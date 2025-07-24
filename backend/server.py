@@ -305,6 +305,8 @@ async def health_check():
             if is_loaded:
                 real_models_available = True
     
+    model_type = "real_ml" if real_models_available else "heuristic"
+    
     return {
         "status": "healthy",
         "models_loaded": {
@@ -316,7 +318,7 @@ async def health_check():
         "enhanced_predictions": True,  # Enhanced IC50 models available
         "available_targets": available_targets,
         "prediction_types": prediction_types,
-        "model_type": "real_ml" if real_models_available else "heuristic"
+        "model_type": model_type
     }
 
 @api_router.get("/targets", response_model=List[TargetInfo])
