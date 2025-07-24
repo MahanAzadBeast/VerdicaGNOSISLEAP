@@ -67,26 +67,34 @@ const HomeTab = ({ setActiveTab }) => {
     setActiveTab('predict');
   };
 
+  React.useEffect(() => {
+    // Load Spline viewer script
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = 'https://unpkg.com/@splinetool/viewer@1.9.28/build/spline-viewer.js';
+    document.head.appendChild(script);
+
+    return () => {
+      // Cleanup
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-900 text-white relative">
       {/* Hero Section with Spline Background */}
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Spline 3D Background with fallback */}
+        {/* Spline 3D Background */}
         <div className="absolute inset-0 w-full h-full z-0">
-          {/* Try iframe first */}
-          <iframe 
-            src="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
-            frameBorder="0"
-            width="100%"
-            height="100%"
-            className="w-full h-full"
-            title="Spline 3D Animation"
-            allow="autoplay; fullscreen"
-            style={{ border: 'none' }}
+          <spline-viewer 
+            url="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
+            style={{ width: '100%', height: '100%' }}
           />
           
-          {/* Fallback gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-gray-900 to-cyan-900/20 -z-10"></div>
+          {/* Fallback gradient background in case Spline doesn't load */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-gray-900 to-cyan-900/30 -z-10"></div>
         </div>
         
         {/* Clickable overlay for middle area */}
@@ -97,8 +105,8 @@ const HomeTab = ({ setActiveTab }) => {
         >
           {/* Center content area */}
           <div className="text-center">
-            <div className="w-80 h-80 rounded-full hover:bg-white/5 transition-all duration-300 flex items-center justify-center border-2 border-white/10 hover:border-white/20">
-              <div className="text-white/70 hover:text-white/90 transition-all text-lg font-medium">
+            <div className="w-80 h-80 rounded-full hover:bg-white/10 transition-all duration-500 flex items-center justify-center border border-white/20 hover:border-white/40 backdrop-blur-sm">
+              <div className="text-white/80 hover:text-white transition-all text-xl font-medium">
                 Click to Start Prediction
               </div>
             </div>
