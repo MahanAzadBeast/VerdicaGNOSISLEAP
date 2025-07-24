@@ -13,12 +13,8 @@ import tempfile
 import csv
 import joblib
 from rdkit import Chem
-from chemprop.data import MoleculeDataset
-from chemprop.features import get_features_generator
-from chemprop.models import MoleculeModel
-from chemprop.train import train
+from chemprop.train import cross_validate, train
 from chemprop.args import TrainArgs, PredictArgs
-from chemprop.utils import get_loss_func, get_metric_func
 from chembl_data_manager import chembl_manager
 
 logger = logging.getLogger(__name__)
