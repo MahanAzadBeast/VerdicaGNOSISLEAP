@@ -71,14 +71,14 @@ const HomeTab = ({ setActiveTab }) => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Spline Banner Section - Increased height to eliminate cropping completely */}
-      <div className="relative w-full h-[720px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
+      {/* Spline Banner Section - Increased height and adjusted positioning to fix cropping */}
+      <div className="relative w-full h-[800px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
         <main className="w-full h-full flex items-center justify-center">
           <div 
             style={{
-              width: '115%',
-              height: '115%',
-              transform: 'scale(0.88) translateY(-32%)',
+              width: '120%',
+              height: '120%',
+              transform: 'scale(0.95) translateY(-20%)',
               transformOrigin: 'center center'
             }}
             className="flex items-center justify-center"
@@ -100,13 +100,10 @@ const HomeTab = ({ setActiveTab }) => {
           onClick={handleSplineClick}
           title="Click to start prediction"
         />
-      </div>
-
-      {/* Optimized spacing for feature boxes */}
-      <div className="max-w-6xl mx-auto px-4 py-3">
-
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        
+        {/* Overlayed Feature Boxes - positioned over the Spline animation */}
+        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-full max-w-6xl px-4 z-20">
+          <div className="grid md:grid-cols-3 gap-8">
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-purple-500 transition-all">
             <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center mb-4">
               <div className="w-6 h-6 bg-purple-400 rounded"></div>
