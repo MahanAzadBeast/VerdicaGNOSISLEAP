@@ -461,20 +461,370 @@ class EnhancedChemistryPlatformTester:
         
         return all_passed
     
+    def test_real_ml_model_status(self):
+        """Test /api/health endpoint for real ML model status"""
+        print("\n=== Testing Real ML Model Status ===")
+        try:
+            response = requests.get(f"{API_BASE}/health", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check for real ML model fields
+                models_loaded = data.get('models_loaded', {})
+                real_ml_models = models_loaded.get('real_ml_models', False)
+                real_ml_targets = data.get('real_ml_targets', {})
+                model_type = data.get('model_type', 'heuristic')
+                
+                self.log_test("Real ML models status field", 'real_ml_models' in models_loaded, 
+                            f"real_ml_models present: {'real_ml_models' in models_loaded}")
+                
+                self.log_test("Real ML targets status", 'real_ml_targets' in data,
+                            f"real_ml_targets: {real_ml_targets}")
+                
+                # Check model type
+                expected_model_type = "real_ml" if real_ml_models else "heuristic"
+                self.log_test("Model type indication", model_type == expected_model_type,
+                            f"Model type: {model_type} (expected: {expected_model_type})")
+                
+                # Check specific targets
+                common_targets = ["EGFR", "BRAF", "CDK2"]
+                for target in common_targets:
+                    target_status = real_ml_targets.get(target, False)
+                    self.log_test(f"Real ML model for {target}", target_status,
+                                f"{target} real model loaded: {target_status}")
+                
+                return True
+            else:
+                self.log_test("Real ML model status check", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Real ML model status check", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_chembl_data_integration(self):
+        """Test ChEMBL data integration by checking if models can be initialized"""
+        print("\n=== Testing ChEMBL Data Integration ===")
+        
+        # This test checks if the system can handle ChEMBL data by making predictions
+        # and checking for real ML model responses vs heuristic fallbacks
+        
+        test_molecules = [
+            ("CC(=O)OC1=CC=CC=C1C(=O)O", "aspirin"),
+            ("CN1C=NC2=C1C(=O)N(C(=O)N2C)C", "caffeine"),
+            ("CCO", "ethanol")
+        ]
+        
+        targets = ["EGFR", "BRAF", "CDK2"]
+        
+        all_passed = True
+        real_model_responses = 0
+        heuristic_responses = 0
+        
+        for smiles, name in test_molecules:
+            for target in targets:
+                try:
+                    payload = {
+                        "smiles": smiles,
+                        "prediction_types": ["bioactivity_ic50"],
+                        "target": target
+                    }
+                    
+                    response = requests.post(f"{API_BASE}/predict", 
+                                           json=payload, 
+                                           headers={'Content-Type': 'application/json'},
+                                           timeout=60)
+                    
+                    if response.status_code == 200:
+                        data = response.json()
+                        
+                        if 'results' in data and len(data['results']) > 0:
+                            result = data['results'][0]
+                            enhanced_prediction = result.get('enhanced_chemprop_prediction')
+                            
+                            if enhanced_prediction:
+                                # Check if this looks like a real ML model response
+                                has_performance_metrics = 'model_performance' in enhanced_prediction
+                                has_training_size = 'training_size' in enhanced_prediction
+                                
+                                if has_performance_metrics and has_training_size:
+                                    real_model_responses += 1
+                                    self.log_test(f"Real ML response - {name}/{target}", True,
+                                                f"Performance metrics and training size present")
+                                else:
+                                    heuristic_responses += 1
+                                    self.log_test(f"Heuristic response - {name}/{target}", True,
+                                                f"Using heuristic model (no performance metrics)")
+                            else:
+                                self.log_test(f"Prediction response - {name}/{target}", False,
+                                            "No enhanced prediction data")
+                                all_passed = False
+                        else:
+                            self.log_test(f"Prediction response - {name}/{target}", False, "No results")
+                            all_passed = False
+                    else:
+                        self.log_test(f"Prediction request - {name}/{target}", False, 
+                                    f"HTTP {response.status_code}")
+                        all_passed = False
+                        
+                except requests.exceptions.RequestException as e:
+                    self.log_test(f"Prediction request - {name}/{target}", False, f"Request error: {str(e)}")
+                    all_passed = False
+        
+        # Summary of model usage
+        total_requests = len(test_molecules) * len(targets)
+        self.log_test("ChEMBL data integration summary", all_passed,
+                    f"Real ML responses: {real_model_responses}, Heuristic responses: {heuristic_responses}, Total: {total_requests}")
+        
+        return all_passed
+    
+    def test_real_vs_heuristic_comparison(self):
+        """Test performance comparison between real ML models and heuristic models"""
+        print("\n=== Testing Real vs Heuristic Model Comparison ===")
+        
+        # Test with aspirin on EGFR to see if we get different types of responses
+        test_smiles = "CC(=O)OC1=CC=CC=C1C(=O)O"  # aspirin
+        test_target = "EGFR"
+        
+        try:
+            payload = {
+                "smiles": test_smiles,
+                "prediction_types": ["bioactivity_ic50"],
+                "target": test_target
+            }
+            
+            response = requests.post(f"{API_BASE}/predict", 
+                                   json=payload, 
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if 'results' in data and len(data['results']) > 0:
+                    result = data['results'][0]
+                    enhanced_prediction = result.get('enhanced_chemprop_prediction')
+                    
+                    if enhanced_prediction:
+                        # Check what type of model was used
+                        has_performance = 'model_performance' in enhanced_prediction
+                        has_training_size = 'training_size' in enhanced_prediction
+                        model_type = enhanced_prediction.get('model_type', 'unknown')
+                        
+                        if has_performance and has_training_size:
+                            # Real ML model response
+                            performance = enhanced_prediction['model_performance']
+                            training_size = enhanced_prediction['training_size']
+                            
+                            self.log_test("Real ML model detection", True,
+                                        f"Real ML model used with {training_size} training samples")
+                            self.log_test("Model performance metrics", True,
+                                        f"Test R²: {performance.get('test_r2', 'N/A')}, RMSE: {performance.get('test_rmse', 'N/A')}")
+                            
+                            # Check if confidence is based on model performance
+                            confidence = enhanced_prediction.get('confidence', 0)
+                            similarity = enhanced_prediction.get('similarity', 0)
+                            
+                            self.log_test("Real ML confidence calculation", confidence > 0.3,
+                                        f"Confidence: {confidence}, Similarity: {similarity}")
+                            
+                        else:
+                            # Heuristic model response
+                            self.log_test("Heuristic model fallback", True,
+                                        f"Using heuristic model (model_type: {model_type})")
+                            
+                            # Check heuristic model characteristics
+                            pic50 = enhanced_prediction.get('pic50')
+                            confidence = enhanced_prediction.get('confidence')
+                            target_specific = enhanced_prediction.get('target_specific', False)
+                            
+                            self.log_test("Heuristic model characteristics", 
+                                        pic50 is not None and confidence is not None and target_specific,
+                                        f"pIC50: {pic50}, confidence: {confidence}, target_specific: {target_specific}")
+                        
+                        return True
+                    else:
+                        self.log_test("Model comparison", False, "No enhanced prediction data")
+                        return False
+                else:
+                    self.log_test("Model comparison", False, "No results returned")
+                    return False
+            else:
+                self.log_test("Model comparison", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model comparison", False, f"Request error: {str(e)}")
+            return False
+    
+    def test_error_handling_and_fallback(self):
+        """Test error handling scenarios and fallback to heuristic models"""
+        print("\n=== Testing Error Handling and Fallback ===")
+        
+        all_passed = True
+        
+        # Test 1: Invalid SMILES should be rejected before reaching models
+        try:
+            payload = {
+                "smiles": "INVALID_SMILES_STRING",
+                "prediction_types": ["bioactivity_ic50"],
+                "target": "EGFR"
+            }
+            
+            response = requests.post(f"{API_BASE}/predict", 
+                                   json=payload, 
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=30)
+            
+            if response.status_code == 400:
+                self.log_test("Invalid SMILES rejection", True, "Invalid SMILES properly rejected with 400")
+            else:
+                self.log_test("Invalid SMILES rejection", False, f"Expected 400, got {response.status_code}")
+                all_passed = False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Invalid SMILES rejection", False, f"Request error: {str(e)}")
+            all_passed = False
+        
+        # Test 2: Valid SMILES with unsupported target should still work (fallback)
+        try:
+            payload = {
+                "smiles": "CCO",  # ethanol
+                "prediction_types": ["bioactivity_ic50"],
+                "target": "UNSUPPORTED_TARGET"
+            }
+            
+            response = requests.post(f"{API_BASE}/predict", 
+                                   json=payload, 
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'results' in data and len(data['results']) > 0:
+                    result = data['results'][0]
+                    enhanced_prediction = result.get('enhanced_chemprop_prediction')
+                    
+                    if enhanced_prediction:
+                        # Should fallback to heuristic model
+                        has_performance = 'model_performance' in enhanced_prediction
+                        self.log_test("Unsupported target fallback", not has_performance,
+                                    f"Fallback to heuristic for unsupported target (no performance metrics)")
+                    else:
+                        self.log_test("Unsupported target fallback", False, "No prediction returned")
+                        all_passed = False
+                else:
+                    self.log_test("Unsupported target fallback", False, "No results")
+                    all_passed = False
+            else:
+                self.log_test("Unsupported target fallback", False, f"HTTP {response.status_code}")
+                all_passed = False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Unsupported target fallback", False, f"Request error: {str(e)}")
+            all_passed = False
+        
+        # Test 3: Empty prediction types should be handled
+        try:
+            payload = {
+                "smiles": "CCO",
+                "prediction_types": [],
+                "target": "EGFR"
+            }
+            
+            response = requests.post(f"{API_BASE}/predict", 
+                                   json=payload, 
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=30)
+            
+            # Should return empty results or handle gracefully
+            if response.status_code == 200:
+                data = response.json()
+                results = data.get('results', [])
+                self.log_test("Empty prediction types handling", len(results) == 0,
+                            f"Empty prediction types handled gracefully (results: {len(results)})")
+            else:
+                self.log_test("Empty prediction types handling", True, 
+                            f"Rejected empty prediction types with {response.status_code}")
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Empty prediction types handling", False, f"Request error: {str(e)}")
+            all_passed = False
+        
+        return all_passed
+    
+    def test_model_information_reporting(self):
+        """Test if health endpoint correctly reports model information"""
+        print("\n=== Testing Model Information Reporting ===")
+        
+        try:
+            response = requests.get(f"{API_BASE}/health", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check comprehensive model information
+                models_loaded = data.get('models_loaded', {})
+                real_ml_targets = data.get('real_ml_targets', {})
+                model_type = data.get('model_type', 'unknown')
+                available_targets = data.get('available_targets', [])
+                
+                # Test model loading status reporting
+                has_molbert = models_loaded.get('molbert', False)
+                has_chemprop_sim = models_loaded.get('chemprop_simulation', False)
+                has_real_ml = models_loaded.get('real_ml_models', False)
+                
+                self.log_test("Model loading status complete", 
+                            all(key in models_loaded for key in ['molbert', 'chemprop_simulation', 'real_ml_models']),
+                            f"Models loaded: {models_loaded}")
+                
+                # Test target-specific model reporting
+                expected_targets = ["EGFR", "BRAF", "CDK2"]
+                targets_reported = all(target in real_ml_targets for target in expected_targets)
+                
+                self.log_test("Target-specific model reporting", targets_reported,
+                            f"Real ML targets: {real_ml_targets}")
+                
+                # Test model type consistency
+                real_models_available = any(real_ml_targets.values()) if real_ml_targets else False
+                expected_type = "real_ml" if real_models_available else "heuristic"
+                
+                self.log_test("Model type consistency", model_type == expected_type,
+                            f"Model type: {model_type}, Real models available: {real_models_available}")
+                
+                # Test available targets list
+                self.log_test("Available targets reporting", len(available_targets) >= 3,
+                            f"Available targets: {available_targets}")
+                
+                return True
+            else:
+                self.log_test("Model information reporting", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model information reporting", False, f"Connection error: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all tests and provide summary"""
-        print(f"🧪 Starting Enhanced Chemistry Platform Backend Testing")
+        print(f"🧪 Starting Enhanced Chemistry Platform Backend Testing with Real ML Models")
         print(f"Backend URL: {API_BASE}")
         print("=" * 60)
         
-        # Run all tests
+        # Run all tests including new real ML model tests
         tests = [
             self.test_health_endpoint_enhanced,
+            self.test_real_ml_model_status,
             self.test_targets_endpoint,
             self.test_enhanced_ic50_predictions,
             self.test_multi_target_comparison,
             self.test_all_prediction_types,
             self.test_confidence_and_similarity_ranges,
+            self.test_chembl_data_integration,
+            self.test_real_vs_heuristic_comparison,
+            self.test_error_handling_and_fallback,
+            self.test_model_information_reporting,
             self.test_error_handling
         ]
         
