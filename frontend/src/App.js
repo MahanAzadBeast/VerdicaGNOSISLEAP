@@ -71,8 +71,8 @@ const HomeTab = ({ setActiveTab }) => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Spline Banner Section - Moving particles up more to avoid bottom cropping */}
-      <div className="relative w-full h-[580px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
+      {/* Spline Banner Section - Increased height to prevent cropping */}
+      <div className="relative w-full h-[650px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
         <main className="w-full h-full flex items-center justify-center">
           <div 
             style={{
@@ -102,7 +102,8 @@ const HomeTab = ({ setActiveTab }) => {
         />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
+      {/* Reduced padding to bring feature boxes closer */}
+      <div className="max-w-6xl mx-auto px-4 py-6">
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
