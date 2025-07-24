@@ -86,12 +86,20 @@ const HomeTab = ({ setActiveTab }) => {
     <div className="min-h-screen bg-gray-900 text-white relative">
       {/* Hero Section with Spline Background */}
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Spline 3D Background */}
+        {/* Spline 3D Background - Zoomed in and shorter horizontally */}
         <div className="absolute inset-0 w-full h-full z-0">
-          <spline-viewer 
-            url="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
-            style={{ width: '100%', height: '100%' }}
-          />
+          <div 
+            className="w-full h-full flex items-center justify-center"
+            style={{ 
+              transform: 'scale(1.5) scaleX(0.7)', 
+              transformOrigin: 'center center' 
+            }}
+          >
+            <spline-viewer 
+              url="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
+              style={{ width: '100%', height: '100%' }}
+            />
+          </div>
           
           {/* Fallback gradient background in case Spline doesn't load */}
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-gray-900 to-cyan-900/30 -z-10"></div>
@@ -103,9 +111,9 @@ const HomeTab = ({ setActiveTab }) => {
           onClick={handleSplineClick}
           title="Click to start prediction"
         >
-          {/* Center content area */}
+          {/* Center content area - removed blur */}
           <div className="text-center">
-            <div className="w-80 h-80 rounded-full hover:bg-white/10 transition-all duration-500 flex items-center justify-center border border-white/20 hover:border-white/40 backdrop-blur-sm">
+            <div className="w-80 h-80 rounded-full hover:bg-white/10 transition-all duration-500 flex items-center justify-center border border-white/20 hover:border-white/40">
               <div className="text-white/80 hover:text-white transition-all text-xl font-medium">
                 Click to Start Prediction
               </div>
