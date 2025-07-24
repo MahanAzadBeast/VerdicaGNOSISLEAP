@@ -63,6 +63,10 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
 
 // Home Tab Component
 const HomeTab = ({ setActiveTab }) => {
+  const handleSplineClick = () => {
+    setActiveTab('predict');
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white relative">
       {/* Hero Section with Spline Background */}
@@ -70,26 +74,23 @@ const HomeTab = ({ setActiveTab }) => {
         {/* Spline 3D Background */}
         <div className="absolute inset-0 w-full h-full z-0">
           <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.28/build/spline-viewer.js"></script>
-          <spline-viewer url="https://prod.spline.design/H7NLYib8mgHt7MGT/scene.splinecode" className="w-full h-full"></spline-viewer>
+          <spline-viewer 
+            url="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode" 
+            className="w-full h-full cursor-pointer"
+            onClick={handleSplineClick}
+          ></spline-viewer>
         </div>
         
-        {/* Overlay Content */}
-        <div className="relative z-20 text-center px-4 max-w-5xl mx-auto">
-          <div className="p-12">
-            <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-6 leading-tight drop-shadow-2xl">
-              Advanced Molecular Prediction
-            </h1>
-            <p className="text-2xl text-white max-w-4xl mx-auto mb-10 leading-relaxed drop-shadow-lg">
-              Harness the power of AI to predict molecular properties, bioactivity, and toxicity 
-              with unprecedented accuracy using state-of-the-art ChemBERTa and Chemprop models.
-            </p>
-            <button
-              onClick={() => setActiveTab('predict')}
-              className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-10 py-5 rounded-xl text-xl font-semibold transition-all shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105"
-            >
-              Start Predicting
-            </button>
-          </div>
+        {/* Clickable overlay for middle area */}
+        <div 
+          className="absolute inset-0 z-10 flex items-center justify-center cursor-pointer"
+          onClick={handleSplineClick}
+          style={{ 
+            background: 'radial-gradient(circle at center, transparent 30%, transparent 70%)',
+          }}
+        >
+          {/* Invisible clickable area in the middle */}
+          <div className="w-96 h-96 rounded-full hover:bg-white/5 transition-all duration-300"></div>
         </div>
       </div>
 
