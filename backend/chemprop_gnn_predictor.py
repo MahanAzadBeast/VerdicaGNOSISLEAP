@@ -107,9 +107,21 @@ class ChempropGNNPredictor:
             logger.info(f"  📦 Batch size: {train_args.batch_size}")
             logger.info(f"  🔄 Epochs: {train_args.epochs}")
             
-            # Train the model
-            from chemprop.train import train
-            model_scores = train(args=train_args)
+            # Train the model using the correct chemprop API
+            from chemprop.train import train as train_func
+            logger.info("🚀 Starting Chemprop GNN training...")
+            
+            # The train function in Chemprop 1.6.1 should be called differently
+            try:
+                from chemprop.train import chemprop_train
+                model_scores = chemprop_train(train_args)
+            except ImportError:
+                # Fallback to cross_validate which is more reliable
+                from chemprop.train import cross_validate
+                logger.info("Using cross_validate as fallback...")
+                model_scores = cross_validate(train_args, train_func)
+            
+            logger.info(f"🎯 Training completed with scores: {model_scores}")
             
             # Extract performance metrics
             if model_scores:
