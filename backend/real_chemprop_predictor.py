@@ -173,20 +173,22 @@ class RealChempropPredictor:
         return np.array(features), np.array(targets)
     
     async def predict_ic50(self, smiles: str, target: str = "EGFR") -> Dict:
-        """Predict IC50 for a molecule"""
+        """Predict IC50 for a molecule using real trained model"""
         
         # Ensure model is initialized
         if target not in self.models:
+            logger.info(f"🔄 Initializing model for {target}")
             await self.initialize_models(target)
         
         if target not in self.models:
-            logger.error(f"No model available for {target}")
+            logger.error(f"❌ No model available for {target}")
             return {
                 'error': f'No model available for {target}',
                 'pic50': None,
                 'ic50_nm': None,
                 'confidence': 0.0,
-                'similarity': 0.0
+                'similarity': 0.0,
+                'model_type': 'error'
             }
         
         try:
@@ -198,7 +200,8 @@ class RealChempropPredictor:
                     'pic50': None,
                     'ic50_nm': None,
                     'confidence': 0.0,
-                    'similarity': 0.0
+                    'similarity': 0.0,
+                    'model_type': 'error'
                 }
             
             # Calculate features
@@ -209,7 +212,8 @@ class RealChempropPredictor:
                     'pic50': None,
                     'ic50_nm': None,
                     'confidence': 0.0,
-                    'similarity': 0.0
+                    'similarity': 0.0,
+                    'model_type': 'error'
                 }
             
             # Make prediction
@@ -234,18 +238,21 @@ class RealChempropPredictor:
                 'ic50_nm': float(ic50_nm),
                 'confidence': float(confidence),
                 'similarity': float(similarity),
+                'model_type': model_data.get('model_type', 'real_ml_rf'),
+                'target_specific': True,
                 'model_performance': model_data['performance'],
                 'training_size': model_data['training_size']
             }
             
         except Exception as e:
-            logger.error(f"Error predicting IC50: {e}")
+            logger.error(f"❌ Error predicting IC50: {e}")
             return {
                 'error': str(e),
                 'pic50': None,
                 'ic50_nm': None,
                 'confidence': 0.0,
-                'similarity': 0.0
+                'similarity': 0.0,
+                'model_type': 'error'
             }
     
     def _calculate_molecule_features(self, mol) -> Optional[List[float]]:
