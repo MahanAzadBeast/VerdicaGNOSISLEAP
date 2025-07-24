@@ -372,7 +372,7 @@ async def predict_molecular_properties(input_data: SMILESInput):
         if prediction_type == "bioactivity_ic50" and input_data.target:
             try:
                 # Use real GNN model for IC50 prediction
-                logger.info(f"🧠 Using Simple GNN model for {input_data.target} IC50 prediction")
+                logger.info(f"🧠 Using Enhanced GNN model for {input_data.target} IC50 prediction")
                 enhanced_prediction = await real_predictor.predict_ic50_gnn(
                     input_data.smiles, 
                     input_data.target
