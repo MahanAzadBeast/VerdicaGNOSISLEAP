@@ -140,7 +140,7 @@ class RealChempropPredictor:
     
     def _prepare_features(self, data: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
         """Prepare molecular features from SMILES"""
-        from rdkit.Chem import Descriptors, Crippen, Lipinski
+        from rdkit.Chem import Descriptors, Crippen
         
         features = []
         targets = []
@@ -152,7 +152,7 @@ class RealChempropPredictor:
                     # Calculate molecular descriptors
                     desc = [
                         Descriptors.MolWt(mol),
-                        Descriptors.MolLogP(mol), 
+                        Crippen.MolLogP(mol),  # Use Crippen.MolLogP instead of Descriptors.MolLogP
                         Descriptors.NumHDonors(mol),
                         Descriptors.NumHAcceptors(mol),
                         Descriptors.TPSA(mol),
@@ -167,9 +167,10 @@ class RealChempropPredictor:
                     targets.append(row['pic50'])
                     
             except Exception as e:
-                logger.warning(f"Error calculating descriptors: {e}")
+                logger.warning(f"Error calculating descriptors for SMILES {row.get('smiles', 'unknown')}: {e}")
                 continue
         
+        logger.info(f"📊 Features extracted: {len(features)} samples, {len(desc) if features else 0} features each")
         return np.array(features), np.array(targets)
     
     async def predict_ic50(self, smiles: str, target: str = "EGFR") -> Dict:
