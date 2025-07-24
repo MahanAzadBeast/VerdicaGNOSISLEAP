@@ -78,7 +78,7 @@ const HomeTab = ({ setActiveTab }) => {
             style={{
               width: '115%',
               height: '115%',
-              transform: 'scale(0.85) translateY(-30%)',
+              transform: 'scale(0.8) translateY(-22%)',
               transformOrigin: 'center center'
             }}
             className="flex items-center justify-center"
