@@ -263,13 +263,13 @@ class RealChempropPredictor:
             
             features = [
                 Descriptors.MolWt(mol),
-                Crippen.MolLogP(mol),  # Use Crippen.MolLogP instead of Descriptors.MolLogP
+                Crippen.MolLogP(mol),
                 Descriptors.NumHDonors(mol),
                 Descriptors.NumHAcceptors(mol),
                 Descriptors.TPSA(mol),
                 Descriptors.NumRotatableBonds(mol),
                 Descriptors.NumAromaticRings(mol),
-                Descriptors.FractionCsp3(mol),
+                Descriptors.FpDensityMorgan1(mol),  # Alternative to FractionCsp3
                 Descriptors.qed(mol),
                 Descriptors.BertzCT(mol)
             ]
