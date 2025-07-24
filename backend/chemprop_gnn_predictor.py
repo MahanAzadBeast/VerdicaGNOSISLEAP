@@ -259,32 +259,36 @@ class ChempropGNNPredictor:
                 if len(pred_df) > 0:
                     predicted_pic50 = pred_df.iloc[0, 0]  # First prediction
                 
-                # Convert to IC50 in nM
-                ic50_nm = 10 ** (9 - predicted_pic50)
-                
-                # Calculate similarity to training set
-                similarity = chembl_manager.calculate_tanimoto_similarity(
-                    smiles, self.reference_smiles.get(target, [])
-                )
-                
-                # Calculate confidence based on similarity and model performance
-                base_confidence = 0.8  # GNNs typically have high confidence
-                similarity_weight = similarity * 0.7 + 0.3
-                confidence = min(base_confidence * similarity_weight, 1.0)
-                
-                return {
-                    'pic50': float(predicted_pic50),
-                    'ic50_nm': float(ic50_nm),
-                    'confidence': float(confidence),
-                    'similarity': float(similarity),
-                    'model_type': 'chemprop_gnn',
-                    'target_specific': True,
-                    'model_performance': self.models[target]['performance'],
-                    'training_size': self.models[target]['training_size'],
-                    'architecture': 'Graph Neural Network'
-                }
+                    # Convert to IC50 in nM
+                    ic50_nm = 10 ** (9 - predicted_pic50)
+                    
+                    # Calculate similarity to training set
+                    similarity = chembl_manager.calculate_tanimoto_similarity(
+                        smiles, self.reference_smiles.get(target, [])
+                    )
+                    
+                    # Calculate confidence based on similarity and model performance
+                    base_confidence = 0.8  # GNNs typically have high confidence
+                    similarity_weight = similarity * 0.7 + 0.3
+                    confidence = min(base_confidence * similarity_weight, 1.0)
+                    
+                    return {
+                        'pic50': float(predicted_pic50),
+                        'ic50_nm': float(ic50_nm),
+                        'confidence': float(confidence),
+                        'similarity': float(similarity),
+                        'model_type': 'chemprop_gnn',
+                        'target_specific': True,
+                        'model_performance': self.models[target]['performance'],
+                        'training_size': self.models[target]['training_size'],
+                        'architecture': 'Graph Neural Network'
+                    }
+                else:
+                    raise Exception("No predictions in output file")
             else:
-                raise Exception("No predictions returned from GNN model")
+                error_msg = f"Prediction failed: {result.stderr}" if result.stderr else "Prediction command failed"
+                logger.error(f"❌ {error_msg}")
+                raise Exception(error_msg)
             
         except Exception as e:
             logger.error(f"❌ Error in GNN prediction: {e}")
