@@ -71,8 +71,9 @@ const HomeTab = ({ setActiveTab }) => {
     <div className="min-h-screen bg-gray-900 text-white relative">
       {/* Hero Section with Spline Background */}
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Spline 3D Background */}
+        {/* Spline 3D Background with fallback */}
         <div className="absolute inset-0 w-full h-full z-0">
+          {/* Try iframe first */}
           <iframe 
             src="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
             frameBorder="0"
@@ -83,6 +84,9 @@ const HomeTab = ({ setActiveTab }) => {
             allow="autoplay; fullscreen"
             style={{ border: 'none' }}
           />
+          
+          {/* Fallback gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-gray-900 to-cyan-900/20 -z-10"></div>
         </div>
         
         {/* Clickable overlay for middle area */}
@@ -91,10 +95,12 @@ const HomeTab = ({ setActiveTab }) => {
           onClick={handleSplineClick}
           title="Click to start prediction"
         >
-          {/* Invisible clickable area in the middle */}
-          <div className="w-80 h-80 rounded-full hover:bg-white/5 transition-all duration-300 flex items-center justify-center">
-            <div className="text-white/70 hover:text-white/90 transition-all text-lg font-medium">
-              Click to Start Prediction
+          {/* Center content area */}
+          <div className="text-center">
+            <div className="w-80 h-80 rounded-full hover:bg-white/5 transition-all duration-300 flex items-center justify-center border-2 border-white/10 hover:border-white/20">
+              <div className="text-white/70 hover:text-white/90 transition-all text-lg font-medium">
+                Click to Start Prediction
+              </div>
             </div>
           </div>
         </div>
