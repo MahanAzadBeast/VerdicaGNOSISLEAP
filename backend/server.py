@@ -366,33 +366,15 @@ async def predict_molecular_properties(input_data: SMILESInput):
         result.molbert_prediction = molbert_pred
         result.chemprop_prediction = chemprop_pred
         
-        # For IC50 predictions, try real ML model first, fallback to enhanced model
+        # For IC50 predictions, use enhanced heuristic model (skip real ML for now)
         if prediction_type == "bioactivity_ic50" and input_data.target:
             try:
-                # Try real ML model first
-                if real_predictor and hasattr(real_predictor, 'predict_ic50'):
-                    try:
-                        real_prediction = await real_predictor.predict_ic50_async(
-                            input_data.smiles, 
-                            input_data.target
-                        )
-                        result.enhanced_chemprop_prediction = real_prediction
-                        logger.info(f"Using real ML model for {input_data.target} IC50 prediction")
-                    except Exception as real_error:
-                        logger.warning(f"Real ML model failed, falling back to heuristic: {real_error}")
-                        # Fallback to heuristic model
-                        enhanced_prediction = enhanced_ic50_prediction(
-                            input_data.smiles, 
-                            input_data.target
-                        )
-                        result.enhanced_chemprop_prediction = enhanced_prediction
-                else:
-                    # Use heuristic enhanced model
-                    enhanced_prediction = enhanced_ic50_prediction(
-                        input_data.smiles, 
-                        input_data.target
-                    )
-                    result.enhanced_chemprop_prediction = enhanced_prediction
+                # Use heuristic enhanced model (reliable and fast)
+                enhanced_prediction = enhanced_ic50_prediction(
+                    input_data.smiles, 
+                    input_data.target
+                )
+                result.enhanced_chemprop_prediction = enhanced_prediction
                 
                 # Use prediction confidence and similarity
                 if result.enhanced_chemprop_prediction and 'confidence' in result.enhanced_chemprop_prediction:
