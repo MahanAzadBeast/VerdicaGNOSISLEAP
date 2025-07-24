@@ -471,11 +471,11 @@ logger = logging.getLogger(__name__)
 
 # Import real GNN predictor
 try:
-    from chemprop_gnn_predictor import gnn_predictor
-    real_predictor = gnn_predictor
-    logger.info("🧠 Chemprop GNN predictor initialized")
+    from simple_gnn_predictor import simple_gnn_predictor
+    real_predictor = simple_gnn_predictor
+    logger.info("🧠 Simple GNN predictor initialized")
 except Exception as e:
-    logger.warning(f"Could not initialize GNN predictor: {e}")
+    logger.warning(f"Could not initialize Simple GNN predictor: {e}")
     # Fallback to Random Forest predictor
     try:
         from real_chemprop_predictor import real_predictor
