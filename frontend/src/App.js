@@ -103,7 +103,7 @@ const HomeTab = ({ setActiveTab }) => {
       </div>
 
       {/* Feature Boxes - positioned right beneath the Spline animation */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-4">
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-purple-500 transition-all shadow-lg">
             <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center mb-4">
