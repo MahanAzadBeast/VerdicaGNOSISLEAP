@@ -73,20 +73,24 @@ class RealChempropPredictor:
     
     async def _train_model(self, target: str, training_data: pd.DataFrame) -> bool:
         """Train Random Forest model on ChEMBL data"""
-        logger.info(f"Training new model for {target} with {len(training_data)} compounds")
+        logger.info(f"🔬 Training new model for {target} with {len(training_data)} compounds")
         
         try:
             # Calculate molecular descriptors
             X, y = self._prepare_features(training_data)
             
             if len(X) < 50:
-                logger.warning(f"Insufficient training data for {target}")
+                logger.warning(f"❌ Insufficient training data for {target}: {len(X)} samples")
                 return False
+            
+            logger.info(f"📊 Features prepared: {X.shape}, targets: {y.shape}")
             
             # Split data
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=0.2, random_state=42
             )
+            
+            logger.info(f"📈 Train set: {X_train.shape[0]}, Test set: {X_test.shape[0]}")
             
             # Train Random Forest model
             model = RandomForestRegressor(
@@ -96,6 +100,7 @@ class RealChempropPredictor:
                 n_jobs=-1
             )
             
+            logger.info("🌳 Training Random Forest model...")
             model.fit(X_train, y_train)
             
             # Evaluate model
@@ -106,10 +111,10 @@ class RealChempropPredictor:
             test_r2 = r2_score(y_test, test_pred)
             test_rmse = np.sqrt(mean_squared_error(y_test, test_pred))
             
-            logger.info(f"Model performance for {target}:")
-            logger.info(f"  Train R²: {train_r2:.3f}")
-            logger.info(f"  Test R²: {test_r2:.3f}")  
-            logger.info(f"  Test RMSE: {test_rmse:.3f}")
+            logger.info(f"📊 Model performance for {target}:")
+            logger.info(f"  🎯 Train R²: {train_r2:.3f}")
+            logger.info(f"  🎯 Test R²: {test_r2:.3f}")  
+            logger.info(f"  📏 Test RMSE: {test_rmse:.3f}")
             
             # Save model
             self.models[target] = {
@@ -119,17 +124,18 @@ class RealChempropPredictor:
                     'test_r2': test_r2,  
                     'test_rmse': test_rmse
                 },
-                'training_size': len(training_data)
+                'training_size': len(training_data),
+                'model_type': 'real_ml_rf'
             }
             
             model_file = self.model_dir / f"{target}_ic50_model.pkl"
             joblib.dump(self.models[target], model_file)
             
-            logger.info(f"Model saved for {target}")
+            logger.info(f"✅ Model saved for {target}")
             return True
             
         except Exception as e:
-            logger.error(f"Error training model for {target}: {e}")
+            logger.error(f"❌ Error training model for {target}: {e}")
             return False
     
     def _prepare_features(self, data: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
