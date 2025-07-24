@@ -209,31 +209,51 @@ class ChEMBLDataManager:
         cached_data = await self.load_cached_data(self.ic50_cache_file)
         
         if cached_data is not None and len(cached_data) > 100:
-            logger.info("Using cached ChEMBL data")
+            logger.info(f"Using cached ChEMBL data: {len(cached_data)} compounds")
             training_data = cached_data
         else:
-            logger.info("Downloading fresh ChEMBL data")
+            logger.info("Downloading fresh ChEMBL data...")
             training_data = await self.download_ic50_data(target, limit=2000)
         
         # Clean and prepare data
         if len(training_data) > 0:
-            # Remove duplicates and outliers
+            logger.info(f"Raw data: {len(training_data)} compounds")
+            
+            # Remove duplicates by SMILES
             training_data = training_data.drop_duplicates(subset=['smiles'])
+            logger.info(f"After deduplication: {len(training_data)} compounds")
+            
+            # Remove outliers (keep reasonable IC50 range)
             training_data = training_data[
                 (training_data['pic50'] >= 3.0) & 
-                (training_data['pic50'] <= 12.0)
+                (training_data['pic50'] <= 12.0) &
+                (training_data['ic50_nm'] > 0.001) &
+                (training_data['ic50_nm'] < 1000000)  # 1 mM max
             ]
+            logger.info(f"After outlier removal: {len(training_data)} compounds")
+            
+            # Validate SMILES
+            valid_smiles = []
+            for _, row in training_data.iterrows():
+                if self._is_valid_smiles(row['smiles']):
+                    valid_smiles.append(row)
+            
+            training_data = pd.DataFrame(valid_smiles)
+            logger.info(f"After SMILES validation: {len(training_data)} compounds")
             
             # Save processed training data
-            training_data.to_csv(self.training_data_file, index=False)
-            
-            reference_smiles = training_data['smiles'].tolist()
-            
-            logger.info(f"Prepared {len(training_data)} training compounds for {target}")
-            return training_data, reference_smiles
-        else:
-            logger.warning("No training data available")
-            return pd.DataFrame(), []
+            if len(training_data) > 0:
+                training_data.to_csv(self.training_data_file, index=False)
+                reference_smiles = training_data['smiles'].tolist()
+                
+                logger.info(f"✅ Prepared {len(training_data)} training compounds for {target}")
+                logger.info(f"IC50 range: {training_data['ic50_nm'].min():.2f} - {training_data['ic50_nm'].max():.2f} nM")
+                logger.info(f"pIC50 range: {training_data['pic50'].min():.2f} - {training_data['pic50'].max():.2f}")
+                
+                return training_data, reference_smiles
+        
+        logger.warning("No training data available")
+        return pd.DataFrame(), []
     
     def get_available_targets(self) -> List[str]:
         """Get list of available protein targets"""
