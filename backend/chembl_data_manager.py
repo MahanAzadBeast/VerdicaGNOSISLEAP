@@ -48,56 +48,84 @@ class ChEMBLDataManager:
         self.training_data_file = self.cache_dir / "training_data.csv"
         
     async def download_ic50_data(self, target_name: str = "EGFR", limit: int = 1000) -> pd.DataFrame:
-        """Download IC50 data from ChEMBL for specific target"""
+        """Download IC50 data from ChEMBL REST API for specific target"""
         logger.info(f"Downloading IC50 data for {target_name} (limit: {limit})")
         
+        target_id = self.target_mappings.get(target_name, "CHEMBL203")
+        logger.info(f"Using ChEMBL target ID: {target_id}")
+        
+        # Build API URL
+        api_url = f"{self.api_base}/activity.json"
+        params = {
+            "target_chembl_id": target_id,
+            "standard_type": "IC50",
+            "limit": limit,
+            "offset": 0
+        }
+        
+        all_data = []
+        
         try:
-            # Get target ChEMBL ID
-            target_id = self.target_mappings.get(target_name)
-            if not target_id:
-                logger.warning(f"Target {target_name} not found in mappings, using EGFR")
-                target_id = "CHEMBL203"
-            
-            # Query activities
-            activities = self.activity.filter(
-                target_chembl_id=target_id,
-                standard_type="IC50",
-                standard_units="nM",
-                pchembl_value__isnull=False
-            )[:limit]
-            
-            # Convert to DataFrame
-            data = []
-            for activity in activities:
-                try:
-                    # Get molecule SMILES
-                    mol_id = activity.get('molecule_chembl_id')
-                    if mol_id:
-                        mol_data = self.molecule.get(mol_id)
-                        smiles = mol_data.get('molecule_structures', {}).get('canonical_smiles')
+            while len(all_data) < limit:
+                logger.info(f"Fetching batch with offset {params['offset']}")
+                
+                response = requests.get(api_url, params=params, timeout=30)
+                response.raise_for_status()
+                
+                data = response.json()
+                activities = data.get('activities', [])
+                
+                if not activities:
+                    logger.info("No more activities found")
+                    break
+                
+                # Process activities
+                for activity in activities:
+                    try:
+                        canonical_smiles = activity.get('canonical_smiles')
+                        standard_value = activity.get('standard_value')
+                        pchembl_value = activity.get('pchembl_value')
+                        standard_units = activity.get('standard_units')
                         
-                        if smiles and self._is_valid_smiles(smiles):
-                            ic50_value = activity.get('standard_value')
-                            pchembl_value = activity.get('pchembl_value')
+                        # Validate data
+                        if (canonical_smiles and 
+                            standard_value and 
+                            pchembl_value and
+                            standard_units == 'nM' and
+                            self._is_valid_smiles(canonical_smiles)):
                             
-                            if ic50_value and pchembl_value:
-                                data.append({
-                                    'smiles': smiles,
-                                    'ic50_nm': float(ic50_value),
-                                    'pic50': float(pchembl_value),
-                                    'target': target_name,
-                                    'chembl_id': mol_id,
-                                    'assay_id': activity.get('assay_chembl_id')
-                                })
-                except Exception as e:
-                    logger.warning(f"Error processing activity: {e}")
-                    continue
-                    
-            df = pd.DataFrame(data)
+                            all_data.append({
+                                'smiles': canonical_smiles,
+                                'ic50_nm': float(standard_value),
+                                'pic50': float(pchembl_value),
+                                'target': target_name,
+                                'chembl_id': activity.get('molecule_chembl_id'),
+                                'assay_id': activity.get('assay_chembl_id'),
+                                'assay_type': activity.get('assay_type')
+                            })
+                            
+                    except Exception as e:
+                        logger.warning(f"Error processing activity: {e}")
+                        continue
+                
+                # Check if there are more pages
+                page_meta = data.get('page_meta', {})
+                if not page_meta.get('next'):
+                    logger.info("No more pages available")
+                    break
+                
+                # Update offset for next batch
+                params['offset'] += params['limit']
+                
+                # Add small delay to be respectful to the API
+                await asyncio.sleep(0.1)
+            
+            df = pd.DataFrame(all_data)
             logger.info(f"Downloaded {len(df)} IC50 records for {target_name}")
             
             # Save to cache
-            await self._save_cache(df, self.ic50_cache_file)
+            if len(df) > 0:
+                await self._save_cache(df, self.ic50_cache_file)
             
             return df
             
