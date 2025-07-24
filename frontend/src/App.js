@@ -105,7 +105,7 @@ const HomeTab = ({ setActiveTab }) => {
       {/* Feature Boxes - positioned to slightly overlay the Spline animation */}
       <div className="max-w-6xl mx-auto px-4 -mt-12 relative z-10">
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-purple-500 transition-all shadow-lg">
+          <div className="bg-gray-800/95 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-purple-500 transition-all shadow-xl">
             <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center mb-4">
               <div className="w-6 h-6 bg-purple-400 rounded"></div>
             </div>
@@ -114,7 +114,7 @@ const HomeTab = ({ setActiveTab }) => {
               Predict IC50 values for specific protein targets including EGFR, BRAF, CDK2, and more.
             </p>
           </div>
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-cyan-500 transition-all shadow-lg">
+          <div className="bg-gray-800/95 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-cyan-500 transition-all shadow-xl">
             <div className="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center mb-4">
               <div className="w-6 h-6 bg-cyan-400 rounded"></div>
             </div>
@@ -123,7 +123,7 @@ const HomeTab = ({ setActiveTab }) => {
               Compare predictions from ChemBERTa, Chemprop, and enhanced RDKit-based models.
             </p>
           </div>
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-green-500 transition-all shadow-lg">
+          <div className="bg-gray-800/95 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-green-500 transition-all shadow-xl">
             <div className="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center mb-4">
               <div className="w-6 h-6 bg-green-400 rounded"></div>
             </div>
