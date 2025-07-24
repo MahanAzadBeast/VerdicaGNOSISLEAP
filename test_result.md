@@ -276,8 +276,22 @@ test_plan:
   test_all: true
   test_priority: "high_first"
 
+  - task: "Real ML Model Integration"
+    implemented: true
+    working: false
+    file: "/app/backend/real_chemprop_predictor.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented real ChemBERT and Chemprop ML model integration. Added RealChempropPredictor class with async prediction methods, ChEMBL data manager integration, and startup initialization for EGFR, BRAF, CDK2 models. Updated health endpoint to show real model status. Ready for testing."
+
 agent_communication:
     - agent: "testing"
       message: "Comprehensive backend testing completed successfully. All 19 test cases passing with 100% success rate. Fixed 2 critical issues: 1) Switched from non-existent MolBERT model to working ChemBERTa model, 2) Fixed MongoDB ObjectId serialization. Platform ready for production use."
     - agent: "testing"
       message: "Enhanced predictive chemistry platform testing completed with 100% success rate (26/26 tests passed). All review requirements verified: 1) Health check with enhanced_predictions: true, 2) Target information endpoint with 6 targets, 3) Enhanced IC50 predictions with aspirin/BRAF showing target_specific: true and Enhanced RDKit-based model, 4) Multi-target comparison showing different predictions for EGFR vs BRAF, 5) Enhanced model validation with proper confidence (0.4-0.95) and similarity scoring, 6) Target-specific logic verified with different IC50 values per target, 7) All 4 prediction types working together with enhanced models. Platform fully operational with target-specific IC50 predictions."
+    - agent: "main"
+      message: "Implemented real ML model integration with RealChempropPredictor. Added ChEMBL data downloading, model training with RandomForestRegressor, and async prediction methods. Updated server startup to initialize models for EGFR, BRAF, CDK2. Health endpoint now shows real_ml_models status and model_type. Ready for comprehensive testing of real ML functionality."
