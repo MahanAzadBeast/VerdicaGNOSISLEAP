@@ -471,11 +471,11 @@ logger = logging.getLogger(__name__)
 
 # Import real GNN predictor
 try:
-    from true_gnn_predictor import true_gnn_predictor
-    real_predictor = true_gnn_predictor
-    logger.info("🧠 True GNN predictor initialized")
+    from enhanced_gnn_predictor import enhanced_gnn_predictor
+    real_predictor = enhanced_gnn_predictor
+    logger.info("🧠 Enhanced GNN predictor initialized")
 except Exception as e:
-    logger.warning(f"Could not initialize True GNN predictor: {e}")
+    logger.warning(f"Could not initialize Enhanced GNN predictor: {e}")
     # Fallback to Simple GNN predictor
     try:
         from simple_gnn_predictor import simple_gnn_predictor
