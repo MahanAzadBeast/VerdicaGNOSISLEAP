@@ -71,14 +71,14 @@ const HomeTab = ({ setActiveTab }) => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Spline Banner Section - Moving particles up more to prevent any cropping */}
-      <div className="relative w-full h-[650px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
+      {/* Spline Banner Section - Fine-tuned for perfect positioning */}
+      <div className="relative w-full h-[680px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
         <main className="w-full h-full flex items-center justify-center">
           <div 
             style={{
-              width: '120%',
-              height: '120%',
-              transform: 'scale(0.85) translateY(-30%)',
+              width: '115%',
+              height: '115%',
+              transform: 'scale(0.88) translateY(-28%)',
               transformOrigin: 'center center'
             }}
             className="flex items-center justify-center"
@@ -102,8 +102,8 @@ const HomeTab = ({ setActiveTab }) => {
         />
       </div>
 
-      {/* Reduced padding even more to bring feature boxes closer to particles */}
-      <div className="max-w-6xl mx-auto px-4 py-2">
+      {/* Optimized spacing for feature boxes */}
+      <div className="max-w-6xl mx-auto px-4 py-3">
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
