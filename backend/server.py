@@ -487,32 +487,13 @@ async def startup_event():
     logger.info("Starting Veridica AI Chemistry Platform...")
     await load_molbert_model()
     
-    # Initialize real ML models for common targets
+    # Skip real ML model initialization during startup to prevent blocking
+    # Real models will be initialized on-demand when first requested
     if real_predictor:
-        try:
-            logger.info("Initializing real ML models for common targets...")
-            # Try to initialize models for the most common targets
-            common_targets = ["EGFR", "BRAF", "CDK2"]
-            initialized_targets = []
-            
-            for target in common_targets:
-                try:
-                    success = await real_predictor.initialize_models(target)
-                    if success:
-                        initialized_targets.append(target)
-                        logger.info(f"✅ Real ML model ready for {target}")
-                    else:
-                        logger.warning(f"⚠️ Could not initialize real model for {target}, will use heuristic")
-                except Exception as e:
-                    logger.warning(f"⚠️ Error initializing {target} model: {e}")
-            
-            if initialized_targets:
-                logger.info(f"🎯 Real ML models active for: {', '.join(initialized_targets)}")
-            else:
-                logger.info("📊 Using heuristic models (real ML models failed to initialize)")
-                
-        except Exception as e:
-            logger.error(f"Error during real model initialization: {e}")
+        logger.info("📊 Real ML models available for on-demand initialization")
+        logger.info("🎯 Will initialize models when first prediction is requested")
+    else:
+        logger.info("📊 Using heuristic models (real ML predictor not available)")
     
     logger.info("🚀 Platform ready with enhanced predictions!")
 
