@@ -71,15 +71,15 @@ const HomeTab = ({ setActiveTab }) => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Spline Banner Section - Increased height and zoomed out for full visibility */}
+      {/* Spline Banner Section - Moved up for better visibility */}
       <div className="relative w-full h-[450px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
-        <main className="w-full h-full flex items-center justify-center">
+        <main className="w-full h-full flex items-start justify-center pt-8">
           <div 
             style={{
               width: '120%',
               height: '120%',
-              transform: 'scale(0.85)',
-              transformOrigin: 'center center'
+              transform: 'scale(0.85) translateY(-15%)',
+              transformOrigin: 'center top'
             }}
             className="flex items-center justify-center"
           >
@@ -89,7 +89,7 @@ const HomeTab = ({ setActiveTab }) => {
                 width: '100%',
                 height: '100%',
                 objectFit: 'contain',
-                objectPosition: 'center'
+                objectPosition: 'center top'
               }}
             />
           </div>
