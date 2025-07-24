@@ -281,17 +281,42 @@ async def root():
 
 @api_router.get("/health")
 async def health_check():
+    """Enhanced health check with model status"""
+    
+    # Available prediction types
+    prediction_types = ["bioactivity_ic50", "toxicity", "logP", "solubility"]
+    
+    # Available targets for IC50 prediction
+    available_targets = [
+        "EGFR", "BRAF", "CDK2", "PARP1", "BCL2", "VEGFR2"
+    ]
+    
+    # Check if models are loaded
+    molbert_loaded = 'molbert' in models and models['molbert'] is not None
+    
+    # Check real ML model status
+    real_models_status = {}
+    real_models_available = False
+    
+    if real_predictor:
+        for target in available_targets:
+            is_loaded = hasattr(real_predictor, 'models') and target in real_predictor.models
+            real_models_status[target] = is_loaded
+            if is_loaded:
+                real_models_available = True
+    
     return {
         "status": "healthy",
-        "models_loaded": list(models.keys()),
-        "available_predictions": [
-            "bioactivity_ic50",
-            "toxicity", 
-            "logP",
-            "solubility"
-        ],
-        "available_targets": list(AVAILABLE_TARGETS.keys()),
-        "enhanced_predictions": True
+        "models_loaded": {
+            "molbert": molbert_loaded,
+            "chemprop_simulation": True,  # Simulation always available
+            "real_ml_models": real_models_available
+        },
+        "real_ml_targets": real_models_status,
+        "enhanced_predictions": True,  # Enhanced IC50 models available
+        "available_targets": available_targets,
+        "prediction_types": prediction_types,
+        "model_type": "real_ml" if real_models_available else "heuristic"
     }
 
 @api_router.get("/targets", response_model=List[TargetInfo])
