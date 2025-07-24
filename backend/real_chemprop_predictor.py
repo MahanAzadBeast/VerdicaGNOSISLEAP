@@ -39,32 +39,37 @@ class RealChempropPredictor:
     
     async def initialize_models(self, target: str = "EGFR"):
         """Initialize models for specific target"""
-        logger.info(f"Initializing models for {target}")
+        logger.info(f"🎯 Initializing models for {target}")
         
-        # Load or download training data
-        training_data, reference_smiles = await chembl_manager.prepare_training_data(target)
-        
-        if len(training_data) == 0:
-            logger.warning(f"No training data available for {target}")
+        try:
+            # Load or download training data
+            training_data, reference_smiles = await chembl_manager.prepare_training_data(target)
+            
+            if len(training_data) == 0:
+                logger.warning(f"❌ No training data available for {target}")
+                return False
+            
+            self.training_data[target] = training_data
+            self.reference_smiles[target] = reference_smiles
+            
+            # Try to load existing model
+            model_file = self.model_dir / f"{target}_ic50_model.pkl"
+            
+            if model_file.exists():
+                try:
+                    self.models[target] = joblib.load(model_file)
+                    logger.info(f"✅ Loaded cached model for {target}")
+                    return True
+                except Exception as e:
+                    logger.warning(f"⚠️ Error loading cached model: {e}")
+            
+            # Train new model
+            success = await self._train_model(target, training_data)
+            return success
+            
+        except Exception as e:
+            logger.error(f"❌ Error initializing models for {target}: {e}")
             return False
-        
-        self.training_data[target] = training_data
-        self.reference_smiles[target] = reference_smiles
-        
-        # Try to load existing model
-        model_file = self.model_dir / f"{target}_ic50_model.pkl"
-        
-        if model_file.exists():
-            try:
-                self.models[target] = joblib.load(model_file)
-                logger.info(f"Loaded cached model for {target}")
-                return True
-            except Exception as e:
-                logger.warning(f"Error loading cached model: {e}")
-        
-        # Train new model
-        success = await self._train_model(target, training_data)
-        return success
     
     async def _train_model(self, target: str, training_data: pd.DataFrame) -> bool:
         """Train Random Forest model on ChEMBL data"""
