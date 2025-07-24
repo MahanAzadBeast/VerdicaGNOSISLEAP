@@ -102,8 +102,8 @@ const HomeTab = ({ setActiveTab }) => {
         />
       </div>
 
-      {/* Reduced padding to bring feature boxes closer */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
+      {/* Reduced padding even more to bring feature boxes closer to particles */}
+      <div className="max-w-6xl mx-auto px-4 py-2">
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
