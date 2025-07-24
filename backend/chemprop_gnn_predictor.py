@@ -108,6 +108,7 @@ class ChempropGNNPredictor:
             logger.info(f"  🔄 Epochs: {train_args.epochs}")
             
             # Train the model
+            from chemprop.train import train
             model_scores = train(args=train_args)
             
             # Extract performance metrics
