@@ -61,73 +61,32 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
   );
 };
 
+import Spline from '@splinetool/react-spline';
+
 // Home Tab Component
 const HomeTab = ({ setActiveTab }) => {
   const handleSplineClick = () => {
     setActiveTab('predict');
   };
 
-  React.useEffect(() => {
-    // Load Spline viewer script
-    const script = document.createElement('script');
-    script.type = 'module';
-    script.src = 'https://unpkg.com/@splinetool/viewer@1.9.28/build/spline-viewer.js';
-    document.head.appendChild(script);
-
-    return () => {
-      // Cleanup
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
-    };
-  }, []);
-
   return (
-    <div className="min-h-screen bg-gray-900 text-white relative">
-      {/* Hero Section with Spline Background */}
-      <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Spline 3D Background - Enlarged but cropped to smaller area */}
-        <div className="absolute inset-0 w-full h-full z-0 flex items-center justify-center">
-          {/* Smaller container for the embedded area */}
-          <div 
-            className="relative overflow-hidden rounded-xl"
-            style={{ 
-              width: '80%', 
-              height: '70%',
-              maxWidth: '1200px',
-              maxHeight: '600px'
-            }}
-          >
-            {/* Enlarged Spline content */}
-            <div
-              style={{
-                transform: 'scale(1.8)',
-                transformOrigin: 'center center',
-                width: '100%',
-                height: '100%'
-              }}
-            >
-              <spline-viewer 
-                url="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
-                style={{ 
-                  width: '100%', 
-                  height: '100%'
-                }}
-              />
-            </div>
-          </div>
-          
-          {/* Fallback gradient background in case Spline doesn't load */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-gray-900 to-cyan-900/30 -z-10"></div>
-        </div>
-        
-        {/* Invisible clickable overlay covering entire area */}
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* Spline Banner Section */}
+      <div className="relative w-full h-64 overflow-hidden cursor-pointer" onClick={handleSplineClick}>
+        <Spline
+          scene="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover'
+          }}
+        />
+        {/* Clickable overlay */}
         <div 
           className="absolute inset-0 z-10 cursor-pointer"
           onClick={handleSplineClick}
           title="Click to start prediction"
-        >
-        </div>
+        />
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-12">
