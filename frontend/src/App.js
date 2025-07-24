@@ -71,14 +71,14 @@ const HomeTab = ({ setActiveTab }) => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Spline Banner Section - Moved down to center the particle animation */}
+      {/* Spline Banner Section - Moving particles up to center them properly */}
       <div className="relative w-full h-[580px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
         <main className="w-full h-full flex items-center justify-center">
           <div 
             style={{
               width: '120%',
               height: '120%',
-              transform: 'scale(0.85) translateY(15%)',
+              transform: 'scale(0.85) translateY(-15%)',
               transformOrigin: 'center center'
             }}
             className="flex items-center justify-center"
