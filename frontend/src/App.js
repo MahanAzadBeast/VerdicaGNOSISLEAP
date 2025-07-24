@@ -102,7 +102,7 @@ const HomeTab = ({ setActiveTab }) => {
         />
         
         {/* Overlayed Feature Boxes - positioned over the Spline animation */}
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-full max-w-6xl px-4 z-20">
+        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 w-full max-w-6xl px-4 z-20">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-gray-800/90 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-purple-500 transition-all shadow-xl">
               <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center mb-4">
