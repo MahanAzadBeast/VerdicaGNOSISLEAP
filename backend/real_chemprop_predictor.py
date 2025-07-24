@@ -140,7 +140,7 @@ class RealChempropPredictor:
     
     def _prepare_features(self, data: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
         """Prepare molecular features from SMILES"""
-        from rdkit.Chem import Descriptors, Crippen
+        from rdkit.Chem import Descriptors, Crippen, Lipinski
         
         features = []
         targets = []
@@ -149,16 +149,16 @@ class RealChempropPredictor:
             try:
                 mol = Chem.MolFromSmiles(row['smiles'])
                 if mol:
-                    # Calculate molecular descriptors
+                    # Calculate molecular descriptors (using only available descriptors)
                     desc = [
                         Descriptors.MolWt(mol),
-                        Crippen.MolLogP(mol),  # Use Crippen.MolLogP instead of Descriptors.MolLogP
+                        Crippen.MolLogP(mol),
                         Descriptors.NumHDonors(mol),
                         Descriptors.NumHAcceptors(mol),
                         Descriptors.TPSA(mol),
                         Descriptors.NumRotatableBonds(mol),
                         Descriptors.NumAromaticRings(mol),
-                        Descriptors.FractionCsp3(mol),
+                        Descriptors.FpDensityMorgan1(mol),  # Alternative to FractionCsp3
                         Descriptors.qed(mol),
                         Descriptors.BertzCT(mol)
                     ]
