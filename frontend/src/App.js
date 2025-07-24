@@ -73,24 +73,30 @@ const HomeTab = ({ setActiveTab }) => {
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Spline 3D Background */}
         <div className="absolute inset-0 w-full h-full z-0">
-          <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.28/build/spline-viewer.js"></script>
-          <spline-viewer 
-            url="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode" 
-            className="w-full h-full cursor-pointer"
-            onClick={handleSplineClick}
-          ></spline-viewer>
+          <iframe 
+            src="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
+            frameBorder="0"
+            width="100%"
+            height="100%"
+            className="w-full h-full"
+            title="Spline 3D Animation"
+            allow="autoplay; fullscreen"
+            style={{ border: 'none' }}
+          />
         </div>
         
         {/* Clickable overlay for middle area */}
         <div 
           className="absolute inset-0 z-10 flex items-center justify-center cursor-pointer"
           onClick={handleSplineClick}
-          style={{ 
-            background: 'radial-gradient(circle at center, transparent 30%, transparent 70%)',
-          }}
+          title="Click to start prediction"
         >
           {/* Invisible clickable area in the middle */}
-          <div className="w-96 h-96 rounded-full hover:bg-white/5 transition-all duration-300"></div>
+          <div className="w-80 h-80 rounded-full hover:bg-white/5 transition-all duration-300 flex items-center justify-center">
+            <div className="text-white/70 hover:text-white/90 transition-all text-lg font-medium">
+              Click to Start Prediction
+            </div>
+          </div>
         </div>
       </div>
 
