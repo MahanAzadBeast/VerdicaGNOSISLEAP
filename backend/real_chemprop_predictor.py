@@ -259,11 +259,11 @@ class RealChempropPredictor:
     def _calculate_molecule_features(self, mol) -> Optional[List[float]]:
         """Calculate molecular features for prediction"""
         try:
-            from rdkit.Chem import Descriptors
+            from rdkit.Chem import Descriptors, Crippen
             
             features = [
                 Descriptors.MolWt(mol),
-                Descriptors.MolLogP(mol),  
+                Crippen.MolLogP(mol),  # Use Crippen.MolLogP instead of Descriptors.MolLogP
                 Descriptors.NumHDonors(mol),
                 Descriptors.NumHAcceptors(mol),
                 Descriptors.TPSA(mol),
