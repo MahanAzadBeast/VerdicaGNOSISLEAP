@@ -13,7 +13,6 @@ import logging
 from pathlib import Path
 import torch
 from chemprop.data import MoleculeDataset
-from chemprop.data.utils import get_data_from_smiles
 from rdkit import Chem
 from chembl_data_manager import chembl_manager
 import joblib
