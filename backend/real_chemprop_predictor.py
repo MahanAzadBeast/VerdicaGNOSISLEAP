@@ -262,6 +262,17 @@ class RealChempropPredictor:
             logger.error(f"Error calculating features: {e}")
             return None
     
+    async def predict_ic50_async(self, smiles: str, target: str) -> Dict:
+        """Async wrapper for IC50 prediction"""
+        # Initialize model if not available
+        if target not in self.models:
+            success = await self.initialize_models(target)
+            if not success:
+                raise Exception(f"Failed to initialize model for {target}")
+        
+        # Make prediction using sync method
+        return self.predict_ic50(smiles, target)
+    
     def get_available_targets(self) -> List[str]:
         """Get list of available targets"""
         return chembl_manager.get_available_targets()
