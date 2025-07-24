@@ -235,21 +235,29 @@ class ChempropGNNPredictor:
             
             # Prepare prediction data
             pred_file = self._prepare_prediction_data(smiles, target)
+            preds_output = self.model_dir / f"{target}_predictions.csv"
             
-            # Set up prediction arguments
-            predict_args = PredictArgs()
-            predict_args.test_path = str(pred_file)
-            predict_args.checkpoint_dir = self.models[target]['model_path']
-            predict_args.preds_path = str(self.model_dir / f"{target}_predictions.csv")
+            # Use command line prediction
+            import subprocess
+            import sys
             
-            # Import prediction function
-            from chemprop.train import make_predictions
+            cmd = [
+                sys.executable, '-m', 'chemprop.train',
+                '--test_path', str(pred_file),
+                '--checkpoint_dir', str(self.model_dir / f"{target}_gnn"),
+                '--preds_path', str(preds_output)
+            ]
             
-            # Make prediction
-            predictions = make_predictions(args=predict_args)
+            logger.info(f"🔮 Running Chemprop prediction...")
+            result = subprocess.run(cmd, capture_output=True, text=True)
             
-            if predictions and len(predictions) > 0:
-                predicted_pic50 = predictions[0][0]  # First prediction, first target
+            if result.returncode == 0 and preds_output.exists():
+                # Read predictions
+                import pandas as pd
+                pred_df = pd.read_csv(preds_output)
+                
+                if len(pred_df) > 0:
+                    predicted_pic50 = pred_df.iloc[0, 0]  # First prediction
                 
                 # Convert to IC50 in nM
                 ic50_nm = 10 ** (9 - predicted_pic50)
