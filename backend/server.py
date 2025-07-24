@@ -428,6 +428,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Import real ML predictor
+try:
+    from real_chemprop_predictor import RealChempropPredictor
+    real_predictor = RealChempropPredictor()
+    logger.info("Real Chemprop predictor initialized")
+except Exception as e:
+    logger.warning(f"Could not initialize real predictor: {e}")
+    real_predictor = None
+
 @app.on_event("startup")
 async def startup_event():
     """Load models on startup"""
