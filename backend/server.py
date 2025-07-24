@@ -341,23 +341,42 @@ async def predict_molecular_properties(input_data: SMILESInput):
         result.molbert_prediction = molbert_pred
         result.chemprop_prediction = chemprop_pred
         
-        # For IC50 predictions, use enhanced target-specific model
+        # For IC50 predictions, try real ML model first, fallback to enhanced model
         if prediction_type == "bioactivity_ic50" and input_data.target:
             try:
-                enhanced_prediction = enhanced_ic50_prediction(
-                    input_data.smiles, 
-                    input_data.target
-                )
-                result.enhanced_chemprop_prediction = enhanced_prediction
+                # Try real ML model first
+                if real_predictor and hasattr(real_predictor, 'predict_ic50'):
+                    try:
+                        real_prediction = await real_predictor.predict_ic50_async(
+                            input_data.smiles, 
+                            input_data.target
+                        )
+                        result.enhanced_chemprop_prediction = real_prediction
+                        logger.info(f"Using real ML model for {input_data.target} IC50 prediction")
+                    except Exception as real_error:
+                        logger.warning(f"Real ML model failed, falling back to heuristic: {real_error}")
+                        # Fallback to heuristic model
+                        enhanced_prediction = enhanced_ic50_prediction(
+                            input_data.smiles, 
+                            input_data.target
+                        )
+                        result.enhanced_chemprop_prediction = enhanced_prediction
+                else:
+                    # Use heuristic enhanced model
+                    enhanced_prediction = enhanced_ic50_prediction(
+                        input_data.smiles, 
+                        input_data.target
+                    )
+                    result.enhanced_chemprop_prediction = enhanced_prediction
                 
-                # Use enhanced prediction confidence and similarity
-                if 'confidence' in enhanced_prediction:
-                    result.confidence = enhanced_prediction['confidence']
-                if 'similarity' in enhanced_prediction:
-                    result.similarity = enhanced_prediction['similarity']
+                # Use prediction confidence and similarity
+                if result.enhanced_chemprop_prediction and 'confidence' in result.enhanced_chemprop_prediction:
+                    result.confidence = result.enhanced_chemprop_prediction['confidence']
+                if result.enhanced_chemprop_prediction and 'similarity' in result.enhanced_chemprop_prediction:
+                    result.similarity = result.enhanced_chemprop_prediction['similarity']
                     
             except Exception as e:
-                logging.error(f"Error in enhanced IC50 prediction: {e}")
+                logging.error(f"Error in IC50 prediction: {e}")
                 result.enhanced_chemprop_prediction = {"error": str(e)}
         
         # Get RDKit value if available
