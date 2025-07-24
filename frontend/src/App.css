@@ -261,3 +261,18 @@ button:focus {
 ::-moz-selection {
   @apply bg-purple-600 text-white;
 }
+
+/* Fix for Spline font loading issues - prevents screenshot timeouts */
+* {
+  font-display: swap !important;
+}
+
+/* Spline component optimization for better loading */
+canvas {
+  font-display: swap !important;
+}
+
+/* Override font loading behavior to prevent delays */
+@font-face {
+  font-display: swap;
+}
