@@ -104,36 +104,39 @@ const HomeTab = ({ setActiveTab }) => {
         {/* Overlayed Feature Boxes - positioned over the Spline animation */}
         <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-full max-w-6xl px-4 z-20">
           <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-purple-500 transition-all">
-            <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center mb-4">
-              <div className="w-6 h-6 bg-purple-400 rounded"></div>
+            <div className="bg-gray-800/90 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-purple-500 transition-all shadow-xl">
+              <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-6 h-6 bg-purple-400 rounded"></div>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Target-Specific IC50</h3>
+              <p className="text-gray-400">
+                Predict IC50 values for specific protein targets including EGFR, BRAF, CDK2, and more.
+              </p>
             </div>
-            <h3 className="text-xl font-semibold mb-3">Target-Specific IC50</h3>
-            <p className="text-gray-400">
-              Predict IC50 values for specific protein targets including EGFR, BRAF, CDK2, and more.
-            </p>
-          </div>
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-cyan-500 transition-all">
-            <div className="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center mb-4">
-              <div className="w-6 h-6 bg-cyan-400 rounded"></div>
+            <div className="bg-gray-800/90 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-cyan-500 transition-all shadow-xl">
+              <div className="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-6 h-6 bg-cyan-400 rounded"></div>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Multi-Model Analysis</h3>
+              <p className="text-gray-400">
+                Compare predictions from ChemBERTa, Chemprop, and enhanced RDKit-based models.
+              </p>
             </div>
-            <h3 className="text-xl font-semibold mb-3">Multi-Model Analysis</h3>
-            <p className="text-gray-400">
-              Compare predictions from ChemBERTa, Chemprop, and enhanced RDKit-based models.
-            </p>
-          </div>
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-green-500 transition-all">
-            <div className="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center mb-4">
-              <div className="w-6 h-6 bg-green-400 rounded"></div>
+            <div className="bg-gray-800/90 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-green-500 transition-all shadow-xl">
+              <div className="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-6 h-6 bg-green-400 rounded"></div>
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Advanced Analytics</h3>
+              <p className="text-gray-400">
+                Visualize results, compare compounds, and export data with our comprehensive analysis tools.
+              </p>
             </div>
-            <h3 className="text-xl font-semibold mb-3">Advanced Analytics</h3>
-            <p className="text-gray-400">
-              Visualize results, compare compounds, and export data with our comprehensive analysis tools.
-            </p>
           </div>
         </div>
+      </div>
 
-        {/* Stats */}
+      {/* Stats Section - Now placed outside the Spline container */}
+      <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl p-8 border border-gray-600">
           <div className="text-center">
             <div className="grid md:grid-cols-4 gap-8">
