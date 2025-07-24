@@ -71,18 +71,28 @@ const HomeTab = ({ setActiveTab }) => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Spline Banner Section - Taller height for full particle visibility */}
-      <div className="relative w-full h-80 overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
+      {/* Spline Banner Section - Increased height and zoomed out for full visibility */}
+      <div className="relative w-full h-[450px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
         <main className="w-full h-full flex items-center justify-center">
-          <Spline
-            scene="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
+          <div 
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              objectPosition: 'center'
+              width: '120%',
+              height: '120%',
+              transform: 'scale(0.85)',
+              transformOrigin: 'center center'
             }}
-          />
+            className="flex items-center justify-center"
+          >
+            <Spline
+              scene="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                objectPosition: 'center'
+              }}
+            />
+          </div>
         </main>
         {/* Clickable overlay */}
         <div 
