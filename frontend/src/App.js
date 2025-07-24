@@ -23,7 +23,7 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
             <img 
               src="/logo.png" 
               alt="Veridica AI Logo" 
-              className="h-8 w-auto"
+              className="h-10 w-auto"
             />
           </div>
 
