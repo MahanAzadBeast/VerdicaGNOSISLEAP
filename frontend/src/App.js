@@ -71,8 +71,8 @@ const HomeTab = ({ setActiveTab }) => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Spline Banner Section - Increased height for better visibility */}
-      <div className="relative w-full h-[500px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
+      {/* Spline Banner Section - Increased to 580px height */}
+      <div className="relative w-full h-[580px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
         <main className="w-full h-full flex items-start justify-center pt-8">
           <div 
             style={{
