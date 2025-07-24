@@ -2,7 +2,7 @@ numpy<2.0.0
 pandas
 scikit-learn
 requests
-rdkit-pypi
+rdkit-pypi==2022.9.5
 fastapi
 uvicorn[standard]
 motor
@@ -12,3 +12,7 @@ boto3
 aiofiles
 joblib
 chembl_webresource_client
+chemprop==1.6.1
+descriptastorus
+dgl
+dgllife
