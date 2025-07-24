@@ -94,6 +94,18 @@ const HomeTab = ({ setActiveTab }) => {
             />
           </div>
         </main>
+        {/* Centered Title Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-2 drop-shadow-lg">
+              Start Discovery AI
+            </h1>
+            <p className="text-lg text-gray-300 opacity-80 font-medium">
+              Click to begin molecular prediction
+            </p>
+          </div>
+        </div>
+        
         {/* Clickable overlay */}
         <div 
           className="absolute inset-0 z-10 cursor-pointer"
