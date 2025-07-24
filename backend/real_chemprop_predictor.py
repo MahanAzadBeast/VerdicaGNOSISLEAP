@@ -7,12 +7,8 @@ import os
 import pandas as pd
 import numpy as np
 from typing import List, Dict, Optional, Tuple
-import tempfile
-import subprocess
 import logging
 from pathlib import Path
-import torch
-from chemprop.data import MoleculeDataset
 from rdkit import Chem
 from chembl_data_manager import chembl_manager
 import joblib
