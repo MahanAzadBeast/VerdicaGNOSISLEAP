@@ -86,18 +86,16 @@ const HomeTab = ({ setActiveTab }) => {
     <div className="min-h-screen bg-gray-900 text-white relative">
       {/* Hero Section with Spline Background */}
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Spline 3D Background - Zoomed in and shorter horizontally */}
+        {/* Spline 3D Background - Not stretched */}
         <div className="absolute inset-0 w-full h-full z-0">
-          <div 
-            className="w-full h-full flex items-center justify-center"
-            style={{ 
-              transform: 'scale(1.5) scaleX(0.7)', 
-              transformOrigin: 'center center' 
-            }}
-          >
+          <div className="w-full h-full flex items-center justify-center">
             <spline-viewer 
               url="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
-              style={{ width: '100%', height: '100%' }}
+              style={{ 
+                width: '100%', 
+                height: '100%',
+                objectFit: 'contain'
+              }}
             />
           </div>
           
@@ -105,20 +103,12 @@ const HomeTab = ({ setActiveTab }) => {
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-gray-900 to-cyan-900/30 -z-10"></div>
         </div>
         
-        {/* Clickable overlay for middle area */}
+        {/* Invisible clickable overlay covering entire area */}
         <div 
-          className="absolute inset-0 z-10 flex items-center justify-center cursor-pointer"
+          className="absolute inset-0 z-10 cursor-pointer"
           onClick={handleSplineClick}
           title="Click to start prediction"
         >
-          {/* Center content area - removed blur */}
-          <div className="text-center">
-            <div className="w-80 h-80 rounded-full hover:bg-white/10 transition-all duration-500 flex items-center justify-center border border-white/20 hover:border-white/40">
-              <div className="text-white/80 hover:text-white transition-all text-xl font-medium">
-                Click to Start Prediction
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
