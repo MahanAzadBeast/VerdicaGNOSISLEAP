@@ -368,15 +368,27 @@ async def predict_molecular_properties(input_data: SMILESInput):
         result.molbert_prediction = molbert_pred
         result.chemprop_prediction = chemprop_pred
         
-        # For IC50 predictions, use real GNN model instead of heuristic
+        # For IC50 predictions, use real ML models
         if prediction_type == "bioactivity_ic50" and input_data.target:
             try:
-                # Use real GNN model for IC50 prediction
-                logger.info(f"🧠 Using Simple GNN model for {input_data.target} IC50 prediction")
-                enhanced_prediction = await real_predictor.predict_ic50_gnn(
-                    input_data.smiles, 
-                    input_data.target
-                )
+                # Check if user wants to test MolBERT (experimental)
+                use_molbert = input_data.prediction_types and "molbert" in str(input_data.prediction_types).lower()
+                
+                if use_molbert and molbert_available:
+                    # Use experimental MolBERT model
+                    logger.info(f"🤖 Using MolBERT transformer for {input_data.target} IC50 prediction")
+                    enhanced_prediction = await molbert_predictor.predict_ic50_gnn(
+                        input_data.smiles, 
+                        input_data.target
+                    )
+                else:
+                    # Use production Simple GNN model
+                    logger.info(f"🧠 Using Simple GNN model for {input_data.target} IC50 prediction")
+                    enhanced_prediction = await real_predictor.predict_ic50_gnn(
+                        input_data.smiles, 
+                        input_data.target
+                    )
+                
                 result.enhanced_chemprop_prediction = enhanced_prediction
                 
                 # Use prediction confidence and similarity
@@ -386,7 +398,7 @@ async def predict_molecular_properties(input_data: SMILESInput):
                     result.similarity = result.enhanced_chemprop_prediction['similarity']
                     
             except Exception as e:
-                logger.error(f"❌ Error in GNN IC50 prediction: {e}")
+                logger.error(f"❌ Error in ML IC50 prediction: {e}")
                 # Fallback to heuristic model
                 logger.info("🔄 Falling back to heuristic model")
                 enhanced_prediction = enhanced_ic50_prediction(
