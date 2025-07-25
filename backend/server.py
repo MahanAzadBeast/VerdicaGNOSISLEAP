@@ -469,19 +469,33 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Import real GNN predictor - Using Simple GNN as production model
+# Import real predictors - Multiple options available
 try:
     from simple_gnn_predictor import simple_gnn_predictor
     real_predictor = simple_gnn_predictor
-    logger.info("🧠 Simple GNN predictor initialized (production model)")
+    logger.info("🧠 Simple GNN predictor initialized (primary production model)")
 except Exception as e:
     logger.warning(f"Could not initialize Simple GNN predictor: {e}")
-    # Fallback to Random Forest predictor
-    try:
+    real_predictor = None
+
+# Import MolBERT as experimental option
+try:
+    from molbert_predictor import molbert_predictor
+    molbert_available = True
+    logger.info("🤖 MolBERT predictor initialized (experimental)")
+except Exception as e:
+    logger.warning(f"Could not initialize MolBERT predictor: {e}")
+    molbert_available = False
+    molbert_predictor = None
+
+# Fallback to Random Forest if needed
+try:
+    if real_predictor is None:
         from real_chemprop_predictor import real_predictor
         logger.info("🌳 Random Forest predictor loaded as fallback")
-    except Exception as e2:
-        logger.warning(f"Could not initialize any real predictor: {e2}")
+except Exception as e2:
+    logger.warning(f"Could not initialize any real predictor: {e2}")
+    if real_predictor is None:
         real_predictor = None
 
 @app.on_event("startup")
