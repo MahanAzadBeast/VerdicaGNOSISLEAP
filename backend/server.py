@@ -321,20 +321,71 @@ async def health_check():
         "model_type": model_type
     }
 
-@api_router.get("/targets", response_model=List[TargetInfo])
-async def get_available_targets():
-    """Get information about available protein targets"""
-    targets = []
-    
-    for target, description in AVAILABLE_TARGETS.items():
-        targets.append(TargetInfo(
-            target=target,
-            available=True,
-            description=description,
-            model_type="Enhanced RDKit-based"
-        ))
-    
-    return targets
+@api_router.get("/molbert_status/{target}")
+async def get_molbert_status(target: str = "EGFR"):
+    """Get MolBERT training status and progress"""
+    try:
+        if molbert_available:
+            status = molbert_predictor.get_training_status(target)
+            
+            # Check if final model exists
+            if target in molbert_predictor.models:
+                model_data = molbert_predictor.models[target]
+                status.update({
+                    'model_completed': True,
+                    'final_performance': model_data.get('performance', {}),
+                    'training_size': model_data.get('training_size', 0)
+                })
+            else:
+                status['model_completed'] = False
+            
+            return {
+                "status": "success",
+                "target": target,
+                "molbert_status": status
+            }
+        else:
+            return {
+                "status": "error",
+                "message": "MolBERT not available"
+            }
+    except Exception as e:
+        logger.error(f"Error getting MolBERT status: {e}")
+        return {
+            "status": "error",
+            "message": str(e)
+        }
+
+@api_router.post("/continue_molbert_training/{target}")
+async def continue_molbert_training(target: str = "EGFR", additional_epochs: int = 5):
+    """Continue MolBERT training from checkpoint"""
+    try:
+        if molbert_available:
+            logger.info(f"🔄 API request to continue MolBERT training for {target}")
+            success = await molbert_predictor.continue_training(target, additional_epochs)
+            
+            if success:
+                return {
+                    "status": "success",
+                    "message": f"MolBERT training continued for {target}",
+                    "additional_epochs": additional_epochs
+                }
+            else:
+                return {
+                    "status": "error",
+                    "message": "Failed to continue MolBERT training"
+                }
+        else:
+            return {
+                "status": "error",
+                "message": "MolBERT not available"
+            }
+    except Exception as e:
+        logger.error(f"Error continuing MolBERT training: {e}")
+        return {
+            "status": "error",
+            "message": str(e)
+        }
 
 @api_router.post("/predict", response_model=BatchPredictionResponse)
 async def predict_molecular_properties(input_data: SMILESInput):
