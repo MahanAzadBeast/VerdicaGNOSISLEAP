@@ -322,8 +322,8 @@ class MolBERTPredictor:
                     
                     train_losses.append(loss.item())
                 
-                # Evaluation every 5 epochs
-                if epoch % 5 == 0:
+                # Evaluation every 2 epochs (more frequent for shorter runs)
+                if epoch % 2 == 0:
                     model.eval()
                     test_losses = []
                     test_preds = []
@@ -357,6 +357,20 @@ class MolBERTPredictor:
                     
                     if avg_test_loss < best_test_loss:
                         best_test_loss = avg_test_loss
+                    
+                    # Save checkpoint after each evaluation
+                    checkpoint = {
+                        'epoch': epoch + 1,
+                        'model_state_dict': model.state_dict(),
+                        'optimizer_state_dict': optimizer.state_dict(),
+                        'best_test_loss': best_test_loss,
+                        'test_r2': test_r2,
+                        'test_rmse': test_rmse
+                    }
+                    joblib.dump(checkpoint, checkpoint_file)
+                    logger.info(f"💾 Checkpoint saved at epoch {epoch}")
+                    
+                    model.train()
             
             # Final evaluation
             logger.info("📊 Final MolBERT evaluation...")
