@@ -526,7 +526,52 @@ class MolBERTPredictor:
                 'model_type': 'error'
             }
     
-    def get_available_targets(self) -> List[str]:
+    async def continue_training(self, target: str = "EGFR", additional_epochs: int = 5):
+        """Continue training from the last checkpoint"""
+        logger.info(f"🔄 Continuing MolBERT training for {target} ({additional_epochs} more epochs)")
+        
+        checkpoint_file = self.model_dir / f"{target}_molbert_checkpoint.pkl"
+        
+        if not checkpoint_file.exists():
+            logger.warning("❌ No checkpoint found. Starting fresh training instead.")
+            return await self.initialize_models(target)
+        
+        try:
+            # Load existing training data
+            training_data = self.training_data.get(target)
+            if training_data is None:
+                training_data, reference_smiles = await chembl_manager.prepare_training_data(target)
+                self.training_data[target] = training_data
+                self.reference_smiles[target] = reference_smiles
+            
+            # Continue training with reduced epochs
+            success = await self._train_molbert_model(target, training_data)
+            return success
+            
+        except Exception as e:
+            logger.error(f"❌ Error continuing MolBERT training: {e}")
+            return False
+    
+    def get_training_status(self, target: str = "EGFR") -> Dict:
+        """Get current training progress from checkpoint"""
+        checkpoint_file = self.model_dir / f"{target}_molbert_checkpoint.pkl"
+        
+        if checkpoint_file.exists():
+            try:
+                checkpoint = joblib.load(checkpoint_file)
+                return {
+                    'has_checkpoint': True,
+                    'epochs_completed': checkpoint.get('epoch', 0),
+                    'best_test_loss': checkpoint.get('best_test_loss', None),
+                    'test_r2': checkpoint.get('test_r2', None),
+                    'test_rmse': checkpoint.get('test_rmse', None),
+                    'can_continue': True
+                }
+            except Exception as e:
+                logger.error(f"Error reading checkpoint: {e}")
+                return {'has_checkpoint': False, 'can_continue': False}
+        else:
+            return {'has_checkpoint': False, 'can_continue': False}
         """Get list of available targets"""
         return chembl_manager.get_available_targets()
     
