@@ -271,15 +271,15 @@ class MolBERTPredictor:
             logger.info(f"  📚 Transformer layers: 6")
             logger.info(f"  👁️ Attention heads: 8")
             
-            # Training loop with checkpointing
+            # Training loop with AGGRESSIVE checkpointing
             model.train()
             best_test_loss = float('inf')
             
-            logger.info("🚀 Starting MolBERT incremental training...")
+            logger.info("🚀 Starting MolBERT incremental training with aggressive checkpointing...")
             
-            # Shorter epochs for incremental training (5 epochs at a time)
-            epochs = 5  # Reduced from 20 - can be run multiple times
-            batch_size = 16  # Small batch size for memory efficiency
+            # Much shorter epochs for incremental training (3 epochs at a time)
+            epochs = 3  # Even shorter sessions
+            batch_size = 8  # Smaller batch size for memory safety
             
             # Check for existing checkpoint
             checkpoint_file = self.model_dir / f"{target}_molbert_checkpoint.pkl"
@@ -296,81 +296,128 @@ class MolBERTPredictor:
                 except Exception as e:
                     logger.warning(f"⚠️ Could not load checkpoint: {e}")
             
+            # Track training time for timeout protection
+            import time
+            training_start = time.time()
+            MAX_TRAINING_TIME = 15 * 60  # 15 minutes max per session
+            
             for epoch in range(start_epoch, start_epoch + epochs):
+                # Check timeout protection
+                if time.time() - training_start > MAX_TRAINING_TIME:
+                    logger.warning("⏰ Training timeout reached, saving checkpoint and exiting")
+                    break
+                
+                epoch_start = time.time()
+                logger.info(f"📈 Starting epoch {epoch}")
+                
                 # Training
                 model.train()
                 train_losses = []
+                batch_count = 0
                 
-                # Process in batches
+                # Process in smaller batches with frequent checkpointing
                 for i in range(0, len(X_train), batch_size):
                     batch_data = X_train[i:i + batch_size]
                     batch_targets = torch.FloatTensor(y_train[i:i + batch_size]).unsqueeze(1).to(self.device)
                     
                     # Prepare batch tensors
-                    input_ids = torch.stack([item['input_ids'] for item in batch_data]).to(self.device)
-                    attention_mask = torch.stack([item['attention_mask'] for item in batch_data]).to(self.device)
+                    try:
+                        input_ids = torch.stack([item['input_ids'] for item in batch_data]).to(self.device)
+                        attention_mask = torch.stack([item['attention_mask'] for item in batch_data]).to(self.device)
+                    except Exception as e:
+                        logger.error(f"❌ Error preparing batch {i}: {e}")
+                        continue
                     
                     optimizer.zero_grad()
                     
-                    # Forward pass
-                    outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-                    loss = criterion(outputs, batch_targets)
-                    
-                    # Backward pass
-                    loss.backward()
-                    optimizer.step()
-                    
-                    train_losses.append(loss.item())
+                    # Forward pass with error handling
+                    try:
+                        outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+                        loss = criterion(outputs, batch_targets)
+                        
+                        # Backward pass
+                        loss.backward()
+                        optimizer.step()
+                        
+                        train_losses.append(loss.item())
+                        batch_count += 1
+                        
+                        # Mini-checkpoint every 50 batches (~5 minutes)
+                        if batch_count % 50 == 0:
+                            temp_checkpoint = {
+                                'epoch': epoch,
+                                'batch': batch_count,
+                                'model_state_dict': model.state_dict(),
+                                'optimizer_state_dict': optimizer.state_dict(),
+                                'best_test_loss': best_test_loss,
+                                'train_losses': train_losses
+                            }
+                            temp_checkpoint_file = self.model_dir / f"{target}_molbert_temp_checkpoint.pkl"
+                            joblib.dump(temp_checkpoint, temp_checkpoint_file)
+                            logger.info(f"💾 Mini-checkpoint saved at epoch {epoch}, batch {batch_count}")
+                        
+                    except Exception as e:
+                        logger.error(f"❌ Error in forward/backward pass: {e}")
+                        continue
                 
-                # Evaluation every 2 epochs (more frequent for shorter runs)
-                if epoch % 2 == 0:
+                epoch_time = time.time() - epoch_start
+                logger.info(f"⏱️ Epoch {epoch} completed in {epoch_time:.1f}s, avg loss: {np.mean(train_losses):.4f}")
+                
+                # Quick evaluation after each epoch
+                try:
                     model.eval()
-                    test_losses = []
-                    test_preds = []
-                    test_targets = []
-                    
                     with torch.no_grad():
-                        for i in range(0, len(X_test), batch_size):
-                            batch_data = X_test[i:i + batch_size]
-                            batch_targets = y_test[i:i + batch_size]
-                            
-                            input_ids = torch.stack([item['input_ids'] for item in batch_data]).to(self.device)
-                            attention_mask = torch.stack([item['attention_mask'] for item in batch_data]).to(self.device)
-                            
-                            outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-                            
-                            batch_targets_tensor = torch.FloatTensor(batch_targets).unsqueeze(1).to(self.device)
-                            loss = criterion(outputs, batch_targets_tensor)
-                            
-                            test_losses.append(loss.item())
-                            test_preds.extend(outputs.cpu().numpy().flatten())
-                            test_targets.extend(batch_targets)
+                        # Sample-based quick evaluation (first 100 test samples)
+                        quick_test_data = X_test[:100] if len(X_test) > 100 else X_test
+                        quick_test_targets = y_test[:100] if len(y_test) > 100 else y_test
+                        
+                        test_preds = []
+                        for test_item, test_target in zip(quick_test_data, quick_test_targets):
+                            try:
+                                input_ids = test_item['input_ids'].unsqueeze(0).to(self.device)
+                                attention_mask = test_item['attention_mask'].unsqueeze(0).to(self.device)
+                                output = model(input_ids=input_ids, attention_mask=attention_mask)
+                                test_preds.append(output.cpu().numpy()[0][0])
+                            except:
+                                continue
+                        
+                        if len(test_preds) > 10:  # Need minimum samples for R²
+                            test_r2 = r2_score(quick_test_targets[:len(test_preds)], test_preds)
+                            test_rmse = np.sqrt(mean_squared_error(quick_test_targets[:len(test_preds)], test_preds))
+                            logger.info(f"📊 Quick eval - R²: {test_r2:.3f}, RMSE: {test_rmse:.3f}")
+                        else:
+                            test_r2 = -999  # Invalid
+                            test_rmse = 999
                     
-                    avg_train_loss = np.mean(train_losses)
-                    avg_test_loss = np.mean(test_losses)
-                    
-                    # Calculate R²
-                    test_r2 = r2_score(test_targets, test_preds)
-                    test_rmse = np.sqrt(mean_squared_error(test_targets, test_preds))
-                    
-                    logger.info(f"  Epoch {epoch}: Train Loss={avg_train_loss:.4f}, Test Loss={avg_test_loss:.4f}, R²={test_r2:.3f}, RMSE={test_rmse:.3f}")
-                    
-                    if avg_test_loss < best_test_loss:
-                        best_test_loss = avg_test_loss
-                    
-                    # Save checkpoint after each evaluation
+                    # Save full checkpoint after each epoch
                     checkpoint = {
                         'epoch': epoch + 1,
                         'model_state_dict': model.state_dict(),
                         'optimizer_state_dict': optimizer.state_dict(),
                         'best_test_loss': best_test_loss,
                         'test_r2': test_r2,
-                        'test_rmse': test_rmse
+                        'test_rmse': test_rmse,
+                        'training_time': time.time() - training_start
                     }
                     joblib.dump(checkpoint, checkpoint_file)
-                    logger.info(f"💾 Checkpoint saved at epoch {epoch}")
+                    logger.info(f"✅ Full checkpoint saved at epoch {epoch}")
                     
-                    model.train()
+                except Exception as e:
+                    logger.error(f"❌ Error in evaluation: {e}")
+                    # Save checkpoint anyway
+                    checkpoint = {
+                        'epoch': epoch + 1,
+                        'model_state_dict': model.state_dict(),
+                        'optimizer_state_dict': optimizer.state_dict(),
+                        'best_test_loss': best_test_loss,
+                        'test_r2': -999,
+                        'test_rmse': 999,
+                        'training_time': time.time() - training_start
+                    }
+                    joblib.dump(checkpoint, checkpoint_file)
+                    logger.info(f"⚠️ Emergency checkpoint saved at epoch {epoch}")
+                
+                model.train()
             
             # Final evaluation
             logger.info("📊 Final MolBERT evaluation...")
