@@ -271,16 +271,32 @@ class MolBERTPredictor:
             logger.info(f"  📚 Transformer layers: 6")
             logger.info(f"  👁️ Attention heads: 8")
             
-            # Training loop
+            # Training loop with checkpointing
             model.train()
             best_test_loss = float('inf')
             
-            logger.info("🚀 Starting MolBERT training...")
+            logger.info("🚀 Starting MolBERT incremental training...")
             
-            epochs = 20  # Fewer epochs for faster training
+            # Shorter epochs for incremental training (5 epochs at a time)
+            epochs = 5  # Reduced from 20 - can be run multiple times
             batch_size = 16  # Small batch size for memory efficiency
             
-            for epoch in range(epochs):
+            # Check for existing checkpoint
+            checkpoint_file = self.model_dir / f"{target}_molbert_checkpoint.pkl"
+            start_epoch = 0
+            
+            if checkpoint_file.exists():
+                try:
+                    checkpoint = joblib.load(checkpoint_file)
+                    model.load_state_dict(checkpoint['model_state_dict'])
+                    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    start_epoch = checkpoint['epoch']
+                    best_test_loss = checkpoint['best_test_loss']
+                    logger.info(f"📁 Resumed from checkpoint at epoch {start_epoch}")
+                except Exception as e:
+                    logger.warning(f"⚠️ Could not load checkpoint: {e}")
+            
+            for epoch in range(start_epoch, start_epoch + epochs):
                 # Training
                 model.train()
                 train_losses = []
