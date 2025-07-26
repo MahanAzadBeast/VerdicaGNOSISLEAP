@@ -321,6 +321,51 @@ async def health_check():
         "model_type": model_type
     }
 
+@api_router.get("/targets")
+async def get_targets():
+    """Get available protein targets for IC50 predictions"""
+    
+    targets = [
+        {
+            "target": "EGFR",
+            "available": True,
+            "description": "Epidermal Growth Factor Receptor",
+            "model_type": "Enhanced RDKit-based"
+        },
+        {
+            "target": "BRAF", 
+            "available": True,
+            "description": "B-Raf Proto-Oncogene",
+            "model_type": "Enhanced RDKit-based"
+        },
+        {
+            "target": "CDK2",
+            "available": True, 
+            "description": "Cyclin Dependent Kinase 2",
+            "model_type": "Enhanced RDKit-based"
+        },
+        {
+            "target": "PARP1",
+            "available": True,
+            "description": "Poly(ADP-ribose) Polymerase 1", 
+            "model_type": "Enhanced RDKit-based"
+        },
+        {
+            "target": "BCL2",
+            "available": True,
+            "description": "BCL2 Apoptosis Regulator",
+            "model_type": "Enhanced RDKit-based"
+        },
+        {
+            "target": "VEGFR2",
+            "available": True,
+            "description": "Vascular Endothelial Growth Factor Receptor 2",
+            "model_type": "Enhanced RDKit-based"
+        }
+    ]
+    
+    return {"targets": targets}
+
 @api_router.get("/molbert_status/{target}")
 async def get_molbert_status(target: str = "EGFR"):
     """Get MolBERT training status and progress"""
