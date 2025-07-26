@@ -429,7 +429,7 @@ const PredictTab = ({ onAnalyze }) => {
     { name: 'Imatinib', smiles: 'CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5' }
   ];
 
-  const handlePredict = async () => {
+  const handlePredict = async (retryCount = 0) => {
     if (!smiles.trim()) {
       setError('Please enter a SMILES string');
       return;
@@ -445,18 +445,48 @@ const PredictTab = ({ onAnalyze }) => {
     setResults(null);
 
     try {
+      // Add timeout and better error handling
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
+
       const response = await axios.post(`${API}/predict`, {
         smiles: smiles.trim(),
         prediction_types: selectedTypes,
         target: selectedTarget
+      }, {
+        timeout: 120000, // 2 minute timeout
+        signal: controller.signal
       });
       
+      clearTimeout(timeoutId);
       setResults(response.data);
     } catch (error) {
       console.error('Prediction error:', error);
-      setError(error.response?.data?.detail || 'Failed to get predictions. Please check your SMILES string.');
+      
+      let errorMessage = 'Failed to get predictions. Please check your SMILES string.';
+      
+      if (error.code === 'ECONNABORTED' || error.name === 'AbortError') {
+        errorMessage = 'Prediction timed out. The server may be busy with training. Please try again in a few minutes.';
+        
+        // Offer retry for timeout errors
+        if (retryCount < 2) {
+          setTimeout(() => {
+            console.log(`Retrying prediction (attempt ${retryCount + 2})...`);
+            handlePredict(retryCount + 1);
+          }, 5000); // Retry after 5 seconds
+          errorMessage += ` Retrying automatically (${retryCount + 1}/2)...`;
+        }
+      } else if (error.response?.status === 500) {
+        errorMessage = 'Server error occurred. The ML models may be initializing. Please try again.';
+      } else if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      }
+      
+      setError(errorMessage);
     } finally {
-      setIsLoading(false);
+      if (retryCount === 0) {
+        setIsLoading(false);
+      }
     }
   };
 
