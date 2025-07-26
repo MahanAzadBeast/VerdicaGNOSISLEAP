@@ -449,37 +449,23 @@ const PredictTab = ({ onAnalyze }) => {
     setResults(null);
 
     try {
-      // Add timeout and better error handling
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
-
       const response = await axios.post(`${API}/predict`, {
         smiles: smiles.trim(),
         prediction_types: selectedTypes,
         target: selectedTarget
       }, {
-        timeout: 120000, // 2 minute timeout
-        signal: controller.signal
+        timeout: 60000, // 1 minute timeout
       });
       
-      clearTimeout(timeoutId);
       setResults(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.error('Prediction error:', error);
       
       let errorMessage = 'Failed to get predictions. Please check your SMILES string.';
       
-      if (error.code === 'ECONNABORTED' || error.name === 'AbortError') {
-        errorMessage = 'Prediction timed out. The server may be busy with training. Please try again in a few minutes.';
-        
-        // Offer retry for timeout errors
-        if (retryCount < 2) {
-          setTimeout(() => {
-            console.log(`Retrying prediction (attempt ${retryCount + 2})...`);
-            handlePredict(retryCount + 1);
-          }, 5000); // Retry after 5 seconds
-          errorMessage += ` Retrying automatically (${retryCount + 1}/2)...`;
-        }
+      if (error.code === 'ECONNABORTED') {
+        errorMessage = 'Prediction timed out. The server may be busy. Please try again.';
       } else if (error.response?.status === 500) {
         errorMessage = 'Server error occurred. The ML models may be initializing. Please try again.';
       } else if (error.response?.data?.detail) {
@@ -487,10 +473,7 @@ const PredictTab = ({ onAnalyze }) => {
       }
       
       setError(errorMessage);
-    } finally {
-      if (retryCount === 0) {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
   };
 
