@@ -274,11 +274,13 @@ const ResultsDisplay = ({ results, isLoading, error, onAnalyze }) => {
     
     switch (type) {
       case 'bioactivity_ic50':
-        if (enhanced.pic50 && enhanced.ic50_nm) {
+        if (enhanced.ic50_nm) {
           return (
             <div className="text-xs">
-              <div>pIC₅₀: {enhanced.pic50.toFixed(2)}</div>
-              <div>{enhanced.ic50_nm.toFixed(1)} nM</div>
+              <div>IC₅₀: {enhanced.ic50_nm.toFixed(1)} nM</div>
+              {enhanced.pic50 && (
+                <div className="text-gray-500">pIC₅₀: {enhanced.pic50.toFixed(2)}</div>
+              )}
             </div>
           );
         }
