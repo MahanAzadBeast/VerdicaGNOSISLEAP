@@ -32,10 +32,10 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => {
-                  console.log(`Navigation: Clicking tab ${tab.id}, current activeTab: ${activeTab}`);
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   setActiveTab(tab.id);
-                  console.log(`Navigation: setActiveTab(${tab.id}) called`);
                 }}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   activeTab === tab.id
