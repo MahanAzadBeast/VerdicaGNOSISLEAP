@@ -768,6 +768,19 @@ const App = () => {
     setActiveTab('analysis');
   };
 
+  // Temporary debugging function
+  const debugSwitchTab = () => {
+    console.log('DEBUG: Forcing tab switch to predict');
+    setActiveTab('predict');
+  };
+
+  // Add debug button temporarily
+  useEffect(() => {
+    setTimeout(() => {
+      debugSwitchTab();
+    }, 3000);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-900">
       <Navigation activeTab={activeTab} setActiveTab={setActiveTab} health={health} />
