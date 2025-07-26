@@ -73,47 +73,19 @@ const HomeTab = ({ setActiveTab }) => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Spline Banner Section - Optimized height with animation positioned higher */}
+      {/* Temporarily disabled Spline to debug navigation issue */}
       <div className="relative w-full h-[720px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleSplineClick}>
-        <main className="w-full h-full flex items-center justify-center">
-          <div 
-            style={{
-              width: '115%',
-              height: '115%',
-              transform: 'scale(0.75) translateY(-18%)',
-              transformOrigin: 'center center'
-            }}
-            className="flex items-center justify-center"
-          >
-            <Spline
-              scene="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                objectPosition: 'center center'
-              }}
-            />
-          </div>
-        </main>
-        {/* Centered Title Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-2 drop-shadow-lg">
-              Start Discovery AI
-            </h1>
-            <p className="text-lg text-gray-300 opacity-80 font-medium">
-              Click to begin molecular prediction
-            </p>
-          </div>
+        <div className="text-center">
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-2 drop-shadow-lg">
+            Start Discovery AI
+          </h1>
+          <p className="text-lg text-gray-300 opacity-80 font-medium">
+            Click to begin molecular prediction
+          </p>
+          <p className="text-sm text-gray-500 mt-4">
+            (Spline animation temporarily disabled for debugging)
+          </p>
         </div>
-        
-        {/* Clickable overlay */}
-        <div 
-          className="absolute inset-0 z-10 cursor-pointer"
-          onClick={handleSplineClick}
-          title="Click to start prediction"
-        />
       </div>
 
       {/* Feature Boxes - positioned to slightly overlay the Spline animation */}
