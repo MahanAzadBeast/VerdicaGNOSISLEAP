@@ -768,29 +768,23 @@ const App = () => {
     setActiveTab('analysis');
   };
 
-  // Temporary debugging function
-  const debugSwitchTab = () => {
-    console.log('DEBUG: Forcing tab switch to predict');
-    setActiveTab('predict');
+  const handleTabChange = (tabId) => {
+    console.log(`handleTabChange called with: ${tabId}`);
+    setActiveTab(tabId);
+    console.log(`setActiveTab called with: ${tabId}`);
   };
-
-  // Add debug button temporarily
-  useEffect(() => {
-    setTimeout(() => {
-      debugSwitchTab();
-    }, 3000);
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <Navigation activeTab={activeTab} setActiveTab={setActiveTab} health={health} />
+      <Navigation activeTab={activeTab} setActiveTab={handleTabChange} health={health} />
       
-      {activeTab === 'home' && <HomeTab setActiveTab={setActiveTab} />}
+      {activeTab === 'home' && <HomeTab setActiveTab={handleTabChange} />}
       {activeTab === 'predict' && <PredictTab onAnalyze={handleAnalyze} />}
       {activeTab === 'analysis' && <AnalysisTab analysisData={analysisData} />}
       {activeTab === 'about' && <AboutTab />}
     </div>
   );
+};
 };
 
 export default App;
