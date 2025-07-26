@@ -338,9 +338,7 @@ const ResultsDisplay = ({ results, isLoading, error, onAnalyze }) => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Property</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">ChemBERTa</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Chemprop</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Enhanced Model</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">RDKit</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Enhanced Prediction</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Confidence</th>
             </tr>
           </thead>
@@ -353,14 +351,20 @@ const ResultsDisplay = ({ results, isLoading, error, onAnalyze }) => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                   {result.molbert_prediction ? formatPredictionValue(result.molbert_prediction, result.prediction_type) : 'N/A'}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {result.chemprop_prediction ? formatPredictionValue(result.chemprop_prediction, result.prediction_type) : 'N/A'}
-                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-purple-400">
-                  {result.enhanced_chemprop_prediction ? formatEnhancedPrediction(result.enhanced_chemprop_prediction, result.prediction_type) : 'N/A'}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {result.rdkit_value ? formatPredictionValue(result.rdkit_value, result.prediction_type) : 'N/A'}
+                  {result.enhanced_chemprop_prediction ? (
+                    <div>
+                      {formatEnhancedPrediction(result.enhanced_chemprop_prediction, result.prediction_type)}
+                      <div className="text-xs text-gray-400 mt-1">
+                        {result.enhanced_chemprop_prediction.model_type || 'Enhanced Model'}
+                      </div>
+                    </div>
+                  ) : result.chemprop_prediction ? (
+                    <div>
+                      {formatPredictionValue(result.chemprop_prediction, result.prediction_type)}
+                      <div className="text-xs text-gray-400 mt-1">Chemprop</div>
+                    </div>
+                  ) : 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex flex-col">
