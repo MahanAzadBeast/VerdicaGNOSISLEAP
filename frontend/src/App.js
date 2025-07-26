@@ -748,8 +748,6 @@ const App = () => {
   const [health, setHealth] = useState(null);
   const [analysisData, setAnalysisData] = useState(null);
 
-  console.log(`App render: activeTab = ${activeTab}`);
-
   useEffect(() => {
     checkHealth();
   }, []);
@@ -768,17 +766,11 @@ const App = () => {
     setActiveTab('analysis');
   };
 
-  const handleTabChange = (tabId) => {
-    console.log(`handleTabChange called with: ${tabId}`);
-    setActiveTab(tabId);
-    console.log(`setActiveTab called with: ${tabId}`);
-  };
-
   return (
     <div className="min-h-screen bg-gray-900">
-      <Navigation activeTab={activeTab} setActiveTab={handleTabChange} health={health} />
+      <Navigation activeTab={activeTab} setActiveTab={setActiveTab} health={health} />
       
-      {activeTab === 'home' && <HomeTab setActiveTab={handleTabChange} />}
+      {activeTab === 'home' && <HomeTab setActiveTab={setActiveTab} />}
       {activeTab === 'predict' && <PredictTab onAnalyze={handleAnalyze} />}
       {activeTab === 'analysis' && <AnalysisTab analysisData={analysisData} />}
       {activeTab === 'about' && <AboutTab />}
