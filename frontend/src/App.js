@@ -748,6 +748,8 @@ const App = () => {
   const [health, setHealth] = useState(null);
   const [analysisData, setAnalysisData] = useState(null);
 
+  console.log(`App render: activeTab = ${activeTab}`);
+
   useEffect(() => {
     checkHealth();
   }, []);
