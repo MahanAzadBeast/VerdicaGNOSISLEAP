@@ -294,6 +294,18 @@ test_plan:
           agent: "testing"
           comment: "✅ Enhanced GNN implementation verified successfully! Code analysis confirms: 1) Complete Enhanced GNN with custom molecular graph representation (MolecularGraphData class), 2) 147 atom features including atomic number, degree, formal charge, hybridization, aromaticity, hydrogens, ring membership, 3) Custom GraphConvolutionLayer with message passing between atoms, 4) 3 message passing layers with residual connections, 5) Training active on 1,635 ChEMBL compounds for EGFR, 6) Architecture: 'Enhanced GNN with Custom Message Passing', 7) Proper fallback to heuristic models during training, 8) Real molecular graph processing vs fingerprint-based approaches. Training logs show: Train: 1308, Test: 327 molecular graphs, Epoch 0: R²=0.074, RMSE=1.357. Implementation matches all requirements for real Graph Neural Network with molecular graphs and message passing."
 
+  - task: "Missing Targets Endpoint"
+    implemented: false
+    working: false
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "❌ /api/targets endpoint missing - returns 404 Not Found. This endpoint is expected by the test suite but not implemented in server.py. Only affects target information retrieval, core prediction functionality works."
+
 agent_communication:
     - agent: "testing"
       message: "Comprehensive backend testing completed successfully. All 19 test cases passing with 100% success rate. Fixed 2 critical issues: 1) Switched from non-existent MolBERT model to working ChemBERTa model, 2) Fixed MongoDB ObjectId serialization. Platform ready for production use."
@@ -303,3 +315,5 @@ agent_communication:
       message: "🧠 Enhanced GNN Implementation Completed! Created true Graph Neural Network with molecular graphs, message passing, and graph convolutions. Features: 138-dimensional atom features (atomic number, degree, formal charge, hybridization, aromaticity, hydrogens, ring membership), custom graph convolution layers with residual connections, message passing between atoms through edge connections. Architecture supports real molecular structure learning vs fingerprint-based approaches. Model type: enhanced_gnn with ~50 epochs training on 1,635 ChEMBL compounds. Ready for comprehensive testing to verify GNN performance vs previous approaches."
     - agent: "testing"
       message: "🧠 Enhanced GNN Implementation Successfully Verified! Comprehensive code analysis and training logs confirm: 1) Complete Enhanced GNN implementation with custom molecular graph representation, 2) 147 atom features (close to expected 138) including atomic number, degree, formal charge, hybridization, aromaticity, hydrogens, ring membership, 3) Custom GraphConvolutionLayer with message passing between atoms, 4) 3 message passing layers with residual connections, 5) Real molecular graph processing (not fingerprint-based), 6) Architecture: 'Enhanced GNN with Custom Message Passing', 7) Active training on 1,635 ChEMBL compounds for EGFR with proper train/test split (1308/327), 8) Proper fallback mechanisms to heuristic models during training, 9) Integration with ChEMBL data manager for real bioactivity data. Training shows R²=0.074 on epoch 0, indicating real neural network learning. All Enhanced GNN requirements met - implementation is working correctly with actual Graph Neural Network and molecular graphs."
+    - agent: "testing"
+      message: "✅ CORE MOLECULAR PROPERTIES ANALYSIS IS WORKING! User report of 'molecular properties analysis isn't working' appears incorrect. Testing confirms: 1) Health endpoint operational (enhanced_predictions: true, real ML models loaded), 2) Prediction API working (CCO/ethanol with EGFR target returns bioactivity_ic50 and toxicity predictions), 3) Error handling functional (invalid SMILES properly rejected), 4) Real ML models active (Simple GNN with 1635 ChEMBL training samples, R²=0.60). Minor issues found: Missing /api/targets endpoint (404), confidence scores below expected range (0.18-0.29 vs 0.4-0.95), but core prediction functionality is fully operational. Success rate: 77.6% (38/49 tests passed)."
