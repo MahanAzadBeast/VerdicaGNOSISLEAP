@@ -275,9 +275,11 @@ const ResultsDisplay = ({ results, isLoading, error, onAnalyze }) => {
     switch (type) {
       case 'bioactivity_ic50':
         if (enhanced.ic50_nm) {
+          // Convert from nM to µM (divide by 1000)
+          const ic50_um = enhanced.ic50_nm / 1000;
           return (
             <div className="text-xs">
-              <div>IC₅₀: {enhanced.ic50_nm.toFixed(1)} nM</div>
+              <div>IC₅₀: {ic50_um.toFixed(1)} µM</div>
               {enhanced.pic50 && (
                 <div className="text-gray-500">pIC₅₀: {enhanced.pic50.toFixed(2)}</div>
               )}
