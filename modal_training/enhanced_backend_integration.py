@@ -405,6 +405,33 @@ async def get_modal_model_status() -> Dict[str, Any]:
     
     return status
 
+# Chemprop GNN integration functions
+async def chemprop_modal_train(
+    target: str,
+    training_data: List[Dict],
+    epochs: int = 50,
+    webhook_url: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Main Chemprop training function for FastAPI integration
+    """
+    client = get_modal_client()
+    return await client.train_chemprop_gnn(target, training_data, epochs, webhook_url)
+
+async def get_chemprop_model_status(target: str) -> Dict[str, Any]:
+    """
+    Get Chemprop model status for FastAPI
+    """
+    client = get_modal_client()
+    return await client.get_chemprop_model_status(target)
+
+async def download_chemprop_model_local(target: str) -> Dict[str, Any]:
+    """
+    Download Chemprop model for local use
+    """
+    client = get_modal_client()
+    return await client.download_chemprop_model_for_local_use(target)
+
 if __name__ == "__main__":
     print("🎯 Enhanced Modal MolBERT Backend Integration")
     print("")
