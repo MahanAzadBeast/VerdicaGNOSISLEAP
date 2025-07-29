@@ -561,8 +561,26 @@ async def predict_molecular_properties(input_data: SMILESInput):
             confidence=0.5
         )
         
-        # Make predictions with traditional models
-        molbert_pred = predict_with_molbert(input_data.smiles, prediction_type)
+        # Make predictions with different models
+        if ENHANCED_MODAL_AVAILABLE:
+            # Use real ChemBERTA pretrained weights on Modal
+            logger.info("🤖 Using pretrained ChemBERTA from Modal")
+            try:
+                modal_molbert_result = await molbert_modal_predict(
+                    input_data.smiles, 
+                    input_data.target, 
+                    use_finetuned=False  # Use pretrained weights
+                )
+                if modal_molbert_result.get("status") == "success":
+                    molbert_pred = modal_molbert_result["prediction"]["ic50_nm"] / 1000  # Convert to µM
+                else:
+                    molbert_pred = predict_with_molbert(input_data.smiles, prediction_type)
+            except Exception as e:
+                logger.error(f"Modal ChemBERTA failed: {e}")
+                molbert_pred = predict_with_molbert(input_data.smiles, prediction_type)
+        else:
+            molbert_pred = predict_with_molbert(input_data.smiles, prediction_type)
+        
         chemprop_pred = predict_with_chemprop_simulation(input_data.smiles, prediction_type)
         
         result.molbert_prediction = molbert_pred
