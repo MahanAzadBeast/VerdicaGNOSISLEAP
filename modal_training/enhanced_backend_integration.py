@@ -7,7 +7,7 @@ import asyncio
 import logging
 import os
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import modal
 
 # Configure logging
