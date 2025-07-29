@@ -943,7 +943,7 @@ def finetune_chembert_modal(
             logger.info(f"📚 Using comprehensive curated EGFR dataset: {len(training_data)} compounds")
         
         # Validate training data
-        if not training_data or len(training_data) < 50:
+        if not training_data or len(training_data) < 200:
             raise ValueError(f"Insufficient training data: {len(training_data) if training_data else 0} samples")
         
         logger.info(f"📊 Training data: {len(training_data)} compounds")
