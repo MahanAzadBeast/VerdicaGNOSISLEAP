@@ -1177,12 +1177,13 @@ class EnhancedChemistryPlatformTester:
 
     def run_all_tests(self):
         """Run all tests and provide summary"""
-        print(f"🧪 Starting Enhanced Chemistry Platform Backend Testing with Real ML Models")
+        print(f"🧪 Starting Enhanced Chemistry Platform Backend Testing with Enhanced Modal MolBERT")
         print(f"Backend URL: {API_BASE}")
         print("=" * 60)
         
-        # Run all tests including new real ML model tests
+        # Run all tests including Enhanced Modal MolBERT tests
         tests = [
+            # Core functionality tests
             self.test_health_endpoint_enhanced,
             self.test_real_ml_model_status,
             self.test_targets_endpoint,
@@ -1190,6 +1191,17 @@ class EnhancedChemistryPlatformTester:
             self.test_multi_target_comparison,
             self.test_all_prediction_types,
             self.test_confidence_and_similarity_ranges,
+            
+            # Enhanced Modal MolBERT tests
+            self.test_enhanced_modal_molbert_status,
+            self.test_enhanced_modal_molbert_setup,
+            self.test_enhanced_modal_molbert_predict_fallback,
+            self.test_enhanced_modal_molbert_train,
+            self.test_enhanced_modal_smiles_validation,
+            self.test_existing_predict_endpoint_integration,
+            self.test_backend_startup_with_modal,
+            
+            # Real ML model tests
             self.test_chembl_data_integration,
             self.test_real_vs_heuristic_comparison,
             self.test_error_handling_and_fallback,
