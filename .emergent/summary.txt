@@ -1,38 +1,18 @@
 <analysis>
-The previous AI engineer successfully launched the Veridica AI platform's MVP, focusing on a robust UI/UX and integrating initial molecular prediction models. A significant portion of the work involved an iterative UI redesign, including implementing a dark theme, new navigation tabs, and extensive refinement of a Spline 3D animation on the homepage. Key challenges included precisely positioning the Spline animation, fixing cropping issues, and dynamically placing feature boxes. Concurrently, the engineer attempted to integrate *real* Chemprop/ChemBERTa models with ChEMBL data for IC₅₀ prediction, but faced persistent technical blockers related to slow data downloads and model initialization timeouts. This led to a fallback to sophisticated heuristic models, ensuring the platform remained functional. The work concluded with the engineer actively debugging a prediction error, identifying and temporarily bypassing the blocking real model initialization to restore service, and then attempting to fetch specific ChEMBL data for actual model training.
+The previous AI engineer successfully launched the Veridica AI platform's MVP, focusing on UI/UX and progressively integrating molecular prediction models. The initial work involved refining the frontend design, including a dark theme and Spline 3D animation, and implementing heuristic prediction models. A major shift involved integrating actual ML models like Chemprop and MolBERT, which presented challenges with environment compatibility and long-running training. Aggressive checkpointing was implemented for MolBERT to enable incremental training, leading to a positive R² score.
+
+The recent trajectory shows a focus on addressing frontend Prediction Error due to backend timeouts, leading to retry logic and improved loading indicators on the frontend. A significant portion of the work revolved around migrating MolBERT training to Modal.com GPUs for efficiency, which involved setting up Modal deployment, addressing environment/import errors, and debugging model performance issues. Despite successful infrastructure setup and large dataset processing on A100 GPUs, the custom MolBERT training attempts yielded poor R² scores. The latest user directive shifts focus to fine-tuning a pre-trained MolBERT model from BenevolentAI.
 </analysis>
 
 <product_requirements>
-The Veridica AI platform aims to be an AI-driven drug discovery interface, supporting molecular property predictions (Bioactivity, Toxicity, ADME, Physicochemical, Drug-likeness) via SMILES input. The MVP uses React/FastAPI/MongoDB. A key shift was requiring *actual* pre-trained Chemprop and MolBERT/ChemBERTa models for IC₅₀ prediction, trained on ChEMBL/BindingDB, with future confidence scoring. The UI needed a dark-themed, responsive redesign, incorporating Home, Predict Molecule Properties, Result Analysis (new, with visualizations/export), and About/Contact tabs. The homepage required a Spline 3D animation banner, meticulously positioned and un-cropped, with a Start Discovery AI title overlay, and a new branded logo replacing text. The immediate problem is ensuring real AI models function while maintaining the refined UI.
+The Veridica AI platform aims to be an AI-driven drug discovery interface. It supports molecular property predictions (Bioactivity, Toxicity, ADME, Physicochemical, Drug-likeness) via SMILES input, currently built with React, FastAPI, and MongoDB. A key requirement is to utilize pre-trained Chemprop and MolBERT/ChemBERTa models for IC₅₀ prediction, trained on ChEMBL/BindingDB, with future plans for confidence scoring. The UI required a dark-themed, responsive redesign, including Home, Predict Molecule Properties, Result Analysis (with visualizations/export), and About/Contact tabs. The homepage needed a Spline 3D animation banner with specific overlay text and a branded logo. The ongoing challenge is to ensure real AI models function reliably, especially handling long-running training, and to present results clearly. Recent user feedback focused on refining results display (removing RDKit, consolidating Enhanced/Chemprop, correcting IC₅₀ units to µM from nM, verifying toxicity confidence) and migrating MolBERT training to high-performance GPUs for speed and accuracy.
 </product_requirements>
 
 <key_technical_concepts>
-- **Molecular Prediction Models:** Chemprop (Graph Neural Network), ChemBERTa (Transformer model).
-- **Web Development:** React.js (Frontend), FastAPI (Backend), Tailwind CSS (Styling).
+- **Molecular Prediction Models:** MolBERT (Transformer), Chemprop (GNN), Simple GNN (Neural Network), Random Forest.
+- **Web Development:** React.js (Frontend), FastAPI (Backend), Tailwind CSS.
 - **Database:** MongoDB.
-- **Chemistry Libraries:** RDKit, .
-- **3D Graphics:** Spline (, ).
-- **Service Management:** Supervisor.
-- **Data Handling:** ChEMBL API integration, CSV data processing.
-</key_technical_concepts>
-
-<code_architecture>
-The application follows a standard full-stack architecture: React frontend, FastAPI backend, and MongoDB database.
-
-
-
-- ****:
-    -   **Importance:** Core FastAPI backend, handles API endpoints, prediction logic, and MongoDB integration.
-    -   **Changes:** Evolved from placeholder to include heuristic molecular property prediction (RDKit, ChemBERTa feature extraction, Chemprop simulation). It defines  and . Recent changes include attempts to integrate  and  for actual model loading during startup, adding health endpoints to report model status. Temporarily modified to disable real model loading and rely on heuristics to resolve blocking issues.
--   ****:
-    -   **Importance:** Main React component; renders UI, manages navigation, input forms, and results.
-    -   **Changes:** Underwent significant redesign for dark theme, adding Home, Predict Properties, Result Analysis, About tabs. Extensively modified to embed and refine the Spline 3D animation on the Home tab (size, position, clickability). It now features a Start Discovery AI title overlaying the Spline. It dynamically manages state for inputs and prediction results.
--   ****:
-    -   **Importance:** Tailwind CSS styling for the application.
-    -   **Changes:** Updated for dark theme, gradient effects, responsive design. A critical fix was added () to address screenshot tool timeouts caused by font loading issues with the Spline component.
--   ****:
-    -   **Importance:** Lists Python dependencies for the backend.
-    -   **Changes:** Includes , , , , usage: transformers <command> [<args>]
+- **Chemistry Libraries:** RDKit, , , usage: transformers <command> [<args>]
 
 positional arguments:
   {chat,convert,download,env,run,serve,add-new-model-like,add-fast-image-processor}
@@ -44,39 +24,72 @@ positional arguments:
                         GraphQL endpoints.
 
 options:
-  -h, --help            show this help message and exit, , , , .
+  -h, --help            show this help message and exit.
+- **Cloud ML Platforms:** Modal.com, RunPod.
+- **3D Graphics:** Spline.
+- **Service Management:** Supervisor, Checkpointing.
+</key_technical_concepts>
+
+<code_architecture>
+The application uses a standard full-stack architecture: React frontend, FastAPI backend, and MongoDB database.
+
+
+
 -   ****:
-    -   **Importance:** Manages Node.js dependencies and scripts for React.
-    -   **Changes:** Includes , , , Tailwind CSS packages.
+    -   **Importance:** Core FastAPI backend, handling API endpoints, prediction logic, and MongoDB integration. It centralizes model invocation and status.
+    -   **Changes:**
+        -   Expanded to integrate various ML models (, ).
+        -   Added MolBERT incremental training and status endpoints (, ).
+        -   Recently added  endpoint to list available prediction targets.
+        -   Integrated Modal.com related endpoints:  (POST) and  (GET) for programmatic Modal deployment, and  (POST) for real-time training updates from Modal.
 -   ****:
-    -   **Importance:** Intended to download and process ChEMBL data for real model training.
-    -   **Changes:** Created to support real IC₅₀ predictions. Contains methods for fetching bioactivity data, preparing training data, and generating fingerprints. Efforts to fully integrate it faced blocking issues and slow downloads, leading to its temporary deactivation from the startup process.
+    -   **Importance:** Main React component, rendering UI, managing navigation, input forms, and displaying prediction results.
+    -   **Changes:**
+        -   Redesigned for dark theme and Spline 3D integration.
+        -   Implemented robust API calls for predictions with  state,  (60-second timeout), and retry logic (3 retries with 2-second delay).
+        -   Modified  block in  to ensure  always executes.
+        -   Cleaned up  component: removed redundant RDKit column, consolidated Enhanced Model and Chemprop into one Enhanced Prediction column.
+        -   Fixed IC₅₀ display from pIC₅₀ to actual IC₅₀ in nM, and then further updated to µM (dividing nM by 1000).
+        -   Confirmed toxicity confidence display as a percentage.
 -   ****:
-    -   **Importance:** Intended to encapsulate the training and prediction logic for real Chemprop models.
-    -   **Changes:** Introduced to move beyond simulated predictions. Contains a  class with methods for  and . It was modified to accept  and attempt model loading, but its full operationalization is currently blocked by data acquisition/training issues.
--   ****:
-    -   **Importance:** Stores the main application logo image.
-    -   **Changes:** This file was recently added after the AI engineer successfully downloaded the user-provided logo image and placed it here for the frontend to use in the navigation bar.
+    -   **Importance:** Implements the MolBERT model.
+    -   **Changes:** Enhanced to support aggressive checkpointing and incremental training, allowing training to resume from last saved state.
+-   ** directory**:
+    -   **Importance:** Contains files for deploying and managing MolBERT training on Modal.com GPUs.
+    -   **Key Files:**
+        -   : Defines the Modal app for multi-target MolBERT training.
+        -   : Contains the actual MolBERT training logic adapted for GPU, including data loading, model definition, and training loop.
+        -   : Python script for programmatically deploying to Modal via API.
+        -   : Handles API routes for Modal deployment and status.
+        -   : A simplified script for direct API-based deployment.
+        -   : An updated version of  created to address module import errors and  device type issues encountered during Modal deployment. It directly embeds the training code for more robust deployment.
 </code_architecture>
 
 <pending_tasks>
-- Integrating *actual* pre-trained Chemprop models (trained on ChEMBL IC₅₀ regression data) instead of the current heuristic approach.
-- Utilizing MolBERT/ChemBERTa as a feature extractor with a *real, trained regression layer* for bioactivity prediction.
-- Implementing *true* confidence scoring based on molecular similarity to *real* training datasets.
-- Fully implementing the visualizations (bar graphs, scatter plots, heatmaps) and interactive features within the Result Analysis tab.
-- Obtaining correct ChEMBL ID for EGFR data to resume real model training.
+- Continue MolBERT training towards Epoch 50 to further improve its R² performance. (Current MolBERT pre-training attempts yielded poor R²).
+- Fully implement visualizations (bar graphs, scatter plots, heatmaps) and interactive features within the Result Analysis tab.
 </pending_tasks>
 
 <current_work>
-The AI engineer was most recently focused on resolving a Failed to Get Predictions error reported by the user. This error was traced to a 500 Internal Server Error in the backend, primarily caused by the ChEMBL data download process blocking the application's startup and subsequent requests.
+The most immediate work involved a significant effort to migrate the MolBERT training from local CPU to Modal.com's A100 GPUs to achieve substantial speed and accuracy improvements.
 
-To mitigate this, the engineer temporarily disabled the real ML model initialization and ChEMBL data downloads in  and . This ensures the application consistently falls back to its robust heuristic-based prediction models, thereby restoring full functionality for the  endpoint.
+Initially, a **RunPod-ready training package** was created, but the user shifted to **Modal.com**. This led to the creation of a  directory containing:
+-  and  for defining and executing GPU-accelerated training.
+- Backend API endpoints (, , ) were added to  to allow programmatic deployment and progress monitoring from the main application.
 
-Following the fix, the prediction form on the frontend () was confirmed to be working, allowing users to input SMILES and select prediction types.
+The deployment process faced several issues:
+1.  **Manual Authentication**: Modal required interactive browser authentication, which was a limitation for the AI engineer.
+2.  **Module Not Found Error**: Initial Modal deployments failed with No module named molbert_training_gpu. This was fixed by adjusting imports and ensuring backend files were copied to the Modal context.
+3.  **Modal API Syntax Error**: Encountered , which was fixed in .
+4.  ** Error**: A  related to  missing  argument was fixed by explicitly passing  in .
 
-The immediate next step involved attempting to fetch real EGFR IC50 data using a specific ChEMBL API endpoint provided by the user. The engineer successfully queried the API but discovered the initial  () corresponded to Delta opioid receptor instead of EGFR, prompting the need to identify the correct ChEMBL ID for the Epidermal growth factor receptor.
+After resolving these infrastructure and deployment issues, the MolBERT training was successfully deployed and executed on A100 GPUs.
+- **BCL2 Target**: An initial training attempt on BCL2 data resulted in an R² of -0.19, indicating poor model performance, attributed to a small dataset (119 samples) and a basic embedded MolBERT implementation.
+- **EGFR Target**: A subsequent focused training on EGFR, utilizing a much larger dataset of 3,968 compounds, successfully ran on the A100 GPU. However, this attempt also yielded poor results (R² ≈ 0), with early stopping at epoch 15. The issue was identified as model architecture, data preprocessing, or training configuration, NOT limited data.
+
+The user's latest instruction is to pivot from training MolBERT from scratch to **fine-tuning using pre-trained MolBERT weights** from BenevolentAI. The engineer has successfully cloned the official MolBERT repository and downloaded the 922 MB pretrained model zip file.
 </current_work>
 
 <optional_next_step>
-Find the correct ChEMBL ID for the Epidermal growth factor receptor to proceed with fetching real IC₅₀ data.
+Extract the downloaded MolBERT pretrained weights and set up the environment for fine-tuning based on the new strategy.
 </optional_next_step>
