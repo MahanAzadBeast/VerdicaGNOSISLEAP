@@ -67,10 +67,10 @@ class EnhancedChemistryPlatformTester:
                 self.log_test("Available targets", len(available_targets) >= 3, f"Targets: {available_targets}")
                 
                 # Check prediction types
-                available_predictions = data.get('available_predictions', [])
+                prediction_types = data.get('prediction_types', [])
                 expected_predictions = ['bioactivity_ic50', 'toxicity', 'logP', 'solubility']
-                has_all_predictions = all(pred in available_predictions for pred in expected_predictions)
-                self.log_test("All prediction types available", has_all_predictions, f"Predictions: {available_predictions}")
+                has_all_predictions = all(pred in prediction_types for pred in expected_predictions)
+                self.log_test("All prediction types available", has_all_predictions, f"Predictions: {prediction_types}")
                 
                 return True
             else:
