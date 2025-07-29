@@ -637,7 +637,8 @@ def finetune_chembert_modal(
     import torch
     import torch.nn as nn
     from torch.utils.data import Dataset, DataLoader
-    from transformers import AutoTokenizer, AutoModel, AdamW
+    from transformers import AutoTokenizer, AutoModel
+    from torch.optim import AdamW  # AdamW moved to torch.optim
     import logging
     import json
     import pandas as pd
