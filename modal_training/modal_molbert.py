@@ -149,7 +149,6 @@ def download_trained_model(target: str = "EGFR"):
     image=image,
     gpu=modal.gpu.A100(count=1),
     volumes={"/models": volume},
-    mounts={"/app": code_mount},
     timeout=21600,  # 6 hours for multi-target
     memory=32768,
     cpu=8.0
