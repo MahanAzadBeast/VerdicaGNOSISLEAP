@@ -251,7 +251,7 @@ def train_egfr_molbert(
                 optimizer.zero_grad()
                 
                 if scaler:
-                    with autocast():
+                    with autocast(device_type='cuda'):
                         outputs = model(batch_X)
                         loss = criterion(outputs, batch_y)
                     
