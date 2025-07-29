@@ -689,6 +689,91 @@ async def get_gpu_training_results(target: str = "EGFR"):
             }
     
     return {"target": target, "status": "not_completed", "results": None}
+
+# Enhanced Modal MolBERT Endpoints
+if ENHANCED_MODAL_AVAILABLE:
+    
+    @api_router.get("/modal/molbert/status")
+    async def get_modal_molbert_status():
+        """Get Enhanced Modal MolBERT setup status"""
+        try:
+            status = await get_modal_model_status()
+            return status
+        except Exception as e:
+            return {
+                "status": "error",
+                "message": str(e),
+                "modal_available": False
+            }
+    
+    @api_router.post("/modal/molbert/setup")
+    async def setup_modal_molbert_endpoint():
+        """Setup Enhanced Modal MolBERT (download pretrained model)"""
+        try:
+            result = await setup_modal_molbert()
+            return result
+        except Exception as e:
+            return {
+                "status": "error",
+                "message": str(e),
+                "timestamp": datetime.utcnow().isoformat()
+            }
+    
+    @api_router.post("/modal/molbert/train/{target}")
+    async def train_modal_molbert(
+        target: str,
+        webhook_url: Optional[str] = None
+    ):
+        """Start Enhanced Modal MolBERT fine-tuning for specific target"""
+        try:
+            if target not in AVAILABLE_TARGETS:
+                raise HTTPException(
+                    status_code=400, 
+                    detail=f"Invalid target. Available: {list(AVAILABLE_TARGETS.keys())}"
+                )
+            
+            result = await molbert_modal_train(target, webhook_url)
+            return result
+        except Exception as e:
+            return {
+                "status": "error",
+                "message": str(e),
+                "target": target,
+                "timestamp": datetime.utcnow().isoformat()
+            }
+    
+    @api_router.post("/modal/molbert/predict")
+    async def predict_modal_molbert(
+        smiles: str,
+        target: str = "EGFR",
+        use_finetuned: bool = True
+    ):
+        """Run prediction using Enhanced Modal MolBERT"""
+        try:
+            if not validate_smiles(smiles):
+                raise HTTPException(status_code=400, detail="Invalid SMILES string")
+            
+            if target not in AVAILABLE_TARGETS:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Invalid target. Available: {list(AVAILABLE_TARGETS.keys())}"
+                )
+            
+            result = await molbert_modal_predict(smiles, target, use_finetuned)
+            return result
+        except Exception as e:
+            return {
+                "status": "error", 
+                "message": str(e),
+                "smiles": smiles,
+                "target": target
+            }
+    
+    logging.info("✅ Enhanced Modal MolBERT endpoints added")
+
+else:
+    logging.info("⚠️ Enhanced Modal MolBERT endpoints not available")
+
 # Include the router in the main app
 app.include_router(api_router)
 
