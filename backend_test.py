@@ -50,7 +50,7 @@ class EnhancedChemistryPlatformTester:
                 data = response.json()
                 
                 # Check required fields for enhanced predictions
-                required_fields = ['status', 'models_loaded', 'available_predictions', 'available_targets', 'enhanced_predictions']
+                required_fields = ['status', 'models_loaded', 'prediction_types', 'available_targets', 'enhanced_predictions']
                 missing_fields = [field for field in required_fields if field not in data]
                 
                 if missing_fields:
