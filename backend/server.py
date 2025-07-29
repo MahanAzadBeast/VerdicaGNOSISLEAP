@@ -47,6 +47,22 @@ try:
 except Exception as e:
     logging.warning(f"⚠️ Modal API integration not available: {e}")
 
+# Import Enhanced Modal MolBERT integration
+try:
+    sys.path.append('/app/modal_training')
+    from enhanced_backend_integration import (
+        get_modal_client, 
+        setup_modal_molbert,
+        molbert_modal_predict,
+        molbert_modal_train,
+        get_modal_model_status
+    )
+    logging.info("✅ Enhanced Modal MolBERT integration loaded")
+    ENHANCED_MODAL_AVAILABLE = True
+except Exception as e:
+    logging.warning(f"⚠️ Enhanced Modal MolBERT integration not available: {e}")
+    ENHANCED_MODAL_AVAILABLE = False
+
 # GPU Training Progress Storage (in-memory for now, could use Redis/DB)
 gpu_training_progress = {}
 
