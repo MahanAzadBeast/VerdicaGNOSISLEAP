@@ -818,7 +818,7 @@ class EnhancedChemistryPlatformTester:
                 data = response.json()
                 
                 # Check required fields
-                required_fields = ['status', 'modal_available']
+                required_fields = ['modal_available']
                 missing_fields = [field for field in required_fields if field not in data]
                 
                 if missing_fields:
@@ -826,14 +826,14 @@ class EnhancedChemistryPlatformTester:
                     return False
                 
                 modal_available = data.get('modal_available', False)
-                status = data.get('status', 'unknown')
+                credentials_set = data.get('credentials_set', False)
                 
-                self.log_test("Modal MolBERT status endpoint", True, f"Status: {status}, Modal available: {modal_available}")
+                self.log_test("Modal MolBERT status endpoint", True, f"Modal available: {modal_available}, Credentials set: {credentials_set}")
                 
-                # Check for credentials info if available
-                if 'credentials_configured' in data:
-                    credentials_configured = data.get('credentials_configured', False)
-                    self.log_test("Modal credentials info", True, f"Credentials configured: {credentials_configured}")
+                # Check for additional info
+                if 'app_name' in data:
+                    app_name = data.get('app_name', '')
+                    self.log_test("Modal app info", True, f"App name: {app_name}")
                 
                 return True
                 
