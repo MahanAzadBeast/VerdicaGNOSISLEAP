@@ -37,6 +37,16 @@ app = FastAPI(title="Veridica AI - Predictive Chemistry Platform")
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Import Modal API integration
+try:
+    import sys
+    sys.path.append('/app')
+    from modal_training.modal_backend_integration import modal_router
+    app.include_router(modal_router, tags=["Modal GPU Training"])
+    logging.info("✅ Modal API integration loaded")
+except Exception as e:
+    logging.warning(f"⚠️ Modal API integration not available: {e}")
+
 # GPU Training Progress Storage (in-memory for now, could use Redis/DB)
 gpu_training_progress = {}
 
