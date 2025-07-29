@@ -291,6 +291,55 @@ class EnhancedModalMolBERTClient:
                 "status": "error",
                 "message": str(e)
             }
+
+    async def finetune_chembert_modal(
+        self,
+        target: str,
+        training_data: List[Dict],  # [{"smiles": str, "ic50": float}]
+        epochs: int = 10,
+        webhook_url: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Fine-tune ChemBERTa with regression head on Modal A100
+        """
+        if not self.modal_available:
+            return {
+                "status": "error",
+                "message": "Modal credentials not available"
+            }
+        
+        try:
+            logger.info(f"🧠 Starting ChemBERTa fine-tuning for {target}...")
+            
+            app = modal.App.lookup(self.app_name, create_if_missing=False)
+            finetune_fn = modal.Function.lookup(self.app_name, "finetune_chembert_modal")
+            
+            # Start fine-tuning (async)
+            result = finetune_fn.remote(
+                target=target,
+                training_data=training_data,
+                epochs=epochs,
+                webhook_url=webhook_url
+            )
+            
+            logger.info(f"✅ ChemBERTa fine-tuning started for {target}")
+            return {
+                "status": "training_started",
+                "target": target,
+                "model_type": "chembert_finetuned",
+                "message": f"ChemBERTa fine-tuning started for {target}",
+                "training_id": str(result),
+                "training_samples": len(training_data),
+                "timestamp": datetime.now().isoformat()
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ ChemBERTa fine-tuning failed: {e}")
+            return {
+                "status": "error",
+                "message": str(e),
+                "timestamp": datetime.now().isoformat()
+            }
     
     async def _local_fallback_prediction(
         self,
