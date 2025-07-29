@@ -1,8 +1,9 @@
 """
-Enhanced Modal.com MolBERT Setup with Persistent Model Storage
+Enhanced Modal.com MolBERT & Chemprop Setup with Persistent Model Storage
 - Uses molbert-cache volume for model persistence
 - Downloads seyonec/ChemBERTa-zinc-base-v1 from Hugging Face on first run
 - Mounts Hugging Face cache to persistent volume
+- Includes Chemprop GNN training on A100 GPUs
 """
 
 import modal
@@ -11,7 +12,7 @@ import sys
 from pathlib import Path
 
 # Define Modal app
-app = modal.App("molbert-enhanced")
+app = modal.App("molbert-chemprop-enhanced")
 
 # Create Modal image with all dependencies
 image = modal.Image.debian_slim(python_version="3.11").pip_install([
@@ -27,7 +28,9 @@ image = modal.Image.debian_slim(python_version="3.11").pip_install([
     "chembl-webresource-client>=0.10.8",
     "accelerate>=0.21.0",
     "pytorch-lightning>=2.0.0",
-    "tokenizers>=0.14.0"
+    "tokenizers>=0.14.0",
+    "chemprop>=1.6.1",  # Add Chemprop for GNN training
+    "descriptastorus>=2.6.0"  # Chemprop dependency
 ]).run_commands([
     # Install additional dependencies
     "apt-get update && apt-get install -y git wget curl",
