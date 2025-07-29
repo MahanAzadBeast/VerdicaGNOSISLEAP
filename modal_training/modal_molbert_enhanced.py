@@ -625,14 +625,14 @@ def train_chemprop_gnn_modal(
 )
 def finetune_chembert_modal(
     target: str = "EGFR",
-    training_data: list = None,  # List of {"smiles": str, "ic50": float}
     epochs: int = 10,
-    batch_size: int = 16,  # Conservative for transformer fine-tuning
-    learning_rate: float = 2e-5,  # Standard for BERT fine-tuning
-    webhook_url: str = None
+    batch_size: int = 16,
+    learning_rate: float = 2e-5,
+    webhook_url: str = ""
 ):
     """
     Fine-tune ChemBERTa with regression head for IC50 prediction on Modal A100
+    Uses comprehensive 1000+ compound dataset for realistic training
     """
     import torch
     import torch.nn as nn
