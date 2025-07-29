@@ -330,7 +330,7 @@ def get_model_info():
 
 @app.function(
     image=image,
-    gpu=modal.gpu.A100(count=1),
+    gpu="A100-40GB",  # Updated GPU specification
     volumes={
         "/cache": molbert_cache,
         "/training": training_volume
