@@ -40,7 +40,7 @@ def deploy_molbert_to_modal(modal_token_id, modal_token_secret):
         
         # Start training for all targets
         print("🎯 Starting training for all 6 targets...")
-        webhook_url = "https://fe6fb94e-8195-4707-8bf5-159ba572116c.preview.emergentagent.com/api/gpu/training-progress"
+        webhook_url = "https://348769bf-1602-47bf-a66f-b776b4902d87.preview.emergentagent.com/api/gpu/training-progress"
         
         result = train_all_targets.remote(
             targets=["EGFR", "BRAF", "CDK2", "PARP1", "BCL2", "VEGFR2"],
