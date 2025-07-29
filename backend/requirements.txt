@@ -16,3 +16,4 @@ chemprop==1.6.1
 descriptastorus
 dgl
 dgllife
+pytorch-lightning
