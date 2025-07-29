@@ -175,6 +175,123 @@ class EnhancedModalMolBERTClient:
             # Fallback to local prediction
             return await self._local_fallback_prediction(smiles, target)
     
+    async def train_chemprop_gnn(
+        self,
+        target: str,
+        training_data: List[Dict],  # [{"smiles": str, "activity": float}]
+        epochs: int = 50,
+        webhook_url: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Train Chemprop GNN on Modal A100 for specific target
+        """
+        if not self.modal_available:
+            return {
+                "status": "error",
+                "message": "Modal credentials not available"
+            }
+        
+        try:
+            logger.info(f"🧠 Starting Chemprop GNN training for {target}...")
+            
+            app = modal.App.lookup(self.app_name, create_if_missing=False)
+            train_fn = modal.Function.lookup(self.app_name, "train_chemprop_gnn_modal")
+            
+            # Start training (async)
+            result = train_fn.remote(
+                target=target,
+                training_data=training_data,
+                epochs=epochs,
+                webhook_url=webhook_url
+            )
+            
+            logger.info(f"✅ Chemprop GNN training started for {target}")
+            return {
+                "status": "training_started",
+                "target": target,
+                "model_type": "chemprop_gnn",
+                "message": f"Chemprop GNN training started for {target}",
+                "training_id": str(result),
+                "training_samples": len(training_data),
+                "timestamp": datetime.now().isoformat()
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ Chemprop GNN training failed: {e}")
+            return {
+                "status": "error",
+                "message": str(e),
+                "timestamp": datetime.now().isoformat()
+            }
+    
+    async def get_chemprop_model_status(self, target: str) -> Dict[str, Any]:
+        """Get status of trained Chemprop model"""
+        if not self.modal_available:
+            return {
+                "status": "error",
+                "message": "Modal credentials not available"
+            }
+        
+        try:
+            app = modal.App.lookup(self.app_name, create_if_missing=False)
+            info_fn = modal.Function.lookup(self.app_name, "get_chemprop_model_info")
+            
+            result = info_fn.remote(target=target)
+            return result
+            
+        except Exception as e:
+            logger.error(f"❌ Failed to get Chemprop model status: {e}")
+            return {
+                "status": "error",
+                "message": str(e)
+            }
+    
+    async def download_chemprop_model_for_local_use(self, target: str) -> Dict[str, Any]:
+        """Download trained Chemprop model for local inference"""
+        if not self.modal_available:
+            return {
+                "status": "error",
+                "message": "Modal credentials not available"
+            }
+        
+        try:
+            logger.info(f"📥 Downloading Chemprop model for {target}...")
+            
+            app = modal.App.lookup(self.app_name, create_if_missing=False)
+            download_fn = modal.Function.lookup(self.app_name, "download_chemprop_model")
+            
+            result = download_fn.remote(target=target)
+            
+            # Save model locally for fast inference
+            if result.get("model_data"):
+                local_model_path = f"/app/backend/local_chemprop_models/{target}_model.pt"
+                os.makedirs(os.path.dirname(local_model_path), exist_ok=True)
+                
+                with open(local_model_path, 'wb') as f:
+                    f.write(result["model_data"])
+                
+                logger.info(f"💾 Chemprop model saved locally: {local_model_path}")
+                
+                return {
+                    "status": "downloaded",
+                    "target": target,
+                    "local_path": local_model_path,
+                    "model_info": result.get("model_info", {}),
+                    "model_size_mb": result.get("model_size_mb", 0)
+                }
+            else:
+                return {
+                    "status": "error",
+                    "message": "No model data received"
+                }
+                
+        except Exception as e:
+            logger.error(f"❌ Failed to download Chemprop model: {e}")
+            return {
+                "status": "error",
+                "message": str(e)
+            }
+    
     async def _local_fallback_prediction(
         self,
         smiles: str,
