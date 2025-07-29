@@ -263,6 +263,53 @@ backend:
 
 frontend:
   # No frontend testing performed as per instructions
+  - task: "Interactive Bar Charts"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Need to implement interactive bar charts for property comparisons using Plotly.js. Should show different prediction types (IC50, toxicity, logP, solubility) side by side."
+
+  - task: "Scatter Plot Visualizations"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Need to implement scatter plots for confidence vs similarity scores, and property relationships."
+
+  - task: "Heatmap Visualizations"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Need to implement heatmaps for molecular property correlation analysis."
+
+  - task: "Interactive Features and Export"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Need to add interactive hover tooltips, zoom/pan functionality, and CSV/image export capabilities."
 
 metadata:
   created_by: "testing_agent"
