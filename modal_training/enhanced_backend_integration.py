@@ -481,6 +481,19 @@ async def download_chemprop_model_local(target: str) -> Dict[str, Any]:
     client = get_modal_client()
     return await client.download_chemprop_model_for_local_use(target)
 
+# ChemBERTa fine-tuning integration functions
+async def chembert_modal_finetune(
+    target: str,
+    training_data: List[Dict],
+    epochs: int = 10,
+    webhook_url: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Main ChemBERTa fine-tuning function for FastAPI integration
+    """
+    client = get_modal_client()
+    return await client.finetune_chembert_modal(target, training_data, epochs, webhook_url)
+
 if __name__ == "__main__":
     print("🎯 Enhanced Modal MolBERT Backend Integration")
     print("")
