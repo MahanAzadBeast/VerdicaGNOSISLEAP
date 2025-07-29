@@ -28,17 +28,10 @@ image = modal.Image.debian_slim(python_version="3.11").pip_install([
 # Create persistent volume for model storage
 volume = modal.Volume.from_name("molbert-models", create_if_missing=True)
 
-# Mount the training code
-code_mount = modal.Mount.from_local_dir(
-    "/app/modal_training", 
-    remote_path="/app/modal_training"
-)
-
 @app.function(
     image=image,
     gpu=modal.gpu.A100(count=1),  # Single A100 GPU
     volumes={"/models": volume},
-    mounts={"/app": code_mount},
     timeout=14400,  # 4 hours max
     memory=32768,   # 32GB RAM
     cpu=8.0
