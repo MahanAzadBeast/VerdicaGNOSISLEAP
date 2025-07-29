@@ -28,10 +28,17 @@ image = modal.Image.debian_slim(python_version="3.11").pip_install([
 # Create persistent volume for model storage
 volume = modal.Volume.from_name("molbert-models", create_if_missing=True)
 
+# Mount the training code
+code_mount = modal.Mount.from_local_dir(
+    "/app/modal_training", 
+    remote_path="/app/modal_training"
+)
+
 @app.function(
     image=image,
     gpu=modal.gpu.A100(count=1),  # Single A100 GPU
     volumes={"/models": volume},
+    mounts={"/app": code_mount},
     timeout=14400,  # 4 hours max
     memory=32768,   # 32GB RAM
     cpu=8.0
@@ -50,7 +57,12 @@ def train_molbert_gpu(
     import logging
     import json
     import time
+    import sys
     from datetime import datetime
+    
+    # Add the mounted code to Python path
+    sys.path.append('/app/modal_training')
+    sys.path.append('/app')
     
     # Setup logging
     logging.basicConfig(level=logging.INFO)
@@ -80,24 +92,28 @@ def train_molbert_gpu(
     send_progress("started", f"Initializing {target} training on Modal GPU", 5)
     
     try:
-        # Import your existing MolBERT code
-        # We'll mount the backend code as a separate function
-        from molbert_training_gpu import GPUMolBERTTrainer
+        # Import the existing MolBERT predictor directly 
+        from molbert_predictor import MolBERTPredictor
         
-        trainer = GPUMolBERTTrainer(
-            target=target,
-            max_epochs=max_epochs,
-            batch_size=batch_size,
-            learning_rate=learning_rate,
-            progress_callback=send_progress
-        )
+        # Initialize predictor
+        predictor = MolBERTPredictor()
         
-        # Start training
-        results = trainer.train()
+        # Run training using existing method
+        logger.info("🎯 Starting MolBERT incremental training...")
+        send_progress("training_started", f"Training {target} with MolBERT", 10)
+        
+        # Use the existing training method
+        results = predictor.train_molbert_model(target)
         
         # Save to persistent volume
         model_path = f"/models/{target}_molbert_final.pkl"
-        trainer.save_model(model_path)
+        
+        # Copy trained model to persistent storage
+        import shutil
+        local_model_path = f"/app/backend/trained_molbert_models/{target}_molbert_model.pkl"
+        if os.path.exists(local_model_path):
+            shutil.copy2(local_model_path, model_path)
+            logger.info(f"💾 Model saved to persistent volume: {model_path}")
         
         send_progress("completed", f"Training completed for {target}", 100, 
                      results=results, model_path=model_path)
@@ -133,6 +149,7 @@ def download_trained_model(target: str = "EGFR"):
     image=image,
     gpu=modal.gpu.A100(count=1),
     volumes={"/models": volume},
+    mounts={"/app": code_mount},
     timeout=21600,  # 6 hours for multi-target
     memory=32768,
     cpu=8.0
@@ -181,12 +198,12 @@ def train_all_targets(
                     except:
                         pass
             
-            # Train individual target
+            # Train individual target using the local function
             result = train_molbert_gpu.local(
                 target=target,
                 max_epochs=max_epochs,
                 batch_size=batch_size,
-                webhook_url=None  # Use our custom callback
+                webhook_url=webhook_url
             )
             
             results[target] = result
