@@ -277,7 +277,7 @@ def train_egfr_molbert(
                     batch_X = X_test[i:i+batch_size].to(device)
                     
                     if scaler:
-                        with autocast():
+                        with autocast(device_type='cuda'):
                             outputs = model(batch_X)
                     else:
                         outputs = model(batch_X)
