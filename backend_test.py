@@ -88,10 +88,11 @@ class EnhancedChemistryPlatformTester:
             response = requests.get(f"{API_BASE}/targets", timeout=30)
             
             if response.status_code == 200:
-                targets = response.json()
+                data = response.json()
+                targets = data.get('targets', [])
                 
                 if not isinstance(targets, list):
-                    self.log_test("Targets endpoint format", False, "Response should be a list")
+                    self.log_test("Targets endpoint format", False, "Response should contain 'targets' list")
                     return False
                 
                 if len(targets) == 0:
