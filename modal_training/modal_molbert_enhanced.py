@@ -614,7 +614,7 @@ def train_chemprop_gnn_modal(
 # ChemBERTa Fine-tuning Functions
 @app.function(
     image=image,
-    gpu=modal.gpu.A100(count=1),  # A100 for fast transformer fine-tuning
+    gpu="A100-40GB",  # Updated GPU specification
     volumes={
         "/cache": molbert_cache,      # Model cache
         "/training": training_volume  # Training outputs
