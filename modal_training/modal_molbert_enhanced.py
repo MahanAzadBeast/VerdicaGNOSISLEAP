@@ -434,7 +434,7 @@ def predict_with_cached_model(
 # Enhanced Chemprop GNN Training Functions
 @app.function(
     image=image,
-    gpu=modal.gpu.A100(count=1),  # A100 for fast GNN training
+    gpu="A100-40GB",  # Updated GPU specification
     volumes={
         "/cache": molbert_cache,      # Model cache
         "/training": training_volume  # Training outputs
