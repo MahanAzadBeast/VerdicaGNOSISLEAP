@@ -625,7 +625,7 @@ def train_chemprop_gnn_modal(
 )
 def finetune_chembert_modal(
     target: str = "EGFR",
-    epochs: int = 10,
+    epochs: int = 25,  # Increased epochs for better convergence
     batch_size: int = 16,
     learning_rate: float = 2e-5,
     webhook_url: str = ""
