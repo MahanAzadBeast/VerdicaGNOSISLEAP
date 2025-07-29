@@ -159,7 +159,7 @@ def download_pretrained_molbert():
 
 @app.function(
     image=image,
-    gpu=modal.gpu.A100(count=1),  # Single A100 GPU
+    gpu="A100-40GB",  # Updated GPU specification
     volumes={
         "/cache": molbert_cache,      # Model cache
         "/training": training_volume  # Training outputs
