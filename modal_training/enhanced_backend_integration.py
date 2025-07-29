@@ -19,7 +19,7 @@ class EnhancedModalMolBERTClient:
     
     def __init__(self):
         """Initialize Modal client"""
-        self.app_name = "molbert-enhanced"
+        self.app_name = "molbert-chemprop-enhanced"
         self._check_modal_credentials()
     
     def _check_modal_credentials(self):
