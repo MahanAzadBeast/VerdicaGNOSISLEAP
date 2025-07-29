@@ -318,7 +318,11 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Interactive Bar Charts"
+    - "Scatter Plot Visualizations"
+    - "Heatmap Visualizations"
+    - "Interactive Features and Export"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
