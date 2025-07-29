@@ -611,6 +611,291 @@ def train_chemprop_gnn_modal(
         send_progress("failed", f"Training failed: {str(e)}", -1)
         raise
 
+# ChemBERTa Fine-tuning Functions
+@app.function(
+    image=image,
+    gpu=modal.gpu.A100(count=1),  # A100 for fast transformer fine-tuning
+    volumes={
+        "/cache": molbert_cache,      # Model cache
+        "/training": training_volume  # Training outputs
+    },
+    timeout=3600,  # 1 hour for fine-tuning
+    memory=32768,  # 32GB RAM
+    cpu=8.0
+)
+def finetune_chembert_modal(
+    target: str = "EGFR",
+    training_data: list = None,  # List of {"smiles": str, "ic50": float}
+    epochs: int = 10,
+    batch_size: int = 16,  # Conservative for transformer fine-tuning
+    learning_rate: float = 2e-5,  # Standard for BERT fine-tuning
+    webhook_url: str = None
+):
+    """
+    Fine-tune ChemBERTa with regression head for IC50 prediction on Modal A100
+    """
+    import torch
+    import torch.nn as nn
+    from torch.utils.data import Dataset, DataLoader
+    from transformers import AutoTokenizer, AutoModel, AdamW
+    import logging
+    import json
+    import pandas as pd
+    from datetime import datetime
+    from pathlib import Path
+    import numpy as np
+    from sklearn.metrics import r2_score, mean_squared_error
+    
+    # Setup logging
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    
+    def send_progress(status, message, progress, **kwargs):
+        """Send progress updates to webhook"""
+        if webhook_url:
+            try:
+                import requests
+                data = {
+                    "status": status,
+                    "message": message, 
+                    "progress": progress,
+                    "target": target,
+                    "model_type": "chembert_finetuned",
+                    "timestamp": datetime.now().isoformat(),
+                    **kwargs
+                }
+                requests.post(webhook_url, json=data, timeout=10)
+            except Exception as e:
+                logger.error(f"Failed to send progress: {e}")
+    
+    logger.info(f"🚀 Starting ChemBERTa fine-tuning on Modal A100 for {target}")
+    logger.info(f"🖥️ GPU: {torch.cuda.get_device_name() if torch.cuda.is_available() else 'CPU'}")
+    
+    send_progress("started", f"Initializing ChemBERTa fine-tuning for {target}", 5)
+    
+    try:
+        # Validate training data
+        if not training_data or len(training_data) < 10:
+            raise ValueError(f"Insufficient training data: {len(training_data) if training_data else 0} samples")
+        
+        logger.info(f"📊 Training data: {len(training_data)} compounds")
+        send_progress("loading_model", f"Loading pretrained ChemBERTa", 15)
+        
+        # Mount HuggingFace cache
+        hf_cache_dir = "/cache/huggingface"
+        os.environ['HF_HOME'] = hf_cache_dir
+        os.environ['TRANSFORMERS_CACHE'] = hf_cache_dir
+        
+        # Load pretrained ChemBERTa from cache
+        model_name = "seyonec/ChemBERTa-zinc-base-v1"
+        logger.info("📥 Loading ChemBERTa tokenizer and model from cache...")
+        
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_name,
+            cache_dir=hf_cache_dir,
+            local_files_only=True
+        )
+        
+        base_model = AutoModel.from_pretrained(
+            model_name,
+            cache_dir=hf_cache_dir,
+            local_files_only=True
+        )
+        
+        # Create regression head for IC50 prediction
+        class ChemBERTaForRegression(nn.Module):
+            def __init__(self, base_model, hidden_size=768):
+                super().__init__()
+                self.bert = base_model
+                self.dropout = nn.Dropout(0.1)
+                self.regressor = nn.Sequential(
+                    nn.Linear(hidden_size, 256),
+                    nn.ReLU(),
+                    nn.Dropout(0.1),
+                    nn.Linear(256, 64),
+                    nn.ReLU(),
+                    nn.Dropout(0.1),
+                    nn.Linear(64, 1)  # Single output for IC50
+                )
+            
+            def forward(self, input_ids, attention_mask):
+                outputs = self.bert(input_ids=input_ids, attention_mask=attention_mask)
+                pooled_output = outputs.last_hidden_state.mean(dim=1)  # Mean pooling
+                pooled_output = self.dropout(pooled_output)
+                return self.regressor(pooled_output)
+        
+        # Initialize the model with regression head
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model = ChemBERTaForRegression(base_model).to(device)
+        
+        logger.info(f"✅ ChemBERTa with regression head loaded on {device}")
+        send_progress("preparing_data", "Preparing training dataset", 25)
+        
+        # Prepare dataset
+        class IC50Dataset(Dataset):
+            def __init__(self, data, tokenizer, max_length=128):
+                self.data = data
+                self.tokenizer = tokenizer
+                self.max_length = max_length
+            
+            def __len__(self):
+                return len(self.data)
+            
+            def __getitem__(self, idx):
+                item = self.data[idx]
+                smiles = item["smiles"]
+                ic50 = float(item["ic50"])
+                
+                # Tokenize SMILES
+                encoding = self.tokenizer(
+                    smiles,
+                    truncation=True,
+                    padding='max_length',
+                    max_length=self.max_length,
+                    return_tensors='pt'
+                )
+                
+                return {
+                    'input_ids': encoding['input_ids'].flatten(),
+                    'attention_mask': encoding['attention_mask'].flatten(),
+                    'labels': torch.tensor(ic50, dtype=torch.float)
+                }
+        
+        # Create dataset and dataloader
+        dataset = IC50Dataset(training_data, tokenizer)
+        
+        # Split into train/val
+        train_size = int(0.8 * len(dataset))
+        val_size = len(dataset) - train_size
+        train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
+        
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+        val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+        
+        logger.info(f"📊 Dataset split: {train_size} train, {val_size} val")
+        
+        # Setup optimizer and loss
+        optimizer = AdamW(model.parameters(), lr=learning_rate)
+        criterion = nn.MSELoss()
+        
+        send_progress("training_started", f"Starting fine-tuning for {epochs} epochs", 35)
+        
+        # Training loop
+        model.train()
+        for epoch in range(epochs):
+            total_loss = 0
+            train_preds = []
+            train_targets = []
+            
+            for batch_idx, batch in enumerate(train_loader):
+                input_ids = batch['input_ids'].to(device)
+                attention_mask = batch['attention_mask'].to(device)
+                labels = batch['labels'].to(device)
+                
+                optimizer.zero_grad()
+                
+                outputs = model(input_ids, attention_mask)
+                loss = criterion(outputs.squeeze(), labels)
+                
+                loss.backward()
+                optimizer.step()
+                
+                total_loss += loss.item()
+                train_preds.extend(outputs.squeeze().detach().cpu().numpy())
+                train_targets.extend(labels.detach().cpu().numpy())
+            
+            # Validation
+            model.eval()
+            val_preds = []
+            val_targets = []
+            val_loss = 0
+            
+            with torch.no_grad():
+                for batch in val_loader:
+                    input_ids = batch['input_ids'].to(device)
+                    attention_mask = batch['attention_mask'].to(device)
+                    labels = batch['labels'].to(device)
+                    
+                    outputs = model(input_ids, attention_mask)
+                    loss = criterion(outputs.squeeze(), labels)
+                    
+                    val_loss += loss.item()
+                    val_preds.extend(outputs.squeeze().cpu().numpy())
+                    val_targets.extend(labels.cpu().numpy())
+            
+            # Calculate metrics
+            train_r2 = r2_score(train_targets, train_preds)
+            val_r2 = r2_score(val_targets, val_preds)
+            train_rmse = np.sqrt(mean_squared_error(train_targets, train_preds))
+            val_rmse = np.sqrt(mean_squared_error(val_targets, val_preds))
+            
+            avg_train_loss = total_loss / len(train_loader)
+            avg_val_loss = val_loss / len(val_loader)
+            
+            logger.info(f"📈 Epoch {epoch+1}/{epochs}:")
+            logger.info(f"   Train Loss: {avg_train_loss:.4f}, R²: {train_r2:.4f}, RMSE: {train_rmse:.4f}")
+            logger.info(f"   Val Loss: {avg_val_loss:.4f}, R²: {val_r2:.4f}, RMSE: {val_rmse:.4f}")
+            
+            progress = 35 + (epoch + 1) / epochs * 50
+            send_progress("training", f"Epoch {epoch+1}/{epochs} - Val R²: {val_r2:.3f}", progress,
+                         train_r2=train_r2, val_r2=val_r2, val_rmse=val_rmse)
+            
+            model.train()
+        
+        # Save fine-tuned model
+        model_save_dir = Path("/training") / f"{target}_chembert_finetuned"
+        model_save_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Save model state dict
+        model_path = model_save_dir / "pytorch_model.bin"
+        torch.save(model.state_dict(), model_path)
+        
+        # Save tokenizer
+        tokenizer.save_pretrained(model_save_dir)
+        
+        # Save model config and training info
+        model_info = {
+            "target": target,
+            "model_type": "chembert_finetuned",
+            "base_model": model_name,
+            "epochs": epochs,
+            "batch_size": batch_size,
+            "learning_rate": learning_rate,
+            "training_samples": len(training_data),
+            "train_r2": float(train_r2),
+            "val_r2": float(val_r2),
+            "val_rmse": float(val_rmse),
+            "model_path": str(model_path),
+            "training_time": datetime.now().isoformat()
+        }
+        
+        info_file = model_save_dir / "training_info.json"
+        with open(info_file, 'w') as f:
+            json.dump(model_info, f, indent=2)
+        
+        logger.info(f"💾 Fine-tuned model saved to: {model_save_dir}")
+        logger.info(f"🎯 Final validation R²: {val_r2:.4f}")
+        
+        send_progress("completed", f"ChemBERTa fine-tuning completed - R²: {val_r2:.3f}", 100,
+                     final_r2=val_r2, model_path=str(model_save_dir))
+        
+        return {
+            "status": "completed",
+            "target": target,
+            "model_type": "chembert_finetuned",
+            "train_r2": train_r2,
+            "val_r2": val_r2,
+            "val_rmse": val_rmse,
+            "model_path": str(model_save_dir),
+            "training_samples": len(training_data),
+            "epochs": epochs
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ ChemBERTa fine-tuning failed: {e}")
+        send_progress("failed", f"Fine-tuning failed: {str(e)}", -1)
+        raise
+
 @app.function(
     image=image,
     volumes={"/training": training_volume},
