@@ -326,6 +326,15 @@ test_plan:
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
+  completed_testing:
+    - "Enhanced Modal MolBERT Status Endpoint"
+    - "Enhanced Modal MolBERT Setup Endpoint"
+    - "Enhanced Modal MolBERT Predict Endpoint"
+    - "Enhanced Modal MolBERT Train Endpoint"
+    - "Enhanced Modal MolBERT SMILES Validation"
+    - "Enhanced Modal MolBERT Target Validation"
+    - "Enhanced Modal MolBERT Integration with Existing Endpoints"
+    - "Enhanced Modal MolBERT Fallback Mechanism"
 
   - task: "Real ML Model Integration"
     implemented: true
