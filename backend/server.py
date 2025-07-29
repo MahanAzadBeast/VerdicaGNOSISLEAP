@@ -16,6 +16,7 @@ import numpy as np
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Crippen, Lipinski
 import warnings
+import json
 
 warnings.filterwarnings("ignore")
 
@@ -29,6 +30,33 @@ db = client[os.environ['DB_NAME']]
 
 # Global model storage
 models = {}
+
+# Create the main app without a prefix
+app = FastAPI(title="Veridica AI - Predictive Chemistry Platform")
+
+# Create a router with the /api prefix
+api_router = APIRouter(prefix="/api")
+
+# GPU Training Progress Storage (in-memory for now, could use Redis/DB)
+gpu_training_progress = {}
+
+# GPU Training Progress Model
+class GPUTrainingProgress(BaseModel):
+    status: str  # "started", "loading_data", "training", "completed", "failed"
+    message: str
+    progress: float  # 0-100 or -1 for error
+    target: Optional[str] = None
+    epoch: Optional[int] = None
+    batch: Optional[int] = None
+    loss: Optional[float] = None
+    r2_score: Optional[float] = None
+    rmse: Optional[float] = None
+    best_r2: Optional[float] = None
+    results: Optional[Dict[Any, Any]] = None
+    training_time_hours: Optional[float] = None
+    completed_targets: Optional[int] = None
+    total_targets: Optional[int] = None
+    current_target: Optional[str] = None
 
 # Create the main app without a prefix
 app = FastAPI(title="Veridica AI - Predictive Chemistry Platform")
