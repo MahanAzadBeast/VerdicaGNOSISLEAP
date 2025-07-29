@@ -248,17 +248,21 @@ def enhanced_ic50_prediction(smiles: str, target: str) -> Dict:
         }
 
 async def load_molbert_model():
-    """Load ChemBERTa model and tokenizer (MolBERT alternative)"""
+    """Placeholder for MolBERT model loading - now handled by Modal"""
     try:
+        # NOTE: ChemBERTa/MolBERT models are now handled by Modal.com to avoid
+        # compromising local CPU/memory performance. This function is kept
+        # for compatibility but doesn't load heavy transformer models locally.
+        
         if 'molbert' not in models:
-            logging.info("Loading ChemBERTa model...")
-            tokenizer = AutoTokenizer.from_pretrained("seyonec/ChemBERTa-zinc-base-v1")
-            model = AutoModel.from_pretrained("seyonec/ChemBERTa-zinc-base-v1")
-            models['molbert'] = {'tokenizer': tokenizer, 'model': model}
-            logging.info("ChemBERTa model loaded successfully")
+            logging.info("🔄 MolBERT functionality delegated to Modal.com")
+            logging.info("💡 Heavy transformer models run on Modal GPUs, not locally")
+            # Store a placeholder to indicate MolBERT is "available" via Modal
+            models['molbert'] = {'status': 'modal_delegated', 'local_model': None}
+            logging.info("✅ MolBERT configured for Modal delegation")
         return models['molbert']
     except Exception as e:
-        logging.error(f"Error loading ChemBERTa: {e}")
+        logging.error(f"Error configuring MolBERT delegation: {e}")
         return None
 
 def predict_with_molbert(smiles: str, property_type: str) -> Optional[float]:
