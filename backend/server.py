@@ -587,6 +587,82 @@ async def get_prediction(prediction_id: str):
         prediction['_id'] = str(prediction['_id'])
     return prediction
 
+# GPU Training Progress Endpoints
+@api_router.post("/gpu/training-progress")
+async def receive_gpu_training_progress(progress: GPUTrainingProgress):
+    """Receive training progress updates from Modal GPU training"""
+    
+    session_id = f"gpu_training_{progress.target or 'unknown'}"
+    timestamp = datetime.now().isoformat()
+    
+    # Store progress
+    if session_id not in gpu_training_progress:
+        gpu_training_progress[session_id] = []
+    
+    progress_data = progress.dict()
+    progress_data['timestamp'] = timestamp
+    gpu_training_progress[session_id].append(progress_data)
+    
+    logger.info(f"📊 GPU Training Progress: {progress.target} - {progress.status} - {progress.message} ({progress.progress}%)")
+    
+    # Keep only last 100 updates per session
+    if len(gpu_training_progress[session_id]) > 100:
+        gpu_training_progress[session_id] = gpu_training_progress[session_id][-100:]
+    
+    return {"status": "received", "timestamp": timestamp}
+
+@api_router.get("/gpu/training-progress/{target}")
+async def get_gpu_training_progress(target: str = "EGFR"):
+    """Get current GPU training progress for a specific target"""
+    session_id = f"gpu_training_{target}"
+    
+    if session_id in gpu_training_progress and gpu_training_progress[session_id]:
+        latest = gpu_training_progress[session_id][-1]
+        return {
+            "target": target,
+            "current_status": latest,
+            "recent_updates": gpu_training_progress[session_id][-10:],  # Last 10 updates
+            "total_updates": len(gpu_training_progress[session_id])
+        }
+    else:
+        return {"target": target, "current_status": None, "message": "No GPU training in progress"}
+
+@api_router.get("/gpu/training-progress")
+async def get_all_gpu_training_progress():
+    """Get progress for all GPU training sessions"""
+    all_progress = {}
+    
+    for session_id, updates in gpu_training_progress.items():
+        if updates:
+            target = session_id.replace("gpu_training_", "")
+            all_progress[target] = {
+                "current_status": updates[-1],
+                "total_updates": len(updates),
+                "last_update": updates[-1]["timestamp"]
+            }
+    
+    return all_progress
+
+@api_router.get("/gpu/training-results/{target}")
+async def get_gpu_training_results(target: str = "EGFR"):
+    """Get final GPU training results if available"""
+    session_id = f"gpu_training_{target}"
+    
+    if session_id not in gpu_training_progress:
+        return {"target": target, "status": "no_training", "results": None}
+    
+    # Find completed training
+    for update in reversed(gpu_training_progress[session_id]):
+        if update['status'] == 'completed' and update.get('results'):
+            return {
+                "target": target,
+                "status": "completed",
+                "results": update['results'],
+                "training_time": update.get('training_time_hours'),
+                "completion_time": update['timestamp']
+            }
+    
+    return {"target": target, "status": "not_completed", "results": None}
 # Include the router in the main app
 app.include_router(api_router)
 
