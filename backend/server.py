@@ -56,9 +56,10 @@ try:
         get_modal_model_status,
         chemprop_modal_train,
         get_chemprop_model_status,
-        download_chemprop_model_local
+        download_chemprop_model_local,
+        chembert_modal_finetune
     )
-    logging.info("✅ Enhanced Modal MolBERT + Chemprop integration loaded")
+    logging.info("✅ Enhanced Modal MolBERT + Chemprop + ChemBERTa integration loaded")
     ENHANCED_MODAL_AVAILABLE = True
 except Exception as e:
     logging.warning(f"⚠️ Enhanced Modal MolBERT integration not available: {e}")
