@@ -431,6 +431,244 @@ def predict_with_cached_model(
         logger.error(f"❌ Prediction failed: {e}")
         raise
 
+# Enhanced Chemprop GNN Training Functions
+@app.function(
+    image=image,
+    gpu=modal.gpu.A100(count=1),  # A100 for fast GNN training
+    volumes={
+        "/cache": molbert_cache,      # Model cache
+        "/training": training_volume  # Training outputs
+    },
+    timeout=7200,  # 2 hours for Chemprop training
+    memory=32768,  # 32GB RAM
+    cpu=8.0
+)
+def train_chemprop_gnn_modal(
+    target: str = "EGFR",
+    training_data: list = None,  # List of {"smiles": str, "activity": float}
+    epochs: int = 50,
+    batch_size: int = 32,
+    hidden_size: int = 300,
+    depth: int = 3,
+    webhook_url: str = None
+):
+    """
+    Train Chemprop GNN model on Modal A100 GPU
+    """
+    import torch
+    import logging
+    import json
+    import pandas as pd
+    import tempfile
+    import subprocess
+    from datetime import datetime
+    from pathlib import Path
+    
+    # Setup logging
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    
+    def send_progress(status, message, progress, **kwargs):
+        """Send progress updates to webhook"""
+        if webhook_url:
+            try:
+                import requests
+                data = {
+                    "status": status,
+                    "message": message, 
+                    "progress": progress,
+                    "target": target,
+                    "model_type": "chemprop_gnn",
+                    "timestamp": datetime.now().isoformat(),
+                    **kwargs
+                }
+                requests.post(webhook_url, json=data, timeout=10)
+            except Exception as e:
+                logger.error(f"Failed to send progress: {e}")
+    
+    logger.info(f"🚀 Starting Chemprop GNN training on Modal A100 for {target}")
+    logger.info(f"🖥️ GPU: {torch.cuda.get_device_name() if torch.cuda.is_available() else 'CPU'}")
+    
+    if torch.cuda.is_available():
+        gpu_props = torch.cuda.get_device_properties(0)
+        logger.info(f"💾 GPU Memory: {gpu_props.total_memory / 1e9:.1f} GB")
+    
+    send_progress("started", f"Initializing Chemprop GNN training for {target}", 5)
+    
+    try:
+        # Validate training data
+        if not training_data or len(training_data) < 10:
+            raise ValueError(f"Insufficient training data: {len(training_data) if training_data else 0} samples")
+        
+        logger.info(f"📊 Training data: {len(training_data)} compounds")
+        send_progress("preparing_data", f"Preparing {len(training_data)} compounds for training", 15)
+        
+        # Create temporary training file
+        train_dir = Path("/training") / f"{target}_chemprop_training"
+        train_dir.mkdir(parents=True, exist_ok=True)
+        
+        train_file = train_dir / "train.csv"
+        
+        # Prepare data in Chemprop format
+        df_data = []
+        for item in training_data:
+            df_data.append({
+                "smiles": item["smiles"],
+                "target": item["activity"]  # Chemprop expects 'target' column
+            })
+        
+        df = pd.DataFrame(df_data)
+        df.to_csv(train_file, index=False)
+        
+        logger.info(f"📝 Training data saved to: {train_file}")
+        
+        # Model save directory
+        model_save_dir = train_dir / "model"
+        model_save_dir.mkdir(parents=True, exist_ok=True)
+        
+        send_progress("training_started", f"Starting GNN training with {epochs} epochs", 25)
+        
+        # Chemprop training command
+        cmd = [
+            "python", "-m", "chemprop.train",
+            "--data_path", str(train_file),
+            "--dataset_type", "regression",
+            "--save_dir", str(model_save_dir),
+            "--epochs", str(epochs),
+            "--batch_size", str(batch_size),
+            "--hidden_size", str(hidden_size),
+            "--depth", str(depth),
+            "--dropout", "0.1",
+            "--metric", "rmse",
+            "--gpu", "0" if torch.cuda.is_available() else None,
+            "--quiet"
+        ]
+        
+        # Remove None values
+        cmd = [str(arg) for arg in cmd if arg is not None]
+        
+        logger.info(f"🧠 Running Chemprop command: {' '.join(cmd)}")
+        
+        # Run training
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            cwd="/training"
+        )
+        
+        if result.returncode == 0:
+            logger.info("✅ Chemprop GNN training completed successfully")
+            send_progress("training_completed", "GNN training completed", 85)
+            
+            # Check for trained model files
+            model_files = list(model_save_dir.glob("*.pt"))
+            if model_files:
+                main_model = model_files[0]
+                logger.info(f"💾 Model saved: {main_model}")
+                
+                # Save model metadata
+                model_info = {
+                    "target": target,
+                    "model_type": "chemprop_gnn",
+                    "epochs": epochs,
+                    "batch_size": batch_size,
+                    "hidden_size": hidden_size,
+                    "depth": depth,
+                    "training_samples": len(training_data),
+                    "model_path": str(main_model),
+                    "training_time": datetime.now().isoformat()
+                }
+                
+                info_file = train_dir / "model_info.json"
+                with open(info_file, 'w') as f:
+                    json.dump(model_info, f, indent=2)
+                
+                send_progress("completed", f"Chemprop GNN training completed for {target}", 100, 
+                             model_info=model_info)
+                
+                return {
+                    "status": "completed",
+                    "target": target,
+                    "model_type": "chemprop_gnn",
+                    "model_path": str(main_model),
+                    "model_info": model_info,
+                    "training_samples": len(training_data)
+                }
+            else:
+                raise FileNotFoundError("No model files found after training")
+                
+        else:
+            logger.error(f"❌ Chemprop training failed:")
+            logger.error(f"STDOUT: {result.stdout}")
+            logger.error(f"STDERR: {result.stderr}")
+            
+            send_progress("failed", f"Training failed: {result.stderr[:200]}", -1)
+            raise RuntimeError(f"Chemprop training failed: {result.stderr}")
+            
+    except Exception as e:
+        logger.error(f"❌ Chemprop GNN training failed: {e}")
+        send_progress("failed", f"Training failed: {str(e)}", -1)
+        raise
+
+@app.function(
+    image=image,
+    volumes={"/training": training_volume},
+    timeout=300  # 5 minutes
+)
+def get_chemprop_model_info(target: str = "EGFR"):
+    """Get information about trained Chemprop models"""
+    import json
+    from pathlib import Path
+    
+    model_dir = Path("/training") / f"{target}_chemprop_training"
+    info_file = model_dir / "model_info.json"
+    
+    if info_file.exists():
+        with open(info_file, 'r') as f:
+            return json.load(f)
+    else:
+        return {
+            "status": "no_model",
+            "message": f"No trained Chemprop model found for {target}"
+        }
+
+@app.function(
+    image=image,
+    volumes={"/training": training_volume},
+    timeout=600  # 10 minutes
+)
+def download_chemprop_model(target: str = "EGFR"):
+    """Download trained Chemprop model for local use"""
+    from pathlib import Path
+    import json
+    
+    model_dir = Path("/training") / f"{target}_chemprop_training"
+    model_files = list(model_dir.glob("model/*.pt"))
+    
+    if not model_files:
+        raise FileNotFoundError(f"No trained model found for {target}")
+    
+    model_file = model_files[0]
+    
+    # Read model file
+    with open(model_file, 'rb') as f:
+        model_data = f.read()
+    
+    # Read model info
+    info_file = model_dir / "model_info.json"
+    model_info = {}
+    if info_file.exists():
+        with open(info_file, 'r') as f:
+            model_info = json.load(f)
+    
+    return {
+        "model_data": model_data,
+        "model_info": model_info,
+        "target": target,
+        "model_size_mb": len(model_data) / (1024 * 1024)
+    }
+
 # Deployment functions
 @app.local_entrypoint()
 def setup_and_train(
