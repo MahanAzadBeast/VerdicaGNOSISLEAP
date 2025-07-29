@@ -10,8 +10,6 @@ from typing import List, Dict, Optional, Any
 import uuid
 from datetime import datetime
 import asyncio
-import torch
-from transformers import AutoTokenizer, AutoModel
 import numpy as np
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Crippen, Lipinski
