@@ -17,4 +17,4 @@ descriptastorus
 dgl
 dgllife
 pytorch-lightning
-modal-client
+modal
