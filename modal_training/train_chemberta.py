@@ -237,6 +237,9 @@ def train_chemberta_multitask(
     Train ChemBERTa multi-task model with W&B logging
     """
     
+    # Import wandb inside function for Modal environment
+    import wandb
+    
     # Initialize logging
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
