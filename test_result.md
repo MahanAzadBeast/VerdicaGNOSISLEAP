@@ -102,53 +102,62 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the enhanced predictive chemistry platform with target-specific IC50 predictions"
+user_problem_statement: "Fix ChemBERTa device property bug during final evaluation and Chemprop CLI compatibility issues, then implement enhanced W&B logging for both training pipelines"
 
 backend:
-  - task: "Multi-Task ChemBERTa Pipeline - ChEMBL Database Download"
+  - task: "ChemBERTa Device Property Bug Fix"
     implemented: true
     working: true
-    file: "/app/modal_training/oncoprotein_chemberta.py"
-    stuck_count: 1
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: false
-          agent: "main"
-          comment: "Initial attempt failed due to incorrect ChEMBL database URLs (404 error on v33). ChEMBL URLs were outdated."
-        - working: true
-          agent: "main"
-          comment: "Fixed ChEMBL database URLs to use latest v35 and correct FTP/HTTPS endpoints. Download completed successfully - ChEMBL v35 (5.0 GB) from ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_35/chembl_35_sqlite.tar.gz"
-        - working: false
-          agent: "main"
-          comment: "Download completed successfully but extraction failed with 'No SQLite file found in extracted archive'. Archive structure may be different than expected."
-        - working: true
-          agent: "main"  
-          comment: "Fixed extraction issue - ChEMBL v35 uses .db extension (chembl_35.db) instead of .sqlite. Updated extraction logic to handle multiple database file extensions (.db, .sqlite, .sqlite3) and added debugging for archive contents. New download in progress."
-
-  - task: "Multi-Task ChemBERTa Pipeline - Data Extraction"
-    implemented: true
-    working: false
-    file: "/app/modal_training/oncoprotein_chemberta.py"
-    stuck_count: 1
+    file: "/app/modal_training/train_chemberta.py"
+    stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
         - working: false
+          agent: "user"
+          comment: "User reported: ChemBERTa Multi-Task Model training completed but crashed during final evaluation due to device property bug"
+        - working: true
           agent: "main"
-          comment: "Blocked by ChEMBL database extraction failure. Cannot proceed with oncoprotein data extraction for 14 targets until ChEMBL SQLite database is successfully extracted and accessible."
-
-  - task: "Multi-Task ChemBERTa Pipeline - Model Training"
+          comment: "FIXED: ChemBERTa device property bug in evaluation function. Issue was on line 211 where self.model.device was accessed. Fixed by safely getting device with next(self.model.parameters()).device before the evaluation loop. Also fixed model loading function to properly reconstruct ChemBERTa architecture and handle device placement correctly."
+  
+  - task: "Chemprop CLI Compatibility Fix"
+    implemented: true
+    working: true
+    file: "/app/modal_training/train_chemprop.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "user"
+          comment: "User reported: Chemprop Multi-Task Model training failed due to command-line interface compatibility issues"
+        - working: true
+          agent: "main"
+          comment: "FIXED: Chemprop CLI compatibility issues. Changed from direct 'chemprop_train' and 'chemprop_predict' commands to Python module approach: 'python -m chemprop.train' and 'python -m chemprop.predict'. This addresses changes in recent Chemprop versions where CLI commands were restructured."
+  
+  - task: "Enhanced W&B Logging for ChemBERTa"
     implemented: true
     working: false
-    file: "/app/modal_training/oncoprotein_chemberta.py"
+    file: "/app/modal_training/train_chemberta.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
         - working: false
           agent: "main"
-          comment: "Multi-task ChemBERTa training implementation ready with A100 GPU support, multi-task regression heads, masked MSE loss, and 10-epoch training. Waiting for data extraction completion."
+          comment: "Enhanced W&B logging already implemented with per-target R², MSE, MAE, and loss graphs, but needs testing after device bug fix. Includes WandbMetricsCallback, per-target scatter plots, performance summaries, and comprehensive artifact logging."
+
+  - task: "Enhanced W&B Logging for Chemprop" 
+    implemented: true
+    working: false
+    file: "/app/modal_training/train_chemprop.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"  
+          comment: "Enhanced W&B logging implemented with ChempropWandbLogger class, multi-task visualization plots, performance summary tables, and artifact logging, but needs testing after CLI compatibility fix."
 
   - task: "Enhanced Health Check Endpoint"
   - task: "Enhanced Health Check Endpoint"
