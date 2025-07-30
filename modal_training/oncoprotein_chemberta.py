@@ -1164,7 +1164,7 @@ if __name__ == "__main__":
     
     return {"status": "created", "path": script_path}
 
-# Orchestration function
+# Orchestration functions
 @app.local_entrypoint()
 def run_complete_pipeline():
     """
@@ -1216,6 +1216,44 @@ def run_complete_pipeline():
         },
         "results": {
             "download": download_result,
+            "extraction": extract_result,
+            "training": training_result
+        }
+    }
+
+@app.local_entrypoint()
+def continue_from_extraction():
+    """
+    Continue pipeline from data extraction step (after download is complete)
+    """
+    print("🔄 Continuing Multi-Task ChemBERTa Pipeline from extraction...")
+    print("=" * 60)
+    
+    # Step 2: Extract data
+    print("🔬 Step 2: Extracting oncoprotein bioactivity data...")
+    extract_result = extract_oncoprotein_data.remote()
+    print(f"✅ Data extracted: {extract_result}")
+    
+    # Step 3: Generate report
+    print("📊 Step 3: Generating dataset report...")
+    report_result = generate_dataset_report.remote()
+    print(f"✅ Report generated: {report_result}")
+    
+    # Step 4: Train model
+    print("🎓 Step 4: Training multi-task ChemBERTa...")
+    training_result = train_multitask_chemberta.remote()
+    print(f"✅ Training completed: {training_result}")
+    
+    # Step 5: Create inference script
+    print("📝 Step 5: Creating inference script...")
+    inference_result = create_inference_script.remote()
+    print(f"✅ Inference script created: {inference_result}")
+    
+    print("\n🎉 Pipeline continuation completed!")
+    
+    return {
+        "status": "completed",
+        "results": {
             "extraction": extract_result,
             "training": training_result
         }
