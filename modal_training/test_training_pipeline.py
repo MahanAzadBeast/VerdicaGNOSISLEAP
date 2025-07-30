@@ -86,7 +86,7 @@ def validate_dataset():
     
     return validation_result
 
-@app.function(timeout=1800)  # 30 minutes
+@app.function(image=image, timeout=1800)  # 30 minutes
 def test_chemberta_pipeline():
     """Test ChemBERTa training pipeline with minimal configuration"""
     
