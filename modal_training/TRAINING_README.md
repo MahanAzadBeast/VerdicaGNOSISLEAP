@@ -22,7 +22,13 @@ SMILES → Molecular Graph → Message Passing → Graph Pooling → 14 FFN Outp
 
 ## 🚀 Quick Start
 
-### 1. Test the Pipeline
+### 0. Verify Multi-Task Setup
+```bash
+# See multi-task architecture explanation
+modal run demo_multitask.py
+```
+
+### 1. Test Both Multi-Task Pipelines
 ```bash
 # Validate dataset and test both training pipelines
 modal run test_training_pipeline.py
