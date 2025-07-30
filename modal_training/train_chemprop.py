@@ -111,16 +111,16 @@ def prepare_chemprop_data(df: pd.DataFrame, smiles_col: str, target_cols: List[s
 def run_chemprop_training(train_path: str, val_path: str, test_path: str,
                          output_dir: str, config: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Run Chemprop training using command line interface
+    Run Chemprop multi-task training using command line interface
     """
     
-    # Prepare Chemprop command
+    # Prepare Chemprop command for multi-task learning
     cmd = [
         'chemprop_train',
         '--data_path', train_path,
         '--separate_val_path', val_path,
         '--separate_test_path', test_path,
-        '--dataset_type', 'regression',
+        '--dataset_type', 'regression',  # Multi-task regression
         '--save_dir', output_dir,
         '--epochs', str(config['num_epochs']),
         '--batch_size', str(config['batch_size']),
@@ -135,7 +135,13 @@ def run_chemprop_training(train_path: str, val_path: str, test_path: str,
         '--ffn_hidden_size', str(config['ffn_hidden_size']),
         '--aggregation', config['aggregation'],
         '--aggregation_norm', str(config['aggregation_norm']),
+        '--save_preds',  # Save predictions for analysis
+        '--quiet',  # Reduce verbose output
     ]
+    
+    # Add multi-task specific parameters
+    if config.get('multitask_scaling', True):
+        cmd.append('--multitask_loss_scaling')  # Scale losses across tasks
     
     # Add optional parameters
     if config.get('early_stopping', False):
@@ -147,12 +153,16 @@ def run_chemprop_training(train_path: str, val_path: str, test_path: str,
     if config.get('atom_messages', False):
         cmd.append('--atom_messages')
     
+    # Add ensemble training for better performance
+    if config.get('ensemble_size', 1) > 1:
+        cmd.extend(['--ensemble_size', str(config['ensemble_size'])])
+    
     # Run training
-    logging.info(f"Running Chemprop training: {' '.join(cmd)}")
+    logging.info(f"🧪 Running Chemprop Multi-Task Training: {' '.join(cmd)}")
     result = subprocess.run(cmd, capture_output=True, text=True)
     
     if result.returncode != 0:
-        raise RuntimeError(f"Chemprop training failed: {result.stderr}")
+        raise RuntimeError(f"Chemprop multi-task training failed: {result.stderr}")
     
     return {"stdout": result.stdout, "stderr": result.stderr}
 
