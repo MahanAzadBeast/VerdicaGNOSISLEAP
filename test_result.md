@@ -111,7 +111,7 @@ backend:
     file: "/app/modal_training/train_chemberta.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "user"
@@ -119,6 +119,9 @@ backend:
         - working: true
           agent: "main"
           comment: "FIXED: ChemBERTa device property bug in evaluation function. Issue was on line 211 where self.model.device was accessed. Fixed by safely getting device with next(self.model.parameters()).device before the evaluation loop. Also fixed model loading function to properly reconstruct ChemBERTa architecture and handle device placement correctly."
+        - working: true
+          agent: "testing"
+          comment: "VERIFIED: ChemBERTa device property fix working correctly. Device property uses safe next(self.parameters()).device access. ChemBERTaTrainer.evaluate method uses safe device access. Model loading function properly reconstructs architecture and handles device placement. All core fixes implemented successfully."
   
   - task: "Chemprop CLI Compatibility Fix"
     implemented: true
