@@ -233,12 +233,50 @@ def extract_oncoprotein_data():
     
     chembl_db = "/vol/chembl/chembl.sqlite"
     if not Path(chembl_db).exists():
-        raise FileNotFoundError("ChEMBL database not found. Run download_chembl_database() first.")
+        # Also check for alternative naming
+        alt_paths = [
+            "/vol/chembl/chembl_35.db",
+            "/vol/chembl/chembl.db", 
+            "/vol/chembl/chembl_35.sqlite"
+        ]
+        found_db = None
+        for alt_path in alt_paths:
+            if Path(alt_path).exists():
+                found_db = alt_path
+                chembl_db = alt_path
+                logger.info(f"Found ChEMBL database at alternative path: {alt_path}")
+                break
+        
+        if not found_db:
+            available_files = list(Path("/vol/chembl/").glob("*"))
+            logger.error(f"Available files in /vol/chembl/: {[f.name for f in available_files]}")
+            raise FileNotFoundError("ChEMBL database not found. Run download_chembl_database() first.")
     
-    logger.info("🔬 Connecting to ChEMBL database...")
+    logger.info(f"🔬 Connecting to ChEMBL database: {chembl_db}")
     
-    # Connect to ChEMBL SQLite database
-    conn = sqlite3.connect(chembl_db)
+    # Test database connection and structure
+    try:
+        conn = sqlite3.connect(chembl_db)
+        
+        # Verify database has expected tables
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = [row[0] for row in cursor.fetchall()]
+        
+        required_tables = ['activities', 'assays', 'target_dictionary', 'compound_structures']
+        missing_tables = [table for table in required_tables if table not in tables]
+        
+        if missing_tables:
+            logger.error(f"Missing required tables: {missing_tables}")
+            logger.info(f"Available tables: {tables[:10]}...")  # Show first 10 tables
+            raise ValueError(f"Database missing required tables: {missing_tables}")
+        
+        logger.info(f"✅ Database connection successful. Found {len(tables)} tables.")
+        
+    except Exception as e:
+        logger.error(f"❌ Database connection failed: {e}")
+        conn.close() if 'conn' in locals() else None
+        raise
     
     # Get target ChEMBL IDs
     target_ids = list(ONCOPROTEIN_TARGETS.values())
