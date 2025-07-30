@@ -35,6 +35,18 @@ app = FastAPI(title="Veridica AI - Predictive Chemistry Platform")
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Simple import test for oncoprotein
+try:
+    import sys
+    sys.path.append('/app')
+    from modal_training.oncoprotein_backend_integration import oncoprotein_router
+    app.include_router(oncoprotein_router)
+    logging.info("✅ Oncoprotein router added successfully")
+    ONCOPROTEIN_AVAILABLE = True
+except Exception as e:
+    logging.error(f"❌ Failed to add oncoprotein router: {e}")
+    ONCOPROTEIN_AVAILABLE = False
+
 # Import Modal API integration
 try:
     import sys
