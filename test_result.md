@@ -107,30 +107,33 @@ user_problem_statement: "Test the enhanced predictive chemistry platform with ta
 backend:
   - task: "Multi-Task ChemBERTa Pipeline - ChEMBL Database Download"
     implemented: true
-    working: true
+    working: false
     file: "/app/modal_training/oncoprotein_chemberta.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: false
           agent: "main"
           comment: "Initial attempt failed due to incorrect ChEMBL database URLs (404 error on v33). ChEMBL URLs were outdated."
         - working: true
           agent: "main"
-          comment: "Fixed ChEMBL database URLs to use latest v35 and correct FTP/HTTPS endpoints. Download now in progress - successfully downloading ChEMBL v35 (5.0 GB) from ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_35/chembl_35_sqlite.tar.gz"
+          comment: "Fixed ChEMBL database URLs to use latest v35 and correct FTP/HTTPS endpoints. Download completed successfully - ChEMBL v35 (5.0 GB) from ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_35/chembl_35_sqlite.tar.gz"
+        - working: false
+          agent: "main"
+          comment: "Download completed successfully but extraction failed with 'No SQLite file found in extracted archive'. Archive structure may be different than expected. Need to investigate ChEMBL v35 archive contents and update extraction logic."
 
   - task: "Multi-Task ChemBERTa Pipeline - Data Extraction"
     implemented: true
     working: false
     file: "/app/modal_training/oncoprotein_chemberta.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: true
     status_history:
         - working: false
           agent: "main"
-          comment: "Waiting for ChEMBL database download to complete before starting oncoprotein data extraction for 14 targets (EGFR, HER2, BRAF, MET, MDM2, STAT3, RRM2, β-catenin, MYC, PI3KCA, CDK4, CDK6, ALK, VEGFR2)"
+          comment: "Blocked by ChEMBL database extraction failure. Cannot proceed with oncoprotein data extraction for 14 targets until ChEMBL SQLite database is successfully extracted and accessible."
 
   - task: "Multi-Task ChemBERTa Pipeline - Model Training"
     implemented: true
