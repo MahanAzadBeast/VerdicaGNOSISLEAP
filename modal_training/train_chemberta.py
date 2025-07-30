@@ -682,10 +682,36 @@ def load_and_predict_chemberta(
     Load trained ChemBERTa model and make predictions
     """
     
-    # Load model and tokenizer
+    # Load tokenizer
     tokenizer = AutoTokenizer.from_pretrained("seyonec/ChemBERTa-zinc-base-v1")
-    model = ChemBERTaMultiTaskModel.from_pretrained(model_path)
+    
+    # Load model - need to reconstruct the model architecture first
+    model_path_obj = Path(model_path)
+    config_path = model_path_obj / "config.json"
+    
+    # Load config if available, otherwise use defaults
+    if config_path.exists():
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        num_targets = config.get('num_targets', 14)  # Default for oncoproteins
+    else:
+        num_targets = 14  # Default for oncoproteins
+    
+    # Reconstruct model architecture
+    model = ChemBERTaMultiTaskModel(
+        model_name="seyonec/ChemBERTa-zinc-base-v1",
+        num_targets=num_targets,
+        dropout=0.1
+    )
+    
+    # Load trained weights
+    checkpoint_path = model_path_obj / "pytorch_model.bin"
+    if checkpoint_path.exists():
+        model.load_state_dict(torch.load(checkpoint_path, map_location='cpu'))
+    
     model.eval()
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.to(device)
     
     predictions = []
     
