@@ -185,7 +185,28 @@ def extract_oncoprotein_data_via_api():
     df = pd.DataFrame(all_data)
     
     if df.empty:
-        raise ValueError("No bioactivity data retrieved via API")
+        logger.error("❌ No bioactivity data retrieved via API for any target")
+        logger.info("💡 This might be due to:")
+        logger.info("  - Incorrect ChEMBL target IDs")
+        logger.info("  - Targets not having IC50/Ki/EC50 data in nM units")
+        logger.info("  - API access issues")
+        
+        # Save empty results for debugging
+        metadata = {
+            'extraction_method': 'ChEMBL_API',
+            'targets': list(ONCOPROTEIN_TARGETS.keys()),
+            'total_compounds': 0,
+            'status': 'failed',
+            'target_stats': target_stats
+        }
+        
+        datasets_dir = Path("/vol/datasets")
+        datasets_dir.mkdir(parents=True, exist_ok=True)
+        metadata_path = datasets_dir / "extraction_metadata_api_failed.json"
+        with open(metadata_path, 'w') as f:
+            json.dump(metadata, f, indent=2)
+        
+        raise ValueError("No bioactivity data retrieved via API for any target. Check ChEMBL target IDs.")
     
     logger.info(f"📈 Retrieved {len(df)} total bioactivity records via API")
     
