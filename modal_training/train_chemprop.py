@@ -572,7 +572,7 @@ def predict_chemprop(
         
         # Run Chemprop prediction
         cmd = [
-            'python', '-m', 'chemprop.predict',  # Use python module instead of chemprop_predict
+            'chemprop_predict',  # Direct command should work with proper installation
             '--test_path', str(input_file),
             '--checkpoint_path', model_path,
             '--preds_path', str(output_file)
