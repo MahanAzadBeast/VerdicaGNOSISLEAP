@@ -1,6 +1,24 @@
-# ChemBERTa & Chemprop Training Pipelines with W&B Integration
+# Multi-Task ChemBERTa & Chemprop Training for 14 Oncoproteins
 
-Complete training infrastructure for molecular property prediction using ChemBERTa (transformer) and Chemprop (graph neural network) models on Modal with full Weights & Biases integration.
+Complete training infrastructure for **multi-task molecular property prediction** using ChemBERTa (transformer) and Chemprop (graph neural network) models. Both models are designed to predict bioactivity (pIC50) for **all 14 oncoprotein targets simultaneously** in a single model.
+
+## 🎯 Multi-Task Architecture
+
+### Both Models Train on ALL 14 Oncoproteins Simultaneously:
+- **EGFR, HER2, VEGFR2, BRAF, MET, CDK4, CDK6, ALK, MDM2, STAT3, RRM2, CTNNB1, MYC, PI3KCA**
+- **Single model** → **14 predictions** per molecule
+- **5,401 data points** across **5,022 unique compounds**
+- **Handles missing data** gracefully (92.3% sparsity)
+
+### ChemBERTa Multi-Task:
+```
+SMILES → Tokenizer → Transformer → [CLS] → Shared Layer → 14 Task Heads
+```
+
+### Chemprop Multi-Task GNN:
+```
+SMILES → Molecular Graph → Message Passing → Graph Pooling → 14 FFN Outputs
+```
 
 ## 🚀 Quick Start
 
