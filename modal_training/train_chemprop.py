@@ -71,7 +71,7 @@ class ChempropWandbLogger:
         for key, value in test_metrics.items():
             final_metrics[f"final_test_{key}"] = value
         
-        wandb.log(final_metrics)
+        self.wandb.log(final_metrics)
         
         # Create summary table
         if self.target_names:
@@ -88,11 +88,11 @@ class ChempropWandbLogger:
                     test_metrics.get(mae_key, 0.0)
                 ])
             
-            summary_table = wandb.Table(
+            summary_table = self.wandb.Table(
                 columns=["Target", "R²", "MSE", "MAE"],
                 data=summary_data
             )
-            wandb.log({"target_performance_summary": summary_table})
+            self.wandb.log({"target_performance_summary": summary_table})
 
 def prepare_chemprop_data(df: pd.DataFrame, smiles_col: str, target_cols: List[str], 
                          output_dir: Path, split_name: str) -> str:
