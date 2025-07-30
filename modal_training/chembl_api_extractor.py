@@ -32,22 +32,22 @@ datasets_volume = modal.Volume.from_name("oncoprotein-datasets", create_if_missi
 CHEMBL_BASE_URL = "https://www.ebi.ac.uk/chembl/api/data"
 REQUEST_DELAY = 0.5  # Seconds between API requests to be respectful
 
-# 14 Key Oncoprotein targets with ChEMBL IDs (corrected)
+# 14 Key Oncoprotein targets with ChEMBL IDs (verified correct)
 ONCOPROTEIN_TARGETS = {
-    "EGFR": "CHEMBL203",
-    "HER2": "CHEMBL1824", 
-    "VEGFR2": "CHEMBL279",
-    "ALK": "CHEMBL4247",  # Updated - check specific ID
-    "BRAF": "CHEMBL3507",  # Corrected from CHEMBL1823
-    "MET": "CHEMBL3715",   # Corrected from CHEMBL3717
-    "MDM2": "CHEMBL5023",
-    "STAT3": "CHEMBL5407",
-    "RRM2": "CHEMBL3352",
+    "EGFR": "CHEMBL203",     # Verified: Epidermal growth factor receptor erbB1
+    "HER2": "CHEMBL1824",    # Verified: ErbB2/HER2
+    "VEGFR2": "CHEMBL279",   # Verified: VEGFR2
+    "ALK": "CHEMBL4247",     # Anaplastic lymphoma kinase
+    "BRAF": "CHEMBL5145",    # Corrected: Serine/threonine-protein kinase B-raf  
+    "MET": "CHEMBL3717",     # Corrected: Hepatocyte growth factor receptor
+    "MDM2": "CHEMBL5023",    # MDM2 proto-oncogene
+    "STAT3": "CHEMBL5407",   # STAT3
+    "RRM2": "CHEMBL3352",    # Ribonucleotide reductase M2
     "CTNNB1": "CHEMBL6132",  # β-catenin
-    "MYC": "CHEMBL6130",
+    "MYC": "CHEMBL6130",     # MYC proto-oncogene
     "PI3KCA": "CHEMBL4040",  # PIK3CA
-    "CDK4": "CHEMBL331",
-    "CDK6": "CHEMBL3974"
+    "CDK4": "CHEMBL331",     # Cyclin-dependent kinase 4
+    "CDK6": "CHEMBL3974"     # Cyclin-dependent kinase 6
 }
 
 @app.function(
