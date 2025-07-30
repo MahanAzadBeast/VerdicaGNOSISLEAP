@@ -20,7 +20,7 @@ from transformers import (
     AutoTokenizer, AutoModel, AutoConfig,
     Trainer, TrainingArguments, EarlyStoppingCallback
 )
-import wandb
+# Note: wandb imported inside functions due to Modal environment
 
 # Modal setup with comprehensive ML libraries
 image = modal.Image.debian_slim(python_version="3.11").pip_install([
