@@ -1,39 +1,58 @@
 <analysis>
-The previous AI engineer initiated the Veridica AI platform MVP, migrating MolBERT training to Modal.com. Initially facing poor R² scores with custom training, the focus shifted to fine-tuning a pre-trained MolBERT, encountering PyTorch Lightning/HuggingFace compatibility issues. A simplified fine-tuner was created, and the agent began debugging it. The current agent took over, first confirming priorities. Although visualizations were initially requested, the user pivoted back to the MolBERT Modal workflow to ensure performance and proper model storage. This led to significant refactoring and implementation of a Modal-first architecture for both ChemBERTa and Chemprop, focusing on offloading heavy computations to Modal. The most recent directive is to build a multi-task ChemBERTa model for oncoproteins, a complex task involving large dataset handling and GPU training on Modal. This involves detailed data acquisition from ChEMBL, extensive preprocessing, and multi-task model training, currently in the data download and extraction phase.
+The previous AI engineer focused on migrating MolBERT training to Modal and then pivoted to fine-tuning MolBERT/ChemBERTa. My analysis of the trajectory reveals a shift in focus to building a multi-task ChemBERTa model for oncoproteins on Modal. This involved significant data acquisition and preprocessing challenges, initially with a large ChEMBL database download that repeatedly failed due to extraction logic issues (incorrect file names and missing directory creation). This led to a critical pivot to an API-based data extraction approach, which proved successful and efficient for gathering data for 14 oncoproteins. Following the successful data extraction, the user requested setting up W&B integrated training pipelines for both ChemBERTa and Chemprop on Modal. I successfully implemented and debugged the ChemBERTa training pipeline with W&B logging, though detailed per-target metric logging remains an outstanding issue. The Chemprop pipeline setup is in progress, facing ongoing compatibility and import challenges. The current task is to complete the detailed W&B logging for ChemBERTa.
 </analysis>
 
 <product_requirements>
-The Veridica AI platform serves as an AI-driven drug discovery interface, predicting molecular properties (Bioactivity, Toxicity, ADME, Physicochemical, Drug-likeness) from SMILES input. It features a React frontend, FastAPI backend, and MongoDB. The core functionality relies on pre-trained Chemprop and MolBERT/ChemBERTa models for IC₅₀ prediction, trained on ChEMBL/BindingDB, with future plans for confidence scoring. The UI includes a dark-themed, responsive design with Home, Predict Molecule Properties, Result Analysis (with visualizations/export), and About/Contact tabs, featuring a Spline 3D animation on the homepage. Initial MolBERT training on Modal.com yielded poor R² scores, leading to a pivot towards fine-tuning pre-trained MolBERT/ChemBERTa models from BenevolentAI or HuggingFace. A key recent requirement is to prevent local loading of heavy AI models, offloading them to Modal.com. The latest, comprehensive requirement is to build and train a multi-task ChemBERTa model on Modal, specifically for key oncoproteins (e.g., EGFR, HER2, BRAF, MET, MDM2, STAT3, RRM2, β-catenin, MYC, PI3KCA, CDK4, CDK6, ALK, VEGFR2) using ChEMBL data, including data acquisition, preprocessing, multi-task training, and an inference script.
+The Veridica AI platform aims to be an AI-driven drug discovery interface, predicting molecular properties (Bioactivity, Toxicity, ADME, Physicochemical, Drug-likeness) from SMILES input. It leverages a React frontend, FastAPI backend, and MongoDB. Core functionality includes pre-trained Chemprop and MolBERT/ChemBERTa models for IC₅₀ prediction, trained on ChEMBL/BindingDB, with future plans for confidence scoring. The UI features a dark-themed, responsive design with Home, Predict Molecule Properties, Result Analysis (with visualizations/export), and About/Contact tabs, including a Spline 3D animation on the homepage. Initial MolBERT training on Modal.com yielded poor R² scores, leading to a focus on fine-tuning pre-trained models. A key recent requirement was offloading heavy AI model computations to Modal.com to prevent local loading. The most comprehensive and recently completed requirement was building and training a multi-task ChemBERTa model on Modal for key oncoproteins (EGFR, HER2, BRAF, MET, MDM2, STAT3, RRM2, β-catenin, MYC, PI3KCA, CDK4, CDK6, ALK, VEGFR2) using ChEMBL data. This included data acquisition, preprocessing, multi-task training setup, and an inference script. The latest user request is to integrate Weights & Biases (W&B) for both ChemBERTa and Chemprop training, logging various metrics and artifacts.
 </product_requirements>
 
 <key_technical_concepts>
-- **Molecular Models:** MolBERT, ChemBERTa (Transformer), Chemprop (GNN), Simple GNN.
+- **Molecular Models:** MolBERT, ChemBERTa (Hugging Face Transformers), Chemprop (GNN).
 - **Web Stack:** React.js, FastAPI, MongoDB, Tailwind CSS.
-- **ML Platforms:** Modal.com (for GPU/high-memory tasks), PyTorch, PyTorch Lightning.
+- **ML Platform:** Modal.com (for GPU/high-memory tasks), PyTorch, PyTorch Lightning.
+- **MLOps/Experiment Tracking:** Weights & Biases (W&B).
 - **Chemistry:** RDKit, ChEMBL API, SMILES, IC₅₀/pIC₅₀.
-- **Deployment:** Supervisor, Kubernetes Ingress.
-- **Data:** SQLite, Parquet, CSV.
+- **Deployment/Infrastructure:** Supervisor, Kubernetes Ingress, Docker.
+- **Data Formats:** SQLite, Parquet, CSV.
 </key_technical_concepts>
 
 <code_architecture>
-The application employs a full-stack architecture: React frontend, FastAPI backend, and MongoDB database.
+The application uses a React frontend, FastAPI backend, and MongoDB. Heavy ML computations are offloaded to Modal.com.
 
 
 
 -   ****: The core FastAPI backend.
-    -   **Importance**: Handles API endpoints, prediction logic, and database interactions. It was significantly modified to integrate Modal.com services for MolBERT/ChemBERTa and Chemprop, adding new endpoints like  and .
-    -   **Changes**: Initially included local ChemBERTa loading that was removed to offload heavy models to Modal. Modified to call  for Modal services. New API endpoints for Modal status, setup, prediction, and training for both MolBERT/ChemBERTa and Chemprop were added.
--   ****: Main React UI component.
-    -   **Importance**: Renders the user interface and makes API calls to the backend.
-    -   **Changes**: Initial attempts to add visualization imports led to JavaScript errors ( redeclared). These problematic imports were removed due to memory issues, reverting the UI to a basic functional state. The UI's  endpoint was updated to use Modal ChemBERTa when available.
--   ** directory**: Crucial for deploying and managing ML model training and inference on Modal.com GPUs.
-    -   **Importance**: Contains Modal application definitions, deployment scripts, and backend integration clients for cloud-based ML.
-    -   **Changes**:  was created to handle MolBERT/ChemBERTa operations on Modal, including persistent caching and automatic model downloads.  was created as a client for these Modal services. Most recently,  was created to manage the comprehensive multi-task ChemBERTa training pipeline for oncoproteins on Modal, including ChEMBL data acquisition, preprocessing, and multi-task model training with dedicated Modal volumes.
--   ****: Stores extracted pre-trained BenevolentAI MolBERT weights.
-    -   **Importance**: Contains  (pretrained weights) and , intended for fine-tuning. While initially the target for fine-tuning, the focus pivoted to  from Hugging Face for Modal integration.
+    -   **Importance**: Handles API endpoints and prediction logic.
+    -   **Changes**: Modified to integrate Modal services. An attempt was made to integrate  for multi-task ChemBERTa endpoints and update the  endpoint, but this integration is currently not fully functional.
+-   ****: Defines Modal functions for ChEMBL data download, extraction, and multi-task ChemBERTa training setup.
+    -   **Importance**: Orchestrates the initial data pipeline for oncoproteins.
+    -   **Changes**: Initially configured for ChEMBL v33 download, later fixed to ChEMBL v35 with FTP URLs. Critical fixes were applied to the ChEMBL database extraction logic to handle  file extension and ensure directory creation, though the large download approach ultimately proved unreliable.
+-   ****: A newly created script for extracting ChEMBL data via API.
+    -   **Importance**: Provides a faster, more reliable alternative to the full ChEMBL database download.
+    -   **Changes**: Created to query ChEMBL API, initially struggling with XML vs. JSON and incorrect ChEMBL IDs. Debugged to correctly use JSON format and identify accurate ChEMBL target IDs for 14 oncoproteins.
+-   ****: A small-scale test extractor for EGFR data using the ChEMBL API.
+    -   **Importance**: Validated the entire API-based data extraction and processing pipeline before scaling up.
+    -   **Changes**: Created, successfully extracted and processed EGFR data, demonstrating functionality including pIC50 conversion, and saving to CSV. Highlighted a missing  dependency.
+-   ****: Scales the API-based extraction to all 14 oncoproteins.
+    -   **Importance**: Generates the final multi-task dataset for ChemBERTa/Chemprop training.
+    -   **Changes**: Created and successfully processed data for all 14 oncoproteins, creating a multi-task dataset with 5,022 unique compounds saved as CSV and Parquet.
+-   ****: Defines the Modal function for multi-task ChemBERTa training.
+    -   **Importance**: Core script for training the ChemBERTa model on Modal GPUs.
+    -   **Changes**: Created to integrate Hugging Face's ChemBERTa with PyTorch and W&B. It underwent several debugging steps, including  import placement,  argument adjustments, and handling  for gradient checkpointing. It now successfully completes training.
+-   ** / **: Define Modal functions for multi-task Chemprop training.
+    -   **Importance**: Core script for training the Chemprop GNN model.
+    -   **Changes**:  was created to use the official Chemprop package. Due to persistent compatibility and command execution issues,  was created as a simplified, currently working version, though it still needs to be fully integrated and debugged for robust multi-task training.
+-   ****: A unified script to launch both ChemBERTa and Chemprop training.
+    -   **Importance**: Simplifies the execution of training jobs.
+    -   **Changes**: Created to provide a command-line interface for initiating training runs.
+-   ****: Tests the entire training pipeline, including dataset validation.
+    -   **Importance**: Ensures the data and training infrastructure are functional.
+    -   **Changes**: Created to validate the 14-oncoprotein dataset and test a simple training run (Random Forest for EGFR). Required adding , ,  to the Modal image.
+-   ****: Documentation for the training pipelines.
+    -   **Importance**: Provides instructions and context for using the training setup.
+    -   **Changes**: Created to document usage, configuration, and troubleshoot.
 -   ****: Python dependencies for the backend.
-    -   **Importance**: Manages all necessary Python libraries for the FastAPI application and Modal integration.
-    -   **Changes**:                                                                                 
+    -   **Changes**: Updated to include                                                                                 
  Usage: modal [OPTIONS] COMMAND [ARGS]...                                       
                                                                                 
  Modal is the fastest way to run code in the cloud.                             
@@ -72,27 +91,39 @@ The application employs a full-stack architecture: React frontend, FastAPI backe
 │ environment   Create and interact with Environments                          │
 │ profile       Switch between Modal profiles.                                 │
 │ token         Manage tokens.                                                 │
-╰──────────────────────────────────────────────────────────────────────────────╯ and  packages were updated/reinstalled multiple times due to versioning and import issues. New dependencies for Modal (e.g., , ) were added.
+╰──────────────────────────────────────────────────────────────────────────────╯, , , ,  for ChEMBL API, , , , , , usage: transformers <command> [<args>]
+
+positional arguments:
+  {chat,convert,download,env,run,serve,add-new-model-like,add-fast-image-processor}
+                        transformers command helpers
+    convert             CLI tool to run convert model from original author
+                        checkpoints to Transformers PyTorch checkpoints.
+    run                 Run a pipeline through the CLI
+    serve               CLI tool to run inference requests through REST and
+                        GraphQL endpoints.
+
+options:
+  -h, --help            show this help message and exit, , ,  for the training pipelines.
 </code_architecture>
 
 <pending_tasks>
 - Fully implement visualizations (bar graphs, scatter plots, heatmaps) and interactive features within the Result Analysis tab, following the initial request.
 - Debug and fully implement the fine-tuning of the pre-trained BenevolentAI MolBERT model if the multi-task ChemBERTa approach proves insufficient or if specifically requested again.
-- Continue the ongoing multi-task ChemBERTa model training pipeline on Modal, from data extraction to full model training and inference script generation.
+- Complete the debugging and robust implementation of the multi-task Chemprop training pipeline.
+- Ensure comprehensive per-target R², MSE, MAE, and loss graph logging in W&B for ChemBERTa training.
 </pending_tasks>
 
 <current_work>
-The most immediate and ongoing work is the development and training of a **multi-task ChemBERTa model on Modal for key oncoproteins**. This ambitious project aims to create a single, powerful AI model capable of predicting molecular properties for 14 different cancer-related protein targets.
+The most immediate and ongoing work involves **enhancing the Weights & Biases (W&B) integration for the ChemBERTa multi-task training pipeline**. While the ChemBERTa training successfully completed and logged general metrics to W&B, the user explicitly requested more granular logging of per-target R², MSE, MAE, and loss graphs for each epoch.
 
-The current phase involves **data acquisition and preprocessing** using Modal's high-memory CPU instances. Specifically:
-1.  **ChEMBL Database Download**: The system successfully downloaded the latest full ChEMBL SQLite dump (ChEMBL v34, 4.9 GB) to a Modal persistent volume (). This step is complete.
-2.  **Database Extraction**: The downloaded ChEMBL database is currently being extracted within the Modal environment. This is a prerequisite for extracting the target-specific bioactivity data.
+Specifically, the work currently entails modifying the  file to:
+1.  Implement a custom callback ( class) for PyTorch Lightning/Hugging Face Trainer.
+2.  Within this callback, calculate and log individual metrics (R², MSE, MAE) and loss for each of the 14 oncoprotein targets per epoch.
+3.  Ensure these metrics are structured appropriately for W&B to generate time-series graphs (e.g., , ).
 
-The overarching goal is to prepare a comprehensive dataset ( and ) containing SMILES strings and pIC₅₀ values for all specified oncoproteins, with NaN values where data is unavailable. This dataset will then be used to train the multi-task ChemBERTa model on Modal's A100 GPUs. The model will feature a multi-task regression head, masked MSE loss, and will be split for train/validation/test. An inference script will also be provided.
-
-This work directly follows the decision to move from individual target models to a more scientifically superior and clinically relevant pan-cancer drug discovery engine. It builds upon the previously established Modal-first architecture, ensuring all heavy computations (data processing, model training) are offloaded from the local environment.
+This task is crucial for providing the detailed performance insights needed to analyze and compare the model's effectiveness across different cancer targets, fulfilling a core requirement for comprehensive experiment tracking.
 </current_work>
 
 <optional_next_step>
-Monitor the ongoing ChEMBL database extraction and then proceed with oncoprotein data extraction and preprocessing on Modal.
+Complete the implementation of the  in  to log per-target R², MSE, MAE, and loss graphs to W&B.
 </optional_next_step>
