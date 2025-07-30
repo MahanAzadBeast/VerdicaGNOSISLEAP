@@ -429,7 +429,7 @@ async def health_check():
     
     # Check oncoprotein pipeline status
     oncoprotein_status = {}
-    if ONCOPROTEIN_CHEMBERTA_AVAILABLE:
+    if ONCOPROTEIN_AVAILABLE:
         try:
             # Check if pipeline files exist
             pipeline_deployed = Path('/app/modal_training/oncoprotein_deploy_fixed_v2.log').exists()
@@ -450,7 +450,7 @@ async def health_check():
             "molbert": molbert_loaded,
             "chemprop_simulation": True,  # Simulation always available
             "real_ml_models": real_models_available,
-            "oncoprotein_chemberta": ONCOPROTEIN_CHEMBERTA_AVAILABLE
+            "oncoprotein_chemberta": ONCOPROTEIN_AVAILABLE
         },
         "real_ml_targets": real_models_status,
         "enhanced_predictions": True,  # Enhanced IC50 models available
