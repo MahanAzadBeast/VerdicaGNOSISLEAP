@@ -21,6 +21,7 @@ app = modal.App("test-training-pipeline")
 datasets_volume = modal.Volume.from_name("oncoprotein-datasets", create_if_missing=True)
 
 @app.function(
+    image=image,
     volumes={"/vol/datasets": datasets_volume},
     timeout=600
 )
