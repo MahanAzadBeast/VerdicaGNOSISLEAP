@@ -116,7 +116,7 @@ def run_chemprop_training(train_path: str, val_path: str, test_path: str,
     
     # Prepare Chemprop command for multi-task learning
     cmd = [
-        'python', '-m', 'chemprop.train',  # Use python module instead of chemprop_train
+        'chemprop_train',  # Direct command should work with proper installation
         '--data_path', train_path,
         '--separate_val_path', val_path,
         '--separate_test_path', test_path,
