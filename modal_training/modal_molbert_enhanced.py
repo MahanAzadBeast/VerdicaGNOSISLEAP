@@ -675,28 +675,39 @@ def finetune_chembert_modal(
     send_progress("started", f"Initializing ChemBERTa fine-tuning for {target}", 5)
     
     try:
-        # Fetch real ChEMBL data for EGFR (CHEMBL203)
-        logger.info("🔬 Fetching real ChEMBL bioactivity data for EGFR (CHEMBL203)...")
+        # Fetch real ChEMBL data for specified target
+        target_chembl_ids = {
+            "EGFR": "CHEMBL203",
+            "HER2": "CHEMBL1824",  # ERBB2/HER2
+            "BRAF": "CHEMBL5145",
+            "CDK2": "CHEMBL301",
+            "PARP1": "CHEMBL3105",
+            "VEGFR2": "CHEMBL279"
+        }
+        
+        chembl_id = target_chembl_ids.get(target, "CHEMBL203")  # Default to EGFR
+        
+        logger.info(f"🔬 Fetching real ChEMBL bioactivity data for {target} ({chembl_id})...")
         
         try:
             from chembl_webresource_client.new_client import new_client
             
             # Initialize ChEMBL clients
-            target = new_client.target
+            target_client = new_client.target
             activity = new_client.activity
             molecule = new_client.molecule
             
-            # Get EGFR target info
-            egfr_targets = target.filter(chembl_id="CHEMBL203")
-            if not egfr_targets:
-                raise ValueError("CHEMBL203 (EGFR) target not found")
+            # Get target info
+            target_results = target_client.filter(chembl_id=chembl_id)
+            if not target_results:
+                raise ValueError(f"{chembl_id} ({target}) target not found")
             
-            logger.info("✅ Found EGFR target CHEMBL203")
+            logger.info(f"✅ Found {target} target {chembl_id}")
             
-            # Get bioactivities for EGFR with IC50 data
+            # Get bioactivities for target with IC50 data
             logger.info("📊 Fetching IC50 bioactivity data...")
             activities = activity.filter(
-                target_chembl_id="CHEMBL203",
+                target_chembl_id=chembl_id,
                 standard_type="IC50",
                 standard_units="nM",
                 standard_value__isnull=False,
