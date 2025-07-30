@@ -288,6 +288,104 @@ def test_egfr_dataset():
     except Exception as e:
         return {'status': 'error', 'error': str(e)}
 
+@app.function(
+    image=image,
+    volumes={"/vol/datasets": datasets_volume},
+    cpu=1.0,
+    memory=2048,
+    timeout=300
+)
+def test_egfr_training():
+    """
+    Test a simple ML model on the EGFR dataset to validate the pipeline
+    """
+    import logging
+    from sklearn.model_selection import train_test_split
+    from sklearn.ensemble import RandomForestRegressor
+    from sklearn.metrics import mean_squared_error, r2_score
+    
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    
+    logger.info("🧪 Testing EGFR dataset with simple ML model...")
+    
+    dataset_path = Path("/vol/datasets/egfr_test_dataset.csv")
+    if not dataset_path.exists():
+        return {'status': 'error', 'message': 'EGFR test dataset not found'}
+    
+    try:
+        df = pd.read_csv(dataset_path)
+        logger.info(f"📊 Loaded {len(df)} compounds")
+        
+        # Create simple molecular features using RDKit
+        from rdkit import Chem
+        from rdkit.Chem import Descriptors
+        
+        features = []
+        valid_smiles = []
+        valid_pic50 = []
+        
+        for _, row in df.iterrows():
+            mol = Chem.MolFromSmiles(row['canonical_smiles'])
+            if mol is not None:
+                # Calculate simple molecular descriptors
+                feat = [
+                    Descriptors.MolWt(mol),
+                    Descriptors.MolLogP(mol),
+                    Descriptors.NumHDonors(mol),
+                    Descriptors.NumHAcceptors(mol),
+                    Descriptors.TPSA(mol),
+                    Descriptors.NumRotatableBonds(mol)
+                ]
+                features.append(feat)
+                valid_smiles.append(row['canonical_smiles'])
+                valid_pic50.append(row['pIC50'])
+        
+        if len(features) < 10:
+            return {'status': 'error', 'message': 'Too few valid compounds for training'}
+        
+        logger.info(f"✅ Generated features for {len(features)} compounds")
+        
+        # Split data
+        X = np.array(features)
+        y = np.array(valid_pic50)
+        
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
+        
+        # Train simple model
+        logger.info("🎓 Training Random Forest model...")
+        model = RandomForestRegressor(n_estimators=100, random_state=42)
+        model.fit(X_train, y_train)
+        
+        # Evaluate
+        y_pred = model.predict(X_test)
+        mse = mean_squared_error(y_test, y_pred)
+        r2 = r2_score(y_test, y_pred)
+        
+        logger.info(f"✅ Model trained successfully!")
+        logger.info(f"✅ R² Score: {r2:.3f}")
+        logger.info(f"✅ RMSE: {np.sqrt(mse):.3f}")
+        
+        return {
+            'status': 'success',
+            'total_compounds': len(features),
+            'train_size': len(X_train),
+            'test_size': len(X_test),
+            'r2_score': float(r2),
+            'rmse': float(np.sqrt(mse)),
+            'model_type': 'RandomForest',
+            'features_used': [
+                'MolWt', 'MolLogP', 'NumHDonors', 
+                'NumHAcceptors', 'TPSA', 'NumRotatableBonds'
+            ]
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Training test failed: {e}")
+        return {'status': 'error', 'error': str(e)}
+
 if __name__ == "__main__":
     # Local test
     pass
