@@ -252,6 +252,8 @@ def train_chemprop_multitask(
     bioactivity (pIC50) for all 14 oncoprotein targets simultaneously.
     """
     
+    import wandb  # Import wandb inside function for Modal environment
+    
     # Initialize logging
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
