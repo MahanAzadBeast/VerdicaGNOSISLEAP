@@ -117,7 +117,14 @@ def download_chembl_database():
         for url in chembl_urls:
             try:
                 logger.info(f"🔍 Trying URL: {url}")
-                response = requests.get(url, stream=True, timeout=30)
+                
+                # Handle FTP URLs differently from HTTP URLs
+                if url.startswith('ftp://'):
+                    # Convert FTP to HTTP for requests library
+                    http_url = url.replace('ftp://', 'https://')
+                    response = requests.get(http_url, stream=True, timeout=60)
+                else:
+                    response = requests.get(url, stream=True, timeout=60)
                 response.raise_for_status()
                 chembl_url = url
                 logger.info(f"✅ Found ChEMBL at: {url}")
