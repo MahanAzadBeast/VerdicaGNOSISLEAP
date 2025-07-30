@@ -354,7 +354,6 @@ def train_chemberta_multitask(
         per_device_eval_batch_size=batch_size,
         learning_rate=learning_rate,
         warmup_steps=warmup_steps,
-        logging_dir=f"{output_dir}/logs",
         logging_steps=100,
         eval_strategy="steps",  # Updated from evaluation_strategy
         save_strategy="steps",
@@ -364,10 +363,10 @@ def train_chemberta_multitask(
         metric_for_best_model="eval_loss",
         greater_is_better=False,
         report_to="wandb",
-        run_name=wandb.run.name,
-        dataloader_num_workers=4,
+        dataloader_num_workers=2,  # Reduced for stability
         fp16=True,  # Mixed precision for A100
-        save_total_limit=2
+        save_total_limit=2,
+        remove_unused_columns=False  # Keep all columns for custom compute_loss
     )
     
     # Initialize trainer
