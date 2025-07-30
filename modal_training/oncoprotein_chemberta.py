@@ -267,6 +267,11 @@ def download_chembl_database():
         
         # Move to expected location with standard name
         target_file = chembl_file  # This is /vol/chembl/chembl.sqlite
+        
+        # Ensure target directory exists (critical fix!)
+        target_file.parent.mkdir(parents=True, exist_ok=True)
+        logger.info(f"📁 Created target directory: {target_file.parent}")
+        
         sqlite_file.rename(target_file)
         
         # Cleanup
