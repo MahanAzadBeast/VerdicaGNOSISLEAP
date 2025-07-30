@@ -77,20 +77,8 @@ except Exception as e:
     logging.warning(f"⚠️ Enhanced Modal MolBERT integration not available: {e}")
     ENHANCED_MODAL_AVAILABLE = False
 
-# Import Multi-Task ChemBERTa Oncoprotein integration
-try:
-    sys.path.append('/app')
-    print("📥 Attempting to import oncoprotein integration...")
-    from modal_training.oncoprotein_backend_integration import oncoprotein_router
-    print(f"📥 Router imported with prefix: {oncoprotein_router.prefix}")
-    app.include_router(oncoprotein_router, tags=["Multi-Task ChemBERTa Oncoproteins"])
-    print("📥 Router included successfully")
-    logging.info("✅ Multi-Task ChemBERTa Oncoprotein integration loaded")
-    ONCOPROTEIN_CHEMBERTA_AVAILABLE = True
-except Exception as e:
-    print(f"❌ oncoprotein integration failed: {e}")
-    logging.warning(f"⚠️ Multi-Task ChemBERTa Oncoprotein integration not available: {e}")
-    ONCOPROTEIN_CHEMBERTA_AVAILABLE = False
+# Multi-Task ChemBERTa Oncoprotein integration disabled
+ONCOPROTEIN_CHEMBERTA_AVAILABLE = False
 
 # GPU Training Progress Storage (in-memory for now, could use Redis/DB)
 gpu_training_progress = {}
