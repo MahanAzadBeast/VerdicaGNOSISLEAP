@@ -102,11 +102,33 @@ def download_chembl_database():
     chembl_url = "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_34_sqlite.tar.gz"
     
     try:
-        # Download compressed file
-        response = requests.get(chembl_url, stream=True)
-        response.raise_for_status()
+        # Try different ChEMBL versions
+        chembl_urls = [
+            "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_34_sqlite.tar.gz",
+            "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_34/chembl_34_sqlite.tar.gz",
+            "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_33/chembl_33_sqlite.tar.gz"
+        ]
         
-        temp_file = Path("/tmp/chembl_33_sqlite.tar.gz")
+        response = None
+        chembl_url = None
+        
+        for url in chembl_urls:
+            try:
+                logger.info(f"🔍 Trying URL: {url}")
+                response = requests.get(url, stream=True, timeout=30)
+                response.raise_for_status()
+                chembl_url = url
+                logger.info(f"✅ Found ChEMBL at: {url}")
+                break
+            except requests.exceptions.RequestException as e:
+                logger.info(f"❌ Failed: {e}")
+                continue
+        
+        if response is None:
+            raise ValueError("Could not find ChEMBL database at any known URL")
+        
+        # Download compressed file
+        temp_file = Path("/tmp/chembl_sqlite.tar.gz")
         
         # Download with progress
         total_size = int(response.headers.get('content-length', 0))
