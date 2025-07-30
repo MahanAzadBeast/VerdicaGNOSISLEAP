@@ -14,11 +14,9 @@ import shutil
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 import subprocess
-# Note: wandb imported inside functions due to Modal environment
+# Note: wandb, matplotlib, seaborn imported inside functions due to Modal environment
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 # Modal setup with Chemprop and dependencies
 image = modal.Image.debian_slim(python_version="3.11").pip_install([
