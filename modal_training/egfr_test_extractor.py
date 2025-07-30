@@ -21,7 +21,8 @@ image = modal.Image.debian_slim(python_version="3.11").pip_install([
     "rdkit",
     "matplotlib",
     "seaborn",
-    "pyarrow"  # Fix parquet support
+    "pyarrow",  # Fix parquet support
+    "scikit-learn"  # For testing ML pipeline
 ])
 
 app = modal.App("egfr-test-extractor")
