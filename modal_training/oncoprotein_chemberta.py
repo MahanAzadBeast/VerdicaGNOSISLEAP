@@ -23,7 +23,7 @@ image = modal.Image.debian_slim(python_version="3.11").pip_install([
     # Chemistry and database
     "rdkit-pypi>=2022.9.5",
     "sqlalchemy>=2.0.0",
-    "sqlite3",  # Usually included but explicit
+    # sqlite3 is included with Python
     
     # Data processing and visualization
     "matplotlib>=3.7.0",
