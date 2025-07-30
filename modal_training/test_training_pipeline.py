@@ -8,6 +8,13 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
+# Modal setup with required dependencies
+image = modal.Image.debian_slim(python_version="3.11").pip_install([
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "pyarrow>=12.0.0"
+])
+
 app = modal.App("test-training-pipeline")
 
 # Import the training modules
