@@ -342,7 +342,7 @@ def train_chemprop_multitask(
         output_dir = f"/vol/models/chemprop_{dataset_name}"
         Path(output_dir).mkdir(parents=True, exist_ok=True)
         
-        # Prepare training configuration
+        # Prepare training configuration for multi-task learning
         config = {
             'num_epochs': num_epochs,
             'batch_size': batch_size,
@@ -360,8 +360,15 @@ def train_chemprop_multitask(
             'use_features': use_features,
             'atom_messages': atom_messages,
             'early_stopping': early_stopping,
-            'patience': patience
+            'patience': patience,
+            'ensemble_size': ensemble_size,
+            'multitask_scaling': multitask_scaling
         }
+        
+        logger.info(f"🎯 Multi-task configuration:")
+        logger.info(f"   Targets: {len(target_cols)} oncoproteins")
+        logger.info(f"   Multi-task scaling: {multitask_scaling}")
+        logger.info(f"   Ensemble size: {ensemble_size}")
         
         # Initialize W&B logger
         wb_logger = ChempropWandbLogger(target_cols)
