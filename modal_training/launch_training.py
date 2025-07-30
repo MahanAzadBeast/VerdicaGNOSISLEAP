@@ -67,7 +67,8 @@ def launch_training(
         print(f"✅ ChemBERTa Training Completed: {chemberta_result['status']}")
     
     if model in ['chemprop', 'both']:
-        print("\n🧪 Starting Chemprop Training...")
+        print("\n🧪 Starting Chemprop Multi-Task GNN Training...")
+        print("🎯 Training single model for ALL 14 oncoproteins simultaneously")
         
         # Import and run Chemprop training
         from train_chemprop import train_chemprop_multitask
@@ -84,11 +85,13 @@ def launch_training(
             learning_rate=chemprop_lr,
             test_size=test_size,
             val_size=val_size,
-            run_name=f"{run_name}-chemprop" if run_name else None
+            multitask_scaling=True,  # Enable multi-task loss scaling
+            ensemble_size=1,  # Can increase for better performance
+            run_name=f"{run_name}-chemprop-multitask" if run_name else None
         )
         
         results['chemprop'] = chemprop_result
-        print(f"✅ Chemprop Training Completed: {chemprop_result['status']}")
+        print(f"✅ Chemprop Multi-Task Training Completed: {chemprop_result['status']}")
     
     print("\n🎉 All Training Completed!")
     print("📊 W&B Results available at: https://wandb.ai/")
