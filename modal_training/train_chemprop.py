@@ -14,7 +14,7 @@ import shutil
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 import subprocess
-import wandb
+# Note: wandb imported inside functions due to Modal environment
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import matplotlib.pyplot as plt
