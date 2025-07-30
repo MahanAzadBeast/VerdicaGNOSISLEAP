@@ -114,7 +114,7 @@ def test_chemberta_pipeline():
         print(f"❌ ChemBERTa Test Failed: {e}")
         return {"status": "error", "error": str(e)}
 
-@app.function(timeout=1800)  # 30 minutes  
+@app.function(image=image, timeout=1800)  # 30 minutes  
 def test_chemprop_pipeline():
     """Test Chemprop training pipeline with minimal configuration"""
     
