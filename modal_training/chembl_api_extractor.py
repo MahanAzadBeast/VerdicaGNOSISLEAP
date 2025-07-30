@@ -32,14 +32,14 @@ datasets_volume = modal.Volume.from_name("oncoprotein-datasets", create_if_missi
 CHEMBL_BASE_URL = "https://www.ebi.ac.uk/chembl/api/data"
 REQUEST_DELAY = 0.5  # Seconds between API requests to be respectful
 
-# 14 Key Oncoprotein targets with ChEMBL IDs
+# 14 Key Oncoprotein targets with ChEMBL IDs (corrected)
 ONCOPROTEIN_TARGETS = {
     "EGFR": "CHEMBL203",
     "HER2": "CHEMBL1824", 
     "VEGFR2": "CHEMBL279",
-    "ALK": "CHEMBL3717",  # Updated ID
-    "BRAF": "CHEMBL1823",
-    "MET": "CHEMBL3717",
+    "ALK": "CHEMBL4247",  # Updated - check specific ID
+    "BRAF": "CHEMBL3507",  # Corrected from CHEMBL1823
+    "MET": "CHEMBL3715",   # Corrected from CHEMBL3717
     "MDM2": "CHEMBL5023",
     "STAT3": "CHEMBL5407",
     "RRM2": "CHEMBL3352",
