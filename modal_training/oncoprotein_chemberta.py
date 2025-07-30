@@ -98,15 +98,17 @@ def download_chembl_database():
     
     logger.info("📥 Downloading latest ChEMBL SQLite database...")
     
-    # ChEMBL FTP URL (check current version)
-    chembl_url = "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_34_sqlite.tar.gz"
+    # ChEMBL FTP URLs for latest version (ChEMBL v35 as of 2025)
     
     try:
-        # Try different ChEMBL versions
+        # Try different ChEMBL versions with correct FTP URLs
         chembl_urls = [
-            "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_34_sqlite.tar.gz",
-            "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_34/chembl_34_sqlite.tar.gz",
-            "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_33/chembl_33_sqlite.tar.gz"
+            "ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_35/chembl_35_sqlite.tar.gz",
+            "ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_34/chembl_34_sqlite.tar.gz",
+            "ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_33/chembl_33_sqlite.tar.gz",
+            # Alternative HTTPS URLs as fallback
+            "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_35/chembl_35_sqlite.tar.gz",
+            "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_34/chembl_34_sqlite.tar.gz"
         ]
         
         response = None
