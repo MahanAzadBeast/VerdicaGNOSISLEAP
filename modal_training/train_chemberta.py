@@ -592,14 +592,17 @@ def train_chemberta_multitask(
         remove_unused_columns=False  # Keep all columns for custom compute_loss
     )
     
-    # Initialize trainer
+    # Initialize trainer with enhanced callbacks
     trainer = ChemBERTaTrainer(
         target_names=target_cols,
         model=model,
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=early_stopping_patience)]
+        callbacks=[
+            EarlyStoppingCallback(early_stopping_patience=early_stopping_patience),
+            WandbMetricsCallback(target_cols)
+        ]
     )
     
     # Train model
