@@ -606,6 +606,8 @@ def hyperparameter_sweep_chemprop(
     Run hyperparameter optimization for Chemprop using W&B Sweeps
     """
     
+    import wandb  # Import wandb inside function for Modal environment
+    
     # Define sweep configuration
     sweep_config = {
         'method': 'random',
