@@ -393,7 +393,7 @@ test_plan:
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
-  completed_testing: []
+  completed_testing: ["ChemBERTa Device Property Bug Fix", "Chemprop CLI Compatibility Fix", "Enhanced W&B Logging for ChemBERTa", "Enhanced W&B Logging for Chemprop"]
 
 agent_communication:
     - agent: "main"
