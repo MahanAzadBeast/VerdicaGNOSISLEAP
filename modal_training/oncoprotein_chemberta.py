@@ -160,9 +160,20 @@ def download_chembl_database():
             tar.extractall("/tmp/chembl/")
         
         # Find and move the SQLite file
-        extracted_files = list(Path("/tmp/chembl/").glob("*.sqlite"))
+        extracted_files = list(Path("/tmp/chembl/").glob("*.db")) + list(Path("/tmp/chembl/").glob("*.sqlite"))
+        
+        # Also check subdirectories for database files
         if not extracted_files:
-            raise FileNotFoundError("No SQLite file found in extracted archive")
+            for subdir in Path("/tmp/chembl/").iterdir():
+                if subdir.is_dir():
+                    extracted_files.extend(list(subdir.glob("*.db")))
+                    extracted_files.extend(list(subdir.glob("*.sqlite")))
+        
+        if not extracted_files:
+            # List all files for debugging
+            all_files = list(Path("/tmp/chembl/").rglob("*"))
+            logger.error(f"Available files in archive: {[str(f) for f in all_files]}")
+            raise FileNotFoundError("No SQLite or .db file found in extracted archive")
         
         sqlite_file = extracted_files[0]
         sqlite_file.rename(chembl_file)
