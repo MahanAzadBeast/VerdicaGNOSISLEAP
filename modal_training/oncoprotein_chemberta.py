@@ -157,26 +157,40 @@ def download_chembl_database():
         # Extract tar.gz
         import tarfile
         with tarfile.open(temp_file, 'r:gz') as tar:
+            # List contents before extraction for debugging
+            members = tar.getnames()
+            logger.info(f"Archive contents: {members}")
             tar.extractall("/tmp/chembl/")
         
-        # Find and move the SQLite file
-        extracted_files = list(Path("/tmp/chembl/").glob("*.db")) + list(Path("/tmp/chembl/").glob("*.sqlite"))
+        # Find and move the SQLite file (ChEMBL v35 uses .db extension)
+        extracted_files = []
+        
+        # Look for common database file extensions
+        for pattern in ["*.db", "*.sqlite", "*.sqlite3"]:
+            extracted_files.extend(list(Path("/tmp/chembl/").glob(pattern)))
         
         # Also check subdirectories for database files
         if not extracted_files:
+            logger.info("No database files in root, checking subdirectories...")
             for subdir in Path("/tmp/chembl/").iterdir():
                 if subdir.is_dir():
-                    extracted_files.extend(list(subdir.glob("*.db")))
-                    extracted_files.extend(list(subdir.glob("*.sqlite")))
+                    logger.info(f"Checking subdirectory: {subdir}")
+                    for pattern in ["*.db", "*.sqlite", "*.sqlite3"]:
+                        extracted_files.extend(list(subdir.glob(pattern)))
         
         if not extracted_files:
             # List all files for debugging
             all_files = list(Path("/tmp/chembl/").rglob("*"))
             logger.error(f"Available files in archive: {[str(f) for f in all_files]}")
-            raise FileNotFoundError("No SQLite or .db file found in extracted archive")
+            raise FileNotFoundError("No SQLite (.db, .sqlite, .sqlite3) file found in extracted archive")
         
+        # Use the first (and likely only) database file found
         sqlite_file = extracted_files[0]
-        sqlite_file.rename(chembl_file)
+        logger.info(f"Found database file: {sqlite_file} ({sqlite_file.stat().st_size / 1e9:.2f} GB)")
+        
+        # Move to expected location with standard name
+        target_file = chembl_file  # This is /vol/chembl/chembl.sqlite
+        sqlite_file.rename(target_file)
         
         # Cleanup
         temp_file.unlink()
