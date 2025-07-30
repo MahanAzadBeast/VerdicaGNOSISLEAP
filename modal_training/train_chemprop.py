@@ -408,6 +408,9 @@ def train_chemprop_multitask(
             if test_preds_path.exists():
                 pred_df = pd.read_csv(test_preds_path)
                 
+                # Import matplotlib for plotting (inside function for Modal environment)
+                import matplotlib.pyplot as plt
+                
                 # Create comprehensive multi-task visualization
                 n_targets = len([col for col in pred_df.columns if col.endswith('_pred')])
                 
