@@ -155,11 +155,12 @@ class ChemBERTaMultiTaskModel(nn.Module):
         }
 
 class ChemBERTaTrainer(Trainer):
-    """Custom trainer for multi-task ChemBERTa with W&B logging"""
+    """Custom trainer for multi-task ChemBERTa with enhanced W&B logging"""
     
     def __init__(self, target_names: List[str], **kwargs):
         super().__init__(**kwargs)
         self.target_names = target_names
+        self.step_count = 0
     
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
         labels = inputs.pop("labels")
@@ -168,13 +169,39 @@ class ChemBERTaTrainer(Trainer):
         outputs = model(**inputs, labels=labels, label_mask=label_mask)
         loss = outputs["loss"]
         
+        # Log per-target losses during training
+        if self.state.global_step % self.args.logging_steps == 0:
+            self._log_per_target_losses(outputs['logits'], labels, label_mask)
+        
         return (loss, outputs) if return_outputs else loss
     
+    def _log_per_target_losses(self, predictions, labels, masks):
+        """Log individual target losses to W&B"""
+        import wandb
+        
+        # Compute per-target losses
+        mse_loss = nn.MSELoss(reduction='none')
+        losses = mse_loss(predictions, labels)  # [batch_size, num_targets]
+        
+        target_losses = {}
+        for i, target_name in enumerate(self.target_names):
+            target_mask = masks[:, i] == 1
+            if target_mask.sum() > 0:
+                target_loss = losses[target_mask, i].mean().item()
+                target_losses[f"train_loss/{target_name}"] = target_loss
+        
+        if target_losses:
+            wandb.log(target_losses, step=self.state.global_step)
+    
     def evaluate(self, eval_dataset=None, ignore_keys=None, metric_key_prefix: str = "eval"):
+        """Enhanced evaluation with per-target metrics logging to W&B"""
+        
+        # Run standard evaluation first
         eval_results = super().evaluate(eval_dataset, ignore_keys, metric_key_prefix)
         
-        # Custom metrics calculation
+        # Custom per-target metrics calculation
         if eval_dataset is not None:
+            import wandb
             eval_dataloader = self.get_eval_dataloader(eval_dataset)
             predictions, labels, masks = [], [], []
             
@@ -192,25 +219,169 @@ class ChemBERTaTrainer(Trainer):
             labels = np.vstack(labels)
             masks = np.vstack(masks)
             
-            # Calculate per-target metrics
+            # Calculate and log per-target metrics
             target_metrics = {}
+            target_data_for_plots = {}
+            
             for i, target_name in enumerate(self.target_names):
                 target_mask = masks[:, i] == 1
-                if target_mask.sum() > 0:
+                if target_mask.sum() > 5:  # Need at least 5 samples for meaningful metrics
                     target_pred = predictions[target_mask, i]
                     target_true = labels[target_mask, i]
                     
+                    # Calculate metrics
                     r2 = r2_score(target_true, target_pred)
                     mse = mean_squared_error(target_true, target_pred)
                     mae = mean_absolute_error(target_true, target_pred)
+                    rmse = np.sqrt(mse)
                     
+                    # Add to results
                     target_metrics[f"{metric_key_prefix}_{target_name}_r2"] = r2
                     target_metrics[f"{metric_key_prefix}_{target_name}_mse"] = mse
                     target_metrics[f"{metric_key_prefix}_{target_name}_mae"] = mae
+                    target_metrics[f"{metric_key_prefix}_{target_name}_rmse"] = rmse
+                    target_metrics[f"{metric_key_prefix}_{target_name}_samples"] = int(target_mask.sum())
+                    
+                    # Store data for scatter plots
+                    target_data_for_plots[target_name] = {
+                        'true': target_true,
+                        'pred': target_pred,
+                        'r2': r2,
+                        'rmse': rmse,
+                        'samples': int(target_mask.sum())
+                    }
             
+            # Log metrics to W&B
+            wandb.log(target_metrics, step=self.state.global_step)
+            
+            # Create and log scatter plots for top targets
+            self._create_and_log_scatter_plots(target_data_for_plots, metric_key_prefix)
+            
+            # Create and log performance summary
+            self._create_and_log_performance_summary(target_metrics, metric_key_prefix)
+            
+            # Update eval_results
             eval_results.update(target_metrics)
         
         return eval_results
+    
+    def _create_and_log_scatter_plots(self, target_data, prefix):
+        """Create scatter plots for predictions vs true values"""
+        import matplotlib.pyplot as plt
+        import wandb
+        
+        # Sort targets by number of samples (descending)
+        sorted_targets = sorted(target_data.keys(), 
+                              key=lambda x: target_data[x]['samples'], 
+                              reverse=True)
+        
+        # Plot top 8 targets with most data
+        n_plots = min(8, len(sorted_targets))
+        if n_plots == 0:
+            return
+            
+        fig, axes = plt.subplots(2, 4, figsize=(20, 10))
+        axes = axes.ravel() if n_plots > 1 else [axes]
+        
+        for i, target in enumerate(sorted_targets[:n_plots]):
+            data = target_data[target]
+            
+            ax = axes[i] if n_plots > 1 else axes
+            ax.scatter(data['true'], data['pred'], alpha=0.6, s=30)
+            
+            # Add perfect prediction line
+            min_val, max_val = min(data['true']), max(data['true'])
+            ax.plot([min_val, max_val], [min_val, max_val], 'r--', alpha=0.8)
+            
+            # Labels and title
+            ax.set_xlabel(f'{target} True pIC50')
+            ax.set_ylabel(f'{target} Predicted pIC50')
+            ax.set_title(f'{target}\nR² = {data["r2"]:.3f}, RMSE = {data["rmse"]:.3f}\n(n = {data["samples"]})')
+            ax.grid(True, alpha=0.3)
+        
+        # Hide unused subplots
+        for i in range(n_plots, len(axes)):
+            axes[i].set_visible(False)
+        
+        plt.suptitle(f'Multi-Task ChemBERTa: {prefix.title()} Predictions per Target', fontsize=16)
+        plt.tight_layout()
+        
+        # Log to W&B
+        wandb.log({f"{prefix}_predictions_scatter": wandb.Image(fig)}, step=self.state.global_step)
+        plt.close(fig)
+    
+    def _create_and_log_performance_summary(self, metrics, prefix):
+        """Create performance summary plots"""
+        import matplotlib.pyplot as plt
+        import wandb
+        
+        # Extract R² scores for all targets
+        r2_data = []
+        rmse_data = []
+        samples_data = []
+        target_names = []
+        
+        for key, value in metrics.items():
+            if key.endswith('_r2'):
+                target = key.replace(f'{prefix}_', '').replace('_r2', '')
+                r2_data.append(value)
+                target_names.append(target)
+                
+                # Get corresponding RMSE and samples
+                rmse_key = f"{prefix}_{target}_rmse"
+                samples_key = f"{prefix}_{target}_samples"
+                rmse_data.append(metrics.get(rmse_key, 0))
+                samples_data.append(metrics.get(samples_key, 0))
+        
+        if not r2_data:
+            return
+        
+        # Create summary plots
+        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 6))
+        
+        # R² scores
+        bars1 = ax1.barh(target_names, r2_data, color='skyblue')
+        ax1.set_xlabel('R² Score')
+        ax1.set_title(f'{prefix.title()} R² by Target')
+        ax1.axvline(x=0.5, color='red', linestyle='--', alpha=0.7, label='R² = 0.5')
+        ax1.axvline(x=0.7, color='green', linestyle='--', alpha=0.7, label='R² = 0.7')
+        ax1.legend()
+        ax1.grid(True, alpha=0.3)
+        
+        # Add R² values on bars
+        for i, (bar, r2) in enumerate(zip(bars1, r2_data)):
+            ax1.text(bar.get_width() + 0.01, bar.get_y() + bar.get_height()/2, 
+                    f'{r2:.3f}', va='center', fontsize=9)
+        
+        # RMSE scores
+        bars2 = ax2.barh(target_names, rmse_data, color='lightcoral')
+        ax2.set_xlabel('RMSE')
+        ax2.set_title(f'{prefix.title()} RMSE by Target')
+        ax2.grid(True, alpha=0.3)
+        
+        # Sample sizes
+        bars3 = ax3.barh(target_names, samples_data, color='lightgreen')
+        ax3.set_xlabel('Number of Samples')
+        ax3.set_title(f'{prefix.title()} Sample Size by Target')
+        ax3.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        
+        # Log to W&B
+        wandb.log({f"{prefix}_performance_summary": wandb.Image(fig)}, step=self.state.global_step)
+        plt.close(fig)
+        
+        # Also log overall statistics
+        overall_stats = {
+            f"{prefix}_mean_r2": np.mean(r2_data),
+            f"{prefix}_median_r2": np.median(r2_data),
+            f"{prefix}_min_r2": np.min(r2_data),
+            f"{prefix}_max_r2": np.max(r2_data),
+            f"{prefix}_mean_rmse": np.mean(rmse_data),
+            f"{prefix}_total_samples": sum(samples_data),
+            f"{prefix}_targets_with_data": len(r2_data)
+        }
+        wandb.log(overall_stats, step=self.state.global_step)
 
 @app.function(
     image=image,
