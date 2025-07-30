@@ -25,7 +25,8 @@ from transformers import (
 # Modal setup with comprehensive ML libraries
 image = modal.Image.debian_slim(python_version="3.11").pip_install([
     "torch>=2.0.0",
-    "transformers>=4.30.0", 
+    "transformers[torch]>=4.30.0", 
+    "accelerate>=0.26.0",
     "datasets>=2.10.0",
     "tokenizers>=0.13.0",
     "scikit-learn>=1.3.0",
