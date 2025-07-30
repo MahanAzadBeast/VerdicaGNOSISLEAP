@@ -367,7 +367,6 @@ def train_chemberta_multitask(
         run_name=wandb.run.name,
         dataloader_num_workers=4,
         fp16=True,  # Mixed precision for A100
-        gradient_checkpointing=True,
         save_total_limit=2
     )
     
