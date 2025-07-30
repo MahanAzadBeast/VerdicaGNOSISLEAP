@@ -75,12 +75,26 @@ def extract_oncoprotein_data_via_api():
     def make_api_request(url, params=None):
         """Make API request with error handling and rate limiting"""
         time.sleep(REQUEST_DELAY)
+        
+        # Ensure JSON format is requested
+        if params is None:
+            params = {}
+        params['format'] = 'json'
+        
         try:
             response = requests.get(url, params=params, timeout=30)
             response.raise_for_status()
+            
+            # Check if response is JSON
+            content_type = response.headers.get('content-type', '')
+            if 'application/json' not in content_type:
+                logger.warning(f"Unexpected content type: {content_type}")
+                logger.warning(f"Response preview: {response.text[:200]}...")
+                return None
+                
             return response.json()
         except Exception as e:
-            logger.error(f"API request failed: {e}")
+            logger.error(f"API request failed for {url}: {e}")
             return None
     
     for target_name, chembl_id in ONCOPROTEIN_TARGETS.items():
