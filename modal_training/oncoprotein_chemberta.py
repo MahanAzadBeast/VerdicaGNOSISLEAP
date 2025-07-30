@@ -98,8 +98,8 @@ def download_chembl_database():
     
     logger.info("📥 Downloading latest ChEMBL SQLite database...")
     
-    # ChEMBL FTP URL (latest version)
-    chembl_url = "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_33_sqlite.tar.gz"
+    # ChEMBL FTP URL (check current version)
+    chembl_url = "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_34_sqlite.tar.gz"
     
     try:
         # Download compressed file
