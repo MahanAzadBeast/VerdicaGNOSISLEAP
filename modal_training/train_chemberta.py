@@ -18,7 +18,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from transformers import (
     AutoTokenizer, AutoModel, AutoConfig,
-    Trainer, TrainingArguments, EarlyStoppingCallback
+    Trainer, TrainingArguments, EarlyStoppingCallback, TrainerCallback
 )
 # Note: wandb imported inside functions due to Modal environment
 
