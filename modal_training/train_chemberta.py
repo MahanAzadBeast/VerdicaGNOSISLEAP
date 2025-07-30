@@ -344,7 +344,7 @@ def train_chemberta_multitask(
         dropout=dropout
     )
     
-    # Training arguments
+    # Training arguments compatible with newer transformers
     output_dir = f"/vol/models/chemberta_{dataset_name}"
     training_args = TrainingArguments(
         output_dir=output_dir,
@@ -355,10 +355,10 @@ def train_chemberta_multitask(
         warmup_steps=warmup_steps,
         logging_dir=f"{output_dir}/logs",
         logging_steps=100,
+        eval_strategy="steps",  # Updated from evaluation_strategy
+        save_strategy="steps",
         eval_steps=eval_steps,
         save_steps=save_steps,
-        evaluation_strategy="steps",
-        save_strategy="steps",
         load_best_model_at_end=True,
         metric_for_best_model="eval_loss",
         greater_is_better=False,
