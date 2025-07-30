@@ -422,18 +422,37 @@ async def health_check():
     
     model_type = "real_ml" if real_models_available else "heuristic"
     
+    # Check oncoprotein pipeline status
+    oncoprotein_status = {}
+    if ONCOPROTEIN_CHEMBERTA_AVAILABLE:
+        try:
+            # Check if pipeline files exist
+            pipeline_deployed = Path('/app/modal_training/oncoprotein_deploy_fixed_v2.log').exists()
+            pipeline_running = Path('/app/modal_training/pipeline_execution_fixed.log').exists()
+            
+            oncoprotein_status = {
+                "pipeline_deployed": pipeline_deployed,
+                "pipeline_executed": pipeline_running,
+                "targets_count": 14,
+                "available": pipeline_deployed
+            }
+        except Exception as e:
+            oncoprotein_status = {"error": str(e), "available": False}
+    
     return {
         "status": "healthy",
         "models_loaded": {
             "molbert": molbert_loaded,
             "chemprop_simulation": True,  # Simulation always available
-            "real_ml_models": real_models_available
+            "real_ml_models": real_models_available,
+            "oncoprotein_chemberta": ONCOPROTEIN_CHEMBERTA_AVAILABLE
         },
         "real_ml_targets": real_models_status,
         "enhanced_predictions": True,  # Enhanced IC50 models available
         "available_targets": available_targets,
         "prediction_types": prediction_types,
-        "model_type": model_type
+        "model_type": model_type,
+        "oncoprotein_pipeline": oncoprotein_status
     }
 
 @api_router.get("/targets")
