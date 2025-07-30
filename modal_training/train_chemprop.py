@@ -49,6 +49,8 @@ class ChempropWandbLogger:
     """Custom W&B logger for Chemprop training"""
     
     def __init__(self, target_names: List[str]):
+        import wandb  # Import wandb inside the class
+        self.wandb = wandb
         self.target_names = target_names
         self.epoch_metrics = {}
     
