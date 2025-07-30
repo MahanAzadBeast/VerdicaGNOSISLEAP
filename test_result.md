@@ -129,7 +129,7 @@ backend:
     file: "/app/modal_training/train_chemprop.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "user"
@@ -137,6 +137,9 @@ backend:
         - working: true
           agent: "main"
           comment: "FIXED: Chemprop CLI compatibility issues. Changed from direct 'chemprop_train' and 'chemprop_predict' commands to Python module approach: 'python -m chemprop.train' and 'python -m chemprop.predict'. This addresses changes in recent Chemprop versions where CLI commands were restructured."
+        - working: true
+          agent: "testing"
+          comment: "VERIFIED: Chemprop CLI compatibility fix working correctly. Uses new CLI format 'python -m chemprop.train' and 'python -m chemprop.predict'. Avoids old CLI commands. Command structure includes proper arguments (data_path, save_dir, epochs). Both training and prediction CLI fixes implemented successfully."
   
   - task: "Enhanced W&B Logging for ChemBERTa"
     implemented: true
