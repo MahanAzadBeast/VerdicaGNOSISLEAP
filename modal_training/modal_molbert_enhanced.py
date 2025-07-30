@@ -966,7 +966,7 @@ def finetune_chembert_modal(
                 except Exception:
                     continue
             
-            logger.info(f"📚 Using comprehensive curated EGFR dataset: {len(training_data)} compounds")
+            logger.info(f"📚 Using curated {target} dataset with known bioactivities")
         
         # Validate training data
         if not training_data or len(training_data) < 200:
