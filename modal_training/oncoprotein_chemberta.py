@@ -68,6 +68,83 @@ ONCOPROTEIN_TARGETS = {
 
 @app.function(
     image=image,
+    volumes={"/vol/chembl": chembl_volume},
+    cpu=4.0,
+    memory=16384,
+    timeout=600  # 10 minutes
+)
+def test_chembl_database():
+    """
+    Test function to verify ChEMBL database structure and accessibility
+    """
+    import sqlite3
+    import logging
+    from pathlib import Path
+    
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    
+    logger.info("🧪 Testing ChEMBL database accessibility...")
+    
+    # Check for database files
+    chembl_dir = Path("/vol/chembl")
+    if not chembl_dir.exists():
+        return {"status": "error", "message": "ChEMBL volume directory not found"}
+    
+    db_files = list(chembl_dir.glob("*.db")) + list(chembl_dir.glob("*.sqlite"))
+    if not db_files:
+        available_files = list(chembl_dir.glob("*"))
+        return {
+            "status": "error", 
+            "message": "No database files found",
+            "available_files": [f.name for f in available_files]
+        }
+    
+    db_file = db_files[0]
+    logger.info(f"Testing database: {db_file}")
+    
+    try:
+        conn = sqlite3.connect(str(db_file))
+        cursor = conn.cursor()
+        
+        # Get basic info
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+        tables = [row[0] for row in cursor.fetchall()]
+        
+        # Test a simple query
+        if 'target_dictionary' in tables:
+            cursor.execute("SELECT COUNT(*) FROM target_dictionary;")
+            target_count = cursor.fetchone()[0]
+        else:
+            target_count = "table not found"
+        
+        if 'activities' in tables:
+            cursor.execute("SELECT COUNT(*) FROM activities;")
+            activity_count = cursor.fetchone()[0]
+        else:
+            activity_count = "table not found"
+        
+        conn.close()
+        
+        return {
+            "status": "success",
+            "database_file": str(db_file),
+            "file_size_gb": db_file.stat().st_size / 1e9,
+            "table_count": len(tables),
+            "target_count": target_count,
+            "activity_count": activity_count,
+            "sample_tables": tables[:10]
+        }
+        
+    except Exception as e:
+        return {
+            "status": "error",
+            "database_file": str(db_file),
+            "error": str(e)
+        }
+
+@app.function(
+    image=image,
     volumes={
         "/vol/chembl": chembl_volume,
         "/vol/datasets": datasets_volume,
