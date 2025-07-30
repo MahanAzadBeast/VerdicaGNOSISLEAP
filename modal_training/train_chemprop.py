@@ -404,44 +404,112 @@ def train_chemprop_multitask(
             if test_preds_path.exists():
                 pred_df = pd.read_csv(test_preds_path)
                 
-                # Create prediction plots
-                fig, axes = plt.subplots(2, 2, figsize=(15, 12))
-                axes = axes.ravel()
+                # Create comprehensive multi-task visualization
+                n_targets = len([col for col in pred_df.columns if col.endswith('_pred')])
                 
-                plot_count = 0
-                for target in target_cols[:4]:  # Plot first 4 targets
-                    if f"{target}_true" in pred_df.columns and f"{target}_pred" in pred_df.columns:
-                        true_vals = pred_df[f"{target}_true"].dropna()
-                        pred_vals = pred_df[f"{target}_pred"].dropna()
-                        
-                        if len(true_vals) > 0:
-                            axes[plot_count].scatter(true_vals, pred_vals, alpha=0.6)
-                            axes[plot_count].plot([true_vals.min(), true_vals.max()], 
-                                               [true_vals.min(), true_vals.max()], 'r--', alpha=0.8)
-                            axes[plot_count].set_xlabel(f'{target} True')
-                            axes[plot_count].set_ylabel(f'{target} Predicted')
-                            axes[plot_count].set_title(f'{target} Predictions')
+                if n_targets >= 4:
+                    # Create prediction plots for all targets
+                    fig, axes = plt.subplots(4, 4, figsize=(20, 16))
+                    axes = axes.ravel()
+                    
+                    plot_count = 0
+                    target_performance = []
+                    
+                    for col in pred_df.columns:
+                        if col.endswith('_pred'):
+                            target = col.replace('_pred', '')
+                            true_col = f"{target}_true"
                             
-                            # Add R² to plot
-                            r2 = results.get(f"{target}_r2", 0.0)
-                            axes[plot_count].text(0.05, 0.95, f'R² = {r2:.3f}', 
-                                                transform=axes[plot_count].transAxes,
-                                                bbox=dict(boxstyle="round", facecolor='wheat', alpha=0.5))
-                            plot_count += 1
-                
-                plt.tight_layout()
-                plot_path = Path(output_dir) / "prediction_plots.png"
-                plt.savefig(plot_path, dpi=300, bbox_inches='tight')
-                plt.close()
-                
-                # Log plot to W&B
-                wandb.log({"prediction_plots": wandb.Image(str(plot_path))})
+                            if true_col in pred_df.columns and plot_count < 16:
+                                true_vals = pred_df[true_col].dropna()
+                                pred_vals = pred_df[col].dropna()
+                                
+                                if len(true_vals) > 0 and len(pred_vals) > 0:
+                                    # Align true and predicted values
+                                    valid_mask = pred_df[true_col].notna() & pred_df[col].notna()
+                                    true_vals = pred_df.loc[valid_mask, true_col]
+                                    pred_vals = pred_df.loc[valid_mask, col]
+                                    
+                                    if len(true_vals) > 0:
+                                        axes[plot_count].scatter(true_vals, pred_vals, alpha=0.6, s=20)
+                                        axes[plot_count].plot([true_vals.min(), true_vals.max()], 
+                                                           [true_vals.min(), true_vals.max()], 'r--', alpha=0.8)
+                                        axes[plot_count].set_xlabel(f'{target} True pIC50')
+                                        axes[plot_count].set_ylabel(f'{target} Predicted pIC50')
+                                        axes[plot_count].set_title(f'{target} (n={len(true_vals)})', fontsize=10)
+                                        
+                                        # Calculate and display metrics
+                                        r2 = r2_score(true_vals, pred_vals)
+                                        mae = mean_absolute_error(true_vals, pred_vals)
+                                        
+                                        axes[plot_count].text(0.05, 0.95, f'R² = {r2:.3f}\nMAE = {mae:.3f}', 
+                                                            transform=axes[plot_count].transAxes,
+                                                            bbox=dict(boxstyle="round", facecolor='wheat', alpha=0.8),
+                                                            fontsize=8, verticalalignment='top')
+                                        
+                                        target_performance.append({
+                                            'target': target,
+                                            'n_samples': len(true_vals),
+                                            'r2': r2,
+                                            'mae': mae
+                                        })
+                                        
+                                        plot_count += 1
+                    
+                    # Hide unused subplots
+                    for i in range(plot_count, 16):
+                        axes[i].set_visible(False)
+                    
+                    plt.suptitle('Multi-Task Chemprop: Predictions for 14 Oncoproteins', fontsize=16)
+                    plt.tight_layout()
+                    plot_path = Path(output_dir) / "multitask_prediction_plots.png"
+                    plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+                    plt.close()
+                    
+                    # Log plot to W&B
+                    wandb.log({"multitask_prediction_plots": wandb.Image(str(plot_path))})
+                    
+                    # Create performance summary plot
+                    if target_performance:
+                        perf_df = pd.DataFrame(target_performance)
+                        
+                        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+                        
+                        # R² scores
+                        perf_df_sorted = perf_df.sort_values('r2', ascending=True)
+                        bars1 = ax1.barh(perf_df_sorted['target'], perf_df_sorted['r2'])
+                        ax1.set_xlabel('R² Score')
+                        ax1.set_title('Multi-Task Performance: R² by Target')
+                        ax1.axvline(x=0.5, color='red', linestyle='--', alpha=0.7, label='R² = 0.5')
+                        ax1.legend()
+                        
+                        # Sample sizes
+                        perf_df_sorted = perf_df.sort_values('n_samples', ascending=True)
+                        bars2 = ax2.barh(perf_df_sorted['target'], perf_df_sorted['n_samples'])
+                        ax2.set_xlabel('Number of Test Samples')
+                        ax2.set_title('Data Coverage by Target')
+                        
+                        plt.tight_layout()
+                        summary_plot_path = Path(output_dir) / "multitask_performance_summary.png"
+                        plt.savefig(summary_plot_path, dpi=300, bbox_inches='tight')
+                        plt.close()
+                        
+                        # Log summary plot to W&B
+                        wandb.log({"multitask_performance_summary": wandb.Image(str(summary_plot_path))})
+                        
+                        # Log performance table to W&B
+                        perf_table = wandb.Table(
+                            columns=["Target", "R²", "MAE", "Test_Samples"],
+                            data=[[row['target'], row['r2'], row['mae'], row['n_samples']] 
+                                  for _, row in perf_df.iterrows()]
+                        )
+                        wandb.log({"multitask_target_performance": perf_table})
                 
                 # Log predictions as artifact
                 pred_artifact = wandb.Artifact(
-                    name=f"chemprop-{dataset_name}-predictions",
+                    name=f"chemprop-multitask-{dataset_name}-predictions",
                     type="predictions",
-                    description=f"Test set predictions from Chemprop model"
+                    description=f"Multi-task test set predictions from Chemprop GNN model for 14 oncoproteins"
                 )
                 pred_artifact.add_file(str(test_preds_path))
                 wandb.log_artifact(pred_artifact)
