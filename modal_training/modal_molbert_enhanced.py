@@ -768,7 +768,7 @@ def finetune_chembert_modal(
                 
                 # Try broader search
                 additional_activities = activity.filter(
-                    target_chembl_id="CHEMBL203",
+                    target_chembl_id=chembl_id,
                     standard_type__in=["IC50", "EC50", "Ki"],
                     standard_units__in=["nM", "uM"],
                     standard_value__isnull=False,
