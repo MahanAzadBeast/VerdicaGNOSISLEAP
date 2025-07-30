@@ -105,6 +105,46 @@
 user_problem_statement: "Test the enhanced predictive chemistry platform with target-specific IC50 predictions"
 
 backend:
+  - task: "Multi-Task ChemBERTa Pipeline - ChEMBL Database Download"
+    implemented: true
+    working: true
+    file: "/app/modal_training/oncoprotein_chemberta.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Initial attempt failed due to incorrect ChEMBL database URLs (404 error on v33). ChEMBL URLs were outdated."
+        - working: true
+          agent: "main"
+          comment: "Fixed ChEMBL database URLs to use latest v35 and correct FTP/HTTPS endpoints. Download now in progress - successfully downloading ChEMBL v35 (5.0 GB) from ftp://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_35/chembl_35_sqlite.tar.gz"
+
+  - task: "Multi-Task ChemBERTa Pipeline - Data Extraction"
+    implemented: true
+    working: false
+    file: "/app/modal_training/oncoprotein_chemberta.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Waiting for ChEMBL database download to complete before starting oncoprotein data extraction for 14 targets (EGFR, HER2, BRAF, MET, MDM2, STAT3, RRM2, β-catenin, MYC, PI3KCA, CDK4, CDK6, ALK, VEGFR2)"
+
+  - task: "Multi-Task ChemBERTa Pipeline - Model Training"
+    implemented: true
+    working: false
+    file: "/app/modal_training/oncoprotein_chemberta.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Multi-task ChemBERTa training implementation ready with A100 GPU support, multi-task regression heads, masked MSE loss, and 10-epoch training. Waiting for data extraction completion."
+
+  - task: "Enhanced Health Check Endpoint"
   - task: "Enhanced Health Check Endpoint"
     implemented: true
     working: true
