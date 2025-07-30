@@ -19,6 +19,7 @@ app = modal.App("test-training-pipeline")
 
 # Import the training modules
 datasets_volume = modal.Volume.from_name("oncoprotein-datasets", create_if_missing=True)
+models_volume = modal.Volume.from_name("trained-models", create_if_missing=True)
 
 @app.function(
     image=image,
