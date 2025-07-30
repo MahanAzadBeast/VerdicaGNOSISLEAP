@@ -67,7 +67,8 @@ except Exception as e:
 
 # Import Multi-Task ChemBERTa Oncoprotein integration
 try:
-    from oncoprotein_backend_integration import oncoprotein_router
+    sys.path.append('/app')
+    from modal_training.oncoprotein_backend_integration import oncoprotein_router
     app.include_router(oncoprotein_router, tags=["Multi-Task ChemBERTa Oncoproteins"])
     logging.info("✅ Multi-Task ChemBERTa Oncoprotein integration loaded")
     ONCOPROTEIN_CHEMBERTA_AVAILABLE = True
