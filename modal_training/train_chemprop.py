@@ -239,10 +239,15 @@ def train_chemprop_multitask(
     atom_messages: bool = False,
     early_stopping: bool = True,
     patience: int = 10,
+    ensemble_size: int = 1,  # Number of models in ensemble
+    multitask_scaling: bool = True,  # Enable multi-task loss scaling
     run_name: Optional[str] = None
 ):
     """
-    Train Chemprop multi-task model with W&B logging
+    Train Chemprop multi-task model for 14 oncoproteins with W&B logging
+    
+    This function trains a single graph neural network model that can predict
+    bioactivity (pIC50) for all 14 oncoprotein targets simultaneously.
     """
     
     # Initialize logging
@@ -253,8 +258,9 @@ def train_chemprop_multitask(
     wandb.init(
         project="veridica-ai-training",
         group="chemprop",
-        name=run_name or f"chemprop-{dataset_name}",
+        name=run_name or f"chemprop-multitask-{dataset_name}",
         config={
+            "model_type": "chemprop_multitask_gnn",
             "dataset_name": dataset_name,
             "num_epochs": num_epochs,
             "batch_size": batch_size,
@@ -273,13 +279,20 @@ def train_chemprop_multitask(
             "use_features": use_features,
             "atom_messages": atom_messages,
             "early_stopping": early_stopping,
-            "patience": patience
+            "patience": patience,
+            "ensemble_size": ensemble_size,
+            "multitask_scaling": multitask_scaling,
+            "multitask": True,  # Explicitly mark as multi-task
+            "num_targets": 14,  # Number of oncoprotein targets
         },
-        tags=["chemprop", "multi-task", "molecular-properties", "gnn"]
+        tags=["chemprop", "multi-task", "molecular-properties", "gnn", "oncoproteins"]
     )
     
-    logger.info("🚀 Starting Chemprop Multi-Task Training")
+    logger.info("🚀 Starting Chemprop Multi-Task Training for 14 Oncoproteins")
+    logger.info("🎯 Single GNN model will predict bioactivity for ALL targets simultaneously")
     logger.info(f"📊 Dataset: {dataset_name}")
+    logger.info(f"🧪 Multi-task loss scaling: {multitask_scaling}")
+    logger.info(f"🎪 Ensemble size: {ensemble_size}")
     
     # Load dataset
     dataset_path = Path(f"/vol/datasets/{dataset_name}.csv")
