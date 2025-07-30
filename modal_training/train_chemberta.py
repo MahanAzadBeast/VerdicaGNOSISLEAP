@@ -114,6 +114,11 @@ class ChemBERTaMultiTaskModel(nn.Module):
         # Optional: shared feature layer
         self.shared_layer = nn.Linear(hidden_size, hidden_size)
         self.activation = nn.ReLU()
+    
+    @property
+    def device(self):
+        """Return the device of the model"""
+        return next(self.parameters()).device
         
     def forward(self, input_ids, attention_mask, labels=None, label_mask=None):
         # Get backbone embeddings
