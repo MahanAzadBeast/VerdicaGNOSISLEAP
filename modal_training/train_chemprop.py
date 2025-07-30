@@ -58,7 +58,7 @@ class ChempropWandbLogger:
         """Log metrics for a specific epoch"""
         epoch_data = {"epoch": epoch}
         epoch_data.update(metrics)
-        wandb.log(epoch_data)
+        self.wandb.log(epoch_data)
         
         # Store for final summary
         self.epoch_metrics[epoch] = metrics
