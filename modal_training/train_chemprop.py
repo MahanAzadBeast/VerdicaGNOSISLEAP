@@ -647,6 +647,7 @@ def hyperparameter_sweep_chemprop(
     
     def train_with_params():
         """Training function for sweep"""
+        import wandb  # Import wandb inside nested function
         wandb.init()
         config = wandb.config
         
