@@ -206,9 +206,10 @@ class ChemBERTaTrainer(Trainer):
             predictions, labels, masks = [], [], []
             
             self.model.eval()
+            device = next(self.model.parameters()).device  # Get device safely
             with torch.no_grad():
                 for batch in eval_dataloader:
-                    batch = {k: v.to(self.model.device) for k, v in batch.items()}
+                    batch = {k: v.to(device) for k, v in batch.items()}
                     outputs = self.model(**batch)
                     
                     predictions.append(outputs['logits'].cpu().numpy())
