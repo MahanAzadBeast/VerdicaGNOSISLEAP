@@ -283,6 +283,32 @@ def extract_oncoprotein_data():
     target_names = list(ONCOPROTEIN_TARGETS.keys())
     
     logger.info(f"📊 Extracting bioactivity data for {len(target_ids)} oncoproteins...")
+    logger.info(f"Targets: {', '.join([f'{name} ({tid})' for name, tid in zip(target_names, target_ids)])}")
+    
+    # First, verify that the target ChEMBL IDs exist in the database
+    logger.info("🔍 Verifying target availability in database...")
+    target_check_query = f"""
+    SELECT td.chembl_id, td.pref_name, COUNT(*) as assay_count
+    FROM target_dictionary td
+    JOIN assays a ON td.tid = a.tid
+    WHERE td.chembl_id IN ({','.join([f"'{tid}'" for tid in target_ids])})
+    GROUP BY td.chembl_id, td.pref_name
+    ORDER BY assay_count DESC
+    """
+    
+    try:
+        target_check_df = pd.read_sql_query(target_check_query, conn)
+        logger.info(f"Found {len(target_check_df)} targets with assays:")
+        for _, row in target_check_df.iterrows():
+            logger.info(f"  {row['chembl_id']}: {row['pref_name']} ({row['assay_count']} assays)")
+        
+        if target_check_df.empty:
+            logger.error("❌ None of the specified targets found in database")
+            raise ValueError("No specified oncoprotein targets found in ChEMBL database")
+            
+    except Exception as e:
+        logger.error(f"❌ Target verification failed: {e}")
+        raise
     
     # SQL query to extract bioactivity data
     query = """
@@ -310,14 +336,36 @@ def extract_oncoprotein_data():
     ORDER BY cs.canonical_smiles, td.chembl_id
     """.format(','.join([f"'{tid}'" for tid in target_ids]))
     
-    logger.info("🗄️ Executing ChEMBL query...")
-    df = pd.read_sql_query(query, conn)
-    conn.close()
+    logger.info("🗄️ Executing main bioactivity data query...")
+    logger.info("This may take several minutes for large datasets...")
     
-    logger.info(f"📈 Retrieved {len(df)} bioactivity records")
+    try:
+        df = pd.read_sql_query(query, conn)
+        logger.info(f"📈 Retrieved {len(df)} bioactivity records")
+        
+    except Exception as e:
+        logger.error(f"❌ Query execution failed: {e}")
+        logger.info("💡 Trying simpler query without confidence score filter...")
+        
+        # Fallback query without confidence score filter
+        fallback_query = query.replace("AND assays.confidence_score >= 8", "")
+        try:
+            df = pd.read_sql_query(fallback_query, conn)
+            logger.info(f"📈 Retrieved {len(df)} bioactivity records (fallback query)")
+        except Exception as e2:
+            logger.error(f"❌ Fallback query also failed: {e2}")
+            raise
+    
+    finally:
+        conn.close()
     
     if df.empty:
-        raise ValueError("No bioactivity data retrieved from ChEMBL")
+        logger.error("❌ No bioactivity data retrieved from ChEMBL")
+        logger.info("💡 This might be due to:")
+        logger.info("  - Targets not having IC50/Ki/EC50 data in nM units")
+        logger.info("  - High confidence score threshold (>= 8)")
+        logger.info("  - Missing SMILES structures")
+        raise ValueError("No bioactivity data retrieved from ChEMBL for specified targets")
     
     # Data preprocessing
     logger.info("🧹 Preprocessing bioactivity data...")
