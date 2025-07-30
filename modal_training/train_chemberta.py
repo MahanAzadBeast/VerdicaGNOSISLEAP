@@ -421,6 +421,11 @@ def train_chemberta_multitask(
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
     
+    # Import required modules
+    import wandb
+    from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+    import matplotlib.pyplot as plt
+    
     # Initialize W&B
     wandb.init(
         project="veridica-ai-training",
