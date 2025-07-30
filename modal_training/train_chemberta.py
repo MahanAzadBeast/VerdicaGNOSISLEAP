@@ -383,6 +383,48 @@ class ChemBERTaTrainer(Trainer):
         }
         wandb.log(overall_stats, step=self.state.global_step)
 
+class WandbMetricsCallback(TrainerCallback):
+    """Callback to log additional metrics to W&B during training"""
+    
+    def __init__(self, target_names):
+        self.target_names = target_names
+    
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        """Called when logging metrics"""
+        if logs is not None:
+            import wandb
+            
+            # Log training metrics with proper step
+            training_metrics = {}
+            for key, value in logs.items():
+                if isinstance(value, (int, float)):
+                    training_metrics[key] = value
+            
+            if training_metrics:
+                wandb.log(training_metrics, step=state.global_step)
+    
+    def on_evaluate(self, args, state, control, logs=None, **kwargs):
+        """Called after evaluation"""
+        if logs is not None:
+            import wandb
+            
+            # Create a summary of target performance
+            eval_metrics = {k: v for k, v in logs.items() if k.startswith('eval_')}
+            
+            # Count how many targets have good performance
+            r2_metrics = {k: v for k, v in eval_metrics.items() if k.endswith('_r2')}
+            if r2_metrics:
+                good_targets = sum(1 for r2 in r2_metrics.values() if r2 > 0.5)
+                excellent_targets = sum(1 for r2 in r2_metrics.values() if r2 > 0.7)
+                
+                summary_stats = {
+                    'eval_targets_r2_above_0.5': good_targets,
+                    'eval_targets_r2_above_0.7': excellent_targets,
+                    'eval_total_targets_evaluated': len(r2_metrics)
+                }
+                
+                wandb.log(summary_stats, step=state.global_step)
+
 @app.function(
     image=image,
     volumes={
