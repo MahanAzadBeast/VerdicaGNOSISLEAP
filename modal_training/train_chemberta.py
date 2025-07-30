@@ -726,13 +726,16 @@ def load_and_predict_chemberta(
                 return_tensors='pt'
             )
             
+            # Move to device
+            encoding = {k: v.to(device) for k, v in encoding.items()}
+            
             # Predict
             outputs = model(
                 input_ids=encoding['input_ids'],
                 attention_mask=encoding['attention_mask']
             )
             
-            predictions.append(outputs['logits'].numpy())
+            predictions.append(outputs['logits'].cpu().numpy())
     
     return np.vstack(predictions)
 
