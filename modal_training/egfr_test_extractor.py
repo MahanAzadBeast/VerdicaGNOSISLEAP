@@ -20,7 +20,8 @@ image = modal.Image.debian_slim(python_version="3.11").pip_install([
     "numpy",
     "rdkit",
     "matplotlib",
-    "seaborn"
+    "seaborn",
+    "pyarrow"  # Fix parquet support
 ])
 
 app = modal.App("egfr-test-extractor")
