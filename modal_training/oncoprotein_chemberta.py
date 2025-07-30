@@ -38,7 +38,7 @@ image = modal.Image.debian_slim(python_version="3.11").pip_install([
     "huggingface-hub>=0.19.0",
 ]).run_commands([
     # Install system dependencies
-    "apt-get update && apt-get install -y wget curl unzip",
+    "apt-get update && apt-get install -y wget curl unzip gzip tar",
     # Create directories
     "mkdir -p /vol /tmp/chembl"
 ])
