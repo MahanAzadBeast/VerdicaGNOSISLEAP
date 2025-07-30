@@ -156,7 +156,7 @@ class ChemBERTaTrainer(Trainer):
         super().__init__(**kwargs)
         self.target_names = target_names
     
-    def compute_loss(self, model, inputs, return_outputs=False):
+    def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
         labels = inputs.pop("labels")
         label_mask = inputs.pop("label_mask")
         
