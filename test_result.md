@@ -471,7 +471,8 @@ test_plan:
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
-  completed_testing: ["ChemBERTa Device Property Bug Fix", "Chemprop CLI Compatibility Fix", "Enhanced W&B Logging for ChemBERTa", "Enhanced W&B Logging for Chemprop", "ChemBERTa Multi-Task Model Integration", "Chemprop Multi-Task Model Integration", "Ligand Activity Predictor Module Integration", "AI Modules Health Check Enhancement", "Real Chemprop Model Router Integration"]
+  completed_testing: ["ChemBERTa Device Property Bug Fix", "Chemprop CLI Compatibility Fix", "Enhanced W&B Logging for ChemBERTa", "Enhanced W&B Logging for Chemprop", "ChemBERTa Multi-Task Model Integration", "Chemprop Multi-Task Model Integration", "Ligand Activity Predictor Module Integration", "AI Modules Health Check Enhancement"]
+  pending_testing: ["Real Chemprop Model Router Integration - PyTorch Direct Update"]
 
 agent_communication:
     - agent: "main"
