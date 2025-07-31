@@ -268,7 +268,7 @@ class FocusedChemBERTaTrainer(Trainer):
     secrets=[wandb_secret],
     gpu="A100",
     memory=32768,
-    timeout=7200  # 2 hours for full training
+    timeout=10800  # 3 hours for 50-epoch training
 )
 def train_focused_chemberta(
     batch_size: int = 16,
