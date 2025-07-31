@@ -61,28 +61,30 @@ def test_chemprop_import_and_cli_fix():
     print("\n⚗️ Testing Chemprop CLI Compatibility Fix...")
     
     try:
-        # Import the module
-        from train_chemprop import run_chemprop_training
+        # Import the modules
+        from train_chemprop import run_chemprop_training, predict_chemprop
         
-        print("   ✅ Chemprop function imported successfully")
+        print("   ✅ Chemprop functions imported successfully")
         
-        # Check the CLI command generation
+        # Check the training CLI command generation
         import inspect
-        source = inspect.getsource(run_chemprop_training)
+        train_source = inspect.getsource(run_chemprop_training)
         
-        if "'python', '-m', 'chemprop.train'" in source:
+        if "'python', '-m', 'chemprop.train'" in train_source:
             print("   ✅ Uses new CLI format: python -m chemprop.train")
         else:
-            print("   ❌ Not using new CLI format")
+            print("   ❌ Not using new CLI training format")
             return False
         
-        if "'python', '-m', 'chemprop.predict'" in source:
+        # Check the prediction CLI command generation
+        predict_source = inspect.getsource(predict_chemprop)
+        if "'python', '-m', 'chemprop.predict'" in predict_source:
             print("   ✅ Uses new CLI format: python -m chemprop.predict")  
         else:
             print("   ❌ Not using new predict CLI format")
             return False
         
-        if 'chemprop_train' not in source and 'chemprop_predict' not in source:
+        if 'chemprop_train' not in train_source and 'chemprop_predict' not in predict_source:
             print("   ✅ Old CLI commands removed")
         else:
             print("   ❌ Still contains old CLI commands")
