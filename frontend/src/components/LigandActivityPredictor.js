@@ -607,7 +607,7 @@ const LigandActivityPredictor = () => {
                     5-layer Message Passing Neural Network • 50 epochs • 512 hidden size
                   </div>
                   
-                  {predictions.results['chemprop-real'] && (
+                  {predictions.results['chemprop-real'] && predictions.results['chemprop-real'].status === 'success' && (
                     <div className="space-y-3">
                       {Object.entries(predictions.results['chemprop-real'].predictions || {}).map(([target, data]) => (
                         <div key={target} className="flex justify-between items-center py-2 border-b border-purple-800/30">
@@ -625,6 +625,17 @@ const LigandActivityPredictor = () => {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  )}
+                  
+                  {predictions.results['chemprop-real'] && predictions.results['chemprop-real'].status === 'error' && (
+                    <div className="bg-purple-900/30 border border-purple-700 rounded p-3">
+                      <div className="text-purple-300 text-sm">
+                        🔄 Model Optimization in Progress
+                      </div>
+                      <div className="text-purple-400 text-xs mt-1">
+                        Deep learning model currently being optimized. Statistical fallback available.
+                      </div>
                     </div>
                   )}
                   
