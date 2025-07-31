@@ -1026,6 +1026,18 @@ if ENHANCED_MODAL_AVAILABLE:
 else:
     logging.info("⚠️ Enhanced Modal MolBERT + Chemprop + ChemBERTa endpoints not available")
 
+# Add ChemBERTa router before including main API router
+try:
+    import sys
+    sys.path.append('/app/modal_training')
+    from chemberta_backend_integration import chemberta_router
+    api_router.include_router(chemberta_router)
+    logging.info("✅ ChemBERTa multi-task router added successfully")
+    CHEMBERTA_AVAILABLE = True
+except Exception as e:
+    logging.error(f"❌ Failed to add ChemBERTa router: {e}")
+    CHEMBERTA_AVAILABLE = False
+
 # Include the router in the main app
 app.include_router(api_router)
 
