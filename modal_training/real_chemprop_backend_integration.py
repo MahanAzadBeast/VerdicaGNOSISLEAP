@@ -51,36 +51,35 @@ _cache_timestamp = None
 CACHE_DURATION = 300  # 5 minutes
 
 async def get_modal_function(function_name: str):
-    """Get Modal function reference with enhanced PyTorch direct fallback"""
+    """Get Modal function reference - prioritize PyTorch direct system"""
     try:
         import modal
         
-        # Try the main inference app first
-        try:
-            app = modal.App.lookup(MODAL_APP_NAME, create_if_missing=False)
-            return getattr(app, function_name)
-        except:
-            # Enhanced fallback to PyTorch direct system
-            if function_name == "predict_oncoprotein_activity":
+        # PRIMARY: Use PyTorch direct system (working solution)
+        if function_name == "predict_oncoprotein_activity":
+            try:
+                app = modal.App.lookup("chemprop-pytorch-direct", create_if_missing=False)
+                function = getattr(app, "predict_with_pytorch_direct")
+                logger.info("✅ Using PyTorch direct Chemprop system")
+                return function
+            except Exception as e:
+                logger.warning(f"PyTorch direct system not available: {e}")
+                
+                # Fallback to simple statistical
                 try:
-                    app = modal.App.lookup("chemprop-pytorch-direct", create_if_missing=False)
-                    function = getattr(app, "predict_with_pytorch_direct")
-                    # Test if the function is actually available
-                    return function
-                except:
-                    # Final fallback to simple statistical
-                    try:
-                        app = modal.App.lookup("chemprop-simple-statistical", create_if_missing=False)
-                        return getattr(app, "predict_with_simple_statistical")
-                    except:
-                        pass
-            elif function_name == "get_model_info":
-                try:
-                    # Use simple statistical model info as it's most reliable
                     app = modal.App.lookup("chemprop-simple-statistical", create_if_missing=False)
-                    return getattr(app, "get_simple_model_info")
+                    return getattr(app, "predict_with_simple_statistical")
                 except:
+                    logger.error("Simple statistical fallback also failed")
                     pass
+                    
+        elif function_name == "get_model_info":
+            try:
+                # Use simple statistical model info for model metadata
+                app = modal.App.lookup("chemprop-simple-statistical", create_if_missing=False)
+                return getattr(app, "get_simple_model_info")
+            except:
+                pass
         
         return None
     except Exception as e:
