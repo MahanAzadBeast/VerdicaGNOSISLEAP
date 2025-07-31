@@ -458,18 +458,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "ChemBERTa Device Property Bug Fix"
-    - "Chemprop CLI Compatibility Fix" 
-    - "Enhanced W&B Logging for ChemBERTa"
-    - "Enhanced W&B Logging for Chemprop"
-    - "ChemBERTa Multi-Task Model Integration"
-    - "Chemprop Multi-Task Model Integration"
-    - "Ligand Activity Predictor Module Integration"
-    - "AI Modules Health Check Enhancement"
+    - "Real Chemprop Model Router Integration"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
-  completed_testing: ["ChemBERTa Device Property Bug Fix", "Chemprop CLI Compatibility Fix", "Enhanced W&B Logging for ChemBERTa", "Enhanced W&B Logging for Chemprop", "ChemBERTa Multi-Task Model Integration", "Chemprop Multi-Task Model Integration", "Ligand Activity Predictor Module Integration", "AI Modules Health Check Enhancement"]
+  completed_testing: ["ChemBERTa Device Property Bug Fix", "Chemprop CLI Compatibility Fix", "Enhanced W&B Logging for ChemBERTa", "Enhanced W&B Logging for Chemprop", "ChemBERTa Multi-Task Model Integration", "Chemprop Multi-Task Model Integration", "Ligand Activity Predictor Module Integration", "AI Modules Health Check Enhancement", "Real Chemprop Model Router Integration"]
 
 agent_communication:
     - agent: "main"
