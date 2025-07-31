@@ -276,10 +276,10 @@ def train_focused_chemprop(
         
         logger.info("🏋️ Starting Chemprop training...")
         
-        # Chemprop training command - Updated for v2.2.0 CLI with correct data handling
+        # Chemprop training command - Updated for v2.2.0 CLI with single data file
         cmd = [
             'chemprop', 'train',
-            '--data-path', str(data_paths['train']),  # Main training data
+            '--data-path', str(data_paths['data']),  # Single data file
             '--task-type', 'regression',
             '--save-dir', str(output_dir),
             '--epochs', str(epochs),
