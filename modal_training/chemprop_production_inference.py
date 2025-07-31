@@ -85,11 +85,28 @@ def predict_oncoprotein_activity(smiles: str) -> Dict[str, Any]:
         
         print(f"📝 Input file created: {input_file}")
         
-        # Run Chemprop prediction
+        # Find checkpoint files in the model directory
+        checkpoint_files = list(latest_model_dir.glob("*.pt"))
+        if not checkpoint_files:
+            checkpoint_files = list(latest_model_dir.rglob("*.pt"))  # Search recursively
+        
+        if not checkpoint_files:
+            return {
+                "status": "error",
+                "error": "No checkpoint files (.pt) found in model directory",
+                "smiles": smiles,
+                "model_dir": str(latest_model_dir)
+            }
+        
+        # Use the first checkpoint file found
+        checkpoint_path = checkpoint_files[0]
+        print(f"📁 Using checkpoint: {checkpoint_path}")
+        
+        # Updated Chemprop CLI command for version 2.2.0
         cmd = [
             'chemprop', 'predict',
             '--test-path', str(input_file),
-            '--checkpoint-dir', str(latest_model_dir),
+            '--model-paths', str(checkpoint_path),  # Use --model-paths instead of --checkpoint-dir
             '--preds-path', str(output_file)
         ]
         
