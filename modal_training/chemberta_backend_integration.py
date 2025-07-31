@@ -50,38 +50,41 @@ def validate_smiles(smiles: str) -> bool:
 
 @chemberta_router.get("/status")
 async def get_chemberta_status():
-    """Get ChemBERTa model status"""
+    """Get ChemBERTa 50-epoch model status"""
     
     if not CHEMBERTA_AVAILABLE:
         return {
-            "status": "unavailable",
-            "message": "ChemBERTa inference not available",
-            "available": False
+            "status": "error",
+            "available": False,
+            "error": "ChemBERTa 50-epoch integration not available"
         }
     
     try:
+        # Get model status from Modal
+        with chemberta_app.run():
+            model_status = get_chemberta_50epoch_status.remote()
+        
         return {
-            "status": "available",
-            "message": "ChemBERTa multi-task model ready for inference",
+            "status": "success",
             "available": True,
             "model_info": {
-                "model_type": "ChemBERTa Multi-Task",
-                "trained_targets": [
-                    'EGFR', 'HER2', 'VEGFR2', 'BRAF', 'MET', 
-                    'CDK4', 'CDK6', 'ALK', 'MDM2', 'PI3KCA'
-                ],
-                "training_r2_mean": 0.516,
-                "total_targets": 10
+                "model_name": model_status.get("model_name", "ChemBERTa Focused 50-Epoch"),
+                "architecture": model_status.get("architecture", "BERT-based molecular transformer"),
+                "training_epochs": model_status.get("training_epochs", 50),
+                "mean_r2": model_status.get("mean_r2", 0.594),
+                "targets": model_status.get("targets", []),
+                "improvement": model_status.get("improvement", "15% better than 10-epoch version"),
+                "wandb_run_id": model_status.get("model_info", {}).get("wandb_run_id", "6v1be0pf")
             },
-            "infrastructure": "Modal A100 GPU",
-            "ready": True
+            "message": "ChemBERTa 50-epoch model ready for predictions - fair comparison with Chemprop now possible"
         }
+        
     except Exception as e:
-        logger.error(f"Error checking ChemBERTa status: {e}")
+        logger.error(f"❌ Failed to get ChemBERTa status: {e}")
         return {
-            "status": "error",
-            "message": str(e),
-            "available": False
+            "status": "error", 
+            "available": False,
+            "error": str(e)
         }
 
 @chemberta_router.get("/targets")
