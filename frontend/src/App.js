@@ -124,27 +124,27 @@ const HomeTab = ({ setActiveTab }) => {
             <div className="w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center mb-4">
               <div className="w-6 h-6 bg-purple-400 rounded"></div>
             </div>
-            <h3 className="text-xl font-semibold mb-3">ChemBERTa Multi-Task</h3>
+            <h3 className="text-xl font-semibold mb-3">Ligand Activity Predictor</h3>
             <p className="text-gray-400">
-              NEW! Predict IC50 values for 10 oncoproteins simultaneously using our trained ChemBERTa transformer model.
+              Comprehensive AI module combining ChemBERTa, Chemprop, and enhanced models for multi-property prediction.
             </p>
           </div>
           <div className="bg-gray-800/95 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-cyan-500 transition-all shadow-xl">
             <div className="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center mb-4">
               <div className="w-6 h-6 bg-cyan-400 rounded"></div>
             </div>
-            <h3 className="text-xl font-semibold mb-3">Target-Specific IC50</h3>
+            <h3 className="text-xl font-semibold mb-3">Multi-Target IC50</h3>
             <p className="text-gray-400">
-              Predict IC50 values for specific protein targets including EGFR, BRAF, CDK2, and more.
+              Predict IC50 values for 10 oncoproteins simultaneously with our trained transformer models.
             </p>
           </div>
           <div className="bg-gray-800/95 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-green-500 transition-all shadow-xl">
             <div className="w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center mb-4">
               <div className="w-6 h-6 bg-green-400 rounded"></div>
             </div>
-            <h3 className="text-xl font-semibold mb-3">Advanced Analytics</h3>
+            <h3 className="text-xl font-semibold mb-3">ADMET Properties</h3>
             <p className="text-gray-400">
-              Visualize results, compare compounds, and export data with our comprehensive analysis tools.
+              Predict toxicity, LogP, solubility, and other ADMET properties with advanced AI models.
             </p>
           </div>
         </div>
