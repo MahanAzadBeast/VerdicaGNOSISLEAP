@@ -66,6 +66,7 @@ def test_chemprop_basic():
             '--message-hidden-dim', '32',  # Changed from --hidden-size
             '--depth', '2',
             '--num-workers', '0',
+            '--patience', '10',  # Disable early stopping for small test
             '--save-dir', str(temp_dir / "model")
         ]
         
