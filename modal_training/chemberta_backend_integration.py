@@ -30,13 +30,12 @@ class ChemBERTaPredictionResponse(BaseModel):
 # Import Modal functions
 try:
     import modal
-    # Use the NEW 50-epoch ChemBERTa integration instead of old one
-    from chemberta_50epoch_integration import app as chemberta_app, predict_chemberta_50epoch, get_chemberta_50epoch_status
+    from chemberta_inference import app as chemberta_app, predict_chemberta_ic50, test_chemberta_inference
     CHEMBERTA_AVAILABLE = True
-    logger.info("✅ ChemBERTa 50-epoch inference integration loaded successfully")
+    logger.info("✅ ChemBERTa inference integration loaded successfully")
 except Exception as e:
     CHEMBERTA_AVAILABLE = False
-    logger.error(f"❌ ChemBERTa 50-epoch inference integration failed: {e}")
+    logger.error(f"❌ ChemBERTa inference integration failed: {e}")
     chemberta_app = None
 
 def validate_smiles(smiles: str) -> bool:
@@ -50,33 +49,32 @@ def validate_smiles(smiles: str) -> bool:
 
 @chemberta_router.get("/status")
 async def get_chemberta_status():
-    """Get ChemBERTa 50-epoch model status"""
+    """Get ChemBERTa model status"""
     
     if not CHEMBERTA_AVAILABLE:
         return {
             "status": "error",
             "available": False,
-            "error": "ChemBERTa 50-epoch integration not available"
+            "error": "ChemBERTa integration not available"
         }
     
     try:
         # Get model status from Modal
         with chemberta_app.run():
-            model_status = get_chemberta_50epoch_status.remote()
+            model_status = test_chemberta_inference.remote()
         
         return {
             "status": "success",
             "available": True,
             "model_info": {
-                "model_name": model_status.get("model_name", "ChemBERTa Focused 50-Epoch"),
+                "model_name": model_status.get("model_name", "ChemBERTa"),
                 "architecture": model_status.get("architecture", "BERT-based molecular transformer"),
-                "training_epochs": model_status.get("training_epochs", 50),
-                "mean_r2": model_status.get("mean_r2", 0.594),
+                "training_epochs": model_status.get("training_epochs", 10),
+                "mean_r2": model_status.get("mean_r2", 0.516),
                 "targets": model_status.get("targets", []),
-                "improvement": model_status.get("improvement", "15% better than 10-epoch version"),
-                "wandb_run_id": model_status.get("model_info", {}).get("wandb_run_id", "6v1be0pf")
+                "wandb_run_id": model_status.get("model_info", {}).get("wandb_run_id", "")
             },
-            "message": "ChemBERTa 50-epoch model ready for predictions - fair comparison with Chemprop now possible"
+            "message": "ChemBERTa model ready for predictions"
         }
         
     except Exception as e:
@@ -192,7 +190,7 @@ async def predict_chemberta_multi_target(request: ChemBERTaPredictionRequest):
     try:
         # Call Modal inference function
         with chemberta_app.run():
-            result = predict_chemberta_50epoch.remote(request.smiles)
+            result = predict_chemberta_ic50.remote(request.smiles)
         
         if result.get("status") == "success":
             logger.info("✅ ChemBERTa prediction completed successfully")
@@ -221,9 +219,9 @@ async def test_chemberta_inference_endpoint():
     logger.info("🧪 Running ChemBERTa inference test...")
     
     try:
-        # Call Modal status function instead of test function
+        # Call Modal test function
         with chemberta_app.run():
-            result = get_chemberta_50epoch_status.remote()
+            result = test_chemberta_inference.remote()
         
         return result
         
