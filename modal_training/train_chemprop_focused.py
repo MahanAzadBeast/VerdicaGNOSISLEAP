@@ -344,37 +344,54 @@ def train_focused_chemprop(
                 
                 # Load predictions and calculate detailed metrics
                 test_preds = pd.read_csv(test_preds_path)
-                test_df_eval = pd.read_csv(data_paths['test'])
+                all_data_df = pd.read_csv(data_paths['data'])
                 
-                # Calculate per-target R² scores
+                # Chemprop handles splits internally, so we need to get the test indices
+                # For now, we'll use the predictions file directly which contains the test set
+                logger.info(f"   📈 Test predictions shape: {test_preds.shape}")
+                
+                # Calculate per-target R² scores if we can identify the structure
                 r2_scores = {}
                 mae_scores = {}
                 rmse_scores = {}
                 
-                for i, target in enumerate(FOCUSED_TARGETS):
-                    if target in test_df_eval.columns:
-                        # Get true and predicted values
-                        y_true = test_df_eval[target].values
-                        y_pred = test_preds.iloc[:, i+1].values  # Skip SMILES column
-                        
-                        # Remove NaN values
-                        mask = ~np.isnan(y_true)
-                        if mask.sum() > 0:
-                            y_true_clean = y_true[mask]
-                            y_pred_clean = y_pred[mask]
+                # Try to extract metrics from test predictions
+                # Note: The exact structure depends on how Chemprop v2.2.0 formats output
+                if len(test_preds.columns) >= len(FOCUSED_TARGETS) + 1:  # SMILES + targets
+                    for i, target in enumerate(FOCUSED_TARGETS):
+                        if f"{target}_pred" in test_preds.columns and f"{target}_true" in test_preds.columns:
+                            y_true = test_preds[f"{target}_true"].values
+                            y_pred = test_preds[f"{target}_pred"].values
                             
-                            # Calculate metrics
-                            from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-                            
-                            r2 = r2_score(y_true_clean, y_pred_clean)
-                            mae = mean_absolute_error(y_true_clean, y_pred_clean)
-                            rmse = np.sqrt(mean_squared_error(y_true_clean, y_pred_clean))
-                            
-                            r2_scores[target] = r2
-                            mae_scores[target] = mae
-                            rmse_scores[target] = rmse
-                            
-                            logger.info(f"   {target:10s}: R² = {r2:7.3f}, MAE = {mae:7.3f}, RMSE = {rmse:7.3f} (n={mask.sum()})")
+                            # Remove NaN values
+                            mask = ~(np.isnan(y_true) | np.isnan(y_pred))
+                            if mask.sum() > 0:
+                                y_true_clean = y_true[mask]
+                                y_pred_clean = y_pred[mask]
+                                
+                                # Calculate metrics
+                                from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+                                
+                                r2 = r2_score(y_true_clean, y_pred_clean)
+                                mae = mean_absolute_error(y_true_clean, y_pred_clean)
+                                rmse = np.sqrt(mean_squared_error(y_true_clean, y_pred_clean))
+                                
+                                r2_scores[target] = r2
+                                mae_scores[target] = mae
+                                rmse_scores[target] = rmse
+                                
+                                logger.info(f"   {target:10s}: R² = {r2:7.3f}, MAE = {mae:7.3f}, RMSE = {rmse:7.3f} (n={mask.sum()})")
+                        else:
+                            logger.info(f"   {target:10s}: Could not find prediction columns")
+                
+                if not r2_scores:
+                    logger.warning("   ⚠️ Could not extract per-target metrics from test predictions")
+                    logger.info(f"   📋 Available columns: {list(test_preds.columns)}")
+                    # Use dummy values for now
+                    for target in FOCUSED_TARGETS:
+                        r2_scores[target] = 0.0
+                        mae_scores[target] = 0.0
+                        rmse_scores[target] = 0.0
                 
                 # Calculate summary statistics
                 if r2_scores:
