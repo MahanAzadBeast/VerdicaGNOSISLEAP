@@ -58,7 +58,7 @@ def test_chemprop_basic():
             'chemprop', 'train',
             '--data-path', str(train_path),
             '--task-type', 'regression',
-            '--epochs', '1',
+            '--epochs', '3',  # Increased to be higher than warmup epochs (default 2)
             '--batch-size', '2',
             '--message-hidden-dim', '32',  # Changed from --hidden-size
             '--depth', '2',
