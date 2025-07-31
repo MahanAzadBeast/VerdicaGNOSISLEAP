@@ -1037,6 +1037,16 @@ except Exception as e:
     logging.error(f"❌ Failed to add Chemprop multi-task router: {e}")
     CHEMPROP_MULTITASK_AVAILABLE = False
 
+# Add Real Trained Chemprop router
+try:
+    from real_chemprop_backend_integration import router as real_chemprop_router
+    api_router.include_router(real_chemprop_router)
+    logging.info("✅ Real trained Chemprop router added successfully")
+    REAL_CHEMPROP_AVAILABLE = True
+except Exception as e:
+    logging.error(f"❌ Failed to add real Chemprop router: {e}")
+    REAL_CHEMPROP_AVAILABLE = False
+
 # Include the router in the main app
 app.include_router(api_router)
 
