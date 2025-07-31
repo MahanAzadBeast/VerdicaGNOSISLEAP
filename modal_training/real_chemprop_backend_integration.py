@@ -160,7 +160,7 @@ async def predict_with_real_chemprop(input_data: SMILESInput):
             raise HTTPException(status_code=503, detail="Prediction service not available")
         
         # Make prediction
-        logger.info(f"Making real Chemprop prediction for: {input_data.smiles}")
+        logger.info(f"Making PyTorch direct Chemprop prediction for: {input_data.smiles}")
         prediction_result = await asyncio.to_thread(predict_function.remote, input_data.smiles)
         
         if prediction_result.get("status") == "success":
