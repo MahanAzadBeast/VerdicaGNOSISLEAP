@@ -155,16 +155,16 @@ const HomeTab = ({ setActiveTab }) => {
           <div className="text-center">
             <div className="grid md:grid-cols-4 gap-8">
               <div>
-                <div className="text-3xl font-bold text-purple-400">6</div>
-                <div className="text-gray-400">Protein Targets</div>
+                <div className="text-3xl font-bold text-purple-400">10</div>
+                <div className="text-gray-400">Oncoproteins</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-cyan-400">4</div>
-                <div className="text-gray-400">Prediction Types</div>
+                <div className="text-3xl font-bold text-cyan-400">0.751</div>
+                <div className="text-gray-400">Best R² Score</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-green-400">3</div>
-                <div className="text-gray-400">AI Models</div>
+                <div className="text-3xl font-bold text-green-400">A100</div>
+                <div className="text-gray-400">GPU Training</div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-yellow-400">∞</div>
