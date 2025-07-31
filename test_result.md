@@ -422,7 +422,7 @@ backend:
           agent: "testing"
           comment: "AI Modules health check enhanced and working. /api/health endpoint shows status: healthy, all models loaded (molbert: true, chemprop_simulation: true, real_ml_models: true, oncoprotein_chemberta: true), enhanced_predictions: true, all 4 prediction types available, all 6 targets available. Health check properly reports the comprehensive AI Modules system status."
 
-frontend:
+  - task: "AI Modules Health Check Enhancement"
   # No frontend testing performed as per instructions
   - task: "Interactive Bar Charts"
     implemented: false
