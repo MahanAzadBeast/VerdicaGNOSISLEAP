@@ -352,13 +352,9 @@ const LigandActivityPredictor = () => {
   };
 
   const formatIC50 = (ic50_um) => {
-    if (ic50_um < 0.001) {
-      return `${(ic50_um * 1000000).toFixed(0)} nM`;
-    } else if (ic50_um < 1) {
-      return `${(ic50_um * 1000).toFixed(0)} nM`;
-    } else {
-      return `${ic50_um.toFixed(2)} μM`;
-    }
+    if (ic50_um === null || ic50_um === undefined) return 'N/A';
+    // Always display in μM as requested by user
+    return `${ic50_um.toFixed(3)} μM`;
   };
 
   return (
