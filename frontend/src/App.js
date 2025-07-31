@@ -104,7 +104,7 @@ const HomeTab = ({ setActiveTab }) => {
               Start Discovery AI
             </h1>
             <p className="text-lg text-gray-300 opacity-80 font-medium">
-              Click to begin molecular prediction
+              Click to access AI modules
             </p>
           </div>
         </div>
