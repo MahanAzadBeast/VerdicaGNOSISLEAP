@@ -264,11 +264,15 @@ def train_focused_chemprop(
         data_paths = prepare_chemprop_data(df, temp_dir / "data")
         
         # Log data info
-        train_df = pd.read_csv(data_paths['train'])
-        val_df = pd.read_csv(data_paths['val'])
-        test_df = pd.read_csv(data_paths['test'])
+        all_data_df = pd.read_csv(data_paths['data'])
+        total_samples = len(all_data_df)
         
-        wandb_logger.log_data_info(len(train_df), len(val_df), len(test_df))
+        # Estimate split sizes (Chemprop handles internally with --split-sizes 0.8 0.1 0.1)
+        train_size = int(total_samples * 0.8)
+        val_size = int(total_samples * 0.1)
+        test_size = total_samples - train_size - val_size
+        
+        wandb_logger.log_data_info(train_size, val_size, test_size)
         
         # Prepare output directory
         output_dir = Path(f"/vol/models/focused_chemprop_{run_name or 'default'}")
