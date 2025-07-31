@@ -630,7 +630,8 @@ const LigandActivityPredictor = () => {
                   
                   {predictions.results['chemprop-simulation'] && (
                     <div className="space-y-3">
-                      {predictions.results['chemprop-simulation'].predictions?.map((pred, idx) => (
+                      {Array.isArray(predictions.results['chemprop-simulation'].predictions) && 
+                       predictions.results['chemprop-simulation'].predictions.map((pred, idx) => (
                         <div key={idx} className="flex justify-between items-center py-2 border-b border-purple-800/30">
                           <span className="font-medium text-purple-200">{pred.target || pred.property}</span>
                           <div className="text-right">
