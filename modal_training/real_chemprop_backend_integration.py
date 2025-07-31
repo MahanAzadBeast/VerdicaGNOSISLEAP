@@ -13,6 +13,12 @@ from datetime import datetime
 import logging
 import os
 
+# Oncoprotein targets for the model
+ONCOPROTEIN_TARGETS = [
+    'EGFR', 'MDM2', 'BRAF', 'PI3KCA', 'HER2', 
+    'VEGFR2', 'MET', 'ALK', 'CDK4', 'CDK6'
+]
+
 # Pydantic models
 class SMILESInput(BaseModel):
     smiles: str
