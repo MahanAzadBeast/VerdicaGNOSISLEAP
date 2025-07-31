@@ -372,7 +372,15 @@ const LigandActivityPredictor = () => {
             
             <div className="space-y-3">
               {predictionModels.map((model) => (
-                <label key={model.id} className="flex items-start space-x-3 p-3 border border-gray-500 rounded-lg hover:bg-gray-600 cursor-pointer transition-all">
+                <label key={model.id} className={`flex items-start space-x-3 p-3 border rounded-lg hover:bg-gray-600 cursor-pointer transition-all ${
+                  selectedModel === model.id 
+                    ? 'border-purple-400 bg-purple-900/20' 
+                    : 'border-gray-500'
+                } ${
+                  model.isComparison 
+                    ? 'border-l-4 border-l-yellow-400' 
+                    : ''
+                }`}>
                   <input
                     type="radio"
                     name="model"
@@ -385,14 +393,58 @@ const LigandActivityPredictor = () => {
                     <div className="flex items-center space-x-2 mb-1">
                       <span className="text-lg">{model.icon}</span>
                       <div className="font-medium text-white">{model.name}</div>
-                      {model.id === 'chemberta-multitask' && modelStatus.chemberta && (
+                      
+                      {/* Status Badges */}
+                      {model.status === 'production' && (
                         <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-900 text-green-300 border border-green-700">
                           <div className="w-1 h-1 bg-green-400 rounded-full mr-1 animate-pulse"></div>
-                          Ready
+                          Production
+                        </div>
+                      )}
+                      {model.status === 'testing' && (
+                        <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-900 text-orange-300 border border-orange-700">
+                          <div className="w-1 h-1 bg-orange-400 rounded-full mr-1 animate-pulse"></div>
+                          Testing
+                        </div>
+                      )}
+                      {model.status === 'simulation' && (
+                        <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-900 text-blue-300 border border-blue-700">
+                          Simulation
+                        </div>
+                      )}
+                      {model.isComparison && (
+                        <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-900 text-yellow-300 border border-yellow-700">
+                          ⚔️ Compare
                         </div>
                       )}
                     </div>
+                    
                     <div className="text-sm text-gray-400 mb-2">{model.description}</div>
+                    
+                    {/* Performance Data */}
+                    {model.performance && (
+                      <div className="text-xs text-gray-500 mb-2 bg-gray-800 rounded px-2 py-1">
+                        {model.performance.mean_r2 && (
+                          <span>Mean R²: {model.performance.mean_r2} • </span>
+                        )}
+                        {model.performance.targets && (
+                          <span>Targets: {model.performance.targets} • </span>
+                        )}
+                        {model.performance.best_target && (
+                          <span>Best: {model.performance.best_target}</span>
+                        )}
+                        {model.performance.epochs && (
+                          <span>Epochs: {model.performance.epochs} • </span>
+                        )}
+                        {model.performance.architecture && (
+                          <span>{model.performance.architecture}</span>
+                        )}
+                        {model.performance.size_mb && (
+                          <span> • {model.performance.size_mb} MB</span>
+                        )}
+                      </div>
+                    )}
+                    
                     <div className="text-xs text-gray-500">
                       Models: {model.models.join(', ')}
                     </div>
