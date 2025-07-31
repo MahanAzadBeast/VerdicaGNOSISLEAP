@@ -53,14 +53,14 @@ def test_chemprop_basic():
         df.to_csv(train_path, index=False)
         print(f"✅ Data saved to: {train_path}")
         
-        # Test Chemprop command - Updated for v2.2.0 CLI
+        # Test Chemprop command - Updated for v2.2.0 CLI with correct arguments
         cmd = [
             'chemprop', 'train',
             '--data-path', str(train_path),
             '--task-type', 'regression',
             '--epochs', '1',
             '--batch-size', '2',
-            '--hidden-size', '32',
+            '--message-hidden-dim', '32',  # Changed from --hidden-size
             '--depth', '2',
             '--num-workers', '0',
             '--save-dir', str(temp_dir / "model"),
