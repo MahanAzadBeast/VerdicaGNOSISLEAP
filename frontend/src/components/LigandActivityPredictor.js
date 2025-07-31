@@ -15,35 +15,49 @@ const LigandActivityPredictor = () => {
   const [error, setError] = useState('');
   const [modelStatus, setModelStatus] = useState({});
 
-  // Available prediction models
+  // Available prediction models - Enhanced for dual-architecture comparison
   const predictionModels = [
     {
-      id: 'unified',
-      name: 'Unified Multi-Model',
-      description: 'Combines all available models for comprehensive predictions',
-      models: ['ChemBERTa', 'Chemprop', 'Enhanced RDKit'],
-      icon: '🔬'
+      id: 'model-comparison',
+      name: 'Model Architecture Comparison',
+      description: 'Compare ChemBERTa Transformer vs Chemprop GNN side-by-side',
+      models: ['ChemBERTa (Transformer)', 'Chemprop (GNN)'],
+      icon: '⚔️',
+      isComparison: true
     },
     {
       id: 'chemberta-multitask',
-      name: 'ChemBERTa Multi-Task',
-      description: 'Transformer-based model for 10 oncoproteins simultaneously',
+      name: 'ChemBERTa Transformer',
+      description: 'BERT-based transformer model (Mean R²: 0.516, Production Ready)',
       models: ['ChemBERTa Multi-Task (10 targets)'],
-      icon: '🧬'
+      icon: '🧬',
+      status: 'production',
+      performance: { mean_r2: 0.516, targets: 10, best_target: 'EGFR (R²: 0.751)' }
+    },
+    {
+      id: 'chemprop-real',
+      name: 'Chemprop Graph Neural Network',
+      description: '5-layer MPNN trained on same targets (50 epochs, Production Testing)',
+      models: ['Chemprop GNN Multi-Task'],
+      icon: '📊',
+      status: 'testing',
+      performance: { epochs: 50, architecture: '5-layer MPNN', size_mb: 25.32 }
     },
     {
       id: 'chemprop-multitask',
-      name: 'Chemprop Multi-Task',
-      description: 'Graph neural network for multi-target prediction',
-      models: ['Chemprop GNN Multi-Task'],
-      icon: '📊'
+      name: 'Chemprop Simulation',
+      description: 'Simulation model for development and testing',
+      models: ['Chemprop GNN Simulation'],
+      icon: '🧪',
+      status: 'simulation'
     },
     {
       id: 'enhanced-rdkit',
       name: 'Enhanced RDKit',
       description: 'Enhanced molecular descriptors with target-specific models',
       models: ['RDKit + ML Models'],
-      icon: '⚗️'
+      icon: '⚗️',
+      status: 'enhanced'
     }
   ];
 
