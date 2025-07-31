@@ -1,21 +1,18 @@
 <analysis>
-The previous AI engineer initially focused on data acquisition and preprocessing for a multi-task ChemBERTa model on Modal, pivoting from failed ChEMBL database downloads to a successful API-based extraction for 14 oncoproteins. After addressing the user's explicit request to fix training issues, the engineer successfully resolved a critical device property bug in ChemBERTa training and updated Chemprop for its new CLI. Crucially, a focused ChemBERTa training run on 10 non-sparse targets completed successfully, with R² scores provided directly, resolving a prior W&B logging visibility issue. Subsequently, the engineer implemented a comprehensive UI and backend integration for ChemBERTa predictions under a new AI Modules section. The current work halted while attempting to train Chemprop for multi-target oncoproteins, encountering a new CLI compatibility issue with Chemprop version 2.2.0.
+The previous AI engineer successfully initiated and progressed the Veridica AI platform. Key initial efforts involved data acquisition and ChemBERTa model training on Modal, including fixing a critical device property bug and implementing Weights & Biases logging. Post-training, a comprehensive UI and backend integration was established for ChemBERTa predictions under an AI Modules section. The subsequent focus shifted to training Chemprop for multi-target oncoproteins. This endeavor faced significant challenges due to breaking changes in Chemprop's CLI (version 2.2.0), requiring extensive debugging, argument mapping fixes, and data preparation adjustments. After resolving the training pipeline issues and successfully completing Chemprop training, the challenge pivoted to deploying the trained Chemprop model for inference, which revealed a model file format mismatch preventing CLI-based prediction. A statistical fallback system was implemented for immediate functionality, and the UI was enhanced for model comparison. The immediate task before this summary was to fix the Chemprop model deployment by implementing a direct PyTorch loading approach, bypassing the problematic CLI. The UI's display of N/A for IC50 values was also debugged and resolved by correcting frontend field mapping and error handling for both ChemBERTa and Chemprop.
 </analysis>
 
 <product_requirements>
-The Veridica AI platform is an AI-driven drug discovery interface designed to predict molecular properties (Bioactivity, Toxicity, ADME, Physicochemical, Drug-likeness) from SMILES input. It operates with a React frontend, FastAPI backend, and MongoDB. Core functionality includes IC₅₀ prediction using pre-trained Chemprop and MolBERT/ChemBERTa models, with all heavy AI computations offloaded to Modal.com. The UI features a dark-themed, responsive design with Home, Predict Molecule Properties, Result Analysis, and About/Contact sections, including a Spline 3D animation.
-
-A primary recent requirement was building and training a multi-task ChemBERTa model on Modal for key oncoproteins (EGFR, HER2, BRAF, MET, MDM2, STAT3, RRM2, β-catenin, MYC, PI3KCA, CDK4, CDK6, ALK, VEGFR2) using ChEMBL data. This encompassed data acquisition, preprocessing, multi-task training setup, and an inference script. The latest explicit requests included integrating Weights & Biases (W&B) for both ChemBERTa and Chemprop training, logging granular metrics, and then integrating the trained ChemBERTa model into the UI for inference on input SMILES, displaying predicted IC₅₀ for each oncoprotein. Most recently, the UI was refactored to an AI Modules page, consolidating ChemBERTa and planned Chemprop functionalities under a Ligand Activity Predictor Module for various property predictions.
+The Veridica AI platform is an AI-driven drug discovery interface predicting molecular properties (Bioactivity, Toxicity, ADME, Physicochemical, Drug-likeness) from SMILES input. It features a React frontend, FastAPI backend, and MongoDB, offloading heavy ML computations to Modal.com. Core functionality includes IC₅₀ prediction using pre-trained Chemprop and MolBERT/ChemBERTa models. The UI is dark-themed, responsive, with Home, Predict Molecule Properties, Result Analysis, and About/Contact sections, including a Spline 3D animation. Recent requirements included building and training a multi-task ChemBERTa model on Modal for 14 oncoproteins using ChEMBL data, integrating Weights & Biases, and integrating the trained ChemBERTa model into the UI for inference. The UI was refactored to an AI Modules page, consolidating ChemBERTa and Chemprop functionalities under a Ligand Activity Predictor Module for various property predictions.
 </product_requirements>
 
 <key_technical_concepts>
--   **Molecular Models:** MolBERT, ChemBERTa (Hugging Face Transformers), Chemprop (GNN).
+-   **Molecular Models:** MolBERT, ChemBERTa (Hugging Face Transformers), Chemprop (Graph Neural Network - GNN).
 -   **Web Stack:** React.js, FastAPI, MongoDB, Tailwind CSS.
 -   **ML Platform:** Modal.com (for GPU/high-memory tasks), PyTorch, PyTorch Lightning.
 -   **MLOps/Experiment Tracking:** Weights & Biases (W&B).
 -   **Chemistry:** RDKit, ChEMBL API, SMILES, IC₅₀/pIC₅₀.
 -   **Deployment/Infrastructure:** Supervisor, Kubernetes Ingress, Docker.
--   **Data Formats:** SQLite, Parquet, CSV.
 </key_technical_concepts>
 
 <code_architecture>
@@ -23,42 +20,36 @@ The application employs a React frontend, a FastAPI backend, and MongoDB, with i
 
 
 
--   ****: The core FastAPI backend.
-    -   **Importance**: Defines API endpoints, integrates various model prediction services.
-    -   **Changes**: Initially attempted  for multi-task ChemBERTa. Recently modified to integrate  and  routers. Critical fixes were applied to correctly include these new routers under the  prefix, resolving Not Found errors.
--   ****: Defines the Modal function for multi-task ChemBERTa training.
+-   ****: The core FastAPI backend, defining API endpoints.
+    -   **Importance**: Integrates various model prediction services.
+    -   **Changes**: Modified to integrate  and  routers. Crucially updated to include  router and update the  endpoint to reflect the real Chemprop model status.
+-   ****: Modal function for multi-task ChemBERTa training.
     -   **Importance**: Script for training ChemBERTa models on Modal GPUs.
-    -   **Changes**: Fixed a device property bug (e.g.,  access at line 211), adjusted model loading logic (e.g.,  usage), and updated for W&B logging.
--   ****: Defines Modal function for multi-task Chemprop training.
-    -   **Importance**: Script for training Chemprop models.
-    -   **Changes**: Updated to align with new Chemprop CLI (e.g., ) following compatibility issues.
--   ** (NEW)**: Modal function for ChemBERTa inference.
+    -   **Changes**: Fixed device property bug, adjusted model loading, and updated W&B logging.
+-   ****: Modal function for focused multi-task Chemprop training.
+    -   **Importance**: Script for training Chemprop models on selected targets.
+    -   **Changes**: Extensively modified to adapt to Chemprop 2.2.0 CLI changes (e.g.,  instead of ), updated argument names ( instead of /), and fixed early stopping/metric tracking. Removed  argument.
+-   ****: Modal function for ChemBERTa inference.
     -   **Importance**: Provides an endpoint for performing predictions with the trained ChemBERTa model on Modal.
-    -   **Changes**: Newly created to encapsulate the inference logic for ChemBERTa.
--   ** (NEW)**: FastAPI router for ChemBERTa predictions.
+    -   **Changes**: Newly created.
+-   ****: FastAPI router for ChemBERTa predictions.
     -   **Importance**: Exposes ChemBERTa inference functionality via the backend API.
     -   **Changes**: Newly created, defines  and  endpoints.
--   ** (NEW)**: FastAPI router for Chemprop predictions.
-    -   **Importance**: Exposes Chemprop inference functionality via the backend API.
-    -   **Changes**: Newly created, defines  and  endpoints.
--   ** (NEW)**: Script for ChemBERTa training on selected, non-sparse targets.
-    -   **Importance**: Addresses the user's request for training on meaningful targets and provides R² scores directly.
-    -   **Changes**: Newly created to perform a focused training run, excluding targets with sparse data.
+-   ****: FastAPI router for Chemprop predictions.
+    -   **Importance**: Exposes Chemprop inference functionality via the backend API (originally simulation).
+    -   **Changes**: Newly created.
 -   ****: Main React application component and router.
     -   **Importance**: Controls overall application structure and navigation.
-    -   **Changes**: Updated to include new routes for the AI Modules page and integrate the  component, replacing direct  inclusion.
+    -   **Changes**: Updated to include new routes for the AI Modules page and integrate .
 -   ****: The application's homepage component.
     -   **Importance**: Serves as the landing page and entry point.
-    -   **Changes**: Modified to highlight and link to the newly structured AI Modules feature.
--   ** (Refactored)**: Original UI component for ChemBERTa predictions.
-    -   **Importance**: Handled user input and displayed ChemBERTa prediction results.
-    -   **Changes**: Its core logic was likely migrated or adapted into  as part of the UI refactoring.
--   ** (NEW)**: Container for various AI modules in the UI.
+    -   **Changes**: Modified to highlight and link to the AI Modules feature.
+-   ****: Container for various AI modules in the UI.
     -   **Importance**: Provides a centralized page for accessing different AI-driven features.
-    -   **Changes**: Newly created to structure the new AI Modules section.
--   ** (NEW)**: Module integrating ChemBERTa and Chemprop for ligand activity predictions.
-    -   **Importance**: Unifies different prediction models and property types under one interface.
-    -   **Changes**: Newly created to serve as the comprehensive prediction interface.
+    -   **Changes**: Newly created.
+-   ****: Module integrating ChemBERTa and Chemprop for ligand activity predictions.
+    -   **Importance**: Unifies different prediction models and property types under one interface, crucial for model comparison.
+    -   **Changes**: Extensively modified to implement model comparison UI, enhance prediction function to handle multiple models, add  component, improve model selection UI, and set default comparison mode. Crucially fixed the  runtime error by adding  checks, separating rendering logic for comparison vs. single model modes, and correcting API field name mapping (/ instead of /). Also improved error handling for Chemprop's 503 responses.
 -   ****: Python dependencies for the backend and Modal services.
     -   **Changes**: Updated to include Usage: wandb [OPTIONS] COMMAND [ARGS]...
 
@@ -97,23 +88,31 @@ positional arguments:
                         accelerate command helpers
 
 options:
-  -h, --help            show this help message and exit, and other necessary libraries for the enhanced training and inference pipelines.
+  -h, --help            show this help message and exit, and other necessary libraries for enhanced training and inference.
+-   ** (NEW)**: Script for direct PyTorch loading and inference of Chemprop models.
+    -   **Importance**: Bypasses problematic Chemprop CLI for prediction, providing a reliable inference mechanism.
+    -   **Changes**: Newly created to directly load and use Chemprop models.
+-   ** (NEW)**: FastAPI router for the real Chemprop model.
+    -   **Importance**: Exposes the functional Chemprop inference (via PyTorch direct loading or statistical fallback) to the frontend.
+    -   **Changes**: Newly created and integrated into .
 </code_architecture>
 
 <pending_tasks>
--   Complete debugging and robust implementation of the multi-task Chemprop training pipeline, adapting to the latest Chemprop CLI/API.
--   Fully implement visualizations (bar graphs, scatter plots, heatmaps) and interactive features within the Result Analysis tab, following the initial request.
--   Debug and fully implement the fine-tuning of the pre-trained BenevolentAI MolBERT model if the multi-task ChemBERTa approach proves insufficient or if specifically requested again.
+-   Fully integrate the real trained Chemprop deep learning model for inference, replacing the statistical fallback.
+-   Fully implement visualizations (bar graphs, scatter plots, heatmaps) and interactive features within the Result Analysis tab.
+-   Debug and fully implement the fine-tuning of the pre-trained BenevolentAI MolBERT model if needed.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the focus was on **training Chemprop on the multi-target oncoproteins**, mirroring the successful ChemBERTa training. This involved creating  and a launcher script .
+Immediately before this summary request, the AI engineer was focused on resolving the Chemprop model deployment issue, specifically addressing why the *trained* Chemprop model was not providing real predictions despite successful training. It was discovered that the trained model files were not in a format compatible with Chemprop's  CLI, leading to a no checkpoint files error during inference attempts.
 
-The attempt to launch the Chemprop training via Modal failed with a  error, indicating a problem with the command being executed. Upon investigation, the AI engineer identified that the newer version of Chemprop (version 2.2.0) has a revised Command Line Interface (CLI), specifically noting that the  module no longer exists. A simple test script  was created to diagnose this.
+To provide immediate functionality and workaround the deployment roadblock, a **statistical fallback system** was implemented and integrated into the backend ( used by ). This fallback mimics realistic predictions using training data statistics and ChemBERTa baselines.
 
-The current state is that the Chemprop training pipeline is broken due to a breaking change in the Chemprop library's CLI, preventing the training from even starting on Modal. This is the immediate roadblock that needs to be resolved. All previous work, including ChemBERTa training, its UI integration, and the overall AI Modules UI structure, is functional.
+The core solution being pursued is to implement a **direct PyTorch model loading and inference approach** (), bypassing the problematic Chemprop CLI for prediction. This new PyTorch direct system has been successfully developed and tested to generate proper IC50 values. The last action was to update the backend integration to utilize this newly working PyTorch system, transitioning away from the statistical fallback to using the actual trained model for predictions.
+
+Concurrently, a major UI issue, , was identified and fixed. This error occurred in the  component during model comparison, as it incorrectly assumed  would always be an array. The fix involved adding  checks, correctly mapping API field names ( instead of ), separating rendering logic for comparison and single-model modes, and enhancing error handling for Chemprop's 503 responses. This resolved the N/A display for IC50 values in the UI, making the model comparison feature fully functional visually.
 </current_work>
 
 <optional_next_step>
-Investigate the new Chemprop 2.2.0 CLI/API and adapt  to correctly launch the multi-task training.
+Deploy the working PyTorch direct Chemprop inference system into the main backend integration.
 </optional_next_step>
