@@ -121,6 +121,25 @@ const LigandActivityPredictor = () => {
     { name: 'Ethanol', smiles: 'CCO' }
   ];
 
+  // Generate PyTorch Direct Enhanced predictions
+  const generatePyTorchDirectPredictions = (smiles) => {
+    // Mock predictions using PyTorch Direct Enhanced System
+    const targets = ['EGFR', 'HER2', 'VEGFR2', 'BRAF', 'MET', 'CDK4', 'CDK6', 'ALK', 'MDM2', 'PI3KCA'];
+    const predictions = {};
+    
+    targets.forEach(target => {
+      // Generate realistic IC50 values with some variation
+      const baseIC50 = Math.random() * 10000 + 100; // 100-10100 nM range
+      predictions[target] = {
+        pIC50: -Math.log10(baseIC50 / 1e9),
+        IC50_nM: baseIC50,
+        activity: baseIC50 < 1000 ? 'Active' : baseIC50 < 10000 ? 'Moderate' : 'Inactive'
+      };
+    });
+    
+    return predictions;
+  };
+
   useEffect(() => {
     checkModelStatus();
   }, []);
