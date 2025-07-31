@@ -187,12 +187,31 @@ const LigandActivityPredictor = () => {
               smiles: smiles.trim()
             }, { timeout: 120000 })
             .then(result => ({ type: 'chemprop-real', data: result.data }))
-            .catch(() => 
-              axios.post(`${API}/chemprop-multitask/predict`, {
+            .catch(error => {
+              // Handle 503 or other errors gracefully
+              if (error.response?.status === 503) {
+                return { 
+                  type: 'chemprop-real', 
+                  data: { 
+                    status: 'error', 
+                    message: 'Model optimization in progress',
+                    error: 'Service temporarily unavailable'
+                  }
+                };
+              }
+              // Try simulation fallback
+              return axios.post(`${API}/chemprop-multitask/predict`, {
                 smiles: smiles.trim(),
                 prediction_types: ['bioactivity_ic50']
               }, { timeout: 60000 }).then(result => ({ type: 'chemprop-simulation', data: result.data }))
-            )
+              .catch(() => ({ 
+                type: 'chemprop-real', 
+                data: { 
+                  status: 'error', 
+                  message: 'All Chemprop models temporarily unavailable'
+                }
+              }));
+            })
           );
         }
       }
