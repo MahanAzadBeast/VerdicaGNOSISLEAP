@@ -259,16 +259,19 @@ const LigandActivityPredictor = () => {
       const results = await Promise.allSettled(promises);
       
       // Process results for comparison or single model view
-      const successfulResults = results.filter(r => r.status === 'fulfilled').map(r => r.value);
+      const processedResults = results
+        .filter(r => r.status === 'fulfilled')
+        .map(r => r.value)
+        .filter(r => r && r.data); // Ensure we have valid data
       
-      if (successfulResults.length === 0) {
+      if (processedResults.length === 0) {
         throw new Error('All prediction requests failed');
       }
       
       // Handle comparison mode
       if (selectedModel === 'model-comparison') {
         const comparisonResults = {};
-        successfulResults.forEach(result => {
+        processedResults.forEach(result => {
           comparisonResults[result.type] = result.data;
         });
         setPredictions({ comparisonMode: true, results: comparisonResults });
