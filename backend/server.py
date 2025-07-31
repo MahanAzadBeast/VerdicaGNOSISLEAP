@@ -1026,6 +1026,16 @@ except Exception as e:
     logging.error(f"❌ Failed to add ChemBERTa router: {e}")
     CHEMBERTA_AVAILABLE = False
 
+# Add Chemprop Multi-Task router
+try:
+    from chemprop_multitask_integration import chemprop_router
+    api_router.include_router(chemprop_router)
+    logging.info("✅ Chemprop multi-task router added successfully")
+    CHEMPROP_MULTITASK_AVAILABLE = True
+except Exception as e:
+    logging.error(f"❌ Failed to add Chemprop multi-task router: {e}")
+    CHEMPROP_MULTITASK_AVAILABLE = False
+
 # Include the router in the main app
 app.include_router(api_router)
 
