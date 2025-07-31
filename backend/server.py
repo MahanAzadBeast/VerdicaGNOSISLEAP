@@ -450,14 +450,22 @@ async def health_check():
             "molbert": molbert_loaded,
             "chemprop_simulation": True,  # Simulation always available
             "real_ml_models": real_models_available,
-            "oncoprotein_chemberta": ONCOPROTEIN_AVAILABLE
+            "oncoprotein_chemberta": ONCOPROTEIN_AVAILABLE,
+            "chemprop_multitask_simulation": CHEMPROP_MULTITASK_AVAILABLE,
+            "real_trained_chemprop": REAL_CHEMPROP_AVAILABLE
         },
         "real_ml_targets": real_models_status,
         "enhanced_predictions": True,  # Enhanced IC50 models available
         "available_targets": available_targets,
         "prediction_types": prediction_types,
         "model_type": model_type,
-        "oncoprotein_pipeline": oncoprotein_status
+        "oncoprotein_pipeline": oncoprotein_status,
+        "ai_modules": {
+            "chemberta_available": CHEMBERTA_AVAILABLE,
+            "chemprop_simulation_available": CHEMPROP_MULTITASK_AVAILABLE,
+            "real_chemprop_available": REAL_CHEMPROP_AVAILABLE,
+            "total_ai_models": sum([CHEMBERTA_AVAILABLE, CHEMPROP_MULTITASK_AVAILABLE, REAL_CHEMPROP_AVAILABLE])
+        }
     }
 
 @api_router.get("/targets")
