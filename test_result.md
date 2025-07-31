@@ -376,6 +376,18 @@ backend:
           agent: "testing"
           comment: "Ligand Activity Predictor Module fully integrated. All three AI models (ChemBERTa, Chemprop Multi-Task, Enhanced RDKit) are accessible through unified /api/predict endpoint. Enhanced models used flag shows true in summary. ChemBERTa predictions via molbert_prediction field, Chemprop via chemprop_prediction field, Enhanced RDKit via enhanced_chemprop_prediction field. Comprehensive property prediction (IC50, toxicity, LogP, solubility) works across all models. Integration successfully tested with aspirin and imatinib."
 
+  - task: "Real Chemprop Model Router Integration"
+    implemented: true
+    working: true
+    file: "/app/modal_training/real_chemprop_backend_integration.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ REAL CHEMPROP ROUTER INTEGRATION SUCCESSFUL: Backend loads without errors and all routers are properly integrated. Health endpoint (/api/health) now correctly shows real_trained_chemprop: true in models_loaded and real_chemprop_available: true in ai_modules. Existing endpoints still work: /api/chemberta/status (available: true), /api/chemprop-multitask/status (available: true). New real Chemprop endpoints are accessible: /api/chemprop-real/status (responds with proper error structure), /api/chemprop-real/health (responds with model_type: real_trained_model). Router integration is complete and functional - model shows as not available which is expected during debugging phase as mentioned in review request."
+
   - task: "AI Modules Health Check Enhancement"
     implemented: true
     working: true
