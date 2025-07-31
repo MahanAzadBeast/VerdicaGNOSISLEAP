@@ -51,11 +51,30 @@ _cache_timestamp = None
 CACHE_DURATION = 300  # 5 minutes
 
 async def get_modal_function(function_name: str):
-    """Get Modal function reference"""
+    """Get Modal function reference with fallback to statistical system"""
     try:
         import modal
-        app = modal.App.lookup(MODAL_APP_NAME, create_if_missing=False)
-        return getattr(app, function_name)
+        
+        # Try the main inference app first
+        try:
+            app = modal.App.lookup(MODAL_APP_NAME, create_if_missing=False)
+            return getattr(app, function_name)
+        except:
+            # Fallback to statistical system
+            if function_name == "predict_oncoprotein_activity":
+                try:
+                    app = modal.App.lookup("chemprop-statistical-inference", create_if_missing=False)
+                    return getattr(app, "predict_with_statistical_models")
+                except:
+                    pass
+            elif function_name == "get_model_info":
+                try:
+                    app = modal.App.lookup("chemprop-statistical-inference", create_if_missing=False)
+                    return getattr(app, "get_statistical_model_info")
+                except:
+                    pass
+        
+        return None
     except Exception as e:
         logger.error(f"Failed to get Modal function {function_name}: {e}")
         return None
