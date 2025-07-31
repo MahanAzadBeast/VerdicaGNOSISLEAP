@@ -35,6 +35,18 @@ app = FastAPI(title="Veridica AI - Predictive Chemistry Platform")
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Import ChemBERTa Multi-Task integration
+try:
+    import sys
+    sys.path.append('/app/modal_training')
+    from chemberta_backend_integration import chemberta_router
+    app.include_router(chemberta_router)
+    logging.info("✅ ChemBERTa multi-task router added successfully")
+    CHEMBERTA_AVAILABLE = True
+except Exception as e:
+    logging.error(f"❌ Failed to add ChemBERTa router: {e}")
+    CHEMBERTA_AVAILABLE = False
+
 # Simple import test for oncoprotein
 try:
     import sys
