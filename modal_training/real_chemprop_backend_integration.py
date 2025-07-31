@@ -270,9 +270,9 @@ async def health_check():
             return {
                 "status": "unhealthy",
                 "model_available": False,
-                "error": "Model not accessible",
+                "error": "PyTorch direct model not accessible",
                 "last_check": datetime.now().isoformat(),
-                "model_type": "real_trained_model"
+                "model_type": "pytorch_direct_chemprop"
             }
     
     except Exception as e:
