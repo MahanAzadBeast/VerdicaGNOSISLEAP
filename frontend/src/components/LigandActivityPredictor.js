@@ -684,7 +684,7 @@ const LigandActivityPredictor = () => {
                           <span className="font-medium text-purple-200">{pred.target || pred.property}</span>
                           <div className="text-right">
                             <div className="text-purple-100 font-semibold">
-                              {pred.ic50_nm ? `${pred.ic50_nm.toFixed(1)} nM` : pred.value?.toFixed(3) || 'N/A'}
+                              IC50: {pred.ic50_nm ? `${(pred.ic50_nm / 1000).toFixed(3)} μM` : pred.value?.toFixed(3) + ' μM' || 'N/A'}
                             </div>
                             <div className="text-xs text-purple-400">
                               {pred.activity || pred.confidence_level || 'Simulation'}
