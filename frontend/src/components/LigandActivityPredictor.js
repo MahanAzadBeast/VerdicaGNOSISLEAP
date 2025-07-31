@@ -486,6 +486,159 @@ const LigandActivityPredictor = () => {
         </div>
       )}
 
+      {/* Model Comparison Results */}
+      {predictions?.comparisonMode && (
+        <div className="space-y-6">
+          <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
+            <h3 className="text-xl font-semibold text-white mb-6 flex items-center">
+              ⚔️ Model Architecture Comparison Results
+              <span className="ml-3 text-sm bg-blue-900 text-blue-300 px-2 py-1 rounded">
+                Head-to-Head Analysis
+              </span>
+            </h3>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* ChemBERTa Results */}
+              {predictions.results.chemberta && (
+                <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/20 border border-blue-700/50 rounded-lg p-4">
+                  <div className="flex items-center mb-4">
+                    <div className="w-3 h-3 bg-blue-400 rounded-full mr-3"></div>
+                    <h4 className="text-lg font-semibold text-blue-300">ChemBERTa Transformer</h4>
+                    <span className="ml-2 text-xs bg-green-900 text-green-300 px-2 py-1 rounded">Production</span>
+                  </div>
+                  
+                  <div className="text-sm text-gray-300 mb-4">
+                    BERT-based molecular transformer • Mean R²: 0.516 • 10 epochs training
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {Object.entries(predictions.results.chemberta.predictions || {}).map(([target, data]) => (
+                      <div key={target} className="flex justify-between items-center py-2 border-b border-blue-800/30">
+                        <span className="font-medium text-blue-200">{target}</span>
+                        <div className="text-right">
+                          <div className="text-blue-100 font-semibold">
+                            pIC50: {data.pIC50?.toFixed(3) || 'N/A'}
+                          </div>
+                          <div className="text-xs text-blue-300">
+                            IC50: {data.IC50_nM ? `${data.IC50_nM.toFixed(1)} nM` : 'N/A'}
+                          </div>
+                          <div className="text-xs text-blue-400">
+                            {data.activity || 'Unknown'}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-4 pt-3 border-t border-blue-800/30 text-xs text-blue-300">
+                    Model: {predictions.results.chemberta.model_info?.model_name || 'ChemBERTa Multi-Task'}
+                  </div>
+                </div>
+              )}
+
+              {/* Chemprop Results */}
+              {(predictions.results['chemprop-real'] || predictions.results['chemprop-simulation']) && (
+                <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-700/50 rounded-lg p-4">
+                  <div className="flex items-center mb-4">
+                    <div className="w-3 h-3 bg-purple-400 rounded-full mr-3"></div>
+                    <h4 className="text-lg font-semibold text-purple-300">Chemprop GNN</h4>
+                    <span className={`ml-2 text-xs px-2 py-1 rounded ${
+                      predictions.results['chemprop-real'] 
+                        ? 'bg-orange-900 text-orange-300' 
+                        : 'bg-gray-900 text-gray-300'
+                    }`}>
+                      {predictions.results['chemprop-real'] ? 'Testing' : 'Simulation'}
+                    </span>
+                  </div>
+                  
+                  <div className="text-sm text-gray-300 mb-4">
+                    5-layer Message Passing Neural Network • 50 epochs • 512 hidden size
+                  </div>
+                  
+                  {predictions.results['chemprop-real'] && (
+                    <div className="space-y-3">
+                      {Object.entries(predictions.results['chemprop-real'].predictions || {}).map(([target, data]) => (
+                        <div key={target} className="flex justify-between items-center py-2 border-b border-purple-800/30">
+                          <span className="font-medium text-purple-200">{target}</span>
+                          <div className="text-right">
+                            <div className="text-purple-100 font-semibold">
+                              pIC50: {data.pIC50?.toFixed(3) || 'N/A'}
+                            </div>
+                            <div className="text-xs text-purple-300">
+                              IC50: {data.IC50_nM ? `${data.IC50_nM.toFixed(1)} nM` : 'N/A'}
+                            </div>
+                            <div className="text-xs text-purple-400">
+                              {data.activity || 'Unknown'}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {predictions.results['chemprop-simulation'] && (
+                    <div className="space-y-3">
+                      {predictions.results['chemprop-simulation'].predictions?.map((pred, idx) => (
+                        <div key={idx} className="flex justify-between items-center py-2 border-b border-purple-800/30">
+                          <span className="font-medium text-purple-200">{pred.target || pred.property}</span>
+                          <div className="text-right">
+                            <div className="text-purple-100 font-semibold">
+                              {pred.ic50_nm ? `${pred.ic50_nm.toFixed(1)} nM` : pred.value?.toFixed(3) || 'N/A'}
+                            </div>
+                            <div className="text-xs text-purple-400">
+                              {pred.activity || pred.confidence_level || 'Simulation'}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <div className="mt-4 pt-3 border-t border-purple-800/30 text-xs text-purple-300">
+                    Model: {predictions.results['chemprop-real'] 
+                      ? predictions.results['chemprop-real'].model_info?.model_used || 'Real Trained GNN'
+                      : 'Chemprop Simulation'
+                    }
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {/* Comparison Summary */}
+            {predictions.results.chemberta && (predictions.results['chemprop-real'] || predictions.results['chemprop-simulation']) && (
+              <div className="mt-6 bg-gray-900/50 border border-gray-600 rounded-lg p-4">
+                <h5 className="text-lg font-semibold text-white mb-3">📊 Comparison Analysis</h5>
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <div className="text-blue-300 font-medium">ChemBERTa Advantages:</div>
+                    <ul className="text-gray-300 text-xs mt-1 space-y-1">
+                      <li>• Pre-trained on large molecular corpus</li>
+                      <li>• Proven production performance</li>
+                      <li>• Mean R²: 0.516 (validated)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="text-purple-300 font-medium">Chemprop Advantages:</div>
+                    <ul className="text-gray-300 text-xs mt-1 space-y-1">
+                      <li>• Graph-based molecular representation</li>
+                      <li>• 5-layer deep MPNN architecture</li>
+                      <li>• Extensive 50-epoch training</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="text-green-300 font-medium">Recommendation:</div>
+                    <div className="text-gray-300 text-xs mt-1">
+                      Compare results for your specific compounds. ChemBERTa is production-ready, 
+                      while Chemprop offers alternative graph-based predictions.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Results Display */}
       {(predictions || chembertaPredictions) && (
         <div className="mt-6 space-y-6">
