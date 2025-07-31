@@ -273,7 +273,7 @@ class FocusedChemBERTaTrainer(Trainer):
 def train_focused_chemberta(
     batch_size: int = 16,
     learning_rate: float = 2e-5,
-    num_epochs: int = 20,  # Full training
+    num_epochs: int = 50,  # Increased to match Chemprop training (50 epochs)
     max_length: int = 512,
     test_size: float = 0.2,
     val_size: float = 0.1,
