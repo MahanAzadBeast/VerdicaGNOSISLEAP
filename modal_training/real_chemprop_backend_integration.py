@@ -281,5 +281,5 @@ async def health_check():
             "model_available": False,
             "error": str(e),
             "last_check": datetime.now().isoformat(),
-            "model_type": "real_trained_model"
+            "model_type": "pytorch_direct_chemprop"
         }
