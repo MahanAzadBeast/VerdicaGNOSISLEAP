@@ -93,3 +93,5 @@ frontend/node_modules/.cache/default-development/10.pack_
 frontend/node_modules/.cache/default-development/10.pack
 models/molbert_pretrained/molbert_pretrained.zip
 models/molbert_pretrained/molbert_100epochs/checkpoints/last.ckpt
+frontend/node_modules/.cache/default-development/1.pack_
+frontend/node_modules/.cache/default-development/0.pack_
