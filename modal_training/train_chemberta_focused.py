@@ -398,7 +398,7 @@ def train_focused_chemberta(
             logging_steps=50,
             eval_steps=eval_steps,
             save_steps=save_steps,
-            evaluation_strategy="steps",
+            eval_strategy="steps",  # Updated from evaluation_strategy
             save_strategy="steps",
             load_best_model_at_end=True,
             metric_for_best_model="eval_mean_r2",
