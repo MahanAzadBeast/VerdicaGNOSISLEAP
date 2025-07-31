@@ -160,7 +160,12 @@ const LigandActivityPredictor = () => {
       }
       
       if (chembertaResponse.status === 'fulfilled') {
-        status.chemberta = chembertaResponse.value.data.available || false;
+        const chembertaData = chembertaResponse.value.data;
+        status.chemberta = chembertaData.available || false;
+        console.log('ChemBERTa status check:', chembertaData.available, chembertaData);
+      } else {
+        console.log('ChemBERTa status check failed:', chembertaResponse.reason);
+        status.chemberta = false;
       }
 
       setModelStatus(status);
