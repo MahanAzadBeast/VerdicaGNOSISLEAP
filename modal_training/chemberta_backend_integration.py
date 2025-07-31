@@ -30,12 +30,13 @@ class ChemBERTaPredictionResponse(BaseModel):
 # Import Modal functions
 try:
     import modal
-    from chemberta_inference import app as chemberta_app, predict_chemberta_ic50, test_chemberta_inference
+    # Use the NEW 50-epoch ChemBERTa integration instead of old one
+    from chemberta_50epoch_integration import app as chemberta_app, predict_chemberta_50epoch, get_chemberta_50epoch_status
     CHEMBERTA_AVAILABLE = True
-    logger.info("✅ ChemBERTa inference integration loaded successfully")
+    logger.info("✅ ChemBERTa 50-epoch inference integration loaded successfully")
 except Exception as e:
     CHEMBERTA_AVAILABLE = False
-    logger.error(f"❌ ChemBERTa inference integration failed: {e}")
+    logger.error(f"❌ ChemBERTa 50-epoch inference integration failed: {e}")
     chemberta_app = None
 
 def validate_smiles(smiles: str) -> bool:
@@ -188,7 +189,7 @@ async def predict_chemberta_multi_target(request: ChemBERTaPredictionRequest):
     try:
         # Call Modal inference function
         with chemberta_app.run():
-            result = predict_chemberta_ic50.remote(request.smiles)
+            result = predict_chemberta_50epoch.remote(request.smiles)
         
         if result.get("status") == "success":
             logger.info("✅ ChemBERTa prediction completed successfully")
@@ -217,9 +218,9 @@ async def test_chemberta_inference_endpoint():
     logger.info("🧪 Running ChemBERTa inference test...")
     
     try:
-        # Call Modal test function
+        # Call Modal status function instead of test function
         with chemberta_app.run():
-            result = test_chemberta_inference.remote()
+            result = get_chemberta_50epoch_status.remote()
         
         return result
         
