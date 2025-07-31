@@ -11,6 +11,7 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
   const tabs = [
     { id: 'home', label: 'Home' },
     { id: 'predict', label: 'Predict Properties' },
+    { id: 'chemberta', label: 'ChemBERTa Multi-Task' },
     { id: 'analysis', label: 'Result Analysis' },
     { id: 'about', label: 'About' }
   ];
