@@ -799,7 +799,7 @@ const LigandActivityPredictor = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-gray-700 divide-y divide-gray-500">
-                    {predictions.results?.map((result, index) => (
+                    {Array.isArray(predictions.results) && predictions.results.map((result, index) => (
                       <tr key={index} className="hover:bg-gray-600">
                         <td className="px-4 py-3 text-sm font-medium text-white">
                           {propertyTypes.find(p => p.id === result.prediction_type)?.label || result.prediction_type}
