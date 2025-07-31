@@ -25,7 +25,7 @@ image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install([
         "torch>=2.0.0",
-        "chemprop>=1.7.0",
+        "chemprop>=2.2.0",  # Updated to latest version with new CLI
         "scikit-learn>=1.3.0",
         "pandas>=2.0.0",
         "numpy>=1.24.0",
