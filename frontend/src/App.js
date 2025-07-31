@@ -69,7 +69,7 @@ import Spline from '@splinetool/react-spline';
 // Home Tab Component
 const HomeTab = ({ setActiveTab }) => {
   const handleSplineClick = () => {
-    setActiveTab('predict');
+    setActiveTab('ai-modules');
   };
 
   return (
