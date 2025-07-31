@@ -169,35 +169,108 @@ const LigandActivityPredictor = () => {
     try {
       const promises = [];
 
-      // Run unified predictions if selected
-      if (selectedModel === 'unified' || selectedModel === 'enhanced-rdkit') {
+      // Handle Model Architecture Comparison
+      if (selectedModel === 'model-comparison') {
+        // Run both ChemBERTa and Chemprop for direct comparison
+        if (selectedProperties.includes('bioactivity_ic50') && modelStatus.chemberta) {
+          promises.push(
+            axios.post(`${API}/chemberta/predict`, {
+              smiles: smiles.trim()
+            }, { timeout: 120000 }).then(result => ({ type: 'chemberta', data: result.data }))
+          );
+        }
+        
+        // Try real Chemprop first, fallback to simulation
+        if (selectedProperties.includes('bioactivity_ic50')) {
+          promises.push(
+            axios.post(`${API}/chemprop-real/predict`, {
+              smiles: smiles.trim()
+            }, { timeout: 120000 })
+            .then(result => ({ type: 'chemprop-real', data: result.data }))
+            .catch(() => 
+              axios.post(`${API}/chemprop-multitask/predict`, {
+                smiles: smiles.trim(),
+                prediction_types: ['bioactivity_ic50']
+              }, { timeout: 60000 }).then(result => ({ type: 'chemprop-simulation', data: result.data }))
+            )
+          );
+        }
+      }
+      
+      // Handle individual model selections
+      else if (selectedModel === 'chemberta-multitask') {
+        if (selectedProperties.includes('bioactivity_ic50') && modelStatus.chemberta) {
+          promises.push(
+            axios.post(`${API}/chemberta/predict`, {
+              smiles: smiles.trim()
+            }, { timeout: 120000 }).then(result => ({ type: 'chemberta', data: result.data }))
+          );
+        }
+      }
+      
+      else if (selectedModel === 'chemprop-real') {
+        if (selectedProperties.includes('bioactivity_ic50')) {
+          promises.push(
+            axios.post(`${API}/chemprop-real/predict`, {
+              smiles: smiles.trim()
+            }, { timeout: 120000 }).then(result => ({ type: 'chemprop-real', data: result.data }))
+          );
+        }
+      }
+      
+      else if (selectedModel === 'chemprop-multitask') {
+        promises.push(
+          axios.post(`${API}/chemprop-multitask/predict`, {
+            smiles: smiles.trim(),
+            prediction_types: selectedProperties
+          }, { timeout: 60000 }).then(result => ({ type: 'chemprop-simulation', data: result.data }))
+        );
+      }
+      
+      else if (selectedModel === 'enhanced-rdkit') {
         promises.push(
           axios.post(`${API}/predict`, {
             smiles: smiles.trim(),
             prediction_types: selectedProperties,
             target: selectedTarget
-          }, { timeout: 60000 })
-        );
-      }
-
-      // Run ChemBERTa multi-task if available and selected
-      if ((selectedModel === 'unified' || selectedModel === 'chemberta-multitask') && 
-          selectedProperties.includes('bioactivity_ic50') && modelStatus.chemberta) {
-        promises.push(
-          axios.post(`${API}/chemberta/predict`, {
-            smiles: smiles.trim()
-          }, { timeout: 120000 })
+          }, { timeout: 60000 }).then(result => ({ type: 'enhanced-rdkit', data: result.data }))
         );
       }
 
       const results = await Promise.allSettled(promises);
-
-      // Process results
-      if (results[0]?.status === 'fulfilled') {
-        setPredictions(results[0].value.data);
+      
+      // Process results for comparison or single model view
+      const successfulResults = results.filter(r => r.status === 'fulfilled').map(r => r.value);
+      
+      if (successfulResults.length === 0) {
+        throw new Error('All prediction requests failed');
+      }
+      
+      // Handle comparison mode
+      if (selectedModel === 'model-comparison') {
+        const comparisonResults = {};
+        successfulResults.forEach(result => {
+          comparisonResults[result.type] = result.data;
+        });
+        setPredictions({ comparisonMode: true, results: comparisonResults });
+      }
+      // Handle single model mode
+      else {
+        const result = successfulResults[0];
+        if (result.type === 'chemberta') {
+          setChembertaPredictions(result.data);
+        } else {
+          setPredictions(result.data);
+        }
       }
 
-      if (results[1]?.status === 'fulfilled') {
+    } catch (error) {
+      console.error('Prediction error:', error);
+      setError(error.response?.data?.detail || error.message || 'Prediction failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
         setChembertaPredictions(results[1].value.data);
       }
 
