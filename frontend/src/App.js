@@ -765,6 +765,7 @@ const App = () => {
       
       {activeTab === 'home' && <HomeTab setActiveTab={setActiveTab} />}
       {activeTab === 'predict' && <PredictTab onAnalyze={handleAnalyze} />}
+      {activeTab === 'chemberta' && <ChemBERTaPredictor />}
       {activeTab === 'analysis' && <AnalysisTab analysisData={analysisData} />}
       {activeTab === 'about' && <AboutTab />}
     </div>
