@@ -63,14 +63,14 @@ async def get_modal_function(function_name: str):
             # Fallback to statistical system
             if function_name == "predict_oncoprotein_activity":
                 try:
-                    app = modal.App.lookup("chemprop-statistical-inference", create_if_missing=False)
-                    return getattr(app, "predict_with_statistical_models")
+                    app = modal.App.lookup("chemprop-simple-statistical", create_if_missing=False)
+                    return getattr(app, "predict_with_simple_statistical")
                 except:
                     pass
             elif function_name == "get_model_info":
                 try:
-                    app = modal.App.lookup("chemprop-statistical-inference", create_if_missing=False)
-                    return getattr(app, "get_statistical_model_info")
+                    app = modal.App.lookup("chemprop-simple-statistical", create_if_missing=False)
+                    return getattr(app, "get_simple_model_info")
                 except:
                     pass
         
