@@ -37,11 +37,14 @@ def test_chemprop_basic():
         import chemprop
         print("✅ Chemprop imported successfully")
         
-        # Create simple test data
+        # Create simple test data - Need more samples for splits to work
         test_data = {
-            'smiles': ['CCO', 'C', 'CC', 'CCC'],
-            'target1': [6.5, 5.2, 7.1, 6.8],
-            'target2': [7.2, 6.1, 6.9, 7.5]
+            'smiles': [
+                'CCO', 'C', 'CC', 'CCC', 'CCCC', 'CCCCC',  # Simple alkanes and ethanol
+                'C1=CC=CC=C1', 'CC(=O)O', 'CCN', 'CCC(=O)O'  # Benzene, acetic acid, ethylamine, etc
+            ],
+            'target1': [6.5, 5.2, 7.1, 6.8, 5.9, 6.3, 7.8, 5.5, 6.7, 7.2],
+            'target2': [7.2, 6.1, 6.9, 7.5, 6.8, 7.0, 8.1, 6.2, 7.1, 7.8]
         }
         
         df = pd.DataFrame(test_data)
