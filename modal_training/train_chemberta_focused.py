@@ -28,6 +28,7 @@ image = (
     .pip_install([
         "torch>=2.0.0",
         "transformers>=4.30.0", 
+        "accelerate>=0.26.0",  # Required for Trainer
         "datasets>=2.14.0",
         "scikit-learn>=1.3.0",
         "pandas>=2.0.0",
