@@ -8,9 +8,9 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-# Basic Modal image
+# Basic Modal image - Updated for v2.2.0
 image = modal.Image.debian_slim(python_version="3.11").pip_install([
-    "chemprop>=1.7.0",
+    "chemprop>=2.2.0",  # Updated to latest version
     "pandas>=2.0.0",
     "numpy>=1.24.0",
     "scikit-learn>=1.3.0",
