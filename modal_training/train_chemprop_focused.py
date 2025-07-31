@@ -280,7 +280,7 @@ def train_focused_chemprop(
         
         logger.info("🏋️ Starting Chemprop training...")
         
-        # Chemprop training command - Updated for v2.2.0 CLI with single data file
+        # Chemprop training command - Updated for v2.2.0 CLI with working configuration
         cmd = [
             'chemprop', 'train',
             '--data-path', str(data_paths['data']),  # Single data file
@@ -296,7 +296,8 @@ def train_focused_chemprop(
             '--dropout', str(dropout),
             '--ffn-num-layers', str(ffn_num_layers),
             '--num-workers', '4',
-            '--split-sizes', '0.8', '0.1', '0.1',  # Handle splits internally
+            '--split-sizes', '0.8', '0.1', '0.1',  # Handle splits internally with validation
+            '--patience', '20',  # Reasonable patience to avoid early stopping issues
             '--save-test-preds'
         ]
         
