@@ -382,7 +382,7 @@ backend:
     file: "/app/modal_training/real_chemprop_backend_integration.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: true
           agent: "testing"
@@ -393,6 +393,9 @@ backend:
         - working: true
           agent: "testing"
           comment: "🔍 PYTORCH DIRECT INTEGRATION TESTING COMPLETED: Tested the FIXED Chemprop system with new PyTorch direct integration as requested. ✅ REAL CHEMPROP ENDPOINTS: All 4 endpoints functional - /api/chemprop-real/status (proper error structure), /api/chemprop-real/health (model_type: real_trained_model), /api/chemprop-real/targets (503 when unavailable), /api/chemprop-real/predict (503 service unavailable). ✅ ASPIRIN & IMATINIB TESTING: Both molecules tested with Real Chemprop predict endpoint - returns proper 503 'Prediction service not available' indicating PyTorch direct system is not currently active but error handling is correct. ✅ CHEMBERTA FORMAT COMPARISON: ChemBERTa provides actual numerical IC50 values (aspirin: pIC50=4.03, IC50_nM=93195) with proper response format including pIC50, IC50_nM, activity fields that frontend expects. ✅ BACKEND INTEGRATION: Main /api/health correctly shows real_trained_chemprop: true and real_chemprop_available: true. ✅ PYTORCH DIRECT INDICATORS: No CLI error patterns detected, proper error handling suggests PyTorch direct integration is implemented but model not currently available. The system is ready for PyTorch direct predictions once the trained model is deployed."
+        - working: true
+          agent: "main"
+          comment: "MAJOR UPDATE - PYTORCH DIRECT SYSTEM INTEGRATED: Successfully replaced the statistical fallback with the working PyTorch direct Chemprop system. Key changes: 1) Updated get_modal_function() to prioritize the PyTorch direct system (chemprop-pytorch-direct app), 2) Modified model info responses to reflect PyTorch direct architecture, 3) Updated prediction flow to use predict_with_pytorch_direct function, 4) Enhanced health checks to show pytorch_direct_chemprop model type, 5) Deployed and verified PyTorch direct system generates realistic predictions for 10 oncoproteins. The system now uses the actual trained model foundation instead of pure statistical fallback."
 
   - task: "AI Modules Health Check Enhancement"
     implemented: true
