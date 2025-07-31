@@ -79,6 +79,9 @@ class RealChempropTester:
         except requests.exceptions.RequestException as e:
             self.log_test("Health Check Endpoint", False, f"Connection error: {str(e)}")
             return False
+        except Exception as e:
+            self.log_test("Health Check Endpoint", False, f"Unexpected error: {str(e)}")
+            return False
     
     def test_real_chemprop_endpoints(self):
         """Test 2: Real Chemprop endpoints: /api/chemprop-real/status, /api/chemprop-real/health, /api/chemprop-real/targets"""
