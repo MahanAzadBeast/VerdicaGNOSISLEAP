@@ -51,7 +51,7 @@ _cache_timestamp = None
 CACHE_DURATION = 300  # 5 minutes
 
 async def get_modal_function(function_name: str):
-    """Get Modal function reference with fallback to statistical system"""
+    """Get Modal function reference with enhanced PyTorch direct fallback"""
     try:
         import modal
         
@@ -60,15 +60,21 @@ async def get_modal_function(function_name: str):
             app = modal.App.lookup(MODAL_APP_NAME, create_if_missing=False)
             return getattr(app, function_name)
         except:
-            # Fallback to statistical system
+            # Enhanced fallback to PyTorch direct system
             if function_name == "predict_oncoprotein_activity":
                 try:
-                    app = modal.App.lookup("chemprop-simple-statistical", create_if_missing=False)
-                    return getattr(app, "predict_with_simple_statistical")
+                    app = modal.App.lookup("chemprop-pytorch-direct", create_if_missing=False)
+                    return getattr(app, "predict_with_pytorch_direct")
                 except:
-                    pass
+                    # Final fallback to simple statistical
+                    try:
+                        app = modal.App.lookup("chemprop-simple-statistical", create_if_missing=False)
+                        return getattr(app, "predict_with_simple_statistical")
+                    except:
+                        pass
             elif function_name == "get_model_info":
                 try:
+                    # Use simple statistical model info as it's most reliable
                     app = modal.App.lookup("chemprop-simple-statistical", create_if_missing=False)
                     return getattr(app, "get_simple_model_info")
                 except:
