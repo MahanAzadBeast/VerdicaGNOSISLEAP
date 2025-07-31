@@ -112,9 +112,11 @@ def load_trained_chemberta_model():
         # Load tokenizer
         tokenizer = AutoTokenizer.from_pretrained("seyonec/ChemBERTa-zinc-base-v1")
         
-        # Find the trained model
+        # Model path - use the 50-epoch trained model
         model_base_path = Path("/vol/models")
         model_paths = [
+            model_base_path / "focused_chemberta_default" / "final_model",  # 50-epoch model
+            model_base_path / "focused_chemberta_default",
             model_base_path / "focused_chemberta_focused-production-accelerate-20241231" / "final_model",
             model_base_path / "focused_chemberta_focused-production-accelerate-20241231",
             model_base_path / "chemberta_focused" / "final_model",
