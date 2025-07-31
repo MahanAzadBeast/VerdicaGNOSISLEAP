@@ -11,7 +11,7 @@ import asyncio
 from datetime import datetime
 
 # Create router for ChemBERTa endpoints
-chemberta_router = APIRouter(prefix="/api/chemberta", tags=["ChemBERTa Multi-Task"])
+chemberta_router = APIRouter(prefix="/chemberta", tags=["ChemBERTa Multi-Task"])
 
 # Set up logging
 logger = logging.getLogger(__name__)
