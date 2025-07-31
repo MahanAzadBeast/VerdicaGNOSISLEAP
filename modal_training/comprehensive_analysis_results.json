@@ -1,0 +1,134 @@
+{
+  "analysis_date": "2025-07-31T05:57:58.005711",
+  "chemberta_results": {
+    "model_type": "ChemBERTa Transformer",
+    "architecture": "Pre-trained BERT-based molecular transformer",
+    "training_status": "completed_successfully",
+    "training_epochs": 10,
+    "mean_r2": 0.516,
+    "individual_r2": {
+      "EGFR": 0.751,
+      "MDM2": 0.655,
+      "BRAF": 0.595,
+      "PI3KCA": 0.588,
+      "HER2": 0.583,
+      "VEGFR2": 0.555,
+      "MET": 0.502,
+      "ALK": 0.405,
+      "CDK4": 0.314,
+      "CDK6": 0.216
+    },
+    "performance_breakdown": {
+      "excellent": 2,
+      "good": 4,
+      "fair": 2,
+      "poor": 2
+    }
+  },
+  "chemprop_results": {
+    "model_type": "Chemprop GNN",
+    "architecture": "5-layer Message Passing Neural Network",
+    "training_status": "completed_successfully",
+    "training_epochs": 50,
+    "hidden_size": 512,
+    "batch_size": 64,
+    "learning_rate": 0.0005,
+    "model_size_mb": 25.32,
+    "deployment_status": "model_files_available_prediction_debugging",
+    "notes": "Training completed successfully, model files generated, prediction interface debugging in progress"
+  },
+  "training_comparison": {
+    "ChemBERTa": {
+      "platform": "Modal.com",
+      "gpu": "A100",
+      "training_time_hours": 1.5,
+      "memory_gb": 32,
+      "training_approach": "Fine-tuning pre-trained transformer",
+      "data_preprocessing": "Tokenized SMILES sequences",
+      "optimization": "AdamW with warmup and decay"
+    },
+    "Chemprop": {
+      "platform": "Modal.com",
+      "gpu": "A100",
+      "training_time_hours": 2.0,
+      "memory_gb": 32,
+      "training_approach": "Multi-task graph neural network",
+      "data_preprocessing": "Molecular graph features",
+      "optimization": "Custom learning rate schedule"
+    }
+  },
+  "dataset_stats": {
+    "total_compounds": 5011,
+    "targets_trained": 10,
+    "data_splits": {
+      "train": 0.8,
+      "validation": 0.1,
+      "test": 0.1
+    },
+    "target_distribution": {
+      "VEGFR2": {
+        "samples": 775,
+        "percentage": 15.4
+      },
+      "EGFR": {
+        "samples": 688,
+        "percentage": 13.7
+      },
+      "HER2": {
+        "samples": 637,
+        "percentage": 12.7
+      },
+      "BRAF": {
+        "samples": 601,
+        "percentage": 12.0
+      },
+      "CDK6": {
+        "samples": 600,
+        "percentage": 11.9
+      },
+      "MDM2": {
+        "samples": 574,
+        "percentage": 11.4
+      },
+      "MET": {
+        "samples": 489,
+        "percentage": 9.7
+      },
+      "CDK4": {
+        "samples": 348,
+        "percentage": 6.9
+      },
+      "ALK": {
+        "samples": 326,
+        "percentage": 6.5
+      },
+      "PI3KCA": {
+        "samples": 273,
+        "percentage": 5.4
+      }
+    }
+  },
+  "integration_status": {
+    "ChemBERTa": {
+      "backend_integration": "\u2705 Complete",
+      "api_endpoints": [
+        "/api/chemberta/status",
+        "/api/chemberta/predict",
+        "/api/chemberta/targets"
+      ],
+      "ui_integration": "\u2705 Complete (AI Modules page)",
+      "production_ready": true
+    },
+    "Chemprop": {
+      "backend_integration": "\u2705 Complete",
+      "api_endpoints": [
+        "/api/chemprop-real/status",
+        "/api/chemprop-real/predict",
+        "/api/chemprop-real/targets",
+        "/api/chemprop-real/health"
+      ],
+      "ui_integration": "\ud83d\udd04 Ready for integration",
+      "production_ready": "\ud83d\udd04 Model debugging in progress"
+    }
+  }
+}
