@@ -297,8 +297,7 @@ def train_focused_chemprop(
             '--ffn-num-layers', str(ffn_num_layers),
             '--num-workers', '4',
             '--split-sizes', '0.8', '0.1', '0.1',  # Handle splits internally with validation
-            '--patience', '20',  # Reasonable patience to avoid early stopping issues
-            '--save-test-preds'
+            '--patience', '20'  # Reasonable patience to avoid early stopping issues
         ]
         
         # Log training config
