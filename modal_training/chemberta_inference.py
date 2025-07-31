@@ -126,7 +126,7 @@ def load_trained_chemberta_model():
         for path in model_paths:
             if path.exists():
                 model_path = path
-                print(f"   ✅ Found model at: {model_path}")
+                print(f"   ✅ Found 50-epoch trained model at: {model_path}")
                 break
         
         if not model_path:
