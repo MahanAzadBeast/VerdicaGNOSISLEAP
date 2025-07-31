@@ -307,8 +307,7 @@ def train_focused_chemprop(
             '--dropout', str(dropout),
             '--ffn-num-layers', str(ffn_num_layers),
             '--num-workers', '4',
-            '--save-test-preds',  # Changed from --save-preds
-            '--quiet'
+            '--save-test-preds'  # Changed from --save-preds, removed --quiet
         ]
         
         # Log training config
