@@ -6,8 +6,8 @@ const API = `${BACKEND_URL}/api`;
 
 const LigandActivityPredictor = () => {
   const [smiles, setSmiles] = useState('');
-  const [selectedModel, setSelectedModel] = useState('unified');
-  const [selectedProperties, setSelectedProperties] = useState(['bioactivity_ic50', 'toxicity']);
+  const [selectedModel, setSelectedModel] = useState('model-comparison'); // Default to comparison mode
+  const [selectedProperties, setSelectedProperties] = useState(['bioactivity_ic50']);
   const [selectedTarget, setSelectedTarget] = useState('EGFR');
   const [predictions, setPredictions] = useState(null);
   const [chembertaPredictions, setChembertaPredictions] = useState(null);
