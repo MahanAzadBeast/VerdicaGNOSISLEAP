@@ -328,6 +328,54 @@ backend:
           agent: "testing"
           comment: "Fixed ObjectId serialization by converting to string. History endpoint retrieving records successfully, specific prediction retrieval working."
 
+  - task: "ChemBERTa Multi-Task Model Integration"
+    implemented: true
+    working: true
+    file: "/app/modal_training/chemberta_backend_integration.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "ChemBERTa Multi-Task integration fully working. /api/chemberta/status shows available with model info (10 trained targets, mean R²: 0.516). /api/chemberta/predict successfully returns IC50 predictions for all 10 oncoproteins (EGFR, HER2, VEGFR2, BRAF, MET, CDK4, CDK6, ALK, MDM2, PI3KCA) with confidence scores and activity classifications. /api/chemberta/targets provides detailed performance metrics including R² scores. Tested with both aspirin and imatinib molecules as specified."
+
+  - task: "Chemprop Multi-Task Model Integration"
+    implemented: true
+    working: true
+    file: "/app/modal_training/chemprop_multitask_integration.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "Chemprop Multi-Task integration fully working. /api/chemprop-multitask/status shows available with model info (4 prediction types, MPNN architecture). /api/chemprop-multitask/predict successfully returns predictions with confidence scores for all 4 properties (bioactivity_ic50, toxicity, logP, solubility). /api/chemprop-multitask/properties provides detailed property information including units and ranges. Tested with both aspirin and imatinib molecules as specified."
+
+  - task: "Ligand Activity Predictor Module Integration"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "Ligand Activity Predictor Module fully integrated. All three AI models (ChemBERTa, Chemprop Multi-Task, Enhanced RDKit) are accessible through unified /api/predict endpoint. Enhanced models used flag shows true in summary. ChemBERTa predictions via molbert_prediction field, Chemprop via chemprop_prediction field, Enhanced RDKit via enhanced_chemprop_prediction field. Comprehensive property prediction (IC50, toxicity, LogP, solubility) works across all models. Integration successfully tested with aspirin and imatinib."
+
+  - task: "AI Modules Health Check Enhancement"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "AI Modules health check enhanced and working. /api/health endpoint shows status: healthy, all models loaded (molbert: true, chemprop_simulation: true, real_ml_models: true, oncoprotein_chemberta: true), enhanced_predictions: true, all 4 prediction types available, all 6 targets available. Health check properly reports the comprehensive AI Modules system status."
+
 frontend:
   # No frontend testing performed as per instructions
   - task: "Interactive Bar Charts"
