@@ -612,10 +612,7 @@ const LigandActivityPredictor = () => {
                         <span className="font-medium text-blue-200">{target}</span>
                         <div className="text-right">
                           <div className="text-blue-100 font-semibold">
-                            pIC50: {data.pic50?.toFixed(3) || 'N/A'}
-                          </div>
-                          <div className="text-xs text-blue-300">
-                            IC50: {data.ic50_nm ? `${data.ic50_nm.toFixed(1)} nM` : 'N/A'}
+                            IC50: {data.ic50_nm ? `${(data.ic50_nm / 1000).toFixed(3)} μM` : 'N/A'}
                           </div>
                           <div className="text-xs text-blue-400">
                             {data.activity_class || data.activity || 'Unknown'}
