@@ -289,7 +289,7 @@ def train_focused_chemprop(
         
         logger.info("🏋️ Starting Chemprop training...")
         
-        # Chemprop training command - Updated for v2.2.0 CLI
+        # Chemprop training command - Updated for v2.2.0 CLI with correct arguments
         cmd = [
             'chemprop', 'train',
             '--data-path', str(data_paths['train']),
@@ -302,12 +302,12 @@ def train_focused_chemprop(
             '--init-lr', str(learning_rate),
             '--max-lr', str(learning_rate * 10),
             '--final-lr', str(learning_rate * 0.1),
-            '--hidden-size', str(hidden_size),
+            '--message-hidden-dim', str(hidden_size),  # Changed from --hidden-size
             '--depth', str(depth),
             '--dropout', str(dropout),
             '--ffn-num-layers', str(ffn_num_layers),
             '--num-workers', '4',
-            '--save-test-preds',
+            '--save-test-preds',  # Changed from --save-preds
             '--quiet'
         ]
         
