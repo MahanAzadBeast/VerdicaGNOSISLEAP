@@ -289,25 +289,25 @@ def train_focused_chemprop(
         
         logger.info("🏋️ Starting Chemprop training...")
         
-        # Chemprop training command
+        # Chemprop training command - Updated for v2.2.0 CLI
         cmd = [
-            'python', '-m', 'chemprop.train',
-            '--data_path', str(data_paths['train']),
-            '--separate_val_path', str(data_paths['val']),
-            '--separate_test_path', str(data_paths['test']),
-            '--dataset_type', 'regression',
-            '--save_dir', str(output_dir),
+            'chemprop', 'train',
+            '--data-path', str(data_paths['train']),
+            '--val-data-path', str(data_paths['val']),
+            '--test-data-path', str(data_paths['test']),
+            '--task-type', 'regression',
+            '--save-dir', str(output_dir),
             '--epochs', str(epochs),
-            '--batch_size', str(batch_size),
-            '--init_lr', str(learning_rate),
-            '--max_lr', str(learning_rate * 10),
-            '--final_lr', str(learning_rate * 0.1),
-            '--hidden_size', str(hidden_size),
+            '--batch-size', str(batch_size),
+            '--init-lr', str(learning_rate),
+            '--max-lr', str(learning_rate * 10),
+            '--final-lr', str(learning_rate * 0.1),
+            '--hidden-size', str(hidden_size),
             '--depth', str(depth),
             '--dropout', str(dropout),
-            '--ffn_num_layers', str(ffn_num_layers),
-            '--num_workers', '4',
-            '--save_preds',
+            '--ffn-num-layers', str(ffn_num_layers),
+            '--num-workers', '4',
+            '--save-test-preds',
             '--quiet'
         ]
         
