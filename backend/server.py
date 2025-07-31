@@ -582,11 +582,12 @@ async def predict_molecular_properties(input_data: SMILESInput):
     # Load MolBERT if not already loaded
     await load_molbert_model()
     
+    # Get RDKit baseline properties once
+    rdkit_props = calculate_rdkit_properties(input_data.smiles)
+    
     results = []
     
     for prediction_type in input_data.prediction_types:
-        # Get RDKit baseline properties
-        rdkit_props = calculate_rdkit_properties(input_data.smiles)
         
         # Initialize result
         result = PredictionResult(
