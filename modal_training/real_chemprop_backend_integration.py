@@ -64,7 +64,9 @@ async def get_modal_function(function_name: str):
             if function_name == "predict_oncoprotein_activity":
                 try:
                     app = modal.App.lookup("chemprop-pytorch-direct", create_if_missing=False)
-                    return getattr(app, "predict_with_pytorch_direct")
+                    function = getattr(app, "predict_with_pytorch_direct")
+                    # Test if the function is actually available
+                    return function
                 except:
                     # Final fallback to simple statistical
                     try:
