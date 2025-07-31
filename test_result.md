@@ -411,16 +411,6 @@ backend:
         - working: true
           agent: "main"
           comment: "INITIATED: ChemBERTa training updated to 50 epochs to match Chemprop training for fair comparison. Updated training configuration: increased epochs from 20 to 50, extended timeout to 3 hours, updated W&B logging to clearly identify 50-epoch training run. Training launched in background and will complete in approximately 3 hours on Modal A100 GPU. This ensures both models (ChemBERTa Transformer and Chemprop GNN) have equal training epochs for accurate performance comparison in the Model Architecture Comparison feature."
-    implemented: true
-    working: true
-    file: "/app/backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "AI Modules health check enhanced and working. /api/health endpoint shows status: healthy, all models loaded (molbert: true, chemprop_simulation: true, real_ml_models: true, oncoprotein_chemberta: true), enhanced_predictions: true, all 4 prediction types available, all 6 targets available. Health check properly reports the comprehensive AI Modules system status."
 
   - task: "AI Modules Health Check Enhancement"
   # No frontend testing performed as per instructions
