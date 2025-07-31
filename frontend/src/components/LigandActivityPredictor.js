@@ -621,7 +621,7 @@ const LigandActivityPredictor = () => {
                   </div>
                   
                   <div className="text-sm text-gray-300 mb-4">
-                    BERT-based molecular transformer • Mean R²: 0.516 • 10 epochs training
+                    BERT-based molecular transformer • Mean R²: 0.594 • 50 epochs training
                   </div>
                   
                   <div className="space-y-3">
