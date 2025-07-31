@@ -278,7 +278,7 @@ const LigandActivityPredictor = () => {
       }
       // Handle single model mode
       else {
-        const result = successfulResults[0];
+        const result = processedResults[0];
         if (result.type === 'chemberta') {
           setChembertaPredictions(result.data);
         } else {
