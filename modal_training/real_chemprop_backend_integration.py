@@ -260,10 +260,11 @@ async def health_check():
             return {
                 "status": "healthy",
                 "model_available": True,
-                "model_name": model_info.get("model_name"),
+                "model_name": "PyTorch Direct Chemprop",
                 "targets_count": len(model_info.get("targets", [])),
                 "last_check": datetime.now().isoformat(),
-                "model_type": "real_trained_model"
+                "model_type": "pytorch_direct_chemprop",
+                "system": "PyTorch direct inference"
             }
         else:
             return {
