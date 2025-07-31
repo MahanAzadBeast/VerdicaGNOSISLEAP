@@ -271,28 +271,6 @@ const LigandActivityPredictor = () => {
       setIsLoading(false);
     }
   };
-        setChembertaPredictions(results[1].value.data);
-      }
-
-      if (results.every(r => r.status === 'rejected')) {
-        throw new Error('All prediction models failed');
-      }
-
-    } catch (error) {
-      console.error('Prediction error:', error);
-      
-      let errorMessage = 'Prediction failed. Please try again.';
-      if (error.code === 'ECONNABORTED') {
-        errorMessage = 'Prediction timed out. Models may be busy. Please try again.';
-      } else if (error.response?.data?.detail) {
-        errorMessage = error.response.data.detail;
-      }
-      
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleExampleClick = (exampleSmiles) => {
     setSmiles(exampleSmiles);
