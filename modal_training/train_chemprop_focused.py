@@ -65,7 +65,7 @@ EXCLUDED_TARGETS = [
 ]
 
 def prepare_chemprop_data(df: pd.DataFrame, output_dir: Path) -> Dict[str, Path]:
-    """Prepare data in Chemprop format (CSV files)"""
+    """Prepare data in Chemprop format (Single CSV file with all data)"""
     
     # Filter to focused targets only
     focused_df = df[['canonical_smiles'] + FOCUSED_TARGETS].copy()
@@ -73,30 +73,17 @@ def prepare_chemprop_data(df: pd.DataFrame, output_dir: Path) -> Dict[str, Path]
     # Remove rows where ALL targets are NaN
     focused_df = focused_df.dropna(subset=['canonical_smiles'])
     
-    # Data split (same as ChemBERTa)
-    from sklearn.model_selection import train_test_split
-    
-    train_df, temp_df = train_test_split(focused_df, test_size=0.3, random_state=42)
-    val_df, test_df = train_test_split(temp_df, test_size=0.67, random_state=42)  # 20% test, 10% val
-    
-    print(f"   📊 Data split - Train: {len(train_df)}, Val: {len(val_df)}, Test: {len(test_df)}")
+    print(f"   📊 Total data: {len(focused_df)} samples")
     
     # Create output directory
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Save splits
-    train_path = output_dir / "train.csv"
-    val_path = output_dir / "val.csv"
-    test_path = output_dir / "test.csv"
-    
-    train_df.to_csv(train_path, index=False)
-    val_df.to_csv(val_path, index=False)
-    test_df.to_csv(test_path, index=False)
+    # Save all data in one file - Chemprop v2.2.0 handles splits internally
+    data_path = output_dir / "all_data.csv"
+    focused_df.to_csv(data_path, index=False)
     
     return {
-        'train': train_path,
-        'val': val_path,
-        'test': test_path
+        'data': data_path  # Changed from train/val/test to single data file
     }
 
 class ChempropWandbLogger:
