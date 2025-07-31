@@ -196,11 +196,24 @@ const LigandActivityPredictor = () => {
       // Handle Model Architecture Comparison
       if (selectedModel === 'model-comparison') {
         // Run both ChemBERTa and Chemprop for direct comparison
-        if (selectedProperties.includes('bioactivity_ic50') && modelStatus.chemberta) {
+        if (selectedProperties.includes('bioactivity_ic50')) {
+          // Always include ChemBERTa in comparison mode (it's working)
           promises.push(
             axios.post(`${API}/chemberta/predict`, {
               smiles: smiles.trim()
-            }, { timeout: 120000 }).then(result => ({ type: 'chemberta', data: result.data }))
+            }, { timeout: 120000 })
+            .then(result => ({ type: 'chemberta', data: result.data }))
+            .catch(error => {
+              console.error('ChemBERTa prediction failed:', error);
+              return { 
+                type: 'chemberta', 
+                data: { 
+                  status: 'error', 
+                  message: 'ChemBERTa prediction failed',
+                  error: error.message 
+                }
+              };
+            })
           );
         }
         
