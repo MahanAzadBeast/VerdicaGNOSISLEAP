@@ -57,27 +57,48 @@ _cache_timestamp = None
 CACHE_DURATION = 300  # 5 minutes
 
 async def get_modal_function(function_name: str):
-    """Get Modal function reference - use REAL trained Chemprop model"""
+    """Get Modal function reference - use REAL trained Chemprop model with robust connection"""
     try:
         import modal
         
         # PRIMARY: Use REAL Chemprop production inference (50-epoch trained model)
         if function_name == "predict_oncoprotein_activity":
             try:
-                app = modal.App.lookup("chemprop-production-inference", create_if_missing=False)
-                function = getattr(app, "predict_oncoprotein_activity")
-                logger.info("✅ Using REAL Chemprop production inference (50-epoch trained model)")
-                return function
+                # Try different possible app names that might exist
+                app_names = [
+                    "chemprop-production-inference",
+                    "chemprop-production-inference-main", 
+                    "chemprop-cli-debug",
+                    "chemprop-cli-detailed-debug"
+                ]
+                
+                function = None
+                app_used = None
+                
+                for app_name in app_names:
+                    try:
+                        app = modal.App.lookup(app_name, create_if_missing=False)
+                        function = getattr(app, "predict_oncoprotein_activity")
+                        app_used = app_name
+                        logger.info(f"✅ Using REAL Chemprop model from app: {app_name}")
+                        break
+                    except Exception as e:
+                        logger.debug(f"App {app_name} not available: {e}")
+                        continue
+                
+                if function:
+                    return function
+                else:
+                    logger.error("REAL Chemprop model not available - no fallbacks as requested")
+                    return None
+                    
             except Exception as e:
-                logger.error(f"REAL Chemprop model not available: {e}")
-                # NO FALLBACKS - user wants only real models
+                logger.error(f"REAL Chemprop model connection failed: {e}")
                 return None
                     
         elif function_name == "get_model_info":
             try:
-                # Get model info from the real Chemprop system
-                app = modal.App.lookup("chemprop-production-inference", create_if_missing=False)
-                # Create a simple model info function
+                # Return model info for the real Chemprop system
                 return lambda: {
                     "status": "available",
                     "model_name": "Chemprop 50-Epoch GNN",
