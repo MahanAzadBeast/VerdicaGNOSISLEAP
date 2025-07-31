@@ -126,10 +126,10 @@ backend:
   - task: "Chemprop CLI Compatibility Fix"
     implemented: true
     working: true
-    file: "/app/modal_training/train_chemprop.py"
+    file: "/app/modal_training/train_chemprop_focused.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: false
           agent: "user"
@@ -140,6 +140,12 @@ backend:
         - working: true
           agent: "testing"
           comment: "VERIFIED: Chemprop CLI compatibility fix working correctly. Uses new CLI format 'python -m chemprop.train' and 'python -m chemprop.predict'. Avoids old CLI commands. Command structure includes proper arguments (data_path, save_dir, epochs). Both training and prediction CLI fixes implemented successfully."
+        - working: false
+          agent: "main"
+          comment: "UPDATED ISSUE: Chemprop 2.2.0 has newer CLI changes. Changed from 'python -m chemprop.train' to 'chemprop train' format. Updated arguments: --hidden-size to --message-hidden-dim, removed --quiet, uses single --data-path with internal splits via --split-sizes, added --patience for early stopping control."
+        - working: true
+          agent: "main"
+          comment: "FIXED: Successfully updated Chemprop training for v2.2.0. New CLI format: 'chemprop train', correct arguments: --message-hidden-dim, --split-sizes '0.8 0.1 0.1', --patience 20. Tested basic functionality on Modal - simple training run completed successfully with new argument structure."
   
   - task: "Enhanced W&B Logging for ChemBERTa"
     implemented: true
