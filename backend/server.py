@@ -40,7 +40,7 @@ try:
     import sys
     sys.path.append('/app/modal_training')
     from chemberta_backend_integration import chemberta_router
-    app.include_router(chemberta_router)
+    api_router.include_router(chemberta_router)
     logging.info("✅ ChemBERTa multi-task router added successfully")
     CHEMBERTA_AVAILABLE = True
 except Exception as e:
