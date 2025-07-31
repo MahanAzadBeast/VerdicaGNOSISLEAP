@@ -208,19 +208,23 @@ const LigandActivityPredictor = () => {
             .then(result => ({ type: 'chemprop-real', data: result.data }))
             .catch(error => {
               console.log('Real Chemprop failed:', error.response?.status);
-              // If real model unavailable (503), create mock successful prediction using PyTorch direct
+              // If real model unavailable (503), show as unavailable but keep in comparison
               if (error.response?.status === 503) {
                 return {
                   type: 'chemprop-real', 
                   data: { 
-                    status: 'success', 
-                    message: 'Using PyTorch Direct Enhanced System',
-                    predictions: generatePyTorchDirectPredictions(smiles.trim()),
-                    model_info: { model_used: 'PyTorch Direct Enhanced System' }
+                    status: 'unavailable', 
+                    message: 'Chemprop 50-epoch model deployment in progress',
+                    model_info: { 
+                      model_used: 'Chemprop 50-Epoch GNN',
+                      training_epochs: 50,
+                      architecture: '5-layer Message Passing Neural Network',
+                      note: 'Real trained model - connection in progress'
+                    }
                   }
                 };
               }
-              // Try simulation fallback
+              // For other errors, try simulation fallback
               return axios.post(`${API}/chemprop-multitask/predict`, {
                 smiles: smiles.trim(),
                 prediction_types: ['bioactivity_ic50']
@@ -229,7 +233,7 @@ const LigandActivityPredictor = () => {
                 type: 'chemprop-real', 
                 data: { 
                   status: 'error', 
-                  message: 'All Chemprop models temporarily unavailable'
+                  message: 'Chemprop models temporarily unavailable'
                 }
               }));
             })
