@@ -319,9 +319,12 @@ def predict_chemberta_ic50(smiles: str):
             "target_info": target_info,
             "summary": summary,
             "model_info": {
-                "model_type": "ChemBERTa Multi-Task",
+                "model_type": "ChemBERTa Multi-Task 50-Epoch",
                 "trained_targets": TRAINED_TARGETS,
-                "training_r2_mean": 0.516
+                "training_r2_mean": 0.594,  # Updated for 50-epoch performance
+                "training_epochs": 50,
+                "wandb_run_id": "6v1be0pf",
+                "improvement": "15% better than previous versions"
             }
         }
         
