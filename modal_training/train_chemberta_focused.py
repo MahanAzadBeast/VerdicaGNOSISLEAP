@@ -293,9 +293,9 @@ def train_focused_chemberta(
     # Initialize W&B
     wandb.init(
         project="veridica-ai-focused-training",
-        name=run_name or f"focused-chemberta-{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+        name=run_name or f"chemberta-50epochs-{datetime.now().strftime('%Y%m%d_%H%M%S')}",
         config={
-            "model": "ChemBERTa-focused",
+            "model": "ChemBERTa-focused-50epochs",
             "targets": FOCUSED_TARGETS,
             "excluded_targets": EXCLUDED_TARGETS,
             "num_targets": len(FOCUSED_TARGETS),
@@ -303,7 +303,9 @@ def train_focused_chemberta(
             "learning_rate": learning_rate,
             "num_epochs": num_epochs,
             "max_length": max_length,
-            "dropout": dropout
+            "dropout": dropout,
+            "comparison_model": "Chemprop-50epochs",
+            "training_purpose": "Equal epoch comparison with Chemprop GNN"
         }
     )
     
