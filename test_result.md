@@ -149,6 +149,9 @@ backend:
         - working: true
           agent: "testing"
           comment: "RETESTED: Backend API functionality verified after Chemprop CLI updates. All existing endpoints working correctly: /api/health shows all models loaded, ChemBERTa Multi-Task endpoints (/api/chemberta/status, /api/chemberta/predict, /api/chemberta/targets) fully functional with 10 trained targets, Chemprop Multi-Task endpoints (/api/chemprop-multitask/status, /api/chemprop-multitask/predict, /api/chemprop-multitask/properties) working with 4 prediction types, main /api/predict endpoint working with aspirin and imatinib molecules, database /api/history endpoint retrieving records properly. Fixed UnboundLocalError in predict endpoint. Success rate: 95.8% (23/24 tests passed). The Chemprop CLI fixes do not affect existing backend functionality as expected."
+        - working: true
+          agent: "main"
+          comment: "COMPREHENSIVE TRAINING COMPLETED: Successfully launched and completed comprehensive Chemprop multi-task training on 10 oncoproteins. Training ran for 50 epochs with enhanced configuration (512 hidden size, 5-layer MPNN, batch size 64). Training completed without CLI errors and generated model files. W&B run ID: 88yupn3x. Model saved to Modal volume. Pipeline fully operational for production use."
   
   - task: "Enhanced W&B Logging for ChemBERTa"
     implemented: true
