@@ -43,7 +43,7 @@ async def deploy_modal_training(request: ModalDeploymentRequest):
         from modal_training.modal_api_deployment import deploy_with_credentials
         
         # Set webhook URL to this app's progress endpoint
-        webhook_url = f"{os.environ.get('BACKEND_URL', 'https://e95b6e37-a9c1-4933-8e16-bb4ded5721b4.preview.emergentagent.com')}/api/gpu/training-progress"
+        webhook_url = f"{os.environ.get('BACKEND_URL', 'https://f0bcfc77-429e-4b91-b237-a16bb3b9633f.preview.emergentagent.com')}/api/gpu/training-progress"
         
         # Deploy to Modal
         result = deploy_with_credentials(
