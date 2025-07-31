@@ -66,7 +66,8 @@ def test_chemprop_basic():
             '--message-hidden-dim', '32',  # Changed from --hidden-size
             '--depth', '2',
             '--num-workers', '0',
-            '--tracking-metric', 'mse',  # Use mse instead of val_loss
+            '--split-sizes', '0.6', '0.2', '0.2',  # Ensure validation set exists
+            '--patience', '100',  # High patience to avoid early stopping
             '--save-dir', str(temp_dir / "model")
         ]
         
