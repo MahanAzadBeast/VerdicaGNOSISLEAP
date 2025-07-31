@@ -756,8 +756,8 @@ const LigandActivityPredictor = () => {
             </div>
           )}
 
-          {/* Unified Model Results */}
-          {predictions && (
+          {/* Single Model Results */}
+          {predictions && !predictions.comparisonMode && (
             <div className="bg-gray-700 border border-gray-600 rounded-xl p-6">
               <h3 className="text-xl font-bold mb-4 text-white flex items-center">
                 <span className="text-2xl mr-2">🔬</span>
