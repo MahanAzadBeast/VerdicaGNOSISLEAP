@@ -763,8 +763,7 @@ const App = () => {
       <Navigation activeTab={activeTab} setActiveTab={setActiveTab} health={health} />
       
       {activeTab === 'home' && <HomeTab setActiveTab={setActiveTab} />}
-      {activeTab === 'predict' && <PredictTab onAnalyze={handleAnalyze} />}
-      {activeTab === 'chemberta' && <ChemBERTaPredictor />}
+      {activeTab === 'ai-modules' && <AIModulesPage />}
       {activeTab === 'analysis' && <AnalysisTab analysisData={analysisData} />}
       {activeTab === 'about' && <AboutTab />}
     </div>
