@@ -31,12 +31,15 @@ app = modal.App("gdsc-cancer-extractor")
 # Persistent volume for datasets
 datasets_volume = modal.Volume.from_name("expanded-datasets", create_if_missing=True)
 
-# GDSC bulk download URLs (these may need to be updated based on current GDSC structure)
+# GDSC bulk download URLs (updated for 2025)
 GDSC_URLS = {
-    'drug_sensitivity': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.4/GDSC2_fitted_dose_response_24Jul22.xlsx',
-    'compound_info': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.4/screened_compunds_rel_8.4.csv',
-    'cell_line_info': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.4/Cell_Lines_Details.xlsx',
-    'genomics': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.4/WES_variants.xlsx'
+    'drug_sensitivity': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.5/GDSC2_fitted_dose_response_24Jul22.xlsx',
+    'gdsc1_sensitivity': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.5/GDSC1_fitted_dose_response_24Jul22.xlsx',
+    'compound_info': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.5/screened_compunds_rel_8.5.csv',
+    'cell_line_info': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.5/Cell_Lines_Details.xlsx',
+    'genomics': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.5/WES_variants.xlsx',
+    'expression': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.5/Cell_line_RMA_proc_basalExp.txt.zip',
+    'cnv': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.5/PANCANCER_Genetic_feature_cna.csv'
 }
 
 # Cancer types of interest for oncology focus
