@@ -77,6 +77,17 @@ except Exception as e:
     logging.warning(f"⚠️ Enhanced Modal MolBERT integration not available: {e}")
     ENHANCED_MODAL_AVAILABLE = False
 
+# Import Expanded Multi-Source Models
+try:
+    sys.path.append('/app/modal_training')
+    from expanded_backend_integration import expanded_router
+    app.include_router(expanded_router, tags=["Expanded Multi-Source Models"])
+    logging.info("✅ Expanded multi-source models integration loaded")
+    EXPANDED_MODELS_AVAILABLE = True
+except Exception as e:
+    logging.warning(f"⚠️ Expanded models integration not available: {e}")
+    EXPANDED_MODELS_AVAILABLE = False
+
 # Multi-Task ChemBERTa Oncoprotein integration disabled
 ONCOPROTEIN_CHEMBERTA_AVAILABLE = False
 
