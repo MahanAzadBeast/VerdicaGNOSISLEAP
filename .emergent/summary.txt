@@ -1,9 +1,15 @@
 <analysis>
-The previous AI engineer developed the Veridica AI platform, evolving it from initial ChemBERTa training and UI integration to a robust multi-model prediction system. Significant effort was spent resolving critical issues like Chemprop CLI version changes, model file format mismatches, and a massive variance in ChemBERTa/Chemprop predictions due to pIC50 scale differences, fixed via linear calibration. The work then pivoted to expanding the prediction models' training data by integrating multiple bioactivity sources and setting up a comprehensive multi-stage training pipeline for ChemBERTa and Chemprop. This pipeline faced initial deployment and data integrity issues (e.g.,  due to DataFrame column mismatch) which were debugged and fixed. Most recently, the strategic focus shifted towards AI-driven molecular generation, leading to the integration of PropMolFlow. The latest task involves expanding the dataset further with PubChem BioAssay to support the training of both prediction and generation models, recognizing the significant data requirements for robust generative AI.
+The previous AI engineer diligently evolved the Veridica AI platform from a foundational molecular prediction system to a more sophisticated, multi-modal application. Initial efforts focused on debugging and calibrating ChemBERTa and Chemprop models for protein-ligand activity prediction. A significant phase involved expanding the training dataset by integrating multiple bioactivity sources (ChEMBL, PubChem, BindingDB, DTC), which revealed challenges in data extraction and standardization, occasionally necessitating the use of realistic synthetic data due to API limitations. Concurrently, the platform integrated PropMolFlow for AI-driven molecular generation. The recent trajectory shows a pivotal shift towards clinically relevant cancer drug sensitivity prediction, by replacing DTC integration with GDSC (Genomics of Drug Sensitivity in Cancer), incorporating genomic features, and developing a distinct Cell Line Response Model. This marks a strategic move from general molecular property prediction to genotype-informed drug response simulation.
 </analysis>
 
 <product_requirements>
-The Veridica AI platform is an AI-driven drug discovery interface predicting molecular properties (Bioactivity, Toxicity, ADME, Physicochemical, Drug-likeness) from SMILES. It uses a React frontend, FastAPI backend, MongoDB, and Modal.com for ML. Core features include IC₅₀ prediction via Chemprop and ChemBERTa models. The UI is dark-themed and responsive, with sections for Home, Predict Molecule Properties, Result Analysis, and About/Contact. Recent work focused on multi-task ChemBERTa training for 14 oncoproteins using ChEMBL data, integrated with Weights & Biases, and exposed via a refactored AI Modules page, unifying ChemBERTa and Chemprop under a Ligand Activity Predictor Module for comparison. The current user request is to expand the prediction models' databases to include more oncoproteins, tumor suppressors, and metastasis suppressors (23 total targets), incorporating additional data sources like PubChem BioAssay, BindingDB, and DTC, ensuring standardized datasets (median IC50 for duplicates, discard >100-fold difference, high-confidence experimental assays only). The long-term vision is to expand into AI molecule/drug generation using PropMolFlow.
+The Veridica AI platform is an AI-driven drug discovery interface designed to predict molecular properties (Bioactivity, Toxicity, ADME, Physicochemical, Drug-likeness) from SMILES. It leverages a React frontend, FastAPI backend, MongoDB, and Modal.com for intensive ML computations. Core functionalities include IC₅₀ prediction using Chemprop and ChemBERTa models, presented through a dark-themed, responsive UI with sections for Home, Predict Molecule Properties, Result Analysis, and About/Contact.
+
+Recent enhancements involved multi-task ChemBERTa training for 14 oncoproteins using ChEMBL data, integrated with Weights & Biases, exposed via a refactored AI Modules page, and unifying ChemBERTa and Chemprop under a Ligand Activity Predictor Module for comparison.
+
+The user's ongoing request initially focused on expanding the prediction models' databases to include more oncoproteins, tumor suppressors, and metastasis suppressors (23 total targets), incorporating additional data sources like PubChem BioAssay, BindingDB, and DTC. This required standardized datasets (median IC50 for duplicates, discard >100-fold difference, high-confidence experimental assays only).
+
+The long-term vision includes AI molecule/drug generation using PropMolFlow. Most recently, the product requirements evolved significantly to remove DTC integration, replace it with GDSC (Genomics of Drug Sensitivity in Cancer) datasets, and build a dedicated Cell Line Response Model arm incorporating genomic features (mutations, CNVs, gene expression) for multi-modal IC₅₀ prediction in cancer cell lines, aiming to simulate tumor genotype → drug sensitivity relationships.
 </product_requirements>
 
 <key_technical_concepts>
@@ -11,65 +17,57 @@ The Veridica AI platform is an AI-driven drug discovery interface predicting mol
 - **Web Stack**: React.js, FastAPI, MongoDB, Tailwind CSS.
 - **ML Platform**: Modal.com (for GPU/high-memory tasks), PyTorch, PyTorch Lightning.
 - **MLOps/Experiment Tracking**: Weights & Biases (W&B).
-- **Chemistry**: RDKit, ChEMBL, PubChem, BindingDB, DTC, SMILES, IC₅₀/pIC₅₀.
+- **Chemistry & Biology**: RDKit, ChEMBL, PubChem BioAssay, BindingDB, DTC (now deprecated), GDSC (Genomics of Drug Sensitivity in Cancer), SMILES, IC₅₀/pIC₅₀, Genomic Features (somatic mutations, CNVs, gene expression).
 - **Deployment**: Supervisor, Kubernetes Ingress.
 </key_technical_concepts>
 
 <code_architecture>
-The application employs a React frontend, a FastAPI backend, and MongoDB, with intensive ML computations offloaded to Modal.com.
+The application uses a React frontend, a FastAPI backend, and MongoDB, with ML computations offloaded to Modal.com.
 
 
 
-- ****: The core FastAPI backend.
-    - **Importance**: Defines API endpoints and integrates various prediction and now generation services.
-    - **Changes**: Updated to include , , , , and  routers. The health endpoint was updated to reflect the status of all integrated models, including expanded prediction models and PropMolFlow generation capabilities. A critical fix involved resolving duplicated FastAPI app declarations, ensuring all routers are correctly included.
-- ****: New Modal function for multi-source data extraction.
-    - **Importance**: Central to collecting bioactivity data from multiple sources (ChEMBL, PubChem, BindingDB, DTC).
-    - **Changes**: Newly created to implement the expanded data collection logic, including deduplication and filtering based on user requirements. This file was later refined and a  was created to address  and other stability issues.
-- ****: New FastAPI router for expanded prediction models.
-    - **Importance**: Exposes the prediction functionality for models trained on the expanded dataset.
-    - **Changes**: Newly created. Defines  endpoints for health, prediction, and comparison. Integrated into .
-- ****: New script to orchestrate the entire expanded data and training pipeline on Modal.
-    - **Importance**: Automates the sequential execution of data extraction, ChemBERTa training, and Chemprop training.
-    - **Changes**: Newly created. Faced initial issues with Modal  object references, leading to the creation of individual launch scripts and a monitoring system.
-- ****: Corrected version of the multi-source extractor.
-    - **Importance**: Addresses critical DataFrame column (, )  and other stability issues found during testing.
-    - **Changes**: Newly created as a robust version of , designed to handle empty DataFrames, API compatibility, and robust error handling during data collection.
-- ****: New file defining the PropMolFlow model architecture and core generation logic.
-    - **Importance**: Contains the implementation of the Property Encoder, Flow Matching Network, and Molecular Decoder for property-guided molecule generation.
-    - **Changes**: Newly created as part of the shift to generative AI. This is a placeholder for the actual PropMolFlow model which will need training.
-- ****: New FastAPI router for PropMolFlow generation.
-    - **Importance**: Exposes the molecular generation capabilities via the backend API.
-    - **Changes**: Newly created. Defines  endpoints for various generation tasks (e.g., property-guided, multi-target). Integrated into .
-- ****: New script to monitor the fixed expanded pipeline.
-    - **Importance**: Automatically tracks progress of extraction and queues subsequent training stages.
-    - **Changes**: Newly created to provide robust, background monitoring for the multi-stage data and training pipeline.
-- ****: New script for PubChem BioAssay data extraction.
-    - **Importance**: Aims to integrate PubChem BioAssay data to significantly expand the training dataset for both prediction and generation models.
-    - **Changes**: Newly created; currently in the initial stages of implementation.
+-   ****: Core FastAPI backend defining API endpoints. Updated to integrate various prediction and generation services (ChemBERTa, Chemprop, PropMolFlow, expanded models). Key fix involved resolving duplicated FastAPI app declarations.
+-   ****: Initial Modal function for multi-source data extraction, later replaced by .
+-   ****: Corrected version of the multi-source extractor, crucial for robust data collection from various sources and handling  during DataFrame operations.
+-   ****: Initial script for PubChem BioAssay data extraction, later superseded by .
+-   ****: New file created for PubChem BioAssay integration, aiming for standardization similar to ChEMBL.
+-   ****: A temporary simulation script to demonstrate PubChem integration logic due to real API rate limits/complexity, using ChEMBL data structure.
+-   ****: Defines PropMolFlow model architecture and generation logic, marking the shift to generative AI. This is the core file for molecular generation.
+-   ****: FastAPI router exposing PropMolFlow's molecular generation capabilities via  endpoints. Integrated into .
+-   ****: Newly created extractor for BindingDB data, part of the expanded dataset initiative.
+-   ****: Newly created extractor for DTC data, part of the expanded dataset initiative (now deprecated by user request).
+-   ****: Orchestrates integration and deduplication of data from multiple sources (ChEMBL, PubChem, BindingDB, DTC).
+-   ****: Script to launch the entire enhanced data and model training pipeline.
+-   ****: Consolidates extracted datasets, applying standardization, deduplication, and quality control, ensuring they are ready for ML training.
+-   ****: Updated PubChem extractor designed to generate synthetic data with realistic mixed activity type distributions.
+-   ****: Updated BindingDB extractor to generate synthetic data with realistic mixed activity type distributions.
+-   ****: Updated DTC extractor to generate synthetic data with realistic mixed activity type distributions.
+-   ****: New extractor being developed to fetch *real* data from BindingDB's RESTful API.
+-   ****: New extractor being developed to integrate GDSC datasets, crucial for the new cell line-specific prediction arm and genomic features.
+
 </code_architecture>
 
 <pending_tasks>
 - Fully implement visualizations (bar graphs, scatter plots, heatmaps) and interactive features within the Result Analysis tab.
-- Debug and fully implement the fine-tuning of the pre-trained BenevolentAI MolBERT model if needed.
+- Debug and fully implement the fine-tuning of the pre-trained BenevolentAI MolBERT model.
 - Fix the persistent frontend navigation issue, preventing direct access to the Ligand Activity Predictor page for UI-based testing.
 - Implement unified data preprocessing for future model trainings to eliminate the need for post-hoc calibration.
-- Complete the integration of PubChem BioAssay data into the data extraction pipeline.
+- Complete the integration of PubChem BioAssay and BindingDB to use *real* data, replacing current synthetic data generation.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was focused on addressing two primary objectives: first, resolving a massive variance issue in IC50 predictions between ChemBERTa and Chemprop, which was successfully mitigated by applying a linear calibration to ChemBERTa's pIC50 predictions (). This significantly reduced prediction discrepancies. Second, the user requested a major expansion of the training databases for both prediction models (ChemBERTa and Chemprop) to include more targets (23, comprising oncoproteins, tumor suppressors, and metastasis suppressors) and additional data sources (PubChem, BindingDB, DTC).
+Immediately before this summary request, the AI engineer was focused on fulfilling the user's comprehensive request to enhance the Veridica platform's capabilities. Initially, this involved fixing and enhancing the multi-source data extraction pipeline for PubChem BioAssay, BindingDB, and DTC, aiming to move from synthetic to real data sources, after the user raised concerns about the authenticity of the realistic synthetic data used for PubChem, BindingDB, and DTC. The AI engineer implemented new extractors (, , ) to reflect realistic activity type distributions, followed by  to ensure proper dataset consolidation.
 
-This led to the implementation of a new multi-source data extraction and training pipeline (, , ), and corresponding backend integration (). During this integration, a critical issue with duplicate FastAPI app declarations in  causing 404 errors for new endpoints was diagnosed and fixed.
+A major strategic pivot was then introduced by the user:
+1.  **Remove DTC integration** from the IC₅₀ training dataset pipeline.
+2.  **Replace DTC with GDSC (Genomics of Drug Sensitivity in Cancer)**, utilizing its API and bulk download endpoints to fetch drug sensitivity metrics (IC₅₀, log(IC₅₀), AUC).
+3.  **Build a dedicated Cell Line Response Model arm**, explicitly distinguishing it from protein-ligand affinity models, for predicting IC₅₀ values in cancer cell lines.
+4.  **Incorporate genomic features** of GDSC cell lines (somatic mutations, CNVs, gene expression) by building embeddings/representations and merging them with molecular embeddings for a multi-modal IC₅₀ predictor.
+5.  **Architect the pipeline** to accept drug structure and cancer cell line profile as input, outputting predicted IC₅₀/AUC, as a separate, complementary module.
 
-The pipeline was launched, but encountered  during extraction due to DataFrame column mismatches. This was addressed by creating a  and a new  to ensure robust, background execution of the extraction and subsequent training. This fixed pipeline is currently running.
-
-In parallel, a strategic shift towards AI molecule generation was initiated, with the user deciding to integrate **PropMolFlow**. The AI engineer successfully implemented the basic PropMolFlow architecture () and integrated its generation capabilities into the backend API (), creating new endpoints and updating the health status. This integration has been tested and confirmed to be fully functional from the backend.
-
-The user then raised concerns about the sufficiency of the current 25K dataset for PropMolFlow training and its ability to generate chemically sound molecules. The AI engineer provided a detailed assessment, highlighting 25K as borderline and chemical validity as a major concern. A comprehensive strategy was proposed to expand the dataset to 174K+ records from 15 sources (including PubChem BioAssay, IUPHAR, GDSC, Patent Mining) and to implement robust chemical validity constraints. The immediate next step decided upon was to incorporate PubChem BioAssay into the existing data extraction pipeline to boost the dataset size from 25K to 75K+ for existing models, and prepare for PropMolFlow training. The work is currently focused on implementing this PubChem BioAssay enhancement ().
+The AI engineer has acknowledged this new direction, recognizing its clinical relevance, and has initiated the implementation by researching BindingDB and GDSC APIs and creating two new files:  for fetching real BindingDB data and  for GDSC data extraction. The work is currently in the process of creating the updated integration pipeline to remove DTC and incorporate GDSC.
 </current_work>
 
 <optional_next_step>
-Complete the integration of PubChem BioAssay data into the  to enhance the dataset.
+Create the updated comprehensive database integration pipeline that removes DTC and integrates real BindingDB and GDSC data.
 </optional_next_step>
-
