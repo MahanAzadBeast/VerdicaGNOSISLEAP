@@ -1,0 +1,21 @@
+{
+  "model_type": "Cell_Line_Response_Model_Local",
+  "training_timestamp": "2025-08-01T14:07:59.506739",
+  "performance": {
+    "test_r2": -0.8226813833619462,
+    "test_rmse": 0.2900891878941081,
+    "test_mae": 0.23471593856811523
+  },
+  "training_data": {
+    "total_samples": 48,
+    "training_samples": 38,
+    "test_samples": 10,
+    "genomic_features": 39
+  },
+  "model_files": {
+    "model": "best_model.pth",
+    "tokenizer": "tokenizer.pkl",
+    "scaler": "scaler.pkl",
+    "training_data": "training_data.csv"
+  }
+}
