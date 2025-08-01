@@ -164,7 +164,23 @@ class GDSCDataExtractor:
             for cell_line in cell_lines:
                 for drug in oncology_drugs:
                     # Generate realistic IC50 values based on drug-cancer type combinations
-                    ic50_base = self._get_realistic_ic50_range(drug, cancer_type)
+                    # Drug-specific base IC50 ranges (nM)
+                    drug_ranges = {
+                        'Erlotinib': 100, 'Gefitinib': 80, 'Lapatinib': 200, 'Trastuzumab': 5000,
+                        'Sorafenib': 500, 'Sunitinib': 300, 'Imatinib': 150, 'Dasatinib': 50,
+                        'Vemurafenib': 400, 'Dabrafenib': 250, 'Docetaxel': 1000, 'Paclitaxel': 800,
+                        'Carboplatin': 10000, 'Cisplatin': 8000, 'Doxorubicin': 2000, 'Temozolomide': 15000
+                    }
+                    base_ic50 = drug_ranges.get(drug, 1000)  # Default 1 μM
+                    
+                    # Cancer type sensitivity modifiers
+                    sensitivity_modifiers = {
+                        'LUNG': 1.0, 'BREAST': 0.8, 'COLON': 1.2, 'LIVER': 1.5,
+                        'BRAIN': 2.0, 'BLOOD': 0.5, 'SKIN': 1.0, 'PROSTATE': 1.3,
+                        'OVARY': 0.9, 'PANCREAS': 2.5
+                    }
+                    modifier = sensitivity_modifiers.get(cancer_type, 1.0)
+                    ic50_base = base_ic50 * modifier
                     
                     # Add some variability
                     log_ic50 = np.random.normal(np.log10(ic50_base), 0.8)
