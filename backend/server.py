@@ -463,7 +463,8 @@ async def health_check():
             "real_ml_models": real_models_available,
             "oncoprotein_chemberta": ONCOPROTEIN_AVAILABLE,
             "chemprop_multitask_simulation": CHEMPROP_MULTITASK_AVAILABLE,
-            "real_trained_chemprop": REAL_CHEMPROP_AVAILABLE
+            "real_trained_chemprop": REAL_CHEMPROP_AVAILABLE,
+            "expanded_models": EXPANDED_MODELS_AVAILABLE
         },
         "real_ml_targets": real_models_status,
         "enhanced_predictions": True,  # Enhanced IC50 models available
@@ -475,7 +476,19 @@ async def health_check():
             "chemberta_available": CHEMBERTA_AVAILABLE,
             "chemprop_simulation_available": CHEMPROP_MULTITASK_AVAILABLE,
             "real_chemprop_available": REAL_CHEMPROP_AVAILABLE,
-            "total_ai_models": sum([CHEMBERTA_AVAILABLE, CHEMPROP_MULTITASK_AVAILABLE, REAL_CHEMPROP_AVAILABLE])
+            "expanded_models_available": EXPANDED_MODELS_AVAILABLE,
+            "total_ai_models": sum([CHEMBERTA_AVAILABLE, CHEMPROP_MULTITASK_AVAILABLE, REAL_CHEMPROP_AVAILABLE, EXPANDED_MODELS_AVAILABLE])
+        },
+        "expanded_models_info": {
+            "available": EXPANDED_MODELS_AVAILABLE,
+            "total_targets": 23,  # 10 oncoproteins + 7 tumor suppressors + 6 metastasis suppressors
+            "target_categories": {
+                "oncoproteins": 10,
+                "tumor_suppressors": 7,
+                "metastasis_suppressors": 6
+            },
+            "activity_types": ["IC50", "EC50", "Ki", "Inhibition", "Activity"],
+            "data_sources": ["ChEMBL", "PubChem", "BindingDB", "DTC"]
         }
     }
 
