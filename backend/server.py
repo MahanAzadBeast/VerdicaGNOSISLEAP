@@ -29,18 +29,11 @@ db = client[os.environ['DB_NAME']]
 # Global model storage
 models = {}
 
-# Create the main app without a prefix
-app = FastAPI(title="Veridica AI - Predictive Chemistry Platform")
-
-# Create a router with the /api prefix
-api_router = APIRouter(prefix="/api")
-
 # Simple import test for oncoprotein
 try:
     import sys
     sys.path.append('/app')
     from modal_training.oncoprotein_backend_integration import oncoprotein_router
-    app.include_router(oncoprotein_router)
     logging.info("✅ Oncoprotein router added successfully")
     ONCOPROTEIN_AVAILABLE = True
 except Exception as e:
@@ -52,7 +45,6 @@ try:
     import sys
     sys.path.append('/app')
     from modal_training.modal_backend_integration import modal_router
-    app.include_router(modal_router, tags=["Modal GPU Training"])
     logging.info("✅ Modal API integration loaded")
 except Exception as e:
     logging.warning(f"⚠️ Modal API integration not available: {e}")
@@ -81,7 +73,6 @@ except Exception as e:
 try:
     sys.path.append('/app/modal_training')
     from expanded_backend_integration import expanded_router
-    app.include_router(expanded_router, tags=["Expanded Multi-Source Models"])
     logging.info("✅ Expanded multi-source models integration loaded")
     EXPANDED_MODELS_AVAILABLE = True
 except Exception as e:
