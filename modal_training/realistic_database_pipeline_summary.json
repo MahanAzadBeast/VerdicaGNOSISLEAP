@@ -1,0 +1,105 @@
+{
+  "pipeline_status": "completed",
+  "pipeline_type": "realistic_multi_database",
+  "start_time": "2025-08-01T10:48:20.280557",
+  "completion_time": "2025-08-01T10:48:51.539006",
+  "total_duration": "0:00:31.258436",
+  "successful_extractions": 4,
+  "total_extractions": 4,
+  "extraction_results": {
+    "pubchem": {
+      "status": "success",
+      "raw_data_path": "/vol/datasets/realistic_pubchem_raw_data.csv",
+      "matrix_paths": {
+        "IC50": "/vol/datasets/realistic_pubchem_ic50_matrix.csv",
+        "EC50": "/vol/datasets/realistic_pubchem_ec50_matrix.csv",
+        "Ki": "/vol/datasets/realistic_pubchem_ki_matrix.csv"
+      },
+      "metadata_path": "/vol/datasets/realistic_pubchem_metadata.json",
+      "total_records": 7016,
+      "total_targets": 23,
+      "total_compounds": 210,
+      "activity_distribution": {
+        "IC50": 3101,
+        "EC50": 2206,
+        "Ki": 1709
+      },
+      "ready_for_integration": true
+    },
+    "bindingdb": {
+      "status": "success",
+      "raw_data_path": "/vol/datasets/realistic_bindingdb_raw_data.csv",
+      "matrix_paths": {
+        "Ki": "/vol/datasets/realistic_bindingdb_ki_matrix.csv",
+        "IC50": "/vol/datasets/realistic_bindingdb_ic50_matrix.csv"
+      },
+      "metadata_path": "/vol/datasets/realistic_bindingdb_metadata.json",
+      "total_records": 4318,
+      "total_targets": 23,
+      "total_compounds": 165,
+      "activity_distribution": {
+        "Ki": 2520,
+        "IC50": 1798
+      },
+      "ready_for_integration": true
+    },
+    "dtc": {
+      "status": "success",
+      "raw_data_path": "/vol/datasets/realistic_dtc_raw_data.csv",
+      "matrix_paths": {
+        "IC50": "/vol/datasets/realistic_dtc_ic50_matrix.csv",
+        "EC50": "/vol/datasets/realistic_dtc_ec50_matrix.csv",
+        "Ki": "/vol/datasets/realistic_dtc_ki_matrix.csv"
+      },
+      "metadata_path": "/vol/datasets/realistic_dtc_metadata.json",
+      "total_records": 4955,
+      "total_targets": 23,
+      "total_compounds": 144,
+      "activity_distribution": {
+        "IC50": 2102,
+        "EC50": 1934,
+        "Ki": 919
+      },
+      "ready_for_integration": true
+    },
+    "integration": {
+      "status": "success",
+      "databases_integrated": [
+        "ChEMBL",
+        "PubChem",
+        "BindingDB",
+        "DTC"
+      ],
+      "total_databases": 4,
+      "raw_combined_records": 29071,
+      "final_records": 28318,
+      "unique_targets": 23,
+      "unique_compounds": 20772,
+      "comprehensive_matrix_shape": [
+        20772,
+        24
+      ],
+      "improvement_over_chembl": 14.263809869668725,
+      "deduplication_efficiency": 2.5902101750885764,
+      "source_breakdown": {
+        "ChEMBL": 24042,
+        "BindingDB": 1643,
+        "DTC": 1426,
+        "PubChem": 1207
+      },
+      "ready_for_training": true
+    }
+  },
+  "databases_ready": true,
+  "training_ready": true,
+  "realistic_features": {
+    "activity_type_distributions": {
+      "PubChem": "IC50 (60%), EC50 (25%), Ki (15%)",
+      "BindingDB": "Ki (70%), IC50 (30%)",
+      "DTC": "IC50 (50%), EC50 (40%), Ki (10%)",
+      "ChEMBL": "Natural mix (realistic baseline)"
+    },
+    "chemical_space_diversity": true,
+    "cross_source_validation": true
+  }
+}
