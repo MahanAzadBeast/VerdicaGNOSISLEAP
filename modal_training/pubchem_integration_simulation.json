@@ -1,0 +1,35 @@
+{
+  "status": "simulation_success",
+  "original_dataset": {
+    "records": 24783,
+    "targets": 20,
+    "compounds": 20180
+  },
+  "pubchem_contribution": {
+    "total_records": 42300,
+    "unique_records": 35955,
+    "targets": 23,
+    "new_compounds": 29609
+  },
+  "integrated_dataset": {
+    "total_records": 60738,
+    "total_targets": 23,
+    "total_compounds": 49789,
+    "boost_percentage": 145.07928822176493
+  },
+  "target_categories": {
+    "oncoprotein": {
+      "count": 10,
+      "records": 23400
+    },
+    "tumor_suppressor": {
+      "count": 7,
+      "records": 14800
+    },
+    "metastasis_suppressor": {
+      "count": 6,
+      "records": 4100
+    }
+  },
+  "simulation_timestamp": "2025-08-01T09:22:00.663811"
+}
