@@ -119,6 +119,38 @@ app = FastAPI(title="Veridica AI - Predictive Chemistry Platform")
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Add ChemBERTa router
+try:
+    import sys
+    sys.path.append('/app/modal_training')
+    from chemberta_backend_integration import chemberta_router
+    api_router.include_router(chemberta_router)
+    logging.info("✅ ChemBERTa multi-task router added successfully")
+    CHEMBERTA_AVAILABLE = True
+except Exception as e:
+    logging.error(f"❌ Failed to add ChemBERTa router: {e}")
+    CHEMBERTA_AVAILABLE = False
+
+# Add Chemprop Multi-Task router
+try:
+    from chemprop_multitask_integration import chemprop_router
+    api_router.include_router(chemprop_router)
+    logging.info("✅ Chemprop multi-task router added successfully")
+    CHEMPROP_MULTITASK_AVAILABLE = True
+except Exception as e:
+    logging.error(f"❌ Failed to add Chemprop multi-task router: {e}")
+    CHEMPROP_MULTITASK_AVAILABLE = False
+
+# Import Cell Line Response Model router
+try:
+    from cell_line_backend_integration import router as cell_line_router
+    api_router.include_router(cell_line_router)
+    logging.info("✅ Cell Line Response Model router added successfully")
+    CELL_LINE_MODEL_AVAILABLE = True
+except Exception as e:
+    logging.error(f"❌ Failed to add Cell Line Response Model router: {e}")
+    CELL_LINE_MODEL_AVAILABLE = False
+
 # Define Models
 class SMILESInput(BaseModel):
     smiles: str
