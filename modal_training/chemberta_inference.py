@@ -233,10 +233,10 @@ def predict_chemberta_ic50(smiles: str):
             raw_pred = predictions[0, i]
             
             # CALIBRATION FIX: ChemBERTa was trained on a different scale
-            # Adjust to match Chemprop and literature values
-            # Original ChemBERTa pIC50 range: ~3-7, Expected range: ~6-9
-            # Apply linear calibration: adjusted_pic50 = raw_pred * 0.8 + 2.5
-            calibrated_pic50 = raw_pred * 0.8 + 2.5
+            # Fine-tuned calibration to better match Chemprop and literature values
+            # Target: ChemBERTa pIC50 ~6.8 should align with Chemprop pIC50 ~8.1
+            # Adjusted formula: calibrated_pic50 = raw_pred * 0.9 + 2.0
+            calibrated_pic50 = raw_pred * 0.9 + 2.0
             
             # Convert to IC50 in µM using standard formula
             ic50_um = 10 ** (6 - calibrated_pic50)  # Convert from pIC50 to µM
