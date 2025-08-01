@@ -12,6 +12,7 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
   const tabs = [
     { id: 'home', label: 'Home' },
     { id: 'ai-modules', label: 'AI Modules' },
+    { id: 'cell-line', label: 'Cell Line Model' },
     { id: 'analysis', label: 'Result Analysis' },
     { id: 'about', label: 'About' }
   ];
