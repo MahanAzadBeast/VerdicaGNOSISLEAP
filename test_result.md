@@ -540,6 +540,18 @@ backend:
           agent: "testing"
           comment: "✅ EXPANDED DATABASE INTEGRATION FULLY FUNCTIONAL: Successfully tested all expanded endpoints after router fix. FIXED ENDPOINTS: GET /api/expanded/health (200 OK with 23 targets, proper categories 10+7+6), GET /api/expanded/targets (200 OK with all 23 targets and categories), GET /api/expanded/stats/performance (200 OK with placeholder stats). HEALTH CHECK INTEGRATION: /api/health correctly includes expanded_models_info with available: true, total_targets: 23, correct category counts, activity types and data sources. BACKEND SERVICE: Backend loads without errors, all routers properly included, expanded_models: true in models_loaded. EXISTING FUNCTIONALITY: All existing endpoints (/api/health, /api/targets, /api/predict) still working correctly. PREDICTION ENDPOINTS: All /api/expanded/predict/* endpoints accessible (503 expected since models not deployed). Tested with aspirin (CC(=O)OC1=CC=CC=C1C(=O)O) - existing predictions working. 404 errors resolved, expanded database integration now fully functional. Success rate: 100% (25/25 tests passed)."
 
+  - task: "PubChem BioAssay Integration"
+    implemented: true
+    working: false
+    file: "/app/modal_training/enhanced_pubchem_extractor.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "IMPLEMENTED: Created comprehensive PubChem BioAssay integration with ChEMBL-compatible standardization. Features: enhanced_pubchem_extractor.py (PubChem API extraction with same quality controls as ChEMBL), integrate_pubchem_with_chembl.py (cross-source deduplication prioritizing ChEMBL), launch_pubchem_integration.py (complete pipeline orchestration). Uses identical data standards: nM units, pIC50 calculation, >100x variance filtering, median aggregation, RDKit validation. Expected to boost dataset from 25K to 75K+ records. Ready for backend testing."
+
 metadata:
   created_by: "testing_agent"
   version: "1.0"
