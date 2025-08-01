@@ -1,0 +1,5 @@
+🧠 STARTING SIMPLIFIED CHEMBERTA TRAINING
+Dataset: Expanded fixed extraction
+Total records: 24783
+Total targets: 20
+Epochs: 30
