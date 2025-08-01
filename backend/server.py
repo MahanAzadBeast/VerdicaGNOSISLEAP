@@ -478,7 +478,8 @@ async def health_check():
             "chemprop_simulation_available": CHEMPROP_MULTITASK_AVAILABLE,
             "real_chemprop_available": REAL_CHEMPROP_AVAILABLE,
             "expanded_models_available": EXPANDED_MODELS_AVAILABLE,
-            "total_ai_models": sum([CHEMBERTA_AVAILABLE, CHEMPROP_MULTITASK_AVAILABLE, REAL_CHEMPROP_AVAILABLE, EXPANDED_MODELS_AVAILABLE])
+            "propmolflow_generation_available": PROPMOLFLOW_AVAILABLE,
+            "total_ai_models": sum([CHEMBERTA_AVAILABLE, CHEMPROP_MULTITASK_AVAILABLE, REAL_CHEMPROP_AVAILABLE, EXPANDED_MODELS_AVAILABLE, PROPMOLFLOW_AVAILABLE])
         },
         "expanded_models_info": {
             "available": EXPANDED_MODELS_AVAILABLE,
@@ -490,6 +491,16 @@ async def health_check():
             },
             "activity_types": ["IC50", "EC50", "Ki", "Inhibition", "Activity"],
             "data_sources": ["ChEMBL", "PubChem", "BindingDB", "DTC"]
+        },
+        "molecular_generation_info": {
+            "available": PROPMOLFLOW_AVAILABLE,
+            "generation_methods": ["PropMolFlow"],
+            "supported_targets": 23,
+            "property_guided": True,
+            "multi_target_design": True,
+            "max_molecules_per_request": 100,
+            "supported_properties": ["IC50", "EC50", "Ki"],
+            "capabilities": ["property_guided_generation", "multi_objective_optimization", "drug_likeness_filtering"]
         }
     }
 
