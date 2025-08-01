@@ -1,0 +1,25 @@
+🧠 STARTING ENHANCED CHEMBERTA TRAINING
+Dataset: Comprehensive multi-database (80K-100K+ records)
+Targets: 23 across 3 categories
+Epochs: 40 (increased for complex dataset)
+Architecture: Enhanced multi-task with cross-database learning
+⏳ Waiting for database integration to complete...
+⏰ Integration timeout - proceeding with available data
+❌ ENHANCED CHEMBERTA TRAINING FAILED: train_expanded_chemberta() got an unexpected keyword argument 'epochs'
+Traceback (most recent call last):
+  File "<string>", line 40, in <module>
+  File "/root/.venv/lib/python3.11/site-packages/modal/_object.py", line 285, in wrapped
+    return await method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_functions.py", line 1570, in remote
+    return await self._call_function(args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_functions.py", line 1525, in _call_function
+    return await invocation.run_function()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_functions.py", line 285, in run_function
+    return await _process_result(item.result, item.data_format, self.stub, self.client)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_utils/function_utils.py", line 506, in _process_result
+    raise exc_with_hints(exc)
+TypeError: train_expanded_chemberta() got an unexpected keyword argument 'epochs'

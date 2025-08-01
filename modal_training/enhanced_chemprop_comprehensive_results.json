@@ -1,0 +1,5 @@
+{
+  "status": "failed",
+  "error": "train_expanded_chemprop() got an unexpected keyword argument 'use_comprehensive_dataset'",
+  "timestamp": "2025-08-01T09:43:51.597376"
+}
