@@ -559,12 +559,13 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "PubChem BioAssay Integration"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
   completed_testing: ["ChemBERTa Device Property Bug Fix", "Chemprop CLI Compatibility Fix", "Enhanced W&B Logging for ChemBERTa", "Enhanced W&B Logging for Chemprop", "ChemBERTa Multi-Task Model Integration", "Chemprop Multi-Task Model Integration", "Ligand Activity Predictor Module Integration", "AI Modules Health Check Enhancement", "Real Chemprop Model Router Integration", "Expanded Multi-Source Data Extraction", "Expanded ChemBERTa Training Pipeline", "Expanded Chemprop Training Pipeline", "Master Training Pipeline Orchestration", "Expanded Backend Integration"]
-  pending_testing: []
+  pending_testing: ["PubChem BioAssay Integration"]
 
 agent_communication:
     - agent: "main"
