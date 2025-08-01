@@ -267,69 +267,122 @@ async def get_cell_line_examples():
     return examples
 
 def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredictionResponse:
-    """Simulate cell line prediction (replaced with actual model once training completes)"""
+    """Use trained model for cell line prediction or fallback to simulation"""
     
-    # Extract genomic features
-    genomics = request.cell_line.genomic_features
-    
-    # Simulate genomics-informed prediction logic
-    base_ic50 = 1000  # 1 μM baseline
-    
-    # Drug-specific effects (simplified)
-    if "erlotinib" in request.drug_name.lower() if request.drug_name else False:
-        # EGFR inhibitor
-        if genomics.mutations.get("EGFR", 0) == 1 or genomics.expression.get("EGFR", 0) > 0.5:
-            base_ic50 *= 0.3  # More sensitive
-        if genomics.mutations.get("KRAS", 0) == 1:
-            base_ic50 *= 5.0  # Resistant
-    elif "trametinib" in request.drug_name.lower() if request.drug_name else False:
-        # MEK inhibitor
-        if genomics.mutations.get("KRAS", 0) == 1 or genomics.mutations.get("BRAF", 0) == 1:
-            base_ic50 *= 0.2  # Very sensitive
-    
-    # p53 status affects general drug sensitivity
-    if genomics.mutations.get("TP53", 0) == 1:
-        base_ic50 *= 1.8  # General resistance
-    
-    # Add some variability
-    ic50_nm = base_ic50 * np.random.lognormal(0, 0.3)
-    pic50 = -np.log10(ic50_nm / 1e9)
-    
-    # Calculate uncertainty and confidence
-    mutation_count = sum(genomics.mutations.values())
-    confidence = 0.6 + 0.3 * (mutation_count / 5)
-    confidence = min(confidence, 0.95)
-    uncertainty = (1 - confidence) * 2  # Simple uncertainty estimate
-    
-    # Determine sensitivity class
-    if ic50_nm < 100:
-        sensitivity_class = "SENSITIVE"
-    elif ic50_nm < 1000:
-        sensitivity_class = "MODERATE"
-    else:
-        sensitivity_class = "RESISTANT"
-    
-    # Create genomic context summary
-    genomic_context = {
-        "key_mutations": [gene for gene, status in genomics.mutations.items() if status == 1],
-        "amplifications": [gene for gene, status in genomics.cnvs.items() if status == 1],
-        "deletions": [gene for gene, status in genomics.cnvs.items() if status == -1],
-        "high_expression": [gene for gene, level in genomics.expression.items() if level > 1.0],
-        "low_expression": [gene for gene, level in genomics.expression.items() if level < -1.0]
-    }
-    
-    return CellLinePredictionResponse(
-        drug_name=request.drug_name,
-        cell_line_name=request.cell_line.cell_line_name,
-        cancer_type=request.cell_line.cancer_type,
-        predicted_ic50_nm=ic50_nm,
-        predicted_pic50=pic50,
-        uncertainty=uncertainty,
-        confidence=confidence,
-        sensitivity_class=sensitivity_class,
-        genomic_context=genomic_context,
-        prediction_timestamp=datetime.now()
-    )
+    try:
+        # Try to use the trained model first
+        from trained_cell_line_predictor import predict_with_trained_model
+        
+        # Convert genomic features to the expected format
+        genomic_dict = {}
+        
+        # Add mutations
+        for gene, status in request.cell_line.genomic_features.mutations.items():
+            genomic_dict[f'{gene}_mutation'] = status
+        
+        # Add CNVs
+        for gene, status in request.cell_line.genomic_features.cnvs.items():
+            genomic_dict[f'{gene}_cnv'] = status
+        
+        # Add expression
+        for gene, level in request.cell_line.genomic_features.expression.items():
+            genomic_dict[f'{gene}_expression'] = level
+        
+        # Get prediction from trained model
+        result = predict_with_trained_model(request.smiles, genomic_dict)
+        
+        # Determine sensitivity class
+        ic50_nm = result['predicted_ic50_nm']
+        if ic50_nm < 100:
+            sensitivity_class = "SENSITIVE"
+        elif ic50_nm < 1000:
+            sensitivity_class = "MODERATE"
+        else:
+            sensitivity_class = "RESISTANT"
+        
+        # Create genomic context summary
+        genomic_context = {
+            "key_mutations": [gene for gene, status in request.cell_line.genomic_features.mutations.items() if status == 1],
+            "amplifications": [gene for gene, status in request.cell_line.genomic_features.cnvs.items() if status == 1],
+            "deletions": [gene for gene, status in request.cell_line.genomic_features.cnvs.items() if status == -1],
+            "high_expression": [gene for gene, level in request.cell_line.genomic_features.expression.items() if level > 1.0],
+            "low_expression": [gene for gene, level in request.cell_line.genomic_features.expression.items() if level < -1.0],
+            "model_source": result.get('model_source', 'trained_local')
+        }
+        
+        return CellLinePredictionResponse(
+            drug_name=request.drug_name,
+            cell_line_name=request.cell_line.cell_line_name,
+            cancer_type=request.cell_line.cancer_type,
+            predicted_ic50_nm=result['predicted_ic50_nm'],
+            predicted_pic50=result['predicted_pic50'],
+            uncertainty=result['uncertainty'],
+            confidence=result['confidence'],
+            sensitivity_class=sensitivity_class,
+            genomic_context=genomic_context,
+            prediction_timestamp=datetime.now()
+        )
+        
+    except Exception as e:
+        # Fallback to original simulation logic if trained model fails
+        logging.warning(f"Trained model prediction failed, using fallback: {e}")
+        
+        # Original simulation logic (shortened)
+        genomics = request.cell_line.genomic_features
+        base_ic50 = 1000  # 1 μM baseline
+        
+        # Drug-specific effects (simplified)
+        if "erlotinib" in request.drug_name.lower() if request.drug_name else False:
+            if genomics.mutations.get("KRAS", 0) == 1:
+                base_ic50 *= 5.0  # Resistant
+        elif "trametinib" in request.drug_name.lower() if request.drug_name else False:
+            if genomics.mutations.get("KRAS", 0) == 1:
+                base_ic50 *= 0.2  # Very sensitive
+        
+        # p53 status affects general drug sensitivity
+        if genomics.mutations.get("TP53", 0) == 1:
+            base_ic50 *= 1.8  # General resistance
+        
+        # Add some variability
+        ic50_nm = base_ic50 * np.random.lognormal(0, 0.3)
+        pic50 = -np.log10(ic50_nm / 1e9)
+        
+        # Calculate uncertainty and confidence
+        mutation_count = sum(genomics.mutations.values())
+        confidence = 0.6 + 0.3 * (mutation_count / 5)
+        confidence = min(confidence, 0.95)
+        uncertainty = (1 - confidence) * 2  # Simple uncertainty estimate
+        
+        # Determine sensitivity class
+        if ic50_nm < 100:
+            sensitivity_class = "SENSITIVE"
+        elif ic50_nm < 1000:
+            sensitivity_class = "MODERATE"
+        else:
+            sensitivity_class = "RESISTANT"
+        
+        # Create genomic context summary
+        genomic_context = {
+            "key_mutations": [gene for gene, status in genomics.mutations.items() if status == 1],
+            "amplifications": [gene for gene, status in genomics.cnvs.items() if status == 1],
+            "deletions": [gene for gene, status in genomics.cnvs.items() if status == -1],
+            "high_expression": [gene for gene, level in genomics.expression.items() if level > 1.0],
+            "low_expression": [gene for gene, level in genomics.expression.items() if level < -1.0],
+            "model_source": "fallback_simulation"
+        }
+        
+        return CellLinePredictionResponse(
+            drug_name=request.drug_name,
+            cell_line_name=request.cell_line.cell_line_name,
+            cancer_type=request.cell_line.cancer_type,
+            predicted_ic50_nm=ic50_nm,
+            predicted_pic50=pic50,
+            uncertainty=uncertainty,
+            confidence=confidence,
+            sensitivity_class=sensitivity_class,
+            genomic_context=genomic_context,
+            prediction_timestamp=datetime.now()
+        )
 
 def load_model_metadata() -> Optional[Dict]:
     """Load model metadata if available"""
