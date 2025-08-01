@@ -1,0 +1,7 @@
+🕸️ STARTING ENHANCED CHEMPROP TRAINING
+Dataset: Integrated ChEMBL + PubChem (expected 60K+ records)
+Targets: 23 (oncoproteins + tumor suppressors + metastasis suppressors)
+Epochs: 40
+Architecture: Enhanced GNN (512 hidden, 5-layer depth)
+✅ ENHANCED CHEMPROP TRAINING COMPLETED!
+Results saved to: /app/modal_training/chemprop_enhanced_results.json

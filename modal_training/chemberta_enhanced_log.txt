@@ -1,0 +1,5 @@
+🧠 STARTING ENHANCED CHEMBERTA TRAINING
+Dataset: Integrated ChEMBL + PubChem (expected 60K+ records)
+Targets: 23 (oncoproteins + tumor suppressors + metastasis suppressors)
+Epochs: 30
+Architecture: Multi-task with category-wise analysis
