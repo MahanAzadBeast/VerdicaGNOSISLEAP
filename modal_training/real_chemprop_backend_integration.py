@@ -57,53 +57,28 @@ _cache_timestamp = None
 CACHE_DURATION = 300  # 5 minutes
 
 async def get_modal_function(function_name: str):
-    """Get Modal function reference - use REAL trained Chemprop model with robust connection"""
+    """Get Modal function reference - use REAL trained Chemprop model with direct import"""
     try:
-        import modal
-        
-        # PRIMARY: Use REAL Chemprop production inference (50-epoch trained model)
+        # PRIMARY: Use direct import instead of App.lookup (more reliable)
         if function_name == "predict_oncoprotein_activity":
             try:
-                # Try different possible app names that might exist
-                app_names = [
-                    "chemprop-production-inference",
-                    "chemprop-production-inference-main", 
-                    "chemprop-cli-debug",
-                    "chemprop-cli-detailed-debug"
-                ]
-                
-                function = None
-                app_used = None
-                
-                for app_name in app_names:
-                    try:
-                        app = modal.App.lookup(app_name, create_if_missing=False)
-                        function = getattr(app, "predict_oncoprotein_activity")
-                        app_used = app_name
-                        logger.info(f"✅ Using REAL Chemprop model from app: {app_name}")
-                        break
-                    except Exception as e:
-                        logger.debug(f"App {app_name} not available: {e}")
-                        continue
-                
-                if function:
-                    return function
-                else:
-                    logger.error("REAL Chemprop model not available - no fallbacks as requested")
-                    return None
+                # Import the app and function directly
+                from chemprop_production_inference import app, predict_oncoprotein_activity
+                logger.info("✅ Using REAL Chemprop production inference (direct import)")
+                return predict_oncoprotein_activity
                     
             except Exception as e:
-                logger.error(f"REAL Chemprop model connection failed: {e}")
+                logger.error(f"REAL Chemprop model direct import failed: {e}")
                 return None
                     
         elif function_name == "get_model_info":
             try:
-                # Return model info for the real Chemprop system
+                # Return model info for the real Chemprop system  
                 return lambda: {
                     "status": "available",
                     "model_name": "Chemprop 50-Epoch GNN",
                     "architecture": "5-layer Message Passing Neural Network",
-                    "targets": ONCOPROTEIN_TARGETS,
+                    "targets": ['EGFR', 'HER2', 'VEGFR2', 'BRAF', 'MET', 'CDK4', 'CDK6', 'ALK', 'MDM2', 'PI3KCA'],
                     "training_epochs": 50,
                     "model_type": "real_trained_chemprop"
                 }
