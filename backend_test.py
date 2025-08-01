@@ -1176,6 +1176,444 @@ class EnhancedChemistryPlatformTester:
             self.log_test("Backend startup with Modal", False, f"Connection error: {str(e)}")
             return False
 
+    def test_expanded_models_health_check(self):
+        """Test /api/health endpoint for expanded models information"""
+        print("\n=== Testing Expanded Models Health Check ===")
+        
+        try:
+            response = requests.get(f"{API_BASE}/health", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check expanded_models_available field
+                models_loaded = data.get('models_loaded', {})
+                expanded_models_available = models_loaded.get('expanded_models', False)
+                
+                self.log_test("Expanded models available in health", 
+                            'expanded_models' in models_loaded,
+                            f"Expanded models field present: {'expanded_models' in models_loaded}")
+                
+                # Check expanded_models_info section
+                expanded_models_info = data.get('expanded_models_info', {})
+                
+                if not expanded_models_info:
+                    self.log_test("Expanded models info section", False, "No expanded_models_info section")
+                    return False
+                
+                # Check required fields in expanded_models_info
+                required_fields = ['available', 'total_targets', 'target_categories', 'activity_types', 'data_sources']
+                missing_fields = [field for field in required_fields if field not in expanded_models_info]
+                
+                if missing_fields:
+                    self.log_test("Expanded models info structure", False, f"Missing fields: {missing_fields}")
+                    return False
+                
+                # Check specific values
+                total_targets = expanded_models_info.get('total_targets', 0)
+                target_categories = expanded_models_info.get('target_categories', {})
+                activity_types = expanded_models_info.get('activity_types', [])
+                data_sources = expanded_models_info.get('data_sources', [])
+                
+                # Verify 23 total targets
+                self.log_test("Total targets count", total_targets == 23, 
+                            f"Total targets: {total_targets} (expected: 23)")
+                
+                # Verify target categories (10 oncoproteins + 7 tumor suppressors + 6 metastasis suppressors)
+                expected_categories = {
+                    'oncoproteins': 10,
+                    'tumor_suppressors': 7,
+                    'metastasis_suppressors': 6
+                }
+                
+                categories_correct = True
+                for category, expected_count in expected_categories.items():
+                    actual_count = target_categories.get(category, 0)
+                    if actual_count != expected_count:
+                        categories_correct = False
+                        break
+                
+                self.log_test("Target categories breakdown", categories_correct,
+                            f"Categories: {target_categories} (expected: {expected_categories})")
+                
+                # Verify activity types
+                expected_activity_types = ["IC50", "EC50", "Ki", "Inhibition", "Activity"]
+                has_all_activity_types = all(activity in activity_types for activity in expected_activity_types)
+                
+                self.log_test("Activity types", has_all_activity_types,
+                            f"Activity types: {activity_types} (expected: {expected_activity_types})")
+                
+                # Verify data sources
+                expected_data_sources = ["ChEMBL", "PubChem", "BindingDB", "DTC"]
+                has_all_data_sources = all(source in data_sources for source in expected_data_sources)
+                
+                self.log_test("Data sources", has_all_data_sources,
+                            f"Data sources: {data_sources} (expected: {expected_data_sources})")
+                
+                return True
+                
+            else:
+                self.log_test("Expanded models health check", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Expanded models health check", False, f"Connection error: {str(e)}")
+            return False
+
+    def test_expanded_models_health_endpoint(self):
+        """Test /api/expanded/health endpoint"""
+        print("\n=== Testing Expanded Models Health Endpoint ===")
+        
+        try:
+            response = requests.get(f"{API_BASE}/expanded/health", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields
+                required_fields = ['status', 'expanded_models', 'target_categories', 'total_targets', 'activity_types', 'data_sources']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Expanded health endpoint structure", False, f"Missing fields: {missing_fields}")
+                    return False
+                
+                # Check status
+                status = data.get('status')
+                self.log_test("Expanded health status", status == 'healthy', f"Status: {status}")
+                
+                # Check expanded models availability
+                expanded_models = data.get('expanded_models', {})
+                chemberta_available = expanded_models.get('chemberta_available', False)
+                chemprop_available = expanded_models.get('chemprop_available', False)
+                
+                self.log_test("Expanded models availability", 
+                            'chemberta_available' in expanded_models and 'chemprop_available' in expanded_models,
+                            f"ChemBERTa: {chemberta_available}, Chemprop: {chemprop_available}")
+                
+                # Check target categories
+                target_categories = data.get('target_categories', {})
+                expected_counts = {'oncoproteins': 10, 'tumor_suppressors': 7, 'metastasis_suppressors': 6}
+                
+                categories_correct = all(
+                    target_categories.get(cat) == count 
+                    for cat, count in expected_counts.items()
+                )
+                
+                self.log_test("Expanded target categories", categories_correct,
+                            f"Categories: {target_categories}")
+                
+                # Check total targets
+                total_targets = data.get('total_targets', 0)
+                self.log_test("Expanded total targets", total_targets == 23, f"Total: {total_targets}")
+                
+                return True
+                
+            else:
+                self.log_test("Expanded health endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Expanded health endpoint", False, f"Connection error: {str(e)}")
+            return False
+
+    def test_expanded_targets_endpoint(self):
+        """Test /api/expanded/targets endpoint"""
+        print("\n=== Testing Expanded Targets Endpoint ===")
+        
+        try:
+            response = requests.get(f"{API_BASE}/expanded/targets", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields
+                required_fields = ['targets', 'by_category', 'total_targets', 'activity_types']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Expanded targets endpoint structure", False, f"Missing fields: {missing_fields}")
+                    return False
+                
+                # Check targets list
+                targets = data.get('targets', [])
+                total_targets = data.get('total_targets', 0)
+                
+                self.log_test("Expanded targets list", len(targets) == 23 and total_targets == 23,
+                            f"Targets count: {len(targets)}, Total: {total_targets}")
+                
+                # Check target structure
+                if targets:
+                    sample_target = targets[0]
+                    required_target_fields = ['target', 'category', 'full_name', 'available_chemberta', 'available_chemprop']
+                    missing_target_fields = [field for field in required_target_fields if field not in sample_target]
+                    
+                    self.log_test("Target structure", len(missing_target_fields) == 0,
+                                f"Sample target: {sample_target.get('target', 'unknown')}, Missing fields: {missing_target_fields}")
+                
+                # Check by_category grouping
+                by_category = data.get('by_category', {})
+                expected_categories = ['oncoprotein', 'tumor_suppressor', 'metastasis_suppressor']
+                has_all_categories = all(cat in by_category for cat in expected_categories)
+                
+                self.log_test("Targets by category", has_all_categories,
+                            f"Categories: {list(by_category.keys())}")
+                
+                # Check category counts
+                category_counts = {cat: len(targets_list) for cat, targets_list in by_category.items()}
+                expected_counts = {'oncoprotein': 10, 'tumor_suppressor': 7, 'metastasis_suppressor': 6}
+                
+                counts_correct = all(
+                    category_counts.get(cat) == count 
+                    for cat, count in expected_counts.items()
+                )
+                
+                self.log_test("Category target counts", counts_correct,
+                            f"Counts: {category_counts}")
+                
+                return True
+                
+            else:
+                self.log_test("Expanded targets endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Expanded targets endpoint", False, f"Connection error: {str(e)}")
+            return False
+
+    def test_expanded_stats_performance_endpoint(self):
+        """Test /api/expanded/stats/performance endpoint"""
+        print("\n=== Testing Expanded Stats Performance Endpoint ===")
+        
+        try:
+            response = requests.get(f"{API_BASE}/expanded/stats/performance", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields
+                required_fields = ['chemberta', 'chemprop', 'comparison']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Expanded stats endpoint structure", False, f"Missing fields: {missing_fields}")
+                    return False
+                
+                # Check ChemBERTa stats
+                chemberta_stats = data.get('chemberta', {})
+                chemberta_required = ['overall_r2', 'category_performance', 'training_info']
+                chemberta_missing = [field for field in chemberta_required if field not in chemberta_stats]
+                
+                self.log_test("ChemBERTa stats structure", len(chemberta_missing) == 0,
+                            f"ChemBERTa missing fields: {chemberta_missing}")
+                
+                # Check Chemprop stats
+                chemprop_stats = data.get('chemprop', {})
+                chemprop_required = ['overall_r2', 'category_performance', 'training_info']
+                chemprop_missing = [field for field in chemprop_required if field not in chemprop_stats]
+                
+                self.log_test("Chemprop stats structure", len(chemprop_missing) == 0,
+                            f"Chemprop missing fields: {chemprop_missing}")
+                
+                # Check comparison stats
+                comparison = data.get('comparison', {})
+                comparison_required = ['chemberta_better_targets', 'chemprop_better_targets', 'similar_targets']
+                comparison_missing = [field for field in comparison_required if field not in comparison]
+                
+                self.log_test("Comparison stats structure", len(comparison_missing) == 0,
+                            f"Comparison missing fields: {comparison_missing}")
+                
+                # Check category performance for both models
+                if 'category_performance' in chemberta_stats:
+                    chemberta_categories = chemberta_stats['category_performance']
+                    expected_categories = ['oncoprotein', 'tumor_suppressor', 'metastasis_suppressor']
+                    has_all_chemberta_categories = all(cat in chemberta_categories for cat in expected_categories)
+                    
+                    self.log_test("ChemBERTa category performance", has_all_chemberta_categories,
+                                f"ChemBERTa categories: {list(chemberta_categories.keys())}")
+                
+                if 'category_performance' in chemprop_stats:
+                    chemprop_categories = chemprop_stats['category_performance']
+                    expected_categories = ['oncoprotein', 'tumor_suppressor', 'metastasis_suppressor']
+                    has_all_chemprop_categories = all(cat in chemprop_categories for cat in expected_categories)
+                    
+                    self.log_test("Chemprop category performance", has_all_chemprop_categories,
+                                f"Chemprop categories: {list(chemprop_categories.keys())}")
+                
+                return True
+                
+            else:
+                self.log_test("Expanded stats endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Expanded stats endpoint", False, f"Connection error: {str(e)}")
+            return False
+
+    def test_expanded_models_error_handling(self):
+        """Test error handling when expanded models are not available"""
+        print("\n=== Testing Expanded Models Error Handling ===")
+        
+        all_passed = True
+        
+        # Test ChemBERTa prediction endpoint when model not available
+        try:
+            payload = {
+                "smiles": "CC(=O)OC1=CC=CC=C1C(=O)O",  # aspirin
+                "targets": ["EGFR", "BRAF"],
+                "activity_types": ["IC50"]
+            }
+            
+            response = requests.post(f"{API_BASE}/expanded/predict/chemberta", 
+                                   json=payload,
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=30)
+            
+            if response.status_code == 503:
+                data = response.json()
+                detail = data.get('detail', '')
+                
+                if 'not available' in detail.lower():
+                    self.log_test("Expanded ChemBERTa error handling", True, 
+                                f"Proper 503 error: {detail}")
+                else:
+                    self.log_test("Expanded ChemBERTa error handling", False, 
+                                f"Wrong error message: {detail}")
+                    all_passed = False
+            else:
+                # May return 200 if model is actually available, or other error codes
+                self.log_test("Expanded ChemBERTa error handling", True, 
+                            f"Response: HTTP {response.status_code} (model may be available)")
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Expanded ChemBERTa error handling", False, f"Connection error: {str(e)}")
+            all_passed = False
+        
+        # Test Chemprop prediction endpoint when model not available
+        try:
+            payload = {
+                "smiles": "Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C",  # imatinib
+                "targets": ["VEGFR2", "MET"],
+                "activity_types": ["IC50"]
+            }
+            
+            response = requests.post(f"{API_BASE}/expanded/predict/chemprop", 
+                                   json=payload,
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=30)
+            
+            if response.status_code == 503:
+                data = response.json()
+                detail = data.get('detail', '')
+                
+                if 'not available' in detail.lower():
+                    self.log_test("Expanded Chemprop error handling", True, 
+                                f"Proper 503 error: {detail}")
+                else:
+                    self.log_test("Expanded Chemprop error handling", False, 
+                                f"Wrong error message: {detail}")
+                    all_passed = False
+            else:
+                # May return 200 if model is actually available, or other error codes
+                self.log_test("Expanded Chemprop error handling", True, 
+                            f"Response: HTTP {response.status_code} (model may be available)")
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Expanded Chemprop error handling", False, f"Connection error: {str(e)}")
+            all_passed = False
+        
+        # Test model comparison endpoint
+        try:
+            payload = {
+                "smiles": "CCO",  # ethanol
+                "targets": ["EGFR"],
+                "activity_types": ["IC50"]
+            }
+            
+            response = requests.post(f"{API_BASE}/expanded/predict/compare", 
+                                   json=payload,
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=30)
+            
+            if response.status_code in [200, 503]:
+                self.log_test("Expanded model comparison endpoint", True, 
+                            f"Comparison endpoint accessible: HTTP {response.status_code}")
+            else:
+                self.log_test("Expanded model comparison endpoint", False, 
+                            f"Unexpected response: HTTP {response.status_code}")
+                all_passed = False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Expanded model comparison endpoint", False, f"Connection error: {str(e)}")
+            all_passed = False
+        
+        return all_passed
+
+    def test_expanded_backend_integration_loaded(self):
+        """Test that expanded_backend_integration.py router is properly loaded"""
+        print("\n=== Testing Expanded Backend Integration Router Loading ===")
+        
+        try:
+            # Test that the expanded endpoints are accessible (even if they return errors)
+            endpoints_to_test = [
+                "/expanded/health",
+                "/expanded/targets", 
+                "/expanded/stats/performance"
+            ]
+            
+            all_loaded = True
+            
+            for endpoint in endpoints_to_test:
+                try:
+                    response = requests.get(f"{API_BASE}{endpoint}", timeout=10)
+                    
+                    # Any response code other than 404 means the endpoint exists
+                    if response.status_code != 404:
+                        self.log_test(f"Expanded endpoint {endpoint}", True, 
+                                    f"Endpoint accessible: HTTP {response.status_code}")
+                    else:
+                        self.log_test(f"Expanded endpoint {endpoint}", False, 
+                                    f"Endpoint not found: HTTP 404")
+                        all_loaded = False
+                        
+                except requests.exceptions.RequestException as e:
+                    self.log_test(f"Expanded endpoint {endpoint}", False, f"Connection error: {str(e)}")
+                    all_loaded = False
+            
+            # Test POST endpoints exist
+            post_endpoints = [
+                "/expanded/predict/chemberta",
+                "/expanded/predict/chemprop",
+                "/expanded/predict/compare"
+            ]
+            
+            for endpoint in post_endpoints:
+                try:
+                    # Send invalid payload to test if endpoint exists
+                    response = requests.post(f"{API_BASE}{endpoint}", 
+                                           json={},
+                                           headers={'Content-Type': 'application/json'},
+                                           timeout=10)
+                    
+                    # Any response code other than 404 means the endpoint exists
+                    if response.status_code != 404:
+                        self.log_test(f"Expanded POST endpoint {endpoint}", True, 
+                                    f"Endpoint accessible: HTTP {response.status_code}")
+                    else:
+                        self.log_test(f"Expanded POST endpoint {endpoint}", False, 
+                                    f"Endpoint not found: HTTP 404")
+                        all_loaded = False
+                        
+                except requests.exceptions.RequestException as e:
+                    self.log_test(f"Expanded POST endpoint {endpoint}", False, f"Connection error: {str(e)}")
+                    all_loaded = False
+            
+            return all_loaded
+            
+        except Exception as e:
+            self.log_test("Expanded backend integration loading", False, f"Error: {str(e)}")
+            return False
+
     def test_real_chemprop_integration(self):
         """Test the new real Chemprop model router integration"""
         print("\n=== Testing Real Chemprop Model Router Integration ===")
