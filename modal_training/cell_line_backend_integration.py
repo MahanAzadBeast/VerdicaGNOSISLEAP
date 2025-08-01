@@ -271,6 +271,8 @@ def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredi
     
     try:
         # Try to use the trained model first
+        import sys
+        sys.path.append('/app/backend')
         from trained_cell_line_predictor import predict_with_trained_model
         
         # Convert genomic features to the expected format
