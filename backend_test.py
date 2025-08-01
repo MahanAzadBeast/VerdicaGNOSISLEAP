@@ -2373,7 +2373,9 @@ class EnhancedChemistryPlatformTester:
 
 if __name__ == "__main__":
     tester = EnhancedChemistryPlatformTester()
-    passed, failed, results = tester.run_all_tests()
+    
+    # Run the new real API integration tests
+    tester.run_real_api_integration_tests()
     
     # Exit with appropriate code
-    sys.exit(0 if failed == 0 else 1)
+    sys.exit(0 if len(tester.failed_tests) == 0 else 1)
