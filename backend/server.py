@@ -1073,6 +1073,27 @@ except Exception as e:
 # Include the router in the main app
 app.include_router(api_router)
 
+# Include additional routers
+if ONCOPROTEIN_AVAILABLE:
+    try:
+        app.include_router(oncoprotein_router)
+        logging.info("✅ Oncoprotein router included in main app")
+    except Exception as e:
+        logging.error(f"❌ Failed to include oncoprotein router: {e}")
+
+try:
+    app.include_router(modal_router, tags=["Modal GPU Training"])
+    logging.info("✅ Modal API router included in main app")
+except Exception as e:
+    logging.warning(f"⚠️ Modal API router not included: {e}")
+
+if EXPANDED_MODELS_AVAILABLE:
+    try:
+        app.include_router(expanded_router, tags=["Expanded Multi-Source Models"])
+        logging.info("✅ Expanded models router included in main app")
+    except Exception as e:
+        logging.error(f"❌ Failed to include expanded models router: {e}")
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
