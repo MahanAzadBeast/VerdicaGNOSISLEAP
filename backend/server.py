@@ -81,7 +81,6 @@ except Exception as e:
 try:
     sys.path.append('/app/modal_training')
     from expanded_backend_integration import expanded_router
-    # Note: expanded_router already has /api/expanded prefix, so include it in main app
     app.include_router(expanded_router, tags=["Expanded Multi-Source Models"])
     logging.info("✅ Expanded multi-source models integration loaded")
     EXPANDED_MODELS_AVAILABLE = True
