@@ -496,7 +496,7 @@ async def health_check():
             "real_ml_models": real_models_available,
             "oncoprotein_chemberta": ONCOPROTEIN_AVAILABLE,
             "chemprop_multitask_simulation": CHEMPROP_MULTITASK_AVAILABLE,
-            "real_trained_chemprop": REAL_CHEMPROP_AVAILABLE,
+            "cell_line_response_model": CELL_LINE_MODEL_AVAILABLE,
             "expanded_models": EXPANDED_MODELS_AVAILABLE
         },
         "real_ml_targets": real_models_status,
@@ -508,10 +508,10 @@ async def health_check():
         "ai_modules": {
             "chemberta_available": CHEMBERTA_AVAILABLE,
             "chemprop_simulation_available": CHEMPROP_MULTITASK_AVAILABLE,
-            "real_chemprop_available": REAL_CHEMPROP_AVAILABLE,
+            "cell_line_model_available": CELL_LINE_MODEL_AVAILABLE,
             "expanded_models_available": EXPANDED_MODELS_AVAILABLE,
             "propmolflow_generation_available": PROPMOLFLOW_AVAILABLE,
-            "total_ai_models": sum([CHEMBERTA_AVAILABLE, CHEMPROP_MULTITASK_AVAILABLE, REAL_CHEMPROP_AVAILABLE, EXPANDED_MODELS_AVAILABLE, PROPMOLFLOW_AVAILABLE])
+            "total_ai_models": sum([CHEMBERTA_AVAILABLE, CHEMPROP_MULTITASK_AVAILABLE, CELL_LINE_MODEL_AVAILABLE, EXPANDED_MODELS_AVAILABLE, PROPMOLFLOW_AVAILABLE])
         },
         "expanded_models_info": {
             "available": EXPANDED_MODELS_AVAILABLE,
