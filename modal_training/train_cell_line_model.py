@@ -20,7 +20,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import pickle
 import matplotlib.pyplot as plt
-import seaborn as sns
+# import seaborn as sns  # Optional for now
 import warnings
 warnings.filterwarnings("ignore")
 
