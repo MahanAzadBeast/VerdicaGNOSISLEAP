@@ -1927,17 +1927,24 @@ class EnhancedChemistryPlatformTester:
 
     def run_all_tests(self):
         """Run all tests and provide summary"""
-        print(f"🧪 Starting Real Chemprop Model Router Integration Testing")
+        print(f"🧪 Starting Expanded Database Integration Testing")
         print(f"Backend URL: {API_BASE}")
         print("=" * 80)
         
-        # Focus on Real Chemprop integration tests as requested
+        # Focus on Expanded Models integration tests as requested
         tests = [
-            # Real Chemprop Integration Tests (Primary Focus)
+            # Expanded Models Integration Tests (Primary Focus)
+            self.test_expanded_models_health_check,
+            self.test_expanded_models_health_endpoint,
+            self.test_expanded_targets_endpoint,
+            self.test_expanded_stats_performance_endpoint,
+            self.test_expanded_models_error_handling,
+            self.test_expanded_backend_integration_loaded,
+            
+            # Backend loading and health checks
             self.test_backend_loading_without_errors,
             self.test_health_endpoint_real_chemprop_status,
             self.test_existing_endpoints_compatibility,
-            self.test_real_chemprop_integration,
             
             # Core functionality tests (Secondary)
             self.test_health_endpoint_enhanced,
