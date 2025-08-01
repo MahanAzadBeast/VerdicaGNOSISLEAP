@@ -1115,6 +1115,13 @@ if EXPANDED_MODELS_AVAILABLE:
     except Exception as e:
         logging.error(f"❌ Failed to include expanded models router: {e}")
 
+if PROPMOLFLOW_AVAILABLE:
+    try:
+        app.include_router(generation_router, tags=["Molecular Generation"])
+        logging.info("✅ PropMolFlow molecular generation router included in main app")
+    except Exception as e:
+        logging.error(f"❌ Failed to include PropMolFlow router: {e}")
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
