@@ -103,7 +103,7 @@ async def get_cached_model_info():
     try:
         get_model_info = await get_modal_function("get_model_info")
         if get_model_info:
-            model_info = await asyncio.to_thread(get_model_info.remote)
+            model_info = get_model_info()  # No .remote() needed for lambda function
             _model_info_cache = model_info
             _cache_timestamp = current_time
             return model_info
