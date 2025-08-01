@@ -1,0 +1,5 @@
+{
+  "status": "failed",
+  "error": "train_focused_chemberta() got an unexpected keyword argument 'epochs'",
+  "timestamp": "2025-08-01T07:23:04.756567"
+}

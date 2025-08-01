@@ -3,3 +3,21 @@ Dataset: Expanded fixed extraction
 Total records: 24783
 Total targets: 20
 Epochs: 30
+❌ CHEMBERTA TRAINING FAILED: train_focused_chemberta() got an unexpected keyword argument 'epochs'
+Traceback (most recent call last):
+  File "<string>", line 15, in <module>
+  File "/root/.venv/lib/python3.11/site-packages/modal/_object.py", line 285, in wrapped
+    return await method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_functions.py", line 1570, in remote
+    return await self._call_function(args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_functions.py", line 1525, in _call_function
+    return await invocation.run_function()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_functions.py", line 285, in run_function
+    return await _process_result(item.result, item.data_format, self.stub, self.client)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_utils/function_utils.py", line 506, in _process_result
+    raise exc_with_hints(exc)
+TypeError: train_focused_chemberta() got an unexpected keyword argument 'epochs'
