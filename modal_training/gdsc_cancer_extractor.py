@@ -92,22 +92,39 @@ class GDSCDataExtractor:
             return None
     
     def extract_drug_sensitivity_data(self) -> Optional[pd.DataFrame]:
-        """Extract drug sensitivity data from GDSC"""
+        """Extract drug sensitivity data from GDSC using multiple endpoints"""
         
-        self.logger.info("🧪 Extracting GDSC drug sensitivity data...")
+        self.logger.info("🧪 Extracting GDSC drug sensitivity data from real sources...")
         
-        # Try to download drug sensitivity data
-        sensitivity_df = self.download_gdsc_file(
-            GDSC_URLS['drug_sensitivity'], 
-            'Drug Sensitivity Data'
-        )
+        # Try multiple GDSC data sources
+        data_sources = [
+            {
+                'url': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.4/GDSC2_fitted_dose_response_24Jul22.xlsx',
+                'description': 'GDSC2 Fitted Dose Response'
+            },
+            {
+                'url': 'https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.4/GDSC1_fitted_dose_response_24Jul22.xlsx',
+                'description': 'GDSC1 Fitted Dose Response'
+            },
+            {
+                'url': 'https://www.cancerrxgene.org/api/download/bulk_download',
+                'description': 'GDSC API Bulk Download'
+            }
+        ]
         
-        if sensitivity_df is None:
-            # Create realistic synthetic GDSC-style data
-            self.logger.info("📊 Creating realistic GDSC-style synthetic data...")
-            return self._create_synthetic_gdsc_data()
+        for source in data_sources:
+            try:
+                sensitivity_df = self.download_gdsc_file(source['url'], source['description'])
+                if sensitivity_df is not None and len(sensitivity_df) > 0:
+                    self.logger.info(f"✅ Successfully downloaded {source['description']}")
+                    return self._process_gdsc_sensitivity_data(sensitivity_df)
+            except Exception as e:
+                self.logger.warning(f"Failed to download {source['description']}: {e}")
+                continue
         
-        return self._process_gdsc_sensitivity_data(sensitivity_df)
+        # If all downloads fail, try alternative API approach
+        self.logger.info("📡 Trying GDSC API endpoint...")
+        return self._extract_via_gdsc_api()
     
     def _create_synthetic_gdsc_data(self) -> pd.DataFrame:
         """Create realistic synthetic GDSC-style drug sensitivity data"""
