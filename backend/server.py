@@ -79,6 +79,16 @@ except Exception as e:
     logging.warning(f"⚠️ Expanded models integration not available: {e}")
     EXPANDED_MODELS_AVAILABLE = False
 
+# Import PropMolFlow Molecular Generation
+try:
+    sys.path.append('/app/modal_training')
+    from propmolflow_backend_integration import generation_router
+    logging.info("✅ PropMolFlow molecular generation integration loaded")
+    PROPMOLFLOW_AVAILABLE = True
+except Exception as e:
+    logging.warning(f"⚠️ PropMolFlow integration not available: {e}")
+    PROPMOLFLOW_AVAILABLE = False
+
 # Multi-Task ChemBERTa Oncoprotein integration disabled
 ONCOPROTEIN_CHEMBERTA_AVAILABLE = False
 
