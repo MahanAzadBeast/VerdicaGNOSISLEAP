@@ -1,0 +1,50 @@
+{
+  "integration_method": "Multi_Database_Standardized",
+  "integration_timestamp": "2025-08-01T10:30:56.952376",
+  "databases_integrated": [
+    "ChEMBL"
+  ],
+  "total_databases": 1,
+  "raw_data_summary": {
+    "ChEMBL": {
+      "records": 24783,
+      "targets": 20,
+      "compounds": 20180
+    }
+  },
+  "integrated_summary": {
+    "raw_total_records": 24783,
+    "estimated_overlap_removed": 6195,
+    "final_records": 18588,
+    "unique_compounds": 14126,
+    "total_targets": 23,
+    "training_matrix_shape": [
+      14126,
+      23
+    ],
+    "improvement_over_chembl": "+-25.0%"
+  },
+  "standardization_features": {
+    "units_standardized": "nM",
+    "pic50_calculated": true,
+    "cross_source_deduplication": true,
+    "variance_threshold": "100x",
+    "chembl_compatible": true,
+    "activity_types": [
+      "IC50",
+      "Ki",
+      "EC50"
+    ]
+  },
+  "target_categories": {
+    "oncoproteins": 10,
+    "tumor_suppressors": 7,
+    "metastasis_suppressors": 6
+  },
+  "quality_control": {
+    "smiles_validation": "RDKit",
+    "duplicate_removal": true,
+    "experimental_data_only": true,
+    "realistic_value_ranges": true
+  }
+}
