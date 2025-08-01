@@ -1,0 +1,29 @@
+{
+  "pipeline_status": "launched",
+  "start_time": "2025-08-01T09:29:42.686537",
+  "stages": {
+    "pubchem_integration": {
+      "status": "launched",
+      "expected_duration": "30-60 minutes",
+      "expected_boost": "25K \u2192 75K+ records"
+    },
+    "chemberta_training": {
+      "status": "launched",
+      "expected_duration": "2-3 hours",
+      "architecture": "Multi-task (23 targets)",
+      "epochs": 30
+    },
+    "chemprop_training": {
+      "status": "launched",
+      "expected_duration": "3-4 hours",
+      "architecture": "Enhanced GNN (512 hidden, 5-layer)",
+      "epochs": 40
+    }
+  },
+  "total_expected_duration": "4-5 hours",
+  "monitoring_files": {
+    "pubchem_integration": "/app/modal_training/pubchem_integration_results.json",
+    "chemberta_results": "/app/modal_training/chemberta_enhanced_results.json",
+    "chemprop_results": "/app/modal_training/chemprop_enhanced_results.json"
+  }
+}
