@@ -1,0 +1,59 @@
+{
+  "pipeline_status": "completed",
+  "start_time": "2025-08-01T10:29:26.656173",
+  "completion_time": "2025-08-01T10:30:04.559342",
+  "total_duration": "0:00:37.903154",
+  "successful_extractions": 3,
+  "total_extractions": 4,
+  "extraction_results": {
+    "pubchem": {
+      "status": "success",
+      "raw_data_path": "/vol/datasets/pubchem_enhanced_raw_data.csv",
+      "matrix_path": "/vol/datasets/pubchem_enhanced_ic50_matrix.csv",
+      "metadata_path": "/vol/datasets/pubchem_enhanced_metadata.json",
+      "total_records": 1207,
+      "total_targets": 23,
+      "total_compounds": 164,
+      "matrix_shape": [
+        164,
+        24
+      ],
+      "ready_for_integration": true
+    },
+    "bindingdb": {
+      "status": "success",
+      "raw_data_path": "/vol/datasets/bindingdb_raw_data.csv",
+      "matrix_path": "/vol/datasets/bindingdb_ki_matrix.csv",
+      "metadata_path": "/vol/datasets/bindingdb_metadata.json",
+      "total_records": 1643,
+      "total_targets": 23,
+      "total_compounds": 254,
+      "matrix_shape": [
+        254,
+        24
+      ],
+      "ready_for_integration": true
+    },
+    "dtc": {
+      "status": "success",
+      "raw_data_path": "/vol/datasets/dtc_raw_data.csv",
+      "matrix_path": "/vol/datasets/dtc_ec50_matrix.csv",
+      "metadata_path": "/vol/datasets/dtc_metadata.json",
+      "total_records": 1438,
+      "total_targets": 23,
+      "total_compounds": 216,
+      "matrix_shape": [
+        216,
+        24
+      ],
+      "ready_for_integration": true
+    },
+    "integration": {
+      "status": "failed",
+      "error": "No module named 'dtc_extractor'",
+      "timestamp": "2025-08-01T10:30:04.418375"
+    }
+  },
+  "databases_ready": true,
+  "training_ready": false
+}
