@@ -102,7 +102,80 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Fix ChemBERTa device property bug during final evaluation and Chemprop CLI compatibility issues, then implement enhanced W&B logging for both training pipelines"
+user_problem_statement: "Update database integration pipeline to remove DTC, replace with GDSC, and use real API connections for PubChem, BindingDB, and GDSC. Build Cell Line Response Model with genomic features for IC₅₀ prediction in cancer cell lines."
+
+backend:
+  - task: "Real PubChem BioAssay API Integration"
+    implemented: true
+    working: false
+    file: "/app/modal_training/real_pubchem_extractor.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "IMPLEMENTED: Created real PubChem BioAssay data extractor using actual PubChem REST APIs. Features: Multi-synonym target search, bioassay filtering by activity types (IC50, EC50, Ki), compound SMILES retrieval, CSV bioactivity data parsing, comprehensive quality control. Uses real API endpoints with proper rate limiting and error handling. Ready for testing and deployment."
+
+  - task: "Enhanced GDSC Real Data Extraction"
+    implemented: true
+    working: false
+    file: "/app/modal_training/gdsc_cancer_extractor.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "ENHANCED: Updated GDSC extractor to use real API endpoints and multiple data sources. Features: GDSC API integration for drugs/cell lines/IC50 data, genomics data extraction from WES/WGS/expression files, realistic data processing with fallback options. Removed synthetic data generation in favor of real API calls. Ready for testing."
+
+  - task: "Real BindingDB API Integration"
+    implemented: true
+    working: false
+    file: "/app/modal_training/real_bindingdb_extractor.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "EXISTING: Real BindingDB extractor already implemented with RESTful API integration. Uses UniProt ID mapping for 23 oncology targets across 3 categories. Handles IC50/Ki/Kd extraction with proper unit conversion and quality control. Ready for integration testing."
+
+  - task: "Updated Database Integration Pipeline"
+    implemented: true
+    working: false
+    file: "/app/modal_training/updated_database_integration.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "IMPLEMENTED: Created new integration pipeline that completely removes DTC and uses real API sources only. Features: Dual-track architecture (protein-ligand activity + cell line sensitivity), real data extraction orchestration, cross-source deduplication with source priority (ChEMBL > PubChem > BindingDB), comprehensive metadata generation. Ready for execution and testing."
+
+  - task: "Cell Line Response Model Architecture"
+    implemented: true
+    working: false
+    file: "/app/modal_training/cell_line_response_model.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "IMPLEMENTED: Built complete Cell Line Response Model with multi-modal architecture. Features: MolecularEncoder (LSTM + attention for SMILES), GenomicEncoder (mutations/CNVs/expression), cross-modal attention fusion, uncertainty quantification, PyTorch implementation with GPU training. Designed for IC₅₀ prediction in cancer cell lines using drug structure + genomic features."
+
+  - task: "DTC Integration Removal"
+    implemented: true
+    working: true
+    file: "Multiple files"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "COMPLETED: Successfully removed all DTC integration from the pipeline as requested. Updated database integration to exclude DTC completely, created new pipeline focusing on ChEMBL + Real PubChem + Real BindingDB + GDSC. All new extractors and integration scripts exclude DTC references."
 
 backend:
   - task: "ChemBERTa Device Property Bug Fix"
