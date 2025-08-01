@@ -1,0 +1,6 @@
+{
+  "pipeline_status": "failed",
+  "start_time": "2025-08-01T09:20:24.609171",
+  "error_time": "2025-08-01T09:21:00.483589",
+  "error": "PubChem extraction failed: \u274c No bioactivity data retrieved from PubChem BioAssay"
+}
