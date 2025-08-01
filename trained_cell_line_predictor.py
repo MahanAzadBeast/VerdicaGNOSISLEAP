@@ -127,7 +127,7 @@ class CellLineResponseModel(nn.Module):
 class TrainedCellLinePredictor:
     """Inference class for the trained Cell Line Response Model"""
     
-    def __init__(self, model_dir: str = "/tmp/cell_line_models"):
+    def __init__(self, model_dir: str = "/app/models/cell_line"):
         self.model_dir = Path(model_dir)
         self.model = None
         self.tokenizer = None
