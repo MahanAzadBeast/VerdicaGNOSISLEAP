@@ -19,8 +19,8 @@ from pathlib import Path
 # Load environment variables
 load_dotenv('/app/frontend/.env')
 
-# Get backend URL from environment
-BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL', 'http://localhost:8001')
+# Get backend URL from environment - use localhost for testing
+BACKEND_URL = 'http://localhost:8001'
 API_BASE = f"{BACKEND_URL}/api"
 
 class CellLineModelTester:
