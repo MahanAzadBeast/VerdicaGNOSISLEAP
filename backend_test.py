@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Enhanced Predictive Chemistry Platform Backend Testing
-Tests target-specific IC50 predictions and enhanced model validation
+Tests target-specific IC50 predictions, enhanced model validation, and new real API integration pipeline
 """
 
 import requests
@@ -11,6 +11,9 @@ import sys
 from typing import Dict, List, Any
 import os
 from dotenv import load_dotenv
+import pandas as pd
+import numpy as np
+from pathlib import Path
 
 # Load environment variables
 load_dotenv('/app/frontend/.env')
