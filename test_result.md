@@ -462,6 +462,66 @@ backend:
           agent: "main"
           comment: "Need to add interactive hover tooltips, zoom/pan functionality, and CSV/image export capabilities."
 
+  - task: "Expanded Multi-Source Data Extraction"
+    implemented: true
+    working: false
+    file: "/app/modal_training/expanded_multisource_extractor.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "IMPLEMENTED: Created comprehensive multi-source data extraction pipeline. Features: 23 targets (10 oncoproteins + 7 tumor suppressors + 6 metastasis suppressors), 4 data sources (ChEMBL, PubChem, BindingDB, DTC), 5 activity types (IC50, EC50, Ki, Inhibition %, Activity %), advanced data quality control (experimental assays only, median aggregation, >100x variance filtering), standardized units conversion. Ready for execution on Modal."
+
+  - task: "Expanded ChemBERTa Training Pipeline"
+    implemented: true
+    working: false
+    file: "/app/modal_training/train_expanded_chemberta.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "IMPLEMENTED: Created expanded ChemBERTa training for 23 targets with multiple activity types. Features: Activity-specific feature layers, Multi-task architecture (23 targets × 3 activity types = 69 prediction tasks), Enhanced W&B logging with category-wise performance tracking, 30 epochs training optimized for expanded dataset. Ready for training on Modal A100."
+
+  - task: "Expanded Chemprop Training Pipeline" 
+    implemented: true
+    working: false
+    file: "/app/modal_training/train_expanded_chemprop.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "IMPLEMENTED: Created expanded Chemprop training for 23 targets with category-wise analysis. Features: Enhanced GNN with 512 hidden units and 5-layer depth, Category-wise performance tracking (oncoproteins vs tumor suppressors vs metastasis suppressors), 40 epochs training for complex multi-target learning, W&B integration with category breakdowns. Ready for training on Modal A100."
+
+  - task: "Master Training Pipeline Orchestration"
+    implemented: true
+    working: false
+    file: "/app/modal_training/launch_expanded_pipeline.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "IMPLEMENTED: Created master pipeline orchestrating complete workflow: Stage 1 (Multi-source data extraction), Stage 2 (Expanded ChemBERTa training), Stage 3 (Expanded Chemprop training), Automatic model comparison and performance analysis across target categories. Estimated 6-12 hours total execution time."
+
+  - task: "Expanded Backend Integration"
+    implemented: true
+    working: false
+    file: "/app/modal_training/expanded_backend_integration.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "IMPLEMENTED: Created backend integration for expanded models. Features: /api/expanded endpoints for both ChemBERTa and Chemprop, Category-wise prediction analysis, Model comparison with performance breakdowns, Activity-type specific predictions (IC50, EC50, Ki), Target information with full names and categories. Integrated into main server.py."
+
 metadata:
   created_by: "testing_agent"
   version: "1.0"
