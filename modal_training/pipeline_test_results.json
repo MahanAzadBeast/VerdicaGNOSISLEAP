@@ -1,0 +1,49 @@
+{
+  "timestamp": "2025-08-01T07:08:38.834422",
+  "total_tests": 10,
+  "passed_tests": 7,
+  "success_rate": 70.0,
+  "results": {
+    "Modal Connectivity": {
+      "passed": false,
+      "duration": 1.430511474609375e-05
+    },
+    "Dependencies": {
+      "passed": true,
+      "duration": 0.6259291172027588
+    },
+    "File Permissions": {
+      "passed": true,
+      "duration": 0.00034236907958984375
+    },
+    "W&B Integration": {
+      "passed": true,
+      "duration": 0.8145105838775635
+    },
+    "Modal Secrets": {
+      "passed": false,
+      "duration": 2.86102294921875e-05
+    },
+    "Extraction App": {
+      "passed": true,
+      "duration": 0.1523594856262207
+    },
+    "ChemBERTa App": {
+      "passed": true,
+      "duration": 4.9279820919036865
+    },
+    "Chemprop App": {
+      "passed": true,
+      "duration": 1.5704784393310547
+    },
+    "Backend Integration": {
+      "passed": true,
+      "duration": 0.31966257095336914
+    },
+    "Mini Extraction": {
+      "passed": false,
+      "duration": 0.03402209281921387
+    }
+  },
+  "recommendation": "fix_issues"
+}
