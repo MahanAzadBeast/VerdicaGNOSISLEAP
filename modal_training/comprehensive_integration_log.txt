@@ -1,0 +1,3 @@
+🔗 STARTING COMPREHENSIVE DATABASE INTEGRATION
+Databases: ChEMBL + PubChem + BindingDB + DTC
+Expected: 80K-100K+ integrated records

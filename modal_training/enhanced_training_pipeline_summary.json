@@ -1,0 +1,44 @@
+{
+  "pipeline_status": "launched",
+  "pipeline_type": "comprehensive_enhanced_training",
+  "start_time": "2025-08-01T09:43:25.972305",
+  "stages": {
+    "database_integration": {
+      "status": "launched",
+      "databases": [
+        "ChEMBL",
+        "PubChem",
+        "BindingDB",
+        "DTC"
+      ],
+      "expected_duration": "45-90 minutes",
+      "expected_records": "80K-100K+"
+    },
+    "enhanced_chemberta": {
+      "status": "launched",
+      "expected_duration": "3-5 hours",
+      "architecture": "Enhanced multi-task transformer",
+      "epochs": 40,
+      "targets": 23
+    },
+    "enhanced_chemprop": {
+      "status": "launched",
+      "expected_duration": "4-6 hours",
+      "architecture": "Advanced GNN (1024 hidden, 6-layer)",
+      "epochs": 50,
+      "targets": 23
+    }
+  },
+  "total_expected_duration": "6-8 hours",
+  "expected_improvements": {
+    "dataset_size": "4x increase (25K \u2192 100K records)",
+    "target_coverage": "23 comprehensive targets",
+    "model_performance": "+15-30% R\u00b2 improvement expected",
+    "chemical_diversity": "Multi-database chemical space"
+  },
+  "monitoring_files": {
+    "integration_results": "/app/modal_training/comprehensive_integration_results.json",
+    "chemberta_results": "/app/modal_training/enhanced_chemberta_comprehensive_results.json",
+    "chemprop_results": "/app/modal_training/enhanced_chemprop_comprehensive_results.json"
+  }
+}
