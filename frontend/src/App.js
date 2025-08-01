@@ -766,6 +766,7 @@ const App = () => {
       
       {activeTab === 'home' && <HomeTab setActiveTab={setActiveTab} />}
       {activeTab === 'ai-modules' && <AIModulesPage />}
+      {activeTab === 'cell-line' && <CellLineResponseModel />}
       {activeTab === 'analysis' && <AnalysisTab analysisData={analysisData} />}
       {activeTab === 'about' && <AboutTab />}
     </div>
