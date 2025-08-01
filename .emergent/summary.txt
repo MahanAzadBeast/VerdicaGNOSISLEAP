@@ -1,18 +1,18 @@
 <analysis>
-The previous AI engineer made significant progress on the Veridica AI platform, from initial ChemBERTa training and UI integration to tackling complex Chemprop multi-target training and deployment issues. Key challenges included adapting to Chemprop CLI breaking changes (v2.2.0), resolving model file format mismatches during inference, and debugging UI display errors (e.g., N/A for IC50, map function errors). A major focus was replacing a statistical fallback with a direct PyTorch-based Chemprop inference system, followed by aligning ChemBERTa training epochs to 50 for fair comparison. A critical massive variance issue between ChemBERTa and Chemprop predictions was diagnosed as a pIC50 scale mismatch due to differing training preprocessing, which was resolved using a linear calibration. The final remaining issue is persistent frontend navigation problems preventing full UI testing, although backend models are confirmed working.
+The previous AI engineer developed the Veridica AI platform, evolving it from initial ChemBERTa training and UI integration to a robust multi-model prediction system. Significant effort was spent resolving critical issues like Chemprop CLI version changes, model file format mismatches, and a massive variance in ChemBERTa/Chemprop predictions due to pIC50 scale differences, fixed via linear calibration. The work then pivoted to expanding the prediction models' training data by integrating multiple bioactivity sources and setting up a comprehensive multi-stage training pipeline for ChemBERTa and Chemprop. This pipeline faced initial deployment and data integrity issues (e.g.,  due to DataFrame column mismatch) which were debugged and fixed. Most recently, the strategic focus shifted towards AI-driven molecular generation, leading to the integration of PropMolFlow. The latest task involves expanding the dataset further with PubChem BioAssay to support the training of both prediction and generation models, recognizing the significant data requirements for robust generative AI.
 </analysis>
 
 <product_requirements>
-The Veridica AI platform is an AI-driven drug discovery interface designed to predict various molecular properties (Bioactivity, Toxicity, ADME, Physicochemical, Drug-likeness) from SMILES input. It's built with a React frontend, FastAPI backend, and MongoDB, leveraging Modal.com for intensive ML computations. A core feature is IC₅₀ prediction using pre-trained Chemprop and MolBERT/ChemBERTa models. The application features a dark-themed, responsive UI with Home, Predict Molecule Properties, Result Analysis, and About/Contact sections, including a Spline 3D animation. Recent enhancements focused on training a multi-task ChemBERTa model on Modal for 14 oncoproteins using ChEMBL data, integrating Weights & Biases for tracking, and exposing this model for inference in the UI. The UI was refactored into an AI Modules page, consolidating ChemBERTa and Chemprop under a Ligand Activity Predictor Module to facilitate model comparison and multi-property prediction.
+The Veridica AI platform is an AI-driven drug discovery interface predicting molecular properties (Bioactivity, Toxicity, ADME, Physicochemical, Drug-likeness) from SMILES. It uses a React frontend, FastAPI backend, MongoDB, and Modal.com for ML. Core features include IC₅₀ prediction via Chemprop and ChemBERTa models. The UI is dark-themed and responsive, with sections for Home, Predict Molecule Properties, Result Analysis, and About/Contact. Recent work focused on multi-task ChemBERTa training for 14 oncoproteins using ChEMBL data, integrated with Weights & Biases, and exposed via a refactored AI Modules page, unifying ChemBERTa and Chemprop under a Ligand Activity Predictor Module for comparison. The current user request is to expand the prediction models' databases to include more oncoproteins, tumor suppressors, and metastasis suppressors (23 total targets), incorporating additional data sources like PubChem BioAssay, BindingDB, and DTC, ensuring standardized datasets (median IC50 for duplicates, discard >100-fold difference, high-confidence experimental assays only). The long-term vision is to expand into AI molecule/drug generation using PropMolFlow.
 </product_requirements>
 
 <key_technical_concepts>
--   **Molecular Models:** MolBERT, ChemBERTa (Hugging Face Transformers), Chemprop (Graph Neural Network - GNN).
--   **Web Stack:** React.js, FastAPI, MongoDB, Tailwind CSS.
--   **ML Platform:** Modal.com (for GPU/high-memory tasks), PyTorch, PyTorch Lightning.
--   **MLOps/Experiment Tracking:** Weights & Biases (W&B).
--   **Chemistry:** RDKit, ChEMBL API, SMILES, IC₅₀/pIC₅₀.
--   **Deployment/Infrastructure:** Supervisor, Kubernetes Ingress, Docker.
+- **Molecular Models**: ChemBERTa (Hugging Face Transformers), Chemprop (Graph Neural Network), PropMolFlow (Flow Matching for Generation).
+- **Web Stack**: React.js, FastAPI, MongoDB, Tailwind CSS.
+- **ML Platform**: Modal.com (for GPU/high-memory tasks), PyTorch, PyTorch Lightning.
+- **MLOps/Experiment Tracking**: Weights & Biases (W&B).
+- **Chemistry**: RDKit, ChEMBL, PubChem, BindingDB, DTC, SMILES, IC₅₀/pIC₅₀.
+- **Deployment**: Supervisor, Kubernetes Ingress.
 </key_technical_concepts>
 
 <code_architecture>
@@ -20,107 +20,56 @@ The application employs a React frontend, a FastAPI backend, and MongoDB, with i
 
 
 
--   ****: The core FastAPI backend.
-    -   **Importance**: Defines API endpoints, integrates various prediction services.
-    -   **Changes**: Updated to include , , and crucially  routers.  endpoint updated to reflect real Chemprop model status.
--   ****: Modal function for multi-task ChemBERTa training.
-    -   **Importance**: Script for training ChemBERTa models on Modal GPUs.
-    -   **Changes**: Fixed device bug, adjusted model loading, updated W&B logging. Epochs were increased from 20 to 50 to match Chemprop. WandB run name updated.
--   ****: Modal function for focused multi-task Chemprop training.
-    -   **Importance**: Script for training Chemprop models on selected targets.
-    -   **Changes**: Extensively modified for Chemprop 2.2.0 CLI (e.g., ), updated argument names (), fixed early stopping/metric tracking.
--   ****: Modal function for ChemBERTa inference.
-    -   **Importance**: Provides an endpoint for predictions with trained ChemBERTa model.
-    -   **Changes**: Newly created. Was later modified to directly load the real 50-epoch model and convert pIC50 to μM, then further calibrated via a linear transformation ().
--   ****: FastAPI router for ChemBERTa predictions.
-    -   **Importance**: Exposes ChemBERTa inference functionality via the backend API.
-    -   **Changes**: Newly created. Defines  and  endpoints. Was later updated to load the new  functions and show 50-epoch info.
--   ****: FastAPI router for Chemprop predictions.
-    -   **Importance**: Exposes Chemprop inference functionality (originally simulation, now real).
-    -   **Changes**: Newly created.
--   ****: Main React application component and router.
-    -   **Importance**: Controls overall application structure and navigation.
-    -   **Changes**: Updated to include new routes for AI Modules page and integrate . Includes tab-based navigation logic.
--   ****: Application's homepage component.
-    -   **Importance**: Landing page and entry point.
-    -   **Changes**: Modified to highlight and link to AI Modules feature.
--   ****: Container for various AI modules in the UI.
-    -   **Importance**: Centralized page for AI-driven features.
-    -   **Changes**: Newly created. Loads  based on module selection.
--   ****: Module for ligand activity predictions.
-    -   **Importance**: Unifies different prediction models and property types, crucial for model comparison.
-    -   **Changes**: Extensively modified for model comparison UI, prediction function handling multiple models,  component, model selection. Fixed , corrected API field mapping (/), improved error handling (503). Modified to display IC50 in μM and to properly display ChemBERTa and Chemprop comparison.
--   ****: Python dependencies.
-    -   **Changes**: Updated to include Usage: wandb [OPTIONS] COMMAND [ARGS]...
-
-Options:
-  --version  Show the version and exit.
-  --help     Show this message and exit.
-
-Commands:
-  agent         Run the W&B agent
-  artifact      Commands for interacting with artifacts
-  beta          Beta versions of wandb CLI commands.
-  controller    Run the W&B local sweep controller
-  disabled      Disable W&B.
-  docker        Run your code in a docker container.
-  docker-run    Wrap `docker run` and adds WANDB_API_KEY and WANDB_DOCKER...
-  enabled       Enable W&B.
-  init          Configure a directory with Weights & Biases
-  job           Commands for managing and viewing W&B jobs
-  launch        Launch or queue a W&B Job.
-  launch-agent  Run a W&B launch agent.
-  launch-sweep  Run a W&B launch sweep (Experimental).
-  login         Login to Weights & Biases
-  offline       Disable W&B sync
-  online        Enable W&B sync
-  pull          Pull files from Weights & Biases
-  restore       Restore code, config and docker state for a run
-  scheduler     Run a W&B launch sweep scheduler (Experimental)
-  server        Commands for operating a local W&B server
-  status        Show configuration settings
-  sweep         Initialize a hyperparameter sweep.
-  sync          Upload an offline training directory to W&B
-  verify        Verify your local instance, usage: accelerate <command> [<args>]
-
-positional arguments:
-  {config,estimate-memory,env,launch,merge-weights,tpu-config,test,to-fsdp2}
-                        accelerate command helpers
-
-options:
-  -h, --help            show this help message and exit, and other necessary libraries.
--   ** (NEW)**: Script for direct PyTorch loading and inference of Chemprop models.
-    -   **Importance**: Bypasses problematic Chemprop CLI for prediction.
-    -   **Changes**: Newly created to directly load and use Chemprop models.
--   ** (NEW)**: FastAPI router for the real Chemprop model.
-    -   **Importance**: Exposes functional Chemprop inference to frontend.
-    -   **Changes**: Newly created and integrated into . Modified to use  via direct import instead of Modal lookup.
--   ** (NEW)**: Actual Chemprop inference on Modal.
-    -   **Importance**: Loads and runs predictions with the trained Chemprop model.
-    -   **Changes**: Newly created. CLI arguments updated to .
--   ** (NEW)**: Integration script for the 50-epoch ChemBERTa model.
-    -   **Importance**: Provides specific status and prediction functions for the updated ChemBERTa model.
-    -   **Changes**: Newly created to ensure the backend uses the latest trained ChemBERTa model.
--   ** (NEW)**: Placeholder for future unified data preprocessing.
-    -   **Importance**: Outlines a long-term solution to avoid model scale mismatches.
-    -   **Changes**: Newly created.
+- ****: The core FastAPI backend.
+    - **Importance**: Defines API endpoints and integrates various prediction and now generation services.
+    - **Changes**: Updated to include , , , , and  routers. The health endpoint was updated to reflect the status of all integrated models, including expanded prediction models and PropMolFlow generation capabilities. A critical fix involved resolving duplicated FastAPI app declarations, ensuring all routers are correctly included.
+- ****: New Modal function for multi-source data extraction.
+    - **Importance**: Central to collecting bioactivity data from multiple sources (ChEMBL, PubChem, BindingDB, DTC).
+    - **Changes**: Newly created to implement the expanded data collection logic, including deduplication and filtering based on user requirements. This file was later refined and a  was created to address  and other stability issues.
+- ****: New FastAPI router for expanded prediction models.
+    - **Importance**: Exposes the prediction functionality for models trained on the expanded dataset.
+    - **Changes**: Newly created. Defines  endpoints for health, prediction, and comparison. Integrated into .
+- ****: New script to orchestrate the entire expanded data and training pipeline on Modal.
+    - **Importance**: Automates the sequential execution of data extraction, ChemBERTa training, and Chemprop training.
+    - **Changes**: Newly created. Faced initial issues with Modal  object references, leading to the creation of individual launch scripts and a monitoring system.
+- ****: Corrected version of the multi-source extractor.
+    - **Importance**: Addresses critical DataFrame column (, )  and other stability issues found during testing.
+    - **Changes**: Newly created as a robust version of , designed to handle empty DataFrames, API compatibility, and robust error handling during data collection.
+- ****: New file defining the PropMolFlow model architecture and core generation logic.
+    - **Importance**: Contains the implementation of the Property Encoder, Flow Matching Network, and Molecular Decoder for property-guided molecule generation.
+    - **Changes**: Newly created as part of the shift to generative AI. This is a placeholder for the actual PropMolFlow model which will need training.
+- ****: New FastAPI router for PropMolFlow generation.
+    - **Importance**: Exposes the molecular generation capabilities via the backend API.
+    - **Changes**: Newly created. Defines  endpoints for various generation tasks (e.g., property-guided, multi-target). Integrated into .
+- ****: New script to monitor the fixed expanded pipeline.
+    - **Importance**: Automatically tracks progress of extraction and queues subsequent training stages.
+    - **Changes**: Newly created to provide robust, background monitoring for the multi-stage data and training pipeline.
+- ****: New script for PubChem BioAssay data extraction.
+    - **Importance**: Aims to integrate PubChem BioAssay data to significantly expand the training dataset for both prediction and generation models.
+    - **Changes**: Newly created; currently in the initial stages of implementation.
 </code_architecture>
 
 <pending_tasks>
--   Fully implement visualizations (bar graphs, scatter plots, heatmaps) and interactive features within the Result Analysis tab.
--   Debug and fully implement the fine-tuning of the pre-trained BenevolentAI MolBERT model if needed.
--   Fix the persistent frontend navigation issue, preventing direct access to the Ligand Activity Predictor page for UI-based testing.
--   Implement unified data preprocessing for future model trainings to eliminate the need for post-hoc calibration.
+- Fully implement visualizations (bar graphs, scatter plots, heatmaps) and interactive features within the Result Analysis tab.
+- Debug and fully implement the fine-tuning of the pre-trained BenevolentAI MolBERT model if needed.
+- Fix the persistent frontend navigation issue, preventing direct access to the Ligand Activity Predictor page for UI-based testing.
+- Implement unified data preprocessing for future model trainings to eliminate the need for post-hoc calibration.
+- Complete the integration of PubChem BioAssay data into the data extraction pipeline.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was focused on resolving a massive variance issue in IC50 predictions between ChemBERTa and Chemprop when displayed in the Model Architecture Comparison. This variance (initially >15,000x for EGFR) was found not to be due to different conversion formulas (as initially suspected, then debunked by mathematical proof) but rather because the underlying pIC50 predictions from each model were on drastically different scales (ChemBERTa at ~5.4 pIC50, Chemprop at ~8.1 pIC50 for Imatinib EGFR).
+Immediately before this summary request, the AI engineer was focused on addressing two primary objectives: first, resolving a massive variance issue in IC50 predictions between ChemBERTa and Chemprop, which was successfully mitigated by applying a linear calibration to ChemBERTa's pIC50 predictions (). This significantly reduced prediction discrepancies. Second, the user requested a major expansion of the training databases for both prediction models (ChemBERTa and Chemprop) to include more targets (23, comprising oncoproteins, tumor suppressors, and metastasis suppressors) and additional data sources (PubChem, BindingDB, DTC).
 
-The solution implemented was a **linear calibration** applied to ChemBERTa's raw pIC50 predictions within  and . The formula  was used to shift ChemBERTa's scale to align with Chemprop's, which was deemed closer to literature values. This reduced the variance by 97%, making predictions scientifically reasonable (e.g., EGFR difference reduced to ~19x, BRAF and ALK became nearly identical).
+This led to the implementation of a new multi-source data extraction and training pipeline (, , ), and corresponding backend integration (). During this integration, a critical issue with duplicate FastAPI app declarations in  causing 404 errors for new endpoints was diagnosed and fixed.
 
-Concurrently, there are persistent **frontend navigation issues** where clicking AI Modules or Ligand Activity Predictor cards does not navigate away from the home page. This prevents direct UI testing of the implemented calibration changes, despite backend APIs confirming the calibrated values are being served. The last action was to attempt verifying the calibrated values in the frontend, but was blocked by the navigation bug.
+The pipeline was launched, but encountered  during extraction due to DataFrame column mismatches. This was addressed by creating a  and a new  to ensure robust, background execution of the extraction and subsequent training. This fixed pipeline is currently running.
+
+In parallel, a strategic shift towards AI molecule generation was initiated, with the user deciding to integrate **PropMolFlow**. The AI engineer successfully implemented the basic PropMolFlow architecture () and integrated its generation capabilities into the backend API (), creating new endpoints and updating the health status. This integration has been tested and confirmed to be fully functional from the backend.
+
+The user then raised concerns about the sufficiency of the current 25K dataset for PropMolFlow training and its ability to generate chemically sound molecules. The AI engineer provided a detailed assessment, highlighting 25K as borderline and chemical validity as a major concern. A comprehensive strategy was proposed to expand the dataset to 174K+ records from 15 sources (including PubChem BioAssay, IUPHAR, GDSC, Patent Mining) and to implement robust chemical validity constraints. The immediate next step decided upon was to incorporate PubChem BioAssay into the existing data extraction pipeline to boost the dataset size from 25K to 75K+ for existing models, and prepare for PropMolFlow training. The work is currently focused on implementing this PubChem BioAssay enhancement ().
 </current_work>
 
 <optional_next_step>
-Diagnose and fix the persistent frontend navigation issue preventing access to the Ligand Activity Predictor page.
+Complete the integration of PubChem BioAssay data into the  to enhance the dataset.
 </optional_next_step>
+
