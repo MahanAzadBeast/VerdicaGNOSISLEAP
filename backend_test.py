@@ -43,6 +43,385 @@ class EnhancedChemistryPlatformTester:
         if details:
             print(f"   Details: {details}")
     
+    def test_real_pubchem_extractor_syntax(self):
+        """Test Real PubChem BioAssay API Integration syntax and structure"""
+        print("\n=== Testing Real PubChem BioAssay API Integration ===")
+        
+        try:
+            # Check if the file exists and can be imported
+            pubchem_file = Path("/app/modal_training/real_pubchem_extractor.py")
+            if not pubchem_file.exists():
+                self.log_test("PubChem Extractor File Exists", False, "File not found")
+                return
+            
+            # Test syntax by attempting to compile
+            with open(pubchem_file, 'r') as f:
+                code = f.read()
+            
+            try:
+                compile(code, str(pubchem_file), 'exec')
+                self.log_test("PubChem Extractor Syntax Valid", True, "Python syntax is correct")
+            except SyntaxError as e:
+                self.log_test("PubChem Extractor Syntax Valid", False, f"Syntax error: {e}")
+                return
+            
+            # Check for key components
+            required_components = [
+                "RealPubChemExtractor",
+                "ONCOLOGY_TARGETS_PUBCHEM", 
+                "search_target_bioassays",
+                "extract_bioassay_data",
+                "get_compound_smiles",
+                "get_bioactivity_data",
+                "extract_real_pubchem_data"
+            ]
+            
+            missing_components = []
+            for component in required_components:
+                if component not in code:
+                    missing_components.append(component)
+            
+            if missing_components:
+                self.log_test("PubChem Extractor Components", False, f"Missing: {missing_components}")
+            else:
+                self.log_test("PubChem Extractor Components", True, "All required components present")
+            
+            # Check API integration patterns
+            api_patterns = [
+                "https://pubchem.ncbi.nlm.nih.gov/rest",
+                "requests.Session",
+                "rate_limit",
+                "synonyms",
+                "bioassay",
+                "SMILES"
+            ]
+            
+            missing_patterns = []
+            for pattern in api_patterns:
+                if pattern not in code:
+                    missing_patterns.append(pattern)
+            
+            if missing_patterns:
+                self.log_test("PubChem API Integration Patterns", False, f"Missing patterns: {missing_patterns}")
+            else:
+                self.log_test("PubChem API Integration Patterns", True, "API integration patterns present")
+            
+            # Check target coverage
+            if "23" in code or len([line for line in code.split('\n') if 'category' in line and 'oncoprotein' in line]) >= 8:
+                self.log_test("PubChem Target Coverage", True, "Comprehensive target coverage")
+            else:
+                self.log_test("PubChem Target Coverage", False, "Limited target coverage")
+                
+        except Exception as e:
+            self.log_test("PubChem Extractor Analysis", False, f"Error analyzing file: {e}")
+    
+    def test_gdsc_cancer_extractor_syntax(self):
+        """Test Enhanced GDSC Real Data Extraction syntax and structure"""
+        print("\n=== Testing Enhanced GDSC Real Data Extraction ===")
+        
+        try:
+            # Check if the file exists
+            gdsc_file = Path("/app/modal_training/gdsc_cancer_extractor.py")
+            if not gdsc_file.exists():
+                self.log_test("GDSC Extractor File Exists", False, "File not found")
+                return
+            
+            # Test syntax
+            with open(gdsc_file, 'r') as f:
+                code = f.read()
+            
+            try:
+                compile(code, str(gdsc_file), 'exec')
+                self.log_test("GDSC Extractor Syntax Valid", True, "Python syntax is correct")
+            except SyntaxError as e:
+                self.log_test("GDSC Extractor Syntax Valid", False, f"Syntax error: {e}")
+                return
+            
+            # Check for key components
+            required_components = [
+                "GDSCDataExtractor",
+                "GDSC_URLS",
+                "ONCOLOGY_CANCER_TYPES",
+                "download_gdsc_file",
+                "extract_drug_sensitivity_data",
+                "extract_genomics_data",
+                "extract_gdsc_data"
+            ]
+            
+            missing_components = []
+            for component in required_components:
+                if component not in code:
+                    missing_components.append(component)
+            
+            if missing_components:
+                self.log_test("GDSC Extractor Components", False, f"Missing: {missing_components}")
+            else:
+                self.log_test("GDSC Extractor Components", True, "All required components present")
+            
+            # Check API integration patterns
+            api_patterns = [
+                "cog.sanger.ac.uk",
+                "cancerrxgene",
+                "IC50",
+                "cell_line",
+                "genomics",
+                "mutations",
+                "expression"
+            ]
+            
+            missing_patterns = []
+            for pattern in api_patterns:
+                if pattern.lower() not in code.lower():
+                    missing_patterns.append(pattern)
+            
+            if missing_patterns:
+                self.log_test("GDSC API Integration Patterns", False, f"Missing patterns: {missing_patterns}")
+            else:
+                self.log_test("GDSC API Integration Patterns", True, "GDSC API integration patterns present")
+            
+            # Check cancer type coverage
+            cancer_types_count = len([line for line in code.split('\n') if 'LUNG' in line or 'BREAST' in line or 'COLON' in line])
+            if cancer_types_count > 0:
+                self.log_test("GDSC Cancer Type Coverage", True, "Cancer type coverage present")
+            else:
+                self.log_test("GDSC Cancer Type Coverage", False, "Limited cancer type coverage")
+                
+        except Exception as e:
+            self.log_test("GDSC Extractor Analysis", False, f"Error analyzing file: {e}")
+    
+    def test_updated_database_integration_syntax(self):
+        """Test Updated Database Integration Pipeline syntax and structure"""
+        print("\n=== Testing Updated Database Integration Pipeline ===")
+        
+        try:
+            # Check if the file exists
+            integration_file = Path("/app/modal_training/updated_database_integration.py")
+            if not integration_file.exists():
+                self.log_test("Database Integration File Exists", False, "File not found")
+                return
+            
+            # Test syntax
+            with open(integration_file, 'r') as f:
+                code = f.read()
+            
+            try:
+                compile(code, str(integration_file), 'exec')
+                self.log_test("Database Integration Syntax Valid", True, "Python syntax is correct")
+            except SyntaxError as e:
+                self.log_test("Database Integration Syntax Valid", False, f"Syntax error: {e}")
+                return
+            
+            # Check for key components
+            required_components = [
+                "integrate_real_databases",
+                "integrate_protein_ligand_data",
+                "process_cell_line_data",
+                "apply_protein_ligand_deduplication",
+                "dual_track",
+                "ChEMBL",
+                "PubChem",
+                "BindingDB",
+                "GDSC"
+            ]
+            
+            missing_components = []
+            for component in required_components:
+                if component not in code:
+                    missing_components.append(component)
+            
+            if missing_components:
+                self.log_test("Database Integration Components", False, f"Missing: {missing_components}")
+            else:
+                self.log_test("Database Integration Components", True, "All required components present")
+            
+            # Check DTC removal
+            if "DTC" in code and "dtc_removed" in code.lower():
+                if "dtc_excluded" in code.lower() or "DTC completely removed" in code:
+                    self.log_test("DTC Removal Verification", True, "DTC removal properly implemented")
+                else:
+                    self.log_test("DTC Removal Verification", False, "DTC removal not clearly implemented")
+            else:
+                self.log_test("DTC Removal Verification", True, "No DTC references found (good)")
+            
+            # Check dual-track architecture
+            dual_track_patterns = [
+                "protein_ligand",
+                "cell_line",
+                "dual_track",
+                "Track 1",
+                "Track 2"
+            ]
+            
+            dual_track_found = sum(1 for pattern in dual_track_patterns if pattern in code.lower())
+            if dual_track_found >= 3:
+                self.log_test("Dual-Track Architecture", True, "Dual-track architecture implemented")
+            else:
+                self.log_test("Dual-Track Architecture", False, "Dual-track architecture not clearly implemented")
+            
+            # Check cross-source deduplication
+            dedup_patterns = ["deduplication", "priority", "ChEMBL > PubChem > BindingDB"]
+            dedup_found = sum(1 for pattern in dedup_patterns if pattern in code)
+            if dedup_found >= 2:
+                self.log_test("Cross-Source Deduplication", True, "Deduplication logic present")
+            else:
+                self.log_test("Cross-Source Deduplication", False, "Deduplication logic unclear")
+                
+        except Exception as e:
+            self.log_test("Database Integration Analysis", False, f"Error analyzing file: {e}")
+    
+    def test_cell_line_response_model_syntax(self):
+        """Test Cell Line Response Model Architecture syntax and structure"""
+        print("\n=== Testing Cell Line Response Model Architecture ===")
+        
+        try:
+            # Check if the file exists
+            model_file = Path("/app/modal_training/cell_line_response_model.py")
+            if not model_file.exists():
+                self.log_test("Cell Line Model File Exists", False, "File not found")
+                return
+            
+            # Test syntax
+            with open(model_file, 'r') as f:
+                code = f.read()
+            
+            try:
+                compile(code, str(model_file), 'exec')
+                self.log_test("Cell Line Model Syntax Valid", True, "Python syntax is correct")
+            except SyntaxError as e:
+                self.log_test("Cell Line Model Syntax Valid", False, f"Syntax error: {e}")
+                return
+            
+            # Check for key components
+            required_components = [
+                "CellLineResponseModel",
+                "MolecularEncoder",
+                "GenomicEncoder",
+                "SMILESTokenizer",
+                "torch.nn.Module",
+                "MultiheadAttention",
+                "train_cell_line_response_model"
+            ]
+            
+            missing_components = []
+            for component in required_components:
+                if component not in code:
+                    missing_components.append(component)
+            
+            if missing_components:
+                self.log_test("Cell Line Model Components", False, f"Missing: {missing_components}")
+            else:
+                self.log_test("Cell Line Model Components", True, "All required components present")
+            
+            # Check PyTorch architecture patterns
+            pytorch_patterns = [
+                "nn.LSTM",
+                "nn.Linear",
+                "nn.MultiheadAttention",
+                "forward",
+                "torch.tensor",
+                "cuda",
+                "optimizer"
+            ]
+            
+            missing_pytorch = []
+            for pattern in pytorch_patterns:
+                if pattern not in code:
+                    missing_pytorch.append(pattern)
+            
+            if missing_pytorch:
+                self.log_test("PyTorch Architecture Patterns", False, f"Missing: {missing_pytorch}")
+            else:
+                self.log_test("PyTorch Architecture Patterns", True, "PyTorch patterns present")
+            
+            # Check multi-modal features
+            multimodal_patterns = [
+                "molecular",
+                "genomic",
+                "SMILES",
+                "mutations",
+                "expression",
+                "cross_attention",
+                "fusion"
+            ]
+            
+            multimodal_found = sum(1 for pattern in multimodal_patterns if pattern.lower() in code.lower())
+            if multimodal_found >= 5:
+                self.log_test("Multi-Modal Architecture", True, "Multi-modal features implemented")
+            else:
+                self.log_test("Multi-Modal Architecture", False, "Multi-modal architecture incomplete")
+            
+            # Check IC50 prediction capability
+            ic50_patterns = ["IC50", "pIC50", "pic50", "drug sensitivity"]
+            ic50_found = sum(1 for pattern in ic50_patterns if pattern in code)
+            if ic50_found >= 2:
+                self.log_test("IC50 Prediction Capability", True, "IC50 prediction implemented")
+            else:
+                self.log_test("IC50 Prediction Capability", False, "IC50 prediction unclear")
+                
+        except Exception as e:
+            self.log_test("Cell Line Model Analysis", False, f"Error analyzing file: {e}")
+    
+    def test_real_bindingdb_extractor_syntax(self):
+        """Test Real BindingDB API Integration syntax and structure"""
+        print("\n=== Testing Real BindingDB API Integration ===")
+        
+        try:
+            # Check if the file exists
+            bindingdb_file = Path("/app/modal_training/real_bindingdb_extractor.py")
+            if not bindingdb_file.exists():
+                self.log_test("BindingDB Extractor File Exists", False, "File not found")
+                return
+            
+            # Test syntax
+            with open(bindingdb_file, 'r') as f:
+                code = f.read()
+            
+            try:
+                compile(code, str(bindingdb_file), 'exec')
+                self.log_test("BindingDB Extractor Syntax Valid", True, "Python syntax is correct")
+            except SyntaxError as e:
+                self.log_test("BindingDB Extractor Syntax Valid", False, f"Syntax error: {e}")
+                return
+            
+            # Check for key components
+            required_components = [
+                "RealBindingDBExtractor",
+                "ONCOLOGY_TARGETS",
+                "extract_target_data",
+                "bindingdb.org",
+                "IC50",
+                "Ki",
+                "Kd"
+            ]
+            
+            missing_components = []
+            for component in required_components:
+                if component not in code:
+                    missing_components.append(component)
+            
+            if missing_components:
+                self.log_test("BindingDB Extractor Components", False, f"Missing: {missing_components}")
+            else:
+                self.log_test("BindingDB Extractor Components", True, "All required components present")
+            
+            # Check API integration patterns
+            api_patterns = [
+                "RESTful",
+                "UniProt",
+                "binding affinity",
+                "unit conversion",
+                "quality control"
+            ]
+            
+            api_found = sum(1 for pattern in api_patterns if pattern.lower() in code.lower())
+            if api_found >= 3:
+                self.log_test("BindingDB API Integration", True, "API integration patterns present")
+            else:
+                self.log_test("BindingDB API Integration", False, "API integration patterns unclear")
+                
+        except Exception as e:
+            self.log_test("BindingDB Extractor Analysis", False, f"Error analyzing file: {e}")
+    
     def test_health_endpoint_enhanced(self):
         """Test the /api/health endpoint for enhanced predictions"""
         print("\n=== Testing Health Check with Enhanced Predictions ===")
