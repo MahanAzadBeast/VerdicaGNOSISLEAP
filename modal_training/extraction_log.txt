@@ -1,3 +1,25 @@
 🚀 STARTING EXPANDED MULTI-SOURCE DATA EXTRACTION
 ============================================================
 Started at: 2025-08-01T06:49:29.430916
+❌ EXTRACTION FAILED: ['canonical_smiles', 'target_name']
+Traceback (most recent call last):
+  File "<string>", line 13, in <module>
+  File "/root/.venv/lib/python3.11/site-packages/modal/_object.py", line 285, in wrapped
+    return await method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_functions.py", line 1570, in remote
+    return await self._call_function(args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_functions.py", line 1525, in _call_function
+    return await invocation.run_function()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_functions.py", line 285, in run_function
+    return await _process_result(item.result, item.data_format, self.stub, self.client)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/modal/_utils/function_utils.py", line 506, in _process_result
+    raise exc_with_hints(exc)
+  File "<ta-01K1J696FKQCW5VB0S9RSZSDJE>:/root/expanded_multisource_extractor.py", line 570, in extract_expanded_multisource_dataset
+    df = df.dropna(subset=['canonical_smiles', 'target_name'])
+      ^^^^^^^^^^^^^^^^^
+  File "<ta-01K1J696FKQCW5VB0S9RSZSDJE>:/usr/local/lib/python3.11/site-packages/pandas/core/frame.py", line 6677, in dropna
+KeyError: ['canonical_smiles', 'target_name']
