@@ -1,0 +1,14 @@
+{
+  "status": "success",
+  "raw_data_path": "/vol/datasets/expanded_fixed_raw_data.csv",
+  "matrix_path": "/vol/datasets/expanded_fixed_ic50_matrix.csv",
+  "metadata_path": "/vol/datasets/expanded_fixed_metadata.json",
+  "total_records": 24783,
+  "total_targets": 20,
+  "total_compounds": 20180,
+  "matrix_shape": [
+    16786,
+    21
+  ],
+  "ready_for_training": true
+}
