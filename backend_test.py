@@ -2307,6 +2307,269 @@ class EnhancedChemistryPlatformTester:
             self.log_test("Backend Root Endpoint", False, f"Connection error: {str(e)}")
             return False
 
+    def test_backend_integration_compatibility(self):
+        """Test that existing backend endpoints still work after new integrations"""
+        print("\n=== Testing Backend Integration Compatibility ===")
+        
+        # Test basic endpoints
+        endpoints_to_test = [
+            ("/health", "Health Check"),
+            ("/targets", "Targets List"),
+        ]
+        
+        for endpoint, description in endpoints_to_test:
+            try:
+                response = requests.get(f"{API_BASE}{endpoint}", timeout=30)
+                if response.status_code == 200:
+                    self.log_test(f"{description} Endpoint", True, f"HTTP 200 OK")
+                else:
+                    self.log_test(f"{description} Endpoint", False, f"HTTP {response.status_code}")
+            except Exception as e:
+                self.log_test(f"{description} Endpoint", False, f"Error: {e}")
+        
+        # Test prediction endpoint with simple molecule
+        try:
+            test_data = {
+                "smiles": "CCO",  # Ethanol
+                "prediction_types": ["bioactivity_ic50"],
+                "target": "EGFR"
+            }
+            
+            response = requests.post(f"{API_BASE}/predict", json=test_data, timeout=60)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get('results') and len(data['results']) > 0:
+                    self.log_test("Prediction Endpoint Compatibility", True, "Predictions working")
+                else:
+                    self.log_test("Prediction Endpoint Compatibility", False, "No prediction results")
+            else:
+                self.log_test("Prediction Endpoint Compatibility", False, f"HTTP {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Prediction Endpoint Compatibility", False, f"Error: {e}")
+    
+    def test_api_error_handling(self):
+        """Test API error handling for new integrations"""
+        print("\n=== Testing API Error Handling ===")
+        
+        # Test invalid SMILES
+        try:
+            test_data = {
+                "smiles": "INVALID_SMILES_STRING",
+                "prediction_types": ["bioactivity_ic50"],
+                "target": "EGFR"
+            }
+            
+            response = requests.post(f"{API_BASE}/predict", json=test_data, timeout=30)
+            if response.status_code == 400:
+                self.log_test("Invalid SMILES Error Handling", True, "Properly rejects invalid SMILES")
+            else:
+                self.log_test("Invalid SMILES Error Handling", False, f"HTTP {response.status_code} instead of 400")
+                
+        except Exception as e:
+            self.log_test("Invalid SMILES Error Handling", False, f"Error: {e}")
+        
+        # Test invalid target
+        try:
+            test_data = {
+                "smiles": "CCO",
+                "prediction_types": ["bioactivity_ic50"],
+                "target": "INVALID_TARGET"
+            }
+            
+            response = requests.post(f"{API_BASE}/predict", json=test_data, timeout=30)
+            # Should still work but may give different results
+            if response.status_code in [200, 400]:
+                self.log_test("Invalid Target Handling", True, "Handles invalid targets appropriately")
+            else:
+                self.log_test("Invalid Target Handling", False, f"Unexpected HTTP {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Invalid Target Handling", False, f"Error: {e}")
+    
+    def test_memory_and_performance_impact(self):
+        """Test that new integrations don't cause memory or performance issues"""
+        print("\n=== Testing Memory and Performance Impact ===")
+        
+        # Test multiple rapid requests
+        try:
+            test_molecules = [
+                "CCO",  # Ethanol
+                "CC(=O)OC1=CC=CC=C1C(=O)O",  # Aspirin
+                "CN1C=NC2=C1C(=O)N(C(=O)N2C)C"  # Caffeine
+            ]
+            
+            start_time = time.time()
+            successful_requests = 0
+            
+            for i, smiles in enumerate(test_molecules):
+                test_data = {
+                    "smiles": smiles,
+                    "prediction_types": ["bioactivity_ic50"],
+                    "target": "EGFR"
+                }
+                
+                response = requests.post(f"{API_BASE}/predict", json=test_data, timeout=30)
+                if response.status_code == 200:
+                    successful_requests += 1
+            
+            end_time = time.time()
+            total_time = end_time - start_time
+            
+            if successful_requests == len(test_molecules) and total_time < 60:
+                self.log_test("Performance Impact", True, f"Processed {successful_requests} requests in {total_time:.2f}s")
+            else:
+                self.log_test("Performance Impact", False, f"Only {successful_requests}/{len(test_molecules)} successful, took {total_time:.2f}s")
+                
+        except Exception as e:
+            self.log_test("Performance Impact", False, f"Error: {e}")
+    
+    def test_cross_database_integration_logic(self):
+        """Test cross-database integration logic conceptually"""
+        print("\n=== Testing Cross-Database Integration Logic ===")
+        
+        # This tests the conceptual integration by checking health endpoint for database info
+        try:
+            response = requests.get(f"{API_BASE}/health", timeout=30)
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check for expanded models info (indicates database integration)
+                expanded_info = data.get('expanded_models_info', {})
+                if expanded_info.get('available'):
+                    total_targets = expanded_info.get('total_targets', 0)
+                    if total_targets >= 20:
+                        self.log_test("Cross-Database Integration", True, f"Integrated {total_targets} targets")
+                    else:
+                        self.log_test("Cross-Database Integration", False, f"Only {total_targets} targets integrated")
+                else:
+                    self.log_test("Cross-Database Integration", False, "Expanded models not available")
+                
+                # Check data sources
+                data_sources = expanded_info.get('data_sources', [])
+                expected_sources = ['ChEMBL', 'PubChem', 'BindingDB']
+                found_sources = [source for source in expected_sources if source in data_sources]
+                
+                if len(found_sources) >= 2:
+                    self.log_test("Multi-Source Integration", True, f"Found sources: {found_sources}")
+                else:
+                    self.log_test("Multi-Source Integration", False, f"Limited sources: {found_sources}")
+                
+            else:
+                self.log_test("Cross-Database Integration", False, f"HTTP {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Cross-Database Integration", False, f"Error: {e}")
+    
+    def run_real_api_integration_tests(self):
+        """Run all tests for the new real API integration pipeline"""
+        print("🧪 REAL API INTEGRATION PIPELINE TESTING")
+        print("=" * 80)
+        print(f"🌐 Backend URL: {BACKEND_URL}")
+        print(f"📡 API Base: {API_BASE}")
+        print()
+        
+        # Test new integration components
+        self.test_real_pubchem_extractor_syntax()
+        self.test_gdsc_cancer_extractor_syntax()
+        self.test_updated_database_integration_syntax()
+        self.test_cell_line_response_model_syntax()
+        self.test_real_bindingdb_extractor_syntax()
+        
+        # Test backend compatibility
+        self.test_health_endpoint_enhanced()
+        self.test_backend_integration_compatibility()
+        self.test_api_error_handling()
+        self.test_memory_and_performance_impact()
+        self.test_cross_database_integration_logic()
+        
+        # Generate summary
+        self.generate_test_summary()
+    
+    def generate_test_summary(self):
+        """Generate comprehensive test summary"""
+        print("\n" + "=" * 80)
+        print("🎯 REAL API INTEGRATION TESTING SUMMARY")
+        print("=" * 80)
+        
+        total_tests = len(self.test_results)
+        passed_tests = len([t for t in self.test_results if t['success']])
+        failed_tests = len(self.failed_tests)
+        
+        success_rate = (passed_tests / total_tests * 100) if total_tests > 0 else 0
+        
+        print(f"📊 Test Results: {passed_tests}/{total_tests} passed ({success_rate:.1f}%)")
+        print(f"✅ Passed: {passed_tests}")
+        print(f"❌ Failed: {failed_tests}")
+        
+        if self.failed_tests:
+            print(f"\n❌ FAILED TESTS:")
+            for test in self.failed_tests:
+                print(f"   • {test['test']}: {test['details']}")
+        
+        print(f"\n📋 DETAILED RESULTS:")
+        
+        # Group by category
+        categories = {
+            'Syntax Validation': [],
+            'API Integration': [],
+            'Backend Compatibility': [],
+            'Performance': []
+        }
+        
+        for test in self.test_results:
+            test_name = test['test']
+            if 'Syntax' in test_name or 'Components' in test_name:
+                categories['Syntax Validation'].append(test)
+            elif 'API' in test_name or 'Integration' in test_name or 'Extractor' in test_name:
+                categories['API Integration'].append(test)
+            elif 'Endpoint' in test_name or 'Compatibility' in test_name or 'Health' in test_name:
+                categories['Backend Compatibility'].append(test)
+            else:
+                categories['Performance'].append(test)
+        
+        for category, tests in categories.items():
+            if tests:
+                print(f"\n🔍 {category}:")
+                for test in tests:
+                    print(f"   {test['status']}: {test['test']}")
+        
+        # Overall assessment
+        print(f"\n🎯 OVERALL ASSESSMENT:")
+        
+        if success_rate >= 90:
+            print("   🟢 EXCELLENT: Real API integration pipeline is ready for deployment")
+        elif success_rate >= 75:
+            print("   🟡 GOOD: Real API integration pipeline is mostly ready, minor issues to address")
+        elif success_rate >= 50:
+            print("   🟠 FAIR: Real API integration pipeline needs significant improvements")
+        else:
+            print("   🔴 POOR: Real API integration pipeline has major issues requiring attention")
+        
+        # Specific recommendations
+        print(f"\n💡 RECOMMENDATIONS:")
+        
+        syntax_issues = [t for t in self.failed_tests if 'Syntax' in t['test'] or 'Components' in t['test']]
+        if syntax_issues:
+            print("   • Fix syntax errors and missing components in integration files")
+        
+        api_issues = [t for t in self.failed_tests if 'API' in t['test'] or 'Integration' in t['test']]
+        if api_issues:
+            print("   • Review API integration patterns and error handling")
+        
+        backend_issues = [t for t in self.failed_tests if 'Endpoint' in t['test'] or 'Compatibility' in t['test']]
+        if backend_issues:
+            print("   • Address backend compatibility and endpoint functionality")
+        
+        performance_issues = [t for t in self.failed_tests if 'Performance' in t['test'] or 'Memory' in t['test']]
+        if performance_issues:
+            print("   • Optimize performance and memory usage")
+        
+        if not self.failed_tests:
+            print("   • All tests passed! Ready for production deployment")
+        
+        print("=" * 80)
+
     def run_all_tests(self):
         """Run all tests and provide summary"""
         print(f"🧪 Starting Expanded Database Integration Testing")
