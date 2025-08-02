@@ -267,13 +267,13 @@ async def get_cell_line_examples():
     return examples
 
 def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredictionResponse:
-    """Use trained model for cell line prediction or fallback to simulation"""
+    """Use Enhanced Gnosis Model or fallback to simulation"""
     
     try:
-        # Try to use the trained model first
+        # Try to use the Enhanced Gnosis Model first
         import sys
-        sys.path.append('/app/backend')
-        from trained_cell_line_predictor import predict_with_trained_model
+        sys.path.append('/app')
+        from enhanced_gnosis_predictor import predict_with_enhanced_gnosis_model
         
         # Convert genomic features to the expected format
         genomic_dict = {}
@@ -290,8 +290,8 @@ def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredi
         for gene, level in request.cell_line.genomic_features.expression.items():
             genomic_dict[f'{gene}_expression'] = level
         
-        # Get prediction from trained model
-        result = predict_with_trained_model(request.smiles, genomic_dict)
+        # Get prediction from Enhanced Gnosis Model
+        result = predict_with_enhanced_gnosis_model(request.smiles, genomic_dict)
         
         # Determine sensitivity class
         ic50_nm = result['predicted_ic50_nm']
@@ -309,7 +309,7 @@ def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredi
             "deletions": [gene for gene, status in request.cell_line.genomic_features.cnvs.items() if status == -1],
             "high_expression": [gene for gene, level in request.cell_line.genomic_features.expression.items() if level > 1.0],
             "low_expression": [gene for gene, level in request.cell_line.genomic_features.expression.items() if level < -1.0],
-            "model_source": result.get('model_source', 'trained_local')
+            "model_source": result.get('model_source', 'enhanced_gnosis_model')
         }
         
         return CellLinePredictionResponse(
@@ -326,8 +326,8 @@ def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredi
         )
         
     except Exception as e:
-        # Fallback to original simulation logic if trained model fails
-        logging.warning(f"Trained model prediction failed, using fallback: {e}")
+        # Fallback to original simulation logic if Enhanced Gnosis Model fails
+        logging.warning(f"Enhanced Gnosis Model prediction failed, using basic fallback: {e}")
         
         # Original simulation logic (shortened)
         genomics = request.cell_line.genomic_features
@@ -370,7 +370,7 @@ def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredi
             "deletions": [gene for gene, status in genomics.cnvs.items() if status == -1],
             "high_expression": [gene for gene, level in genomics.expression.items() if level > 1.0],
             "low_expression": [gene for gene, level in genomics.expression.items() if level < -1.0],
-            "model_source": "fallback_simulation"
+            "model_source": "basic_fallback_simulation"
         }
         
         return CellLinePredictionResponse(
