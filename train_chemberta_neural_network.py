@@ -682,18 +682,7 @@ def train_chemberta_neural_network():
         print(f"   📊 Trainable parameters: {trainable_params:,}")
         
         # Advanced training setup
-        if CHEMBERTA_AVAILABLE:
-            # Different learning rates for ChemBERTa and other components
-            chemberta_params = list(model.drug_encoder.chemberta.parameters())
-            other_params = [p for p in model.parameters() if p not in chemberta_params]
-            
-            optimizer = torch.optim.AdamW([
-                {'params': chemberta_params, 'lr': 1e-5},  # Lower LR for pretrained ChemBERTa
-                {'params': other_params, 'lr': 1e-3}      # Higher LR for new layers
-            ], weight_decay=1e-4)
-        else:
-            optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
-        
+        optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer, max_lr=1e-3, epochs=150, steps_per_epoch=len(train_loader)
         )
