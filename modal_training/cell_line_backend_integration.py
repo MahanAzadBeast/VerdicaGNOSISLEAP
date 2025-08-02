@@ -267,13 +267,13 @@ async def get_cell_line_examples():
     return examples
 
 def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredictionResponse:
-    """Use Enhanced Gnosis Model or fallback to simulation"""
+    """Use Trained ChemBERTa Neural Network or fallback"""
     
     try:
-        # Try to use the Enhanced Gnosis Model first
+        # Try to use the trained ChemBERTa neural network first
         import sys
         sys.path.append('/app')
-        from enhanced_gnosis_predictor import predict_with_enhanced_gnosis_model
+        from chemberta_neural_predictor import predict_with_chemberta_neural_network
         
         # Convert genomic features to the expected format
         genomic_dict = {}
@@ -290,8 +290,8 @@ def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredi
         for gene, level in request.cell_line.genomic_features.expression.items():
             genomic_dict[f'{gene}_expression'] = level
         
-        # Get prediction from Enhanced Gnosis Model
-        result = predict_with_enhanced_gnosis_model(request.smiles, genomic_dict)
+        # Get prediction from trained ChemBERTa neural network
+        result = predict_with_chemberta_neural_network(request.smiles, genomic_dict)
         
         # Determine sensitivity class
         ic50_nm = result['predicted_ic50_nm']
@@ -309,7 +309,7 @@ def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredi
             "deletions": [gene for gene, status in request.cell_line.genomic_features.cnvs.items() if status == -1],
             "high_expression": [gene for gene, level in request.cell_line.genomic_features.expression.items() if level > 1.0],
             "low_expression": [gene for gene, level in request.cell_line.genomic_features.expression.items() if level < -1.0],
-            "model_source": result.get('model_source', 'enhanced_gnosis_model')
+            "model_source": result.get('model_source', 'chemberta_neural_network')
         }
         
         return CellLinePredictionResponse(
@@ -326,34 +326,53 @@ def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredi
         )
         
     except Exception as e:
-        # Fallback to original simulation logic if Enhanced Gnosis Model fails
-        logging.warning(f"Enhanced Gnosis Model prediction failed, using basic fallback: {e}")
+        # Enhanced fallback simulation if neural network fails
+        logging.warning(f"ChemBERTa neural network prediction failed, using enhanced fallback: {e}")
         
-        # Original simulation logic (shortened)
+        # Enhanced simulation logic with drug-genomic interactions
         genomics = request.cell_line.genomic_features
         base_ic50 = 1000  # 1 μM baseline
         
-        # Drug-specific effects (simplified)
-        if "erlotinib" in request.drug_name.lower() if request.drug_name else False:
+        # Enhanced drug-specific effects using SMILES pattern recognition
+        smiles_lower = request.smiles.lower() if request.smiles else ""
+        
+        # MEK inhibitor patterns (trametinib-like)
+        if 'sc(=n' in smiles_lower and 'f)f' in smiles_lower:
             if genomics.mutations.get("KRAS", 0) == 1:
-                base_ic50 *= 5.0  # Resistant
-        elif "trametinib" in request.drug_name.lower() if request.drug_name else False:
+                base_ic50 *= 0.05  # KRAS mutation -> extremely sensitive
+            if genomics.mutations.get("BRAF", 0) == 1:
+                base_ic50 *= 0.02  # BRAF mutation -> extremely sensitive
+            base_ic50 *= 0.1  # MEK inhibitors are generally potent
+        
+        # EGFR inhibitor patterns (erlotinib-like)
+        elif 'ncnc' in smiles_lower and 'f' in smiles_lower and 'cl' in smiles_lower:
             if genomics.mutations.get("KRAS", 0) == 1:
-                base_ic50 *= 0.2  # Very sensitive
+                base_ic50 *= 5.0  # KRAS mutation -> resistance
+            if genomics.cnvs.get("EGFR", 0) == 1:
+                base_ic50 *= 0.4  # EGFR amplification -> sensitivity
         
         # p53 status affects general drug sensitivity
         if genomics.mutations.get("TP53", 0) == 1:
-            base_ic50 *= 1.8  # General resistance
+            base_ic50 *= 1.5  # p53 mutation -> moderate resistance
         
-        # Add some variability
-        ic50_nm = base_ic50 * np.random.lognormal(0, 0.3)
+        # Add controlled variability
+        ic50_nm = base_ic50 * np.random.lognormal(0, 0.2)
         pic50 = -np.log10(ic50_nm / 1e9)
         
-        # Calculate uncertainty and confidence
+        # Enhanced confidence scoring
         mutation_count = sum(genomics.mutations.values())
-        confidence = 0.6 + 0.3 * (mutation_count / 5)
+        cnv_count = sum(1 for v in genomics.cnvs.values() if v != 0)
+        
+        # Higher confidence for well-characterized interactions
+        base_confidence = 0.4
+        if 'sc(=n' in smiles_lower and genomics.mutations.get("KRAS", 0) == 1:
+            base_confidence = 0.85  # High confidence for MEK-KRAS interaction
+        elif 'ncnc' in smiles_lower and genomics.mutations.get("KRAS", 0) == 1:
+            base_confidence = 0.8   # High confidence for EGFR-KRAS interaction
+        
+        confidence = base_confidence + 0.1 * (mutation_count + cnv_count) / 5
         confidence = min(confidence, 0.95)
-        uncertainty = (1 - confidence) * 2  # Simple uncertainty estimate
+        uncertainty = (1 - confidence) * 1.5
         
         # Determine sensitivity class
         if ic50_nm < 100:
@@ -370,7 +389,7 @@ def simulate_cell_line_prediction(request: CellLineDrugRequest) -> CellLinePredi
             "deletions": [gene for gene, status in genomics.cnvs.items() if status == -1],
             "high_expression": [gene for gene, level in genomics.expression.items() if level > 1.0],
             "low_expression": [gene for gene, level in genomics.expression.items() if level < -1.0],
-            "model_source": "basic_fallback_simulation"
+            "model_source": "enhanced_fallback_simulation"
         }
         
         return CellLinePredictionResponse(
