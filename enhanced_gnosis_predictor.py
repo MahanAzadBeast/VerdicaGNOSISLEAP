@@ -394,13 +394,15 @@ class EnhancedGnosisPredictor:
                 base_ic50 *= 0.4  # EGFR amplification -> sensitivity
         
         # MEK inhibitor patterns (trametinib-like)
-        elif ('nc=nc' in smiles_lower and 'c(=o)nc' in smiles_lower and 
-              'f)i)f' in smiles_lower and 'c(f)(f)f' in smiles_lower):
+        elif ('cc(c)' in smiles_lower and 'c(=o)n' in smiles_lower and 
+              'sc(=n' in smiles_lower and 'f)f' in smiles_lower and 'c5=c' in smiles_lower):
             # Trametinib-like MEK inhibitor characteristics
             if mutations.get('KRAS', 0) == 1:
-                base_ic50 *= 0.15  # KRAS mutation -> very sensitive to MEK inhibition
+                base_ic50 *= 0.05  # KRAS mutation -> extremely sensitive (2-30 nM range)
             if mutations.get('BRAF', 0) == 1:
-                base_ic50 *= 0.12  # BRAF mutation -> very sensitive to MEK inhibition
+                base_ic50 *= 0.02  # BRAF mutation -> extremely sensitive (1-10 nM range)
+            # Adjust base for MEK inhibitors to be more potent
+            base_ic50 = base_ic50 * 0.1  # MEK inhibitors are generally very potent
         
         # BCR-ABL inhibitor patterns (imatinib-like)
         elif 'ccc(cc1nc2nccc' in smiles_lower:
