@@ -253,12 +253,10 @@ class EnhancedGnosisModelTester:
         """Test Trametinib sensitivity comparison: A549 (KRAS-mutated) vs MCF7 (KRAS wild-type)"""
         print("\n=== Testing Trametinib Comparison: A549 vs MCF7 ===")
         
-        # Comparison payload
+        # Comparison payload (corrected format)
         payload = {
-            "drug": {
-                "smiles": "CN(C1=CC(=C(C=C1)C(=O)NC2=CC(=C(C=C2F)I)F)C(F)(F)F)C3=NC=NC4=C3C=CN4C5CCCC5",  # Trametinib
-                "drug_name": "Trametinib"
-            },
+            "smiles": "CN(C1=CC(=C(C=C1)C(=O)NC2=CC(=C(C=C2F)I)F)C(F)(F)F)C3=NC=NC4=C3C=CN4C5CCCC5",  # Trametinib
+            "drug_name": "Trametinib",
             "cell_lines": [
                 {
                     "cell_line_name": "A549",
@@ -290,8 +288,8 @@ class EnhancedGnosisModelTester:
             if response.status_code == 200:
                 data = response.json()
                 
-                # Check response structure
-                required_fields = ['comparison_results', 'summary']
+                # Check response structure (based on CellLineComparisonResponse)
+                required_fields = ['predictions', 'summary']
                 missing_fields = [field for field in required_fields if field not in data]
                 
                 if missing_fields:
@@ -299,16 +297,16 @@ class EnhancedGnosisModelTester:
                     return False
                 
                 # Check comparison results
-                comparison_results = data.get('comparison_results', [])
-                if len(comparison_results) != 2:
-                    self.log_test("Trametinib Comparison Results", False, f"Expected 2 results, got {len(comparison_results)}")
+                predictions = data.get('predictions', [])
+                if len(predictions) != 2:
+                    self.log_test("Trametinib Comparison Results", False, f"Expected 2 results, got {len(predictions)}")
                     return False
                 
                 # Extract IC50 values for both cell lines
                 a549_result = None
                 mcf7_result = None
                 
-                for result in comparison_results:
+                for result in predictions:
                     cell_line_name = result.get('cell_line_name', '')
                     if cell_line_name == 'A549':
                         a549_result = result
@@ -320,8 +318,8 @@ class EnhancedGnosisModelTester:
                     return False
                 
                 # Check IC50 values
-                a549_ic50 = a549_result.get('prediction', {}).get('ic50_nm')
-                mcf7_ic50 = mcf7_result.get('prediction', {}).get('ic50_nm')
+                a549_ic50 = a549_result.get('predicted_ic50_nm')
+                mcf7_ic50 = mcf7_result.get('predicted_ic50_nm')
                 
                 if not (a549_ic50 and mcf7_ic50):
                     self.log_test("Trametinib IC50 Values", False, f"A549 IC50: {a549_ic50}, MCF7 IC50: {mcf7_ic50}")
@@ -336,20 +334,19 @@ class EnhancedGnosisModelTester:
                 
                 # Check genomic context for KRAS mutation effect
                 a549_genomic = a549_result.get('genomic_context', {})
-                a549_mutations = a549_genomic.get('detected_mutations', [])
-                kras_effect_noted = any('KRAS' in mut for mut in a549_mutations)
+                a549_mutations = a549_genomic.get('key_mutations', [])
+                kras_effect_noted = 'KRAS' in a549_mutations
                 
                 self.log_test("KRAS Mutation Effect Noted", kras_effect_noted, 
                             f"A549 detected mutations: {a549_mutations}")
                 
                 # Check summary
                 summary = data.get('summary', {})
-                most_sensitive = summary.get('most_sensitive_cell_line', '')
-                sensitivity_ranking = summary.get('sensitivity_ranking', [])
+                most_sensitive = summary.get('most_sensitive', '')
                 
                 a549_most_sensitive = most_sensitive == 'A549'
                 self.log_test("A549 Identified as Most Sensitive", a549_most_sensitive, 
-                            f"Most sensitive: {most_sensitive}, Ranking: {sensitivity_ranking}")
+                            f"Most sensitive: {most_sensitive}")
                 
                 return (a549_more_sensitive and kras_effect_noted and a549_most_sensitive)
                 
