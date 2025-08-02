@@ -475,7 +475,7 @@ class EnhancedGnosisPredictor:
             drug_genomic_confidence += 0.3  # High confidence in KRAS-EGFR inhibitor resistance
         
         # MEK inhibitor - KRAS/BRAF relationship is well-established
-        if 'cc(c)' in smiles_lower and 'c(=o)n' in smiles_lower:
+        if 'sc(=n' in smiles_lower and 'f)f' in smiles_lower:
             if mutations.get('KRAS', 0) == 1 or mutations.get('BRAF', 0) == 1:
                 drug_genomic_confidence += 0.4  # Very high confidence in KRAS/BRAF-MEK inhibitor sensitivity
         
