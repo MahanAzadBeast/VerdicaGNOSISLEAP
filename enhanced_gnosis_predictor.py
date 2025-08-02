@@ -442,25 +442,47 @@ class EnhancedGnosisPredictor:
         # Calculate derived values
         pic50 = -np.log10(base_ic50 / 1e9)
         
-        # Enhanced uncertainty calculation
+        # Enhanced uncertainty calculation with Bayesian-inspired confidence
         mutation_count = sum(mutations.values())
         cnv_count = sum(1 for v in cnvs.values() if v != 0)
         expr_count = sum(1 for v in expression.values() if abs(v) > 1.0)
         
         genomic_info = mutation_count + cnv_count + expr_count
         
-        # More genomic info -> lower uncertainty
-        if genomic_info == 0:
-            base_uncertainty = 0.6
-        elif genomic_info <= 2:
-            base_uncertainty = 0.4
-        elif genomic_info <= 5:
-            base_uncertainty = 0.25
-        else:
-            base_uncertainty = 0.15
+        # Enhanced confidence scoring based on:
+        # 1. Amount of genomic information
+        # 2. Known drug-genomic interactions
+        # 3. Molecular complexity
         
-        uncertainty = base_uncertainty + np.random.uniform(-0.05, 0.05)
-        uncertainty = max(0.1, min(uncertainty, 0.8))
+        # Base uncertainty from genomic information
+        if genomic_info == 0:
+            base_uncertainty = 0.7  # High uncertainty with no genomic info
+        elif genomic_info <= 2:
+            base_uncertainty = 0.4  # Moderate uncertainty
+        elif genomic_info <= 5:
+            base_uncertainty = 0.2  # Lower uncertainty with rich genomic context
+        else:
+            base_uncertainty = 0.1  # Very low uncertainty with comprehensive profiling
+        
+        # Adjust uncertainty based on known drug-genomic interactions
+        drug_genomic_confidence = 0.0
+        
+        # EGFR inhibitor - KRAS relationship is well-established
+        if 'ncnc' in smiles_lower and mutations.get('KRAS', 0) == 1:
+            drug_genomic_confidence += 0.3  # High confidence in KRAS-EGFR inhibitor resistance
+        
+        # MEK inhibitor - KRAS/BRAF relationship is well-established
+        if 'cc(c)' in smiles_lower and 'c(=o)n' in smiles_lower:
+            if mutations.get('KRAS', 0) == 1 or mutations.get('BRAF', 0) == 1:
+                drug_genomic_confidence += 0.4  # Very high confidence in KRAS/BRAF-MEK inhibitor sensitivity
+        
+        # p53 status effect on DNA-damaging agents
+        if 'n.n.cl[pt]cl' in smiles_lower and mutations.get('TP53', 0) == 1:
+            drug_genomic_confidence += 0.25  # High confidence in p53-DNA damage resistance
+        
+        # Final uncertainty calculation (Bayesian-inspired)
+        uncertainty = base_uncertainty - drug_genomic_confidence
+        uncertainty = max(0.05, min(uncertainty, 0.8))  # Clamp between 5% and 80%
         confidence = 1.0 - uncertainty
         
         return {
