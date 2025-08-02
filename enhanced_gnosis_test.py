@@ -51,31 +51,30 @@ class EnhancedGnosisModelTester:
                 data = response.json()
                 
                 # Check required fields for Enhanced Gnosis Model
-                required_fields = ['status', 'model_info', 'capabilities']
+                required_fields = ['status', 'model_type', 'architecture', 'capabilities']
                 missing_fields = [field for field in required_fields if field not in data]
                 
                 if missing_fields:
                     self.log_test("Cell Line Health - Structure", False, f"Missing fields: {missing_fields}")
                     return False
                 
-                # Check model info for Enhanced Gnosis architecture
-                model_info = data.get('model_info', {})
-                model_name = model_info.get('model_name', '')
-                architecture = model_info.get('architecture', '')
+                # Check model type and architecture for Enhanced Gnosis indicators
+                model_type = data.get('model_type', '')
+                architecture = data.get('architecture', '')
                 
                 # Check for Enhanced Gnosis indicators
                 enhanced_gnosis_indicators = [
-                    'Enhanced Gnosis' in model_name or 'enhanced_gnosis' in model_name.lower(),
+                    'Cell_Line_Response_Model' in model_type,
                     'Multi_Modal' in architecture or 'multi_modal' in architecture.lower(),
                     'Molecular_Genomic' in architecture or 'molecular_genomic' in architecture.lower()
                 ]
                 
                 has_enhanced_gnosis = any(enhanced_gnosis_indicators)
                 self.log_test("Enhanced Gnosis Architecture", has_enhanced_gnosis, 
-                            f"Model: {model_name}, Architecture: {architecture}")
+                            f"Model Type: {model_type}, Architecture: {architecture}")
                 
                 # Check capabilities
-                capabilities = data.get('capabilities', [])
+                capabilities = data.get('capabilities', {})
                 expected_capabilities = [
                     'multi_modal_prediction',
                     'genomic_integration', 
@@ -83,14 +82,19 @@ class EnhancedGnosisModelTester:
                     'cancer_type_specific'
                 ]
                 
-                missing_capabilities = [cap for cap in expected_capabilities if cap not in capabilities]
+                missing_capabilities = []
+                if isinstance(capabilities, dict):
+                    missing_capabilities = [cap for cap in expected_capabilities if not capabilities.get(cap, False)]
+                else:
+                    missing_capabilities = expected_capabilities
+                
                 if missing_capabilities:
                     self.log_test("Enhanced Gnosis Capabilities", False, f"Missing: {missing_capabilities}")
                 else:
                     self.log_test("Enhanced Gnosis Capabilities", True, f"All capabilities present: {capabilities}")
                 
                 # Check model availability
-                model_available = data.get('status') == 'healthy' or data.get('available', False)
+                model_available = data.get('status') == 'healthy'
                 self.log_test("Cell Line Model Available", model_available, f"Status: {data.get('status')}")
                 
                 return has_enhanced_gnosis and len(missing_capabilities) == 0 and model_available
