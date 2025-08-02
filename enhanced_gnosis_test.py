@@ -118,7 +118,7 @@ class EnhancedGnosisModelTester:
                 data = response.json()
                 
                 # Check for example cell lines and drugs
-                required_sections = ['cell_lines', 'drugs']
+                required_sections = ['cell_lines', 'example_drugs']
                 missing_sections = [section for section in required_sections if section not in data]
                 
                 if missing_sections:
@@ -136,10 +136,10 @@ class EnhancedGnosisModelTester:
                             f"Found cell lines: {cell_line_names}")
                 
                 # Check drugs
-                drugs = data.get('drugs', [])
+                drugs = data.get('example_drugs', [])
                 expected_drugs = ['Erlotinib', 'Trametinib']
                 
-                drug_names = [drug.get('drug_name', '') for drug in drugs if isinstance(drug, dict)]
+                drug_names = [drug.get('name', '') for drug in drugs if isinstance(drug, dict)]
                 has_expected_drugs = all(name in drug_names for name in expected_drugs)
                 
                 self.log_test("Example Drugs", has_expected_drugs, 
