@@ -195,8 +195,8 @@ class EnhancedGnosisModelTester:
             if response.status_code == 200:
                 data = response.json()
                 
-                # Check response structure
-                required_fields = ['prediction', 'genomic_context', 'clinical_insights']
+                # Check response structure (based on CellLinePredictionResponse)
+                required_fields = ['predicted_ic50_nm', 'predicted_pic50', 'sensitivity_class', 'genomic_context']
                 missing_fields = [field for field in required_fields if field not in data]
                 
                 if missing_fields:
@@ -204,10 +204,9 @@ class EnhancedGnosisModelTester:
                     return False
                 
                 # Check prediction values
-                prediction = data.get('prediction', {})
-                ic50_nm = prediction.get('ic50_nm')
-                pic50 = prediction.get('pic50')
-                sensitivity = prediction.get('sensitivity', '')
+                ic50_nm = data.get('predicted_ic50_nm')
+                pic50 = data.get('predicted_pic50')
+                sensitivity = data.get('sensitivity_class', '')
                 
                 # Erlotinib in KRAS-mutated cells should show resistance (high IC50)
                 resistance_expected = ic50_nm and ic50_nm > 1000  # > 1μM indicates resistance
@@ -217,29 +216,30 @@ class EnhancedGnosisModelTester:
                 
                 # Check genomic context
                 genomic_context = data.get('genomic_context', {})
-                detected_mutations = genomic_context.get('detected_mutations', [])
+                detected_mutations = genomic_context.get('key_mutations', [])
                 
-                kras_mutation_detected = any('KRAS' in mut for mut in detected_mutations)
+                kras_mutation_detected = 'KRAS' in detected_mutations
                 self.log_test("KRAS Mutation Detection", kras_mutation_detected, 
                             f"Detected mutations: {detected_mutations}")
                 
-                # Check clinical insights
-                clinical_insights = data.get('clinical_insights', {})
-                mechanism = clinical_insights.get('mechanism', '')
-                resistance_reason = clinical_insights.get('resistance_reason', '')
-                
-                kras_resistance_explained = 'KRAS' in mechanism or 'KRAS' in resistance_reason
-                self.log_test("KRAS Resistance Mechanism", kras_resistance_explained, 
-                            f"Mechanism: {mechanism}, Resistance reason: {resistance_reason}")
-                
                 # Check model source
-                model_source = data.get('model_source', '')
+                model_source = genomic_context.get('model_source', '')
                 enhanced_model = 'enhanced_gnosis' in model_source.lower() or 'enhanced_simulation' in model_source.lower()
                 self.log_test("Enhanced Gnosis Model Source", enhanced_model, 
                             f"Model source: {model_source}")
                 
+                # Check confidence and uncertainty
+                confidence = data.get('confidence')
+                uncertainty = data.get('uncertainty')
+                
+                good_confidence = confidence and confidence > 0.5
+                reasonable_uncertainty = uncertainty and uncertainty < 0.6
+                
+                self.log_test("Prediction Quality", good_confidence and reasonable_uncertainty, 
+                            f"Confidence: {confidence}, Uncertainty: {uncertainty}")
+                
                 return (resistance_expected and kras_mutation_detected and 
-                       kras_resistance_explained and enhanced_model)
+                       enhanced_model and good_confidence)
                 
             else:
                 self.log_test("Erlotinib Prediction", False, f"HTTP {response.status_code}: {response.text}")
