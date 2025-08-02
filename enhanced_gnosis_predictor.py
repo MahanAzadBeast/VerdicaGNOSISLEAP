@@ -383,7 +383,8 @@ class EnhancedGnosisPredictor:
         smiles_lower = smiles.lower()
         
         # EGFR inhibitor patterns (erlotinib, gefitinib-like)
-        if 'ncnc' in smiles_lower and 'f' in smiles_lower and 'cl' in smiles_lower:
+        if ('ncnc' in smiles_lower and 'f' in smiles_lower and 'cl' in smiles_lower and
+            'occoccoc' in smiles_lower):  # More specific for erlotinib-like compounds
             # EGFR inhibitor characteristics
             if mutations.get('KRAS', 0) == 1:
                 base_ic50 *= 5.0  # KRAS mutation -> resistance
