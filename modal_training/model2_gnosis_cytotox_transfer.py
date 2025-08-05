@@ -557,16 +557,16 @@ class GnosisChemBERTaEncoder:
 class CytotoxicityTransferModel(nn.Module):
     """
     Cytotoxicity head on frozen GNOSIS ChemBERTa encoder
-    Architecture as specified:
-    [SMILES] → Frozen GNOSIS encoder → h_chem (768)  
+    Architecture as specified - FIXED DIMENSIONS:
+    [SMILES] → Frozen ChemBERTa → h_chem (384)  
     [Genomics] → 2-layer MLP (128) → h_gen  
     Concat + LayerNorm → Dropout 0.2 → FC 256 + GELU → FC 1 → pIC50
     """
     
-    def __init__(self, molecular_dim=768, genomic_dim=54, hidden_dim=256):
+    def __init__(self, molecular_dim=384, genomic_dim=109, hidden_dim=256):
         super().__init__()
         
-        # Genomic encoder: 2-layer MLP → 128 features
+        # Genomic encoder: 2-layer MLP → 128 features (compress 109 → 128)
         self.genomic_encoder = nn.Sequential(
             nn.Linear(genomic_dim, 128),
             nn.ReLU(),
@@ -575,12 +575,12 @@ class CytotoxicityTransferModel(nn.Module):
             nn.ReLU()
         )
         
-        # Fusion layers - FIXED DIMENSIONS
-        input_dim = 768 + 128   # ChemBERTa (768) + genomics (128) - adjust if genomics fusion toggled
+        # Fusion layers - CORRECTED DIMENSIONS
+        input_dim = molecular_dim + 128   # 384 + 128 = 512 (matches actual data!)
         self.layer_norm = nn.LayerNorm(input_dim)
         self.dropout = nn.Dropout(0.2)
         
-        # Prediction head - FIXED INPUT DIMENSION
+        # Prediction head - CORRECTED INPUT DIMENSION
         self.fc1 = nn.Linear(input_dim, 256)
         self.prediction_head = nn.Sequential(
             self.fc1,
@@ -590,16 +590,16 @@ class CytotoxicityTransferModel(nn.Module):
         
     def forward(self, molecular_features, genomic_features):
         """
-        Forward pass
-        molecular_features: (batch_size, 768) - from frozen ChemBERTa
-        genomic_features: (batch_size, 54) - mutation + CNV + tissue
+        Forward pass - CORRECTED DIMENSIONS
+        molecular_features: (batch_size, 384) - from ChemBERTa
+        genomic_features: (batch_size, 109) - comprehensive GDSC features
         """
         
         # Encode genomics to 128 dimensions
         genomic_encoded = self.genomic_encoder(genomic_features)  # (batch, 128)
         
-        # Concatenate molecular + genomic (768 + 128 = 896)
-        combined = torch.cat([molecular_features, genomic_encoded], dim=1)  # (batch, 896)
+        # Concatenate molecular + genomic (384 + 128 = 512)
+        combined = torch.cat([molecular_features, genomic_encoded], dim=1)  # (batch, 512)
         
         # Apply normalization and dropout
         normalized = self.layer_norm(combined)
