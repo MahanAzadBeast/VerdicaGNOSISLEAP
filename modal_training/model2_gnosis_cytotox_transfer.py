@@ -640,16 +640,17 @@ class CytotoxicityTransferModel(nn.Module):
             nn.ReLU()
         )
         
-        # Fusion layers
-        fusion_dim = molecular_dim + 128  # 768 + 128 = 896
-        self.layer_norm = nn.LayerNorm(fusion_dim)
+        # Fusion layers - FIXED DIMENSIONS
+        input_dim = 768 + 128   # ChemBERTa (768) + genomics (128) - adjust if genomics fusion toggled
+        self.layer_norm = nn.LayerNorm(input_dim)
         self.dropout = nn.Dropout(0.2)
         
-        # Prediction head
+        # Prediction head - FIXED INPUT DIMENSION
+        self.fc1 = nn.Linear(input_dim, 256)
         self.prediction_head = nn.Sequential(
-            nn.Linear(fusion_dim, hidden_dim),
+            self.fc1,
             nn.GELU(),
-            nn.Linear(hidden_dim, 1)
+            nn.Linear(256, 1)
         )
         
     def forward(self, molecular_features, genomic_features):
@@ -659,10 +660,10 @@ class CytotoxicityTransferModel(nn.Module):
         genomic_features: (batch_size, 54) - mutation + CNV + tissue
         """
         
-        # Encode genomics
+        # Encode genomics to 128 dimensions
         genomic_encoded = self.genomic_encoder(genomic_features)  # (batch, 128)
         
-        # Concatenate molecular + genomic 
+        # Concatenate molecular + genomic (768 + 128 = 896)
         combined = torch.cat([molecular_features, genomic_encoded], dim=1)  # (batch, 896)
         
         # Apply normalization and dropout
