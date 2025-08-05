@@ -736,8 +736,8 @@ def train_gnosis_cytotox_transfer():
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = CytotoxicityTransferModel(
-        molecular_dim=768,
-        genomic_dim=X_gen_train.shape[1],
+        molecular_dim=384,  # Actual ChemBERTa output dimension
+        genomic_dim=X_gen_train.shape[1],  # Actual genomic feature count
         hidden_dim=256
     ).to(device)
     
