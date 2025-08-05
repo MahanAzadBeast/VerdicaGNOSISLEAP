@@ -88,50 +88,31 @@ class RealGDSCDataLoader:
         logger.info("📊 LOADING REAL GDSC v17 EXPERIMENTAL DATA")
         logger.info("=" * 60)
         
-        # ASSERTIONS for real data availability
-        assert os.path.exists("/root/data/gdsc/gdsc_ic50.csv"), "GDSC IC50 file missing"
-        assert len(pd.read_csv("/root/data/gdsc/gdsc_ic50.csv")) > 10000, "Insufficient real data"
+        # ASSERTIONS for real data availability - UPDATED PATHS
+        gdsc_data_path = "/vol/gdsc_comprehensive_training_data.csv"
+        assert os.path.exists(gdsc_data_path), f"GDSC comprehensive data file missing: {gdsc_data_path}"
+        
+        # Load and verify the real GDSC data
+        self.gdsc_data = pd.read_csv(gdsc_data_path)
+        assert len(self.gdsc_data) > 10000, f"Insufficient real data: {len(self.gdsc_data)} records"
         
         logger.info("✅ Data assertions passed - real GDSC data confirmed")
+        logger.info(f"✅ Loaded GDSC comprehensive data: {len(self.gdsc_data):,} records")
         
-        # Load the confirmed real data
-        gdsc_ic50_path = "/root/data/gdsc/gdsc_ic50.csv"
-        self.gdsc_data = pd.read_csv(gdsc_ic50_path)
+        # Verify essential columns exist
+        required_columns = ['SMILES', 'pIC50', 'CELL_LINE_NAME']
+        missing_cols = [col for col in required_columns if col not in self.gdsc_data.columns]
+        assert not missing_cols, f"Missing required columns: {missing_cols}"
         
-        logger.info(f"✅ Loaded GDSC IC50 data: {len(self.gdsc_data):,} records")
+        logger.info(f"📋 Dataset columns: {len(self.gdsc_data.columns)} total")
+        logger.info(f"   SMILES: {self.gdsc_data['SMILES'].nunique():,} unique molecules")
+        logger.info(f"   Cell lines: {self.gdsc_data['CELL_LINE_NAME'].nunique()} unique")
+        logger.info(f"   pIC50 range: {self.gdsc_data['pIC50'].min():.2f} - {self.gdsc_data['pIC50'].max():.2f}")
         
-        # Try to load additional GDSC files if available
-        additional_files = [
-            "/root/data/gdsc/gdsc_compound_info.csv",
-            "/root/data/gdsc/gdsc_cell_line_info.csv",
-            "/root/data/gdsc/mutation_data.csv",
-            "/root/data/gdsc/cnv_data.csv"
-        ]
-        
-        for file_path in additional_files:
-            if os.path.exists(file_path):
-                try:
-                    df = pd.read_csv(file_path)
-                    logger.info(f"✅ Additional data {os.path.basename(file_path)}: {len(df):,} records")
-                    
-                    if 'mutation' in file_path.lower():
-                        self.mutation_data = df
-                    elif 'cnv' in file_path.lower():
-                        self.cnv_data = df
-                    elif 'cell_line' in file_path.lower():
-                        self.cell_metadata = df
-                        
-                except Exception as e:
-                    logger.warning(f"⚠️ Could not load {file_path}: {e}")
-            else:
-                logger.info(f"📋 Optional file not found: {os.path.basename(file_path)}")
-                
-        return {
-            'gdsc_data': self.gdsc_data,
-            'mutation_data': self.mutation_data,
-            'cnv_data': self.cnv_data,
-            'cell_metadata': self.cell_metadata
-        }
+        # Set other data sources as None for now (we have comprehensive data)
+        self.mutation_data = None
+        self.cnv_data = None  
+        self.cell_metadata = None
     
     def strict_data_cleaning(self):
         """
