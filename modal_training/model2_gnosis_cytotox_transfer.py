@@ -109,10 +109,12 @@ class RealGDSCDataLoader:
         logger.info(f"   Cell lines: {self.gdsc_data['CELL_LINE_NAME'].nunique()} unique")
         logger.info(f"   pIC50 range: {self.gdsc_data['pIC50'].min():.2f} - {self.gdsc_data['pIC50'].max():.2f}")
         
-        # Set other data sources as None for now (we have comprehensive data)
-        self.mutation_data = None
-        self.cnv_data = None  
-        self.cell_metadata = None
+        return {
+            'gdsc_data': self.gdsc_data,
+            'mutation_data': self.mutation_data,
+            'cnv_data': self.cnv_data,
+            'cell_metadata': self.cell_metadata
+        }
     
     def strict_data_cleaning(self):
         """
