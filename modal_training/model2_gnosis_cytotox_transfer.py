@@ -83,81 +83,49 @@ class RealGDSCDataLoader:
         self.cell_metadata = None
         
     def load_real_gdsc_datasets(self):
-        """Load real GDSC v17 experimental datasets"""
+        """Load real GDSC v17 experimental datasets with proper assertions"""
         
         logger.info("📊 LOADING REAL GDSC v17 EXPERIMENTAL DATA")
         logger.info("=" * 60)
         
-        # GDSC v17 file paths (real experimental data)
-        gdsc_files = [
-            "/vol/expanded/GDSC1_fitted_dose_response_25Feb20.xlsx",
-            "/vol/expanded/GDSC2_fitted_dose_response_25Feb20.xlsx", 
-            "/vol/expanded/gdsc_compound_info.csv",
-            "/vol/expanded/gdsc_cell_line_info.csv"
+        # ASSERTIONS for real data availability
+        assert os.path.exists("/root/data/gdsc/gdsc_ic50.csv"), "GDSC IC50 file missing"
+        assert len(pd.read_csv("/root/data/gdsc/gdsc_ic50.csv")) > 10000, "Insufficient real data"
+        
+        logger.info("✅ Data assertions passed - real GDSC data confirmed")
+        
+        # Load the confirmed real data
+        gdsc_ic50_path = "/root/data/gdsc/gdsc_ic50.csv"
+        self.gdsc_data = pd.read_csv(gdsc_ic50_path)
+        
+        logger.info(f"✅ Loaded GDSC IC50 data: {len(self.gdsc_data):,} records")
+        
+        # Try to load additional GDSC files if available
+        additional_files = [
+            "/root/data/gdsc/gdsc_compound_info.csv",
+            "/root/data/gdsc/gdsc_cell_line_info.csv",
+            "/root/data/gdsc/mutation_data.csv",
+            "/root/data/gdsc/cnv_data.csv"
         ]
         
-        # Load mutation and CNV data
-        genomic_files = [
-            "/vol/expanded/Cell_line_RMA_proc_basalExp.txt",
-            "/vol/expanded/WES_variants.xlsx", 
-            "/vol/expanded/cnv_20191101.csv"
-        ]
-        
-        # Try to load primary GDSC dose-response data
-        gdsc_datasets = []
-        
-        for file_path in gdsc_files:
-            if Path(file_path).exists():
+        for file_path in additional_files:
+            if os.path.exists(file_path):
                 try:
-                    if file_path.endswith('.xlsx'):
-                        df = pd.read_excel(file_path)
-                    else:
-                        df = pd.read_csv(file_path)
+                    df = pd.read_csv(file_path)
+                    logger.info(f"✅ Additional data {os.path.basename(file_path)}: {len(df):,} records")
                     
-                    logger.info(f"✅ Loaded {Path(file_path).name}: {len(df):,} records")
-                    
-                    # Check for essential columns
-                    if any(col in df.columns for col in ['IC50', 'LN_IC50', 'SMILES']):
-                        gdsc_datasets.append(df)
-                        logger.info(f"   Contains drug sensitivity data")
-                    elif any(col in df.columns for col in ['CELL_LINE_NAME', 'COSMIC_ID']):
+                    if 'mutation' in file_path.lower():
+                        self.mutation_data = df
+                    elif 'cnv' in file_path.lower():
+                        self.cnv_data = df
+                    elif 'cell_line' in file_path.lower():
                         self.cell_metadata = df
-                        logger.info(f"   Cell line metadata: {len(df)} cell lines")
-                    else:
-                        logger.info(f"   Supplementary data: {list(df.columns)[:5]}...")
                         
                 except Exception as e:
                     logger.warning(f"⚠️ Could not load {file_path}: {e}")
             else:
-                logger.warning(f"⚠️ File not found: {file_path}")
-        
-        # Load genomic data
-        for file_path in genomic_files:
-            if Path(file_path).exists():
-                try:
-                    if file_path.endswith('.xlsx'):
-                        df = pd.read_excel(file_path)
-                    else:
-                        df = pd.read_csv(file_path)
-                    
-                    logger.info(f"✅ Genomic data {Path(file_path).name}: {df.shape}")
-                    
-                    if 'mutation' in file_path.lower() or 'WES' in file_path:
-                        self.mutation_data = df
-                    elif 'cnv' in file_path.lower():
-                        self.cnv_data = df
-                        
-                except Exception as e:
-                    logger.warning(f"⚠️ Could not load genomic data {file_path}: {e}")
-        
-        # Combine GDSC datasets if multiple found
-        if gdsc_datasets:
-            self.gdsc_data = pd.concat(gdsc_datasets, ignore_index=True)
-            logger.info(f"📊 Combined GDSC data: {len(self.gdsc_data):,} total records")
-        else:
-            logger.error("❌ No GDSC drug sensitivity data found!")
-            return None
-            
+                logger.info(f"📋 Optional file not found: {os.path.basename(file_path)}")
+                
         return {
             'gdsc_data': self.gdsc_data,
             'mutation_data': self.mutation_data,
