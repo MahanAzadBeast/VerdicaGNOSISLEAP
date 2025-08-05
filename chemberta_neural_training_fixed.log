@@ -1,0 +1,37 @@
+✅ ChemBERTa (transformers) available - will use pretrained model
+🧬 CHEMBERTA NEURAL NETWORK TRAINING ON GDSC/DEPMAP DATA
+==========================================================================================
+🎯 NEURAL NETWORK TRAINING (NOT SIMULATION)
+🤖 ChemBERTa Available: True
+
+📊 STEP 1: Creating GDSC/DepMap training dataset...
+📊 Creating comprehensive GDSC/DepMap-inspired training dataset...
+   ✅ GDSC/DepMap-inspired dataset created: 600 records
+   📊 Unique cell lines: 60
+   📊 Unique drugs: 10
+   📊 IC50 range: 8.09 - 39621.17 nM
+   📊 Cancer types: 7
+
+🔧 STEP 2: Preparing molecular and genomic features...
+   🧬 Using ChemBERTa for molecular encoding
+   📊 Molecular features: 600 SMILES
+   📊 Genomic features: (600, 39)
+   📊 Targets: (600,)
+   📊 pIC50 range: 4.40 - 8.09
+
+📋 STEP 3: Creating stratified train/test split...
+   📊 Training cell lines: 11
+   📊 Test cell lines: 4
+   📊 Training samples: 440
+   📊 Test samples: 160
+
+🗂️ STEP 4: Creating PyTorch datasets...
+
+🤖 STEP 5: Initializing ChemBERTa Cell Line Model...
+🧬 Initializing ChemBERTa drug encoder...
+✅ ChemBERTa encoder initialized (hidden_size: 768)
+   🖥️ Device: cpu
+   📊 Total parameters: 45,207,106
+   📊 Trainable parameters: 45,207,106
+
+🚀 STEP 6: Training ChemBERTa Neural Network...

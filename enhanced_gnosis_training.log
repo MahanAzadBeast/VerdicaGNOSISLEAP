@@ -1,0 +1,48 @@
+🧬 CELL LINE RESPONSE MODEL LOCAL TRAINING
+================================================================================
+
+📊 STEP 1: Creating training dataset...
+📊 Creating training dataset...
+   ✅ Training data: 48 records
+
+🔧 STEP 2: Preparing features...
+   📊 SMILES tokens: torch.Size([48, 80])
+   📊 Genomic features: (48, 39)
+   📊 Targets: (48,)
+
+📋 STEP 3: Train-test split...
+   📊 Training: 38 samples
+   📊 Testing: 10 samples
+
+🗂️ STEP 4: Creating data loaders...
+
+🤖 STEP 5: Initializing model...
+   🖥️ Device: cpu
+   📊 Parameters: 284,801
+
+🚀 STEP 6: Training model...
+   Epoch 10: Train Loss = 2.8499, Test Loss = 0.6013, Test R² = -12.8552
+   Epoch 20: Train Loss = 0.9114, Test Loss = 0.2480, Test R² = -4.7139
+   Epoch 30: Train Loss = 0.8678, Test Loss = 0.1961, Test R² = -3.5188
+   Epoch 40: Train Loss = 0.9902, Test Loss = 0.1561, Test R² = -2.5962
+   Epoch 50: Train Loss = 0.6347, Test Loss = 0.3153, Test R² = -6.2646
+
+📊 STEP 7: Final evaluation...
+   📊 Final Test R²: -1.0625
+   📊 Final Test RMSE: 0.2992
+   📊 Final Test MAE: 0.2431
+
+💾 STEP 8: Saving artifacts...
+   ✅ Model saved: /tmp/cell_line_models/best_model.pth
+   ✅ Tokenizer saved: /tmp/cell_line_models/tokenizer.pkl
+   ✅ Scaler saved: /tmp/cell_line_models/scaler.pkl
+   ✅ Metadata saved: /tmp/cell_line_models/metadata.json
+
+🎉 CELL LINE RESPONSE MODEL TRAINING COMPLETED!
+================================================================================
+📊 Final Performance:
+  • Test R²: -1.0625
+  • Test RMSE: 0.2992
+  • Test MAE: 0.2431
+🚀 Model ready for use!
+Training result: {'status': 'success', 'test_r2': -1.0625424204655993, 'test_rmse': 0.2991881626468885, 'test_mae': 0.2430565357208252, 'model_path': '/tmp/cell_line_models/best_model.pth', 'metadata_path': '/tmp/cell_line_models/metadata.json'}
