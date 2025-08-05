@@ -6,7 +6,8 @@ rdkit-pypi==2022.9.5
 fastapi
 uvicorn[standard]
 motor
-transformers
+transformers==4.33.0
+tokenizers==0.13.3
 torch
 boto3
 aiofiles
@@ -18,3 +19,6 @@ dgl
 dgllife
 pytorch-lightning
 modal
+weasyprint
+jinja2
+reportlab

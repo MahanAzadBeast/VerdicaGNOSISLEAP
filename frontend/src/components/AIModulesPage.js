@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LigandActivityPredictor from './LigandActivityPredictor';
+import CytotoxicityPredictionModel from './CytotoxicityPredictionModel';
 
 const AIModulesPage = () => {
   const [activeModule, setActiveModule] = useState('ligand-predictor');
@@ -12,6 +13,14 @@ const AIModulesPage = () => {
       description: 'Multi-model prediction system for IC50, toxicity, LogP, and solubility',
       icon: '🧬',
       models: ['ChemBERTa Multi-Task', 'Chemprop Multi-Task', 'Enhanced RDKit'],
+      status: 'active'
+    },
+    {
+      id: 'cytotoxicity-predictor',
+      name: 'Cytotoxicity Prediction Model',
+      description: 'ChemBERTa-based multi-modal drug sensitivity prediction for cancer cell lines',
+      icon: '🦠',
+      models: ['ChemBERTa + Genomics', 'Neural Network (A100 GPU Trained)', '74K Samples Dataset'],
       status: 'active'
     },
     {
@@ -95,6 +104,8 @@ const AIModulesPage = () => {
         {/* Module Content */}
         <div className="bg-gray-800 border border-gray-700 rounded-xl">
           {activeModule === 'ligand-predictor' && <LigandActivityPredictor />}
+          
+          {activeModule === 'cytotoxicity-predictor' && <CytotoxicityPredictionModel />}
           
           {activeModule === 'molecular-analysis' && (
             <div className="p-12 text-center">

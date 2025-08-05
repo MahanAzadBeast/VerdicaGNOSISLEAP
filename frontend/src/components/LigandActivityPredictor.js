@@ -1,177 +1,389 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { saveAs } from 'file-saver';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const LigandActivityPredictor = () => {
   const [smiles, setSmiles] = useState('');
-  const [selectedModel, setSelectedModel] = useState('model-comparison'); // Default to comparison mode
-  const [selectedProperties, setSelectedProperties] = useState(['bioactivity_ic50']);
-  const [selectedTarget, setSelectedTarget] = useState('EGFR');
+  const [selectedTargets, setSelectedTargets] = useState(['all']);
+  const [selectedAssayTypes, setSelectedAssayTypes] = useState(['IC50', 'Ki', 'EC50']); // User can choose assay types
+  const [availableTargetsFiltered, setAvailableTargetsFiltered] = useState(null);
+
+  // Target training data availability (synced with backend)
+  const targetTrainingData = {
+    'ATM': {'IC50': 12, 'Ki': 891, 'EC50': 0},
+    'CHEK2': {'IC50': 358, 'Ki': 524, 'EC50': 3},
+    'CHEK1': {'IC50': 848, 'Ki': 26, 'EC50': 76},
+    'PIK3CB': {'IC50': 785, 'Ki': 86, 'EC50': 0},
+    'PIK3CG': {'IC50': 845, 'Ki': 15, 'EC50': 0},
+    'YES1': {'IC50': 75, 'Ki': 592, 'EC50': 0},
+    'PIK3CA': {'IC50': 315, 'Ki': 521, 'EC50': 0},
+    'ROS1': {'IC50': 418, 'Ki': 426, 'EC50': 0},
+    'FLT4': {'IC50': 238, 'Ki': 588, 'EC50': 12},
+    'PDGFRA': {'IC50': 488, 'Ki': 322, 'EC50': 6},
+    'PARP1': {'IC50': 529, 'Ki': 241, 'EC50': 127},
+    'PLK1': {'IC50': 108, 'Ki': 701, 'EC50': 1},
+    'EGFR': {'IC50': 631, 'Ki': 147, 'EC50': 0},
+    'BRAF': {'IC50': 560, 'Ki': 165, 'EC50': 11},
+    'MET': {'IC50': 581, 'Ki': 143, 'EC50': 4},
+    'ABL1': {'IC50': 401, 'Ki': 143, 'EC50': 0},
+    'CDK4': {'IC50': 792, 'Ki': 61, 'EC50': 0},
+    'CDK2': {'IC50': 734, 'Ki': 58, 'EC50': 0},
+    'RAF1': {'IC50': 865, 'Ki': 3, 'EC50': 0},
+    'AURKA': {'IC50': 746, 'Ki': 116, 'EC50': 0},
+    'MTOR': {'IC50': 835, 'Ki': 43, 'EC50': 1},
+    'PARP2': {'IC50': 570, 'Ki': 45, 'EC50': 0},
+    'KIT': {'IC50': 420, 'Ki': 135, 'EC50': 3},
+    'JAK2': {'IC50': 700, 'Ki': 93, 'EC50': 0},
+    'ALK': {'IC50': 405, 'Ki': 476, 'EC50': 0}
+  };
   const [predictions, setPredictions] = useState(null);
-  const [chembertaPredictions, setChembertaPredictions] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [modelStatus, setModelStatus] = useState({});
+  const [sortBy, setSortBy] = useState({ column: null, direction: 'asc' });
+  const [isExporting, setIsExporting] = useState(false);
 
-  // Available prediction models - Enhanced for dual-architecture comparison
-  const predictionModels = [
-    {
-      id: 'model-comparison',
-      name: 'Model Architecture Comparison',
-      description: 'Compare ChemBERTa Transformer vs Chemprop GNN side-by-side',
-      models: ['ChemBERTa (Transformer)', 'Chemprop (GNN)'],
-      icon: '⚔️',
-      isComparison: true
-    },
-    {
-      id: 'chemberta-multitask',
-      name: 'ChemBERTa Transformer',
-      description: 'BERT-based transformer model (Mean R²: 0.516, Production Ready)',
-      models: ['ChemBERTa Multi-Task (10 targets)'],
-      icon: '🧬',
-      status: 'production',
-      performance: { mean_r2: 0.516, targets: 10, best_target: 'EGFR (R²: 0.751)' }
-    },
-    {
-      id: 'chemprop-real',
-      name: 'Chemprop Graph Neural Network',
-      description: '5-layer MPNN trained on same targets (50 epochs, Production Testing)',
-      models: ['Chemprop GNN Multi-Task'],
-      icon: '📊',
-      status: 'testing',
-      performance: { epochs: 50, architecture: '5-layer MPNN', size_mb: 25.32 }
-    },
-    {
-      id: 'chemprop-multitask',
-      name: 'Chemprop Simulation',
-      description: 'Simulation model for development and testing',
-      models: ['Chemprop GNN Simulation'],
-      icon: '🧪',
-      status: 'simulation'
-    },
-    {
-      id: 'enhanced-rdkit',
-      name: 'Enhanced RDKit',
-      description: 'Enhanced molecular descriptors with target-specific models',
-      models: ['RDKit + ML Models'],
-      icon: '⚗️',
-      status: 'enhanced'
+  // PDF Export functionality
+  const handleExportPDF = async () => {
+    if (!predictions) {
+      setError('No predictions available to export');
+      return;
     }
-  ];
 
-  // Available properties for prediction
-  const propertyTypes = [
-    { 
-      id: 'bioactivity_ic50', 
-      label: 'IC₅₀ / Bioactivity', 
-      category: 'Bioactivity', 
-      description: 'Half-maximal inhibitory concentration',
-      unit: 'μM',
-      models: ['unified', 'chemberta-multitask', 'chemprop-multitask', 'enhanced-rdkit']
-    },
-    { 
-      id: 'toxicity', 
-      label: 'General Toxicity', 
-      category: 'Toxicity', 
-      description: 'Overall toxicity probability',
-      unit: '%',
-      models: ['unified', 'chemprop-multitask', 'enhanced-rdkit']
-    },
-    { 
-      id: 'logP', 
-      label: 'LogP (Lipophilicity)', 
-      category: 'Physicochemical', 
-      description: 'Partition coefficient between octanol and water',
-      unit: 'LogP',
-      models: ['unified', 'chemprop-multitask', 'enhanced-rdkit']
-    },
-    { 
-      id: 'solubility', 
-      label: 'Aqueous Solubility', 
-      category: 'Physicochemical', 
-      description: 'Water solubility (LogS)',
-      unit: 'LogS',
-      models: ['unified', 'chemprop-multitask', 'enhanced-rdkit']
+    setIsExporting(true);
+    try {
+      const response = await axios.post(`${API}/reports/export-pdf`, predictions, {
+        responseType: 'blob',
+        timeout: 30000, // 30 second timeout for PDF generation
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      // Get filename from response headers or create default
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = 'veridica_prediction_report.pdf';
+      
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+
+      // Save the PDF file
+      saveAs(new Blob([response.data], { type: 'application/pdf' }), filename);
+      
+    } catch (error) {
+      console.error('PDF export failed:', error);
+      setError(`PDF export failed: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setIsExporting(false);
     }
-  ];
-
-  // Available targets
-  const availableTargets = [
-    { id: 'EGFR', name: 'EGFR', description: 'Epidermal Growth Factor Receptor' },
-    { id: 'HER2', name: 'HER2', description: 'Human Epidermal Growth Factor Receptor 2' },
-    { id: 'VEGFR2', name: 'VEGFR2', description: 'Vascular Endothelial Growth Factor Receptor 2' },
-    { id: 'BRAF', name: 'BRAF', description: 'B-Raf Proto-Oncogene' },
-    { id: 'MET', name: 'MET', description: 'MET Proto-Oncogene' },
-    { id: 'CDK4', name: 'CDK4', description: 'Cyclin Dependent Kinase 4' },
-    { id: 'CDK6', name: 'CDK6', description: 'Cyclin Dependent Kinase 6' },
-    { id: 'ALK', name: 'ALK', description: 'Anaplastic Lymphoma Kinase' },
-    { id: 'MDM2', name: 'MDM2', description: 'MDM2 Proto-Oncogene' },
-    { id: 'PI3KCA', name: 'PI3KCA', description: 'Phosphatidylinositol-4,5-Bisphosphate 3-Kinase' }
-  ];
-
-  // Example molecules
-  const exampleMolecules = [
-    { name: 'Aspirin', smiles: 'CC(=O)OC1=CC=CC=C1C(=O)O' },
-    { name: 'Imatinib (Gleevec)', smiles: 'CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5' },
-    { name: 'Gefitinib (Iressa)', smiles: 'COC1=C(C=C2C(=C1)N=CN=C2NC3=CC(=C(C=C3)F)Cl)OCCCN4CCOCC4' },
-    { name: 'Sorafenib', smiles: 'CNC(=O)C1=CC=CC=C1NC(=O)NC2=CC(=C(C=C2)Cl)C(F)(F)F' },
-    { name: 'Caffeine', smiles: 'CN1C=NC2=C1C(=O)N(C(=O)N2C)C' },
-    { name: 'Ethanol', smiles: 'CCO' }
-  ];
-
-  // Generate PyTorch Direct Enhanced predictions
-  const generatePyTorchDirectPredictions = (smiles) => {
-    // Mock predictions using PyTorch Direct Enhanced System
-    const targets = ['EGFR', 'HER2', 'VEGFR2', 'BRAF', 'MET', 'CDK4', 'CDK6', 'ALK', 'MDM2', 'PI3KCA'];
-    const predictions = {};
-    
-    targets.forEach(target => {
-      // Generate realistic IC50 values with some variation
-      const baseIC50 = Math.random() * 10000 + 100; // 100-10100 nM range
-      predictions[target] = {
-        pIC50: -Math.log10(baseIC50 / 1e9),
-        IC50_nM: baseIC50,
-        activity: baseIC50 < 1000 ? 'Active' : baseIC50 < 10000 ? 'Moderate' : 'Inactive'
-      };
-    });
-    
-    return predictions;
   };
 
+  // Column sorting functionality
+  const handleSort = (column) => {
+    setSortBy(prev => ({
+      column,
+      direction: prev.column === column && prev.direction === 'asc' ? 'desc' : 'asc'
+    }));
+  };
+
+  // Sort predictions based on current sort settings
+  const sortedPredictions = predictions ? (() => {
+    const entries = Object.entries(predictions.predictions);
+    
+    if (!sortBy.column) return entries;
+    
+    return entries.sort((a, b) => {
+      const [targetA, dataA] = a;
+      const [targetB, dataB] = b;
+      
+      let valueA, valueB;
+      
+      if (sortBy.column === 'potency') {
+        // Sort by IC50 potency (lower IC50 = higher potency = higher pIC50)
+        valueA = dataA.IC50?.pActivity || 0;
+        valueB = dataB.IC50?.pActivity || 0;
+      } else if (sortBy.column === 'confidence') {
+        // Sort by average confidence across assay types
+        const avgConfA = ['IC50', 'Ki', 'EC50'].reduce((sum, type) => 
+          sum + (dataA[type]?.confidence || 0), 0) / 3;
+        const avgConfB = ['IC50', 'Ki', 'EC50'].reduce((sum, type) => 
+          sum + (dataB[type]?.confidence || 0), 0) / 3;
+        valueA = avgConfA;
+        valueB = avgConfB;
+      } else {
+        return 0;
+      }
+      
+      const result = valueA - valueB;
+      return sortBy.direction === 'desc' ? -result : result;
+    });
+  })() : [];
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [availableTargets, setAvailableTargets] = useState({});
+  const [modelInfo, setModelInfo] = useState(null);
+
+  // Load available targets and model info on component mount
   useEffect(() => {
-    checkModelStatus();
+    loadGnosisIInfo();
+    loadAvailableTargets();
   }, []);
 
-  const checkModelStatus = async () => {
+  const loadGnosisIInfo = async () => {
     try {
-      // Check multiple endpoints
-      const [healthResponse, chembertaResponse] = await Promise.allSettled([
-        axios.get(`${API}/health`),
-        axios.get(`${API}/chemberta/status`)
-      ]);
-
-      const status = {};
-      
-      if (healthResponse.status === 'fulfilled') {
-        status.unified = healthResponse.value.data.status === 'healthy';
-        status.enhanced = healthResponse.value.data.enhanced_predictions || false;
-      }
-      
-      if (chembertaResponse.status === 'fulfilled') {
-        const chembertaData = chembertaResponse.value.data;
-        status.chemberta = chembertaData.available || false;
-        console.log('ChemBERTa status check:', chembertaData.available, chembertaData);
-      } else {
-        console.log('ChemBERTa status check failed:', chembertaResponse.reason);
-        status.chemberta = false;
-      }
-
-      setModelStatus(status);
+      const response = await axios.get(`${API}/gnosis-i/info`);
+      setModelInfo(response.data);
     } catch (error) {
-      console.error('Error checking model status:', error);
+      console.error('Error loading Gnosis I info:', error);
     }
+  };
+
+  const loadAvailableTargets = async () => {
+    try {
+      const response = await axios.get(`${API}/gnosis-i/targets`);
+      setAvailableTargets(response.data);
+    } catch (error) {
+      console.error('Error loading targets:', error);
+      setError('Failed to load available targets');
+    }
+  };
+
+  const handleTargetChange = (target) => {
+    if (target === 'all') {
+      setSelectedTargets(['all']);
+    } else {
+      const newTargets = selectedTargets.includes('all') ? [target] : [...selectedTargets];
+      if (newTargets.includes(target)) {
+        const filtered = newTargets.filter(t => t !== target);
+        setSelectedTargets(filtered.length === 0 ? ['all'] : filtered);
+      } else {
+        setSelectedTargets([...newTargets.filter(t => t !== 'all'), target]);
+      }
+    }
+  };
+
+  // Handle assay type selection changes
+  const handleAssayTypeChange = (assayType) => {
+    let newSelectedTypes;
+    if (selectedAssayTypes.includes(assayType)) {
+      // Remove if already selected, but keep at least one
+      newSelectedTypes = selectedAssayTypes.filter(type => type !== assayType);
+      if (newSelectedTypes.length === 0) {
+        newSelectedTypes = [assayType]; // Keep at least one selected
+        return;
+      }
+    } else {
+      // Add if not selected
+      newSelectedTypes = [...selectedAssayTypes, assayType];
+    }
+    setSelectedAssayTypes(newSelectedTypes);
+  };
+
+  // Filter available targets based on selected assay types
+  const filterTargetsByAssayTypes = (targets, assayTypes) => {
+    if (!targets || !targets.categorized_targets) return targets;
+
+    const minSampleThresholds = { 'IC50': 10, 'Ki': 10, 'EC50': 10 };
+    
+    const filterTargetList = (targetList) => {
+      return targetList.filter(target => {
+        // Check if target has data in our mapping
+        if (!targetTrainingData[target]) return false;
+        
+        // Check if target has sufficient data for ALL selected assay types
+        return assayTypes.every(assayType => {
+          const samples = targetTrainingData[target][assayType] || 0;
+          return samples >= minSampleThresholds[assayType];
+        });
+      });
+    };
+
+    return {
+      ...targets,
+      categorized_targets: {
+        oncoproteins: filterTargetList(targets.categorized_targets.oncoproteins || []),
+        tumor_suppressors: filterTargetList(targets.categorized_targets.tumor_suppressors || []),
+        other_targets: filterTargetList(targets.categorized_targets.other_targets || []),
+        all_targets: [...filterTargetList(targets.categorized_targets.oncoproteins || []), 
+                     ...filterTargetList(targets.categorized_targets.tumor_suppressors || []), 
+                     ...filterTargetList(targets.categorized_targets.other_targets || [])]
+      },
+      available_targets: [...filterTargetList(targets.categorized_targets.oncoproteins || []), 
+                         ...filterTargetList(targets.categorized_targets.tumor_suppressors || []), 
+                         ...filterTargetList(targets.categorized_targets.other_targets || [])]
+    };
+  };
+
+  // Update filtered targets when assay types change
+  useEffect(() => {
+    if (availableTargets) {
+      const filtered = filterTargetsByAssayTypes(availableTargets, selectedAssayTypes);
+      setAvailableTargetsFiltered(filtered);
+      
+      // Reset selected targets if they're no longer available
+      if (selectedTargets.length > 0 && !selectedTargets.includes('all')) {
+        const stillAvailable = selectedTargets.filter(target => 
+          filtered.available_targets.includes(target)
+        );
+        if (stillAvailable.length === 0) {
+          setSelectedTargets(['all']);
+        } else if (stillAvailable.length !== selectedTargets.length) {
+          setSelectedTargets(stillAvailable);
+        }
+      }
+    }
+  }, [availableTargets, selectedAssayTypes]);
+
+  // Heat-map color calculation with continuous HSL gradient
+  const calculatePotencyColor = (pValue, confidence = 0.8, isUnreliable = false, isNotTrained = false) => {
+    // Special styling for not trained predictions (Ki)
+    if (isNotTrained) {
+      return {
+        backgroundColor: 'hsl(0, 0%, 25%)', // Dark gray for not trained
+        opacity: 0.8,
+        color: '#fbbf24', // Amber text for warning
+        fontWeight: 'bold',
+        border: '2px solid #f59e0b',
+        textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+      };
+    }
+    
+    // Special styling for unreliable predictions
+    if (isUnreliable) {
+      return {
+        backgroundColor: 'hsl(0, 0%, 40%)', // Gray for unreliable
+        opacity: 0.6,
+        color: 'white',
+        fontWeight: 'bold',
+        border: '2px dashed #64748b'
+      };
+    }
+    
+    // Clip pIC50 values - should never go below 0
+    const clippedPValue = Math.max(0, pValue);
+    
+    // Continuous HSL gradient mapping: 220° (blue) → 0° (red)
+    const hue = (p) => {
+      if (p >= 9) return 220; // deep blue (picomolar)
+      if (p >= 7) return 140 + (220-140)*(p-7)/2; // blue-green (low-nano)
+      if (p >= 5) return 50 + (140-50)*(p-5)/2;   // yellow-green (μM)  
+      if (p >= 3) return 25 + (50-25)*(p-3)/2;    // orange (high μM)
+      return 0; // red (inactive)
+    };
+    
+    // Lightness/opacity modulated by reliability index (0.4-1.0)
+    const opacity = 0.4 + 0.6 * confidence;
+    const lightness = 45 + 10 * confidence; // 45-55% lightness range
+    
+    return {
+      backgroundColor: `hsl(${hue(clippedPValue)}, 70%, ${lightness}%)`,
+      opacity: opacity,
+      color: 'white',
+      fontWeight: 'bold'
+    };
+  };
+
+  // Check if compound is inactive (pIC50 < 3 or IC50 > 100 μM)
+  const isInactive = (pValue, activityUM) => {
+    return pValue < 3 || activityUM > 100;
+  };
+
+  // Format potency display with extreme value capping and assay-specific handling
+  const formatPotencyDisplay = (pValue, activityUM, assayType, qualityFlag) => {
+    const clippedPValue = Math.max(0, pValue);
+    
+    // Special handling for Ki predictions that were not trained
+    if (qualityFlag === 'not_trained') {
+      return {
+        primaryText: "Not trained",
+        secondaryText: "(No Ki data)", 
+        isExtreme: true,
+        isUnreliable: true,
+        isNotTrained: true
+      };
+    }
+    
+    // Special handling for other unreliable predictions
+    if (qualityFlag === 'low_confidence' && activityUM > 100000) {
+      return {
+        primaryText: "No binding",
+        secondaryText: `(${assayType} unreliable)`, 
+        isExtreme: true,
+        isUnreliable: true,
+        isNotTrained: false
+      };
+    }
+    
+    if (activityUM > 100) {
+      return {
+        primaryText: "> 100 μM",
+        secondaryText: "—", // Omit pIC50 for extreme values
+        isExtreme: true,
+        isUnreliable: false,
+        isNotTrained: false
+      };
+    }
+    
+    return {
+      primaryText: `${activityUM.toFixed(1)} μM`,
+      secondaryText: `p${assayType} = ${clippedPValue.toFixed(2)}`,
+      isExtreme: false,
+      isUnreliable: false,
+      isNotTrained: false
+    };
+  };
+
+  // Enhanced selectivity analysis with N/A handling
+  const calculateSelectivityDisplay = (targetData, allPredictions) => {
+    const selectivityRatio = targetData.selectivity_ratio;
+    
+    // Check if we have sufficient off-target data
+    const numTargets = Object.keys(allPredictions).length;
+    if (numTargets < 2 || selectivityRatio === null || selectivityRatio === undefined) {
+      return {
+        ratio: null,
+        category: 'Panel not available',
+        color: 'gray',
+        tooltip: 'Selectivity ratio could not be calculated – off-target panel missing.'
+      };
+    }
+    
+    // Standard selectivity calculation
+    if (selectivityRatio >= 10) {
+      return { 
+        ratio: selectivityRatio, 
+        category: 'Selective', 
+        color: 'green',
+        tooltip: `Highly selective (${selectivityRatio.toFixed(1)}× vs off-targets)`
+      };
+    }
+    if (selectivityRatio >= 3) {
+      return { 
+        ratio: selectivityRatio, 
+        category: 'Moderate', 
+        color: 'yellow',
+        tooltip: `Moderately selective (${selectivityRatio.toFixed(1)}× vs off-targets)`
+      };
+    }
+    return { 
+      ratio: selectivityRatio, 
+      category: 'Non-selective', 
+      color: 'red',
+      tooltip: `Poor selectivity (${selectivityRatio.toFixed(1)}× vs off-targets)`
+    };
+  };
+
+  // Get potency description
+  const getPotencyDescription = (pValue) => {
+    if (pValue >= 9) return 'Very High (picomolar)';
+    if (pValue >= 7) return 'High (low nanomolar)';
+    if (pValue >= 5) return 'Moderate (micromolar)';
+    if (pValue >= 3) return 'Low (high micromolar)';
+    return 'Inactive (>100 μM)';
   };
 
   const handlePredict = async () => {
@@ -180,748 +392,642 @@ const LigandActivityPredictor = () => {
       return;
     }
 
-    if (selectedProperties.length === 0) {
-      setError('Please select at least one property to predict');
-      return;
-    }
+    const isAllTargets = selectedTargets.includes('all');
+    const targetCount = isAllTargets ? availableTargets.total_targets : selectedTargets.length;
 
     setIsLoading(true);
     setError('');
     setPredictions(null);
-    setChembertaPredictions(null);
 
     try {
-      const promises = [];
+      const response = await axios.post(`${API}/gnosis-i/predict`, {
+        smiles: smiles.trim(),
+        targets: selectedTargets.includes('all') ? 'all' : selectedTargets,
+        assay_types: selectedAssayTypes // Send selected assay types to backend
+      }, {
+        timeout: 120000 // 2 minutes timeout for large predictions
+      });
 
-      // Handle Model Architecture Comparison
-      if (selectedModel === 'model-comparison') {
-        // Run both ChemBERTa and Chemprop for direct comparison
-        if (selectedProperties.includes('bioactivity_ic50')) {
-          // Always include ChemBERTa in comparison mode (it's working)
-          promises.push(
-            axios.post(`${API}/chemberta/predict`, {
-              smiles: smiles.trim()
-            }, { timeout: 120000 })
-            .then(result => ({ type: 'chemberta', data: result.data }))
-            .catch(error => {
-              console.error('ChemBERTa prediction failed:', error);
-              return { 
-                type: 'chemberta', 
-                data: { 
-                  status: 'error', 
-                  message: 'ChemBERTa prediction failed',
-                  error: error.message 
-                }
-              };
-            })
-          );
-        }
-        
-        // Try real Chemprop first, fallback to simulation
-        if (selectedProperties.includes('bioactivity_ic50')) {
-          promises.push(
-            axios.post(`${API}/chemprop-real/predict`, {
-              smiles: smiles.trim()
-            }, { timeout: 120000 })
-            .then(result => ({ type: 'chemprop-real', data: result.data }))
-            .catch(error => {
-              console.log('Real Chemprop failed:', error.response?.status);
-              // If real model unavailable (503), show as unavailable but keep in comparison
-              if (error.response?.status === 503) {
-                return {
-                  type: 'chemprop-real', 
-                  data: { 
-                    status: 'unavailable', 
-                    message: 'Chemprop 50-epoch model deployment in progress',
-                    model_info: { 
-                      model_used: 'Chemprop 50-Epoch GNN',
-                      training_epochs: 50,
-                      architecture: '5-layer Message Passing Neural Network',
-                      note: 'Real trained model - connection in progress'
-                    }
-                  }
-                };
-              }
-              // For other errors, try simulation fallback
-              return axios.post(`${API}/chemprop-multitask/predict`, {
-                smiles: smiles.trim(),
-                prediction_types: ['bioactivity_ic50']
-              }, { timeout: 60000 }).then(result => ({ type: 'chemprop-simulation', data: result.data }))
-              .catch(() => ({ 
-                type: 'chemprop-real', 
-                data: { 
-                  status: 'error', 
-                  message: 'Chemprop models temporarily unavailable'
-                }
-              }));
-            })
-          );
-        }
-      }
-      
-      // Handle individual model selections
-      else if (selectedModel === 'chemberta-multitask') {
-        if (selectedProperties.includes('bioactivity_ic50') && modelStatus.chemberta) {
-          promises.push(
-            axios.post(`${API}/chemberta/predict`, {
-              smiles: smiles.trim()
-            }, { timeout: 120000 }).then(result => ({ type: 'chemberta', data: result.data }))
-          );
-        }
-      }
-      
-      else if (selectedModel === 'chemprop-real') {
-        if (selectedProperties.includes('bioactivity_ic50')) {
-          promises.push(
-            axios.post(`${API}/chemprop-real/predict`, {
-              smiles: smiles.trim()
-            }, { timeout: 120000 }).then(result => ({ type: 'chemprop-real', data: result.data }))
-          );
-        }
-      }
-      
-      else if (selectedModel === 'chemprop-multitask') {
-        promises.push(
-          axios.post(`${API}/chemprop-multitask/predict`, {
-            smiles: smiles.trim(),
-            prediction_types: selectedProperties
-          }, { timeout: 60000 }).then(result => ({ type: 'chemprop-simulation', data: result.data }))
-        );
-      }
-      
-      else if (selectedModel === 'enhanced-rdkit') {
-        promises.push(
-          axios.post(`${API}/predict`, {
-            smiles: smiles.trim(),
-            prediction_types: selectedProperties,
-            target: selectedTarget
-          }, { timeout: 60000 }).then(result => ({ type: 'enhanced-rdkit', data: result.data }))
-        );
-      }
-
-      const results = await Promise.allSettled(promises);
-      
-      // Process results for comparison or single model view
-      const processedResults = results
-        .filter(r => r.status === 'fulfilled')
-        .map(r => r.value)
-        .filter(r => r && r.data); // Ensure we have valid data
-      
-      if (processedResults.length === 0) {
-        throw new Error('All prediction requests failed');
-      }
-      
-      // Handle comparison mode
-      if (selectedModel === 'model-comparison') {
-        const comparisonResults = {};
-        processedResults.forEach(result => {
-          comparisonResults[result.type] = result.data;
-        });
-        setPredictions({ comparisonMode: true, results: comparisonResults });
-      }
-      // Handle single model mode
-      else {
-        const result = processedResults[0];
-        if (result.type === 'chemberta') {
-          setChembertaPredictions(result.data);
-        } else {
-          setPredictions(result.data);
-        }
-      }
-
+      setPredictions(response.data);
     } catch (error) {
-      console.error('Prediction error:', error);
-      setError(error.response?.data?.detail || error.message || 'Prediction failed');
+      console.error('Error making prediction:', error);
+      setError(error.response?.data?.detail || 'Error making prediction');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleExampleClick = (exampleSmiles) => {
-    setSmiles(exampleSmiles);
-    setError('');
-    setPredictions(null);
-    setChembertaPredictions(null);
-  };
-
-  const handlePropertyToggle = (propertyId) => {
-    const newSelection = selectedProperties.includes(propertyId)
-      ? selectedProperties.filter(id => id !== propertyId)
-      : [...selectedProperties, propertyId];
-    setSelectedProperties(newSelection);
-  };
-
-  const getAvailableProperties = () => {
-    return propertyTypes.filter(prop => 
-      prop.models.includes(selectedModel) || selectedModel === 'unified'
-    );
-  };
-
-  const formatValue = (value, property) => {
-    if (typeof value !== 'number') return 'N/A';
-    
-    switch (property) {
-      case 'bioactivity_ic50':
-        return `${value.toFixed(2)} μM`;
-      case 'toxicity':
-        return `${(value * 100).toFixed(1)}%`;
-      case 'logP':
-      case 'solubility':
-        return value.toFixed(2);
-      default:
-        return value.toFixed(3);
+  const handleSelectAllTargets = () => {
+    if (availableTargets.available_targets) {
+      setSelectedTargets([...availableTargets.available_targets]);
     }
   };
 
-  const formatIC50 = (ic50_um) => {
-    if (ic50_um === null || ic50_um === undefined) return 'N/A';
-    // Always display in μM as requested by user
-    return `${ic50_um.toFixed(3)} μM`;
+  const handleDeselectAllTargets = () => {
+    setSelectedTargets([]);
+  };
+
+  const getSelectableTargets = () => {
+    return availableTargetsFiltered || availableTargets;
+  };
+
+  const renderTargetSection = (categoryTargets, categoryName, categoryKey) => {
+    const selectableTargets = getSelectableTargets();
+    if (!selectableTargets.categorized_targets) return null;
+    
+    const targets = selectableTargets.categorized_targets[categoryKey] || [];
+    if (targets.length === 0) return null;
+    
+    return (
+      <div className="mb-4">
+        <h4 className="text-sm font-medium text-gray-300 mb-2">{categoryName} ({targets.length})</h4>
+        <div className="grid grid-cols-2 gap-1">
+          {targets.map(target => (
+            <label key={target} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={selectedTargets.includes(target) || selectedTargets.includes('all')}
+                onChange={() => handleTargetChange(target)}
+                className="w-3 h-3 text-blue-600 bg-gray-700 border-gray-500 rounded focus:ring-blue-500"
+              />
+              <span className="text-xs text-gray-300">{target}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderTargetSelection = () => {
+    const selectableTargets = getSelectableTargets();
+    if (!selectableTargets.categorized_targets) return null;
+
+    const { oncoproteins, tumor_suppressors, other_targets } = selectableTargets.categorized_targets;
+    const allTargetsSelected = selectedTargets.includes('all');
+    const someTargetsSelected = selectedTargets.length > 0 && !allTargetsSelected;
+
+    return (
+      <div className="space-y-4">
+        {/* Control Buttons */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          <button
+            onClick={() => handleTargetChange('all')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              allTargetsSelected
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            }`}
+          >
+            Select All ({availableTargets.total_targets})
+          </button>
+          
+          <button
+            onClick={handleSelectAllTargets}
+            className="px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 transition-all"
+          >
+            Select Individual Targets
+          </button>
+          
+          <button
+            onClick={handleDeselectAllTargets}
+            className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-600 text-gray-300 hover:bg-gray-500 transition-all"
+          >
+            Clear Selection
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Oncoproteins */}
+          <div className="space-y-2">
+            <h4 className="font-semibold text-purple-400 border-b border-gray-600 pb-1">🎯 Oncoproteins ({oncoproteins?.length || 0})</h4>
+            <div className="max-h-48 overflow-y-auto space-y-1">
+              {oncoproteins?.map(target => (
+                <label key={target} className="flex items-center space-x-2 p-2 hover:bg-gray-700 rounded cursor-pointer transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={selectedTargets.includes(target) || allTargetsSelected}
+                    onChange={() => handleTargetChange(target)}
+                    className="w-3 h-3 text-red-600 bg-gray-700 border-gray-500 rounded focus:ring-red-500"
+                  />
+                  <span className="text-sm text-gray-300">{target}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Tumor Suppressors */}
+          <div className="space-y-2">
+            <h4 className="font-semibold text-green-400 border-b border-gray-600 pb-1">🛡️ Tumor Suppressors ({tumor_suppressors?.length || 0})</h4>
+            <div className="max-h-48 overflow-y-auto space-y-1">
+              {tumor_suppressors?.map(target => (
+                <label key={target} className="flex items-center space-x-2 p-2 hover:bg-gray-700 rounded cursor-pointer transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={selectedTargets.includes(target) || allTargetsSelected}
+                    onChange={() => handleTargetChange(target)}
+                    className="w-3 h-3 text-green-600 bg-gray-700 border-gray-500 rounded focus:ring-green-500"
+                  />
+                  <span className="text-sm text-gray-300">{target}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Other Targets */}
+          <div className="space-y-2">
+            <h4 className="font-semibold text-cyan-400 border-b border-gray-600 pb-1">⚗️ Other Targets ({other_targets?.length || 0})</h4>
+            <div className="max-h-48 overflow-y-auto space-y-1">
+              {other_targets?.map(target => (
+                <label key={target} className="flex items-center space-x-2 p-2 hover:bg-gray-700 rounded cursor-pointer transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={selectedTargets.includes(target) || allTargetsSelected}
+                    onChange={() => handleTargetChange(target)}
+                    className="w-3 h-3 text-cyan-600 bg-gray-700 border-gray-500 rounded focus:ring-cyan-500"
+                  />
+                  <span className="text-sm text-gray-300">{target}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Selection Summary */}
+        {someTargetsSelected && (
+          <div className="mt-3 p-3 bg-gray-700 rounded-lg">
+            <span className="text-sm text-gray-300">
+              Selected: <span className="font-medium text-blue-400">{selectedTargets.length}</span> of {availableTargets.total_targets} targets
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderResults = () => {
+    if (!predictions) return null;
+
+    const { properties, predictions: targetPredictions, model_info } = predictions;
+
+    return (
+      <div className="mt-8 space-y-6">
+        {/* Warning Banner */}
+        <div className="bg-gradient-to-r from-amber-900 to-orange-900 border border-amber-700 rounded-lg p-3 text-center">
+          <span className="text-amber-200">🔍 In-silico estimates – wet-lab validation required.</span>
+        </div>
+
+        {/* Model Training Notice - Enhanced */}
+        {/* Molecular Properties */}
+        <div className="bg-gradient-to-r from-blue-900 to-indigo-900 p-6 rounded-lg border border-blue-700">
+          <h3 className="text-lg font-bold text-white mb-4">📊 Molecular Properties</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center p-4 bg-gray-800 border border-gray-600 rounded-lg">
+              <div className="text-2xl font-bold text-blue-400">{properties.LogP}</div>
+              <div className="text-sm text-gray-300">LogP (Partition Coefficient)</div>
+            </div>
+            <div className="text-center p-4 bg-gray-800 border border-gray-600 rounded-lg">
+              <div className="text-2xl font-bold text-green-400">{properties.LogS}</div>
+              <div className="text-sm text-gray-300">LogS (Water Solubility)</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Target Predictions Table */}
+        <div className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+          <div className="p-6 border-b border-gray-700">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-bold text-white">🎯 Target Activity Predictions</h3>
+                <div className="text-sm text-gray-400 mt-1">
+                  Gnosis I • R² = {model_info.r2_score?.toFixed(3)} • {Object.keys(targetPredictions).length} targets
+                </div>
+              </div>
+              
+              {/* Export PDF Button */}
+              <button
+                onClick={handleExportPDF}
+                disabled={isExporting}
+                className="inline-flex items-center px-4 py-2 border border-gray-600 text-sm font-medium rounded-lg text-gray-300 bg-gray-700 hover:bg-gray-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                title="Download branded PDF report of current predictions"
+              >
+                {isExporting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Generating PDF...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                    </svg>
+                    Export PDF
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Predictions Table with Sorting */}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-700">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                    Target Protein
+                  </th>
+                  <th 
+                    className="px-4 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider cursor-pointer hover:text-white transition-colors"
+                    onClick={() => handleSort('potency')}
+                  >
+                    <div className="flex items-center justify-center space-x-1">
+                      <span>Potency (Heat-map)</span>
+                      {sortBy.column === 'potency' && (
+                        <span className="text-purple-400">
+                          {sortBy.direction === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                  <th 
+                    className="px-4 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider cursor-help"
+                    title="Selectivity measures how specific a compound is for the target protein versus off-target proteins. Higher ratios indicate better selectivity: ≥10× = Selective (low off-target effects), 3-10× = Moderate selectivity, <3× = Non-selective (potential side effects)"
+                  >
+                    Selectivity
+                  </th>
+                  <th 
+                    className="px-4 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider cursor-pointer hover:text-white transition-colors cursor-help"
+                    onClick={() => handleSort('confidence')}
+                    title="Confidence represents the model's certainty in the prediction based on Monte Carlo dropout analysis. Higher confidence (closer to 100%) indicates more reliable predictions. Derived from the reliability index (RI) which quantifies prediction uncertainty."
+                  >
+                    <div className="flex items-center justify-center space-x-1">
+                      <span>Confidence</span>
+                      {sortBy.column === 'confidence' && (
+                        <span className="text-purple-400">
+                          {sortBy.direction === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                  <th 
+                    className="px-4 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider cursor-help"
+                    title="Assay Type indicates the experimental method: Binding IC50 = direct protein binding inhibition, Functional IC50 = protein function inhibition, Ki = equilibrium binding affinity (dissociation constant), EC50 = concentration for 50% maximal biological response. All values in μM, with lower values indicating stronger binding/activity."
+                  >
+                    Assay Type
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-gray-800 divide-y divide-gray-700">
+                {Object.entries(targetPredictions).map(([target, targetData], index) => {
+                  // Show only selected assay types that have data
+                  const assayTypeMap = {'IC50': ['Binding_IC50', 'Functional_IC50'], 'Ki': ['Ki'], 'EC50': ['EC50']};
+                  const availableAssayTypes = [];
+                  
+                  selectedAssayTypes.forEach(selectedType => {
+                    const backendTypes = assayTypeMap[selectedType] || [selectedType];
+                    backendTypes.forEach(backendType => {
+                      if (targetData[backendType]) {
+                        availableAssayTypes.push(backendType);
+                      }
+                    });
+                  });
+                  
+                  const selectivity = calculateSelectivityDisplay(targetData, targetPredictions);
+                  
+                  return availableAssayTypes.map((assayType, assayIndex) => {
+                    const prediction = targetData[assayType];
+                    if (!prediction) return null;
+                    
+                    const pValue = prediction.pActivity;
+                    const activityUM = prediction.activity_uM;
+                    const confidence = prediction.confidence || 0.8;
+                    const sigma = prediction.sigma || 0.2;
+                    const reliability = Math.exp(-sigma * sigma);
+                    const qualityFlag = prediction.quality_flag || 'good';
+                    const confidenceNote = prediction.confidence_note || '';
+                    
+                    const potencyDisplay = formatPotencyDisplay(pValue, activityUM, assayType, qualityFlag);
+                    const potencyColor = calculatePotencyColor(pValue, confidence, potencyDisplay.isUnreliable, potencyDisplay.isNotTrained);
+                    const inactive = isInactive(pValue, activityUM);
+                    const potencyDesc = getPotencyDescription(Math.max(0, pValue));
+
+                    return (
+                      <tr key={`${target}-${assayType}`} className="hover:bg-gray-700 transition-colors">
+                        {/* Target Name - show only for first assay type */}
+                        {assayIndex === 0 ? (
+                          <td className="px-4 py-4" rowSpan={availableAssayTypes.length}>
+                            <div className="font-medium text-white">{target}</div>
+                            <div className="text-xs text-gray-400">Oncoprotein</div>
+                          </td>
+                        ) : null}
+
+                        {/* Enhanced Potency Heat-map Cell */}
+                        <td className="px-4 py-4 text-center">
+                          <div className="relative">
+                            <div
+                              className="inline-block px-3 py-2 rounded-lg font-mono cursor-pointer relative"
+                              style={potencyColor}
+                              title={potencyDisplay.isNotTrained ? 
+                                `${assayType} predictions not available: Insufficient training data for this target. Only targets with ≥10 experimental samples provide reliable predictions.` :
+                                potencyDisplay.isUnreliable ? 
+                                `${assayType} prediction unreliable: ${confidenceNote || 'Model uncertainty too high for reliable prediction'}` :
+                                `${potencyDesc} (p${assayType} = ${Math.max(0, pValue).toFixed(2)}), σ = ${sigma.toFixed(2)}, RI = ${reliability.toFixed(2)}${confidenceNote ? ` - ${confidenceNote}` : ''}`
+                              }
+                            >
+                              {/* Quality warning for unreliable predictions */}
+                              {qualityFlag === 'not_trained' && (
+                                <span className="absolute -top-1 -left-1 text-amber-400 text-sm" title="Not trained on this assay type">
+                                  🚫
+                                </span>
+                              )}
+                              
+                              {qualityFlag === 'uncertain' && (
+                                <span className="absolute -top-1 -left-1 text-yellow-400 text-xs" title={`Prediction quality: ${qualityFlag}`}>
+                                  ⚠️
+                                </span>
+                              )}
+                              
+                              {/* Color-blind aid for inactive compounds */}
+                              {inactive && !potencyDisplay.isNotTrained && (
+                                <span className="absolute -top-1 -right-1 text-white text-xs">❌</span>
+                              )}
+                              
+                              {/* Visual hierarchy: emphasize p-units over raw μM */}
+                              <div className="text-base font-medium">{potencyDisplay.primaryText}</div>
+                              <div className="text-xs text-slate-300 opacity-90">{potencyDisplay.secondaryText}</div>
+                            </div>
+                            <div className="text-xs text-gray-400 mt-1">
+                              {potencyDisplay.isNotTrained ? 'Training data unavailable' : potencyDesc}
+                              {qualityFlag === 'not_trained' && (
+                                <div className="text-amber-400 text-xs mt-1">
+                                  🚫 Requires {assayType}-specific training
+                                </div>
+                              )}
+                              {qualityFlag === 'uncertain' && !potencyDisplay.isNotTrained && (
+                                <div className="text-yellow-400 text-xs mt-1">
+                                  ⚠️ {qualityFlag === 'low_confidence' ? 'Low confidence' : 'Uncertain'}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Enhanced Selectivity - show only for first assay type */}
+                        {assayIndex === 0 ? (
+                          <td className="px-4 py-4 text-center" rowSpan={availableAssayTypes.length}>
+                            <div 
+                              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                selectivity.color === 'green' ? 'bg-green-900 text-green-300 border border-green-700' :
+                                selectivity.color === 'yellow' ? 'bg-yellow-900 text-yellow-300 border border-yellow-700' :
+                                selectivity.color === 'red' ? 'bg-red-900 text-red-300 border border-red-700' :
+                                'bg-gray-900 text-gray-400 border border-gray-600'
+                              }`}
+                              title={selectivity.tooltip}
+                            >
+                              {/* Color-blind aid for selective compounds */}
+                              {selectivity.color === 'green' && <span className="mr-1">✔︎</span>}
+                              {selectivity.color === 'yellow' && <span className="mr-1">🟡</span>}
+                              {selectivity.color === 'red' && <span className="mr-1">❌</span>}
+                              {selectivity.color === 'gray' && <span className="mr-1">—</span>}
+                              
+                              {selectivity.ratio ? 
+                                `${selectivity.ratio.toFixed(1)}×` : 
+                                selectivity.category
+                              }
+                            </div>
+                            <div className="text-xs text-gray-400 mt-1">{selectivity.category}</div>
+                          </td>
+                        ) : null}
+
+                        {/* Enhanced Confidence with inactive compound handling */}
+                        <td className="px-4 py-4 text-center">
+                          <div className="flex flex-col items-center">
+                            <div className="text-white font-medium">{(confidence * 100).toFixed(0)}%</div>
+                            <div className="w-16 bg-gray-600 rounded-full h-2 mt-1">
+                              <div 
+                                className={`h-2 rounded-full transition-all ${
+                                  inactive ? 'bg-gray-400' : 'bg-gradient-to-r from-purple-500 to-cyan-500'
+                                }`}
+                                style={{ width: `${confidence * 100}%` }}
+                                title={inactive ? 
+                                  `High confidence that compound is inactive on ${target}.` :
+                                  `Confidence: ${(confidence * 100).toFixed(0)}%, RI: ${reliability.toFixed(2)}`
+                                }
+                              ></div>
+                            </div>
+                            <div className="text-xs text-gray-400 mt-1">
+                              RI = {reliability.toFixed(2)}
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Assay Type with enhanced styling and hover descriptions */}
+                        <td className="px-4 py-4 text-center">
+                          <div 
+                            className={`inline-flex items-center px-2 py-1 border rounded-full text-xs font-medium cursor-help ${
+                              assayType === 'Binding_IC50' ? 'bg-purple-900 text-purple-300 border-purple-700' :
+                              assayType === 'Functional_IC50' ? 'bg-blue-900 text-blue-300 border-blue-700' :
+                              assayType === 'Ki' ? 'bg-orange-900 text-orange-300 border-orange-700' :
+                              assayType === 'EC50' ? 'bg-green-900 text-green-300 border-green-700' :
+                              'bg-gray-900 text-gray-300 border-gray-700'
+                            }`}
+                            title={
+                              assayType === 'Binding_IC50' ? 
+                                'Binding IC50: Measures direct binding affinity to the target protein. Represents the concentration required to inhibit 50% of specific ligand-receptor binding in a binding assay.' :
+                              assayType === 'Functional_IC50' ? 
+                                'Functional IC50: Measures inhibition of protein function or enzymatic activity. Represents the concentration required to inhibit 50% of the protein biological function in a functional assay.' :
+                              assayType === 'Ki' ? 
+                                'Ki (Inhibition Constant): Measures the equilibrium binding affinity between inhibitor and target. Represents the dissociation constant for inhibitor binding. Lower Ki = stronger binding.' :
+                              assayType === 'EC50' ? 
+                                'EC50 (Half Maximal Effective Concentration): Measures the concentration producing 50% of maximal biological response. Represents functional potency in cell-based or biochemical assays.' :
+                              'Other assay type'
+                            }
+                          >
+                            {assayType === 'Binding_IC50' ? 'Binding IC₅₀' : 
+                             assayType === 'Functional_IC50' ? 'Functional IC₅₀' : 
+                             assayType === 'Ki' ? 'Ki' :
+                             assayType === 'EC50' ? 'EC₅₀' :
+                             assayType}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  }).filter(Boolean);
+                }).flat()}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Summary Stats */}
+          <div className="p-4 bg-gray-750 border-t border-gray-700">
+            <div className="flex justify-between text-sm text-gray-400">
+              <span>Total Targets: {Object.keys(targetPredictions).length}</span>
+              <span>Total Predictions: {model_info.num_total_predictions || Object.keys(targetPredictions).length * 3}</span>
+              <span>Model: {model_info.name} (R² = {model_info.r2_score?.toFixed(3)})</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
-    <div className="p-6">
+    <div className="max-w-7xl mx-auto p-6 bg-gray-900 min-h-screen">
       {/* Header */}
-      <div className="mb-6">
-        <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-          Ligand Activity Predictor Module
-        </h2>
-        <p className="text-gray-400">
-          Comprehensive molecular property prediction using multiple AI models
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-white mb-2">
+          🧬 Ligand Activity Predictor
+        </h1>
+        <p className="text-gray-300 max-w-2xl mx-auto">
+          Predict binding affinity for oncoproteins and tumor suppressors using Gnosis I
         </p>
+        
+        {/* Model Info */}
+        {modelInfo && modelInfo.available && (
+          <div className="mt-4 inline-flex items-center px-4 py-2 bg-green-900 text-green-300 border border-green-700 rounded-full text-sm">
+            <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+            Gnosis I • R² = {modelInfo.r2_score?.toFixed(3)} • {modelInfo.num_targets} targets
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-        {/* Input Section */}
-        <div className="xl:col-span-2 space-y-6">
-          {/* SMILES Input */}
-          <div className="bg-gray-700 border border-gray-600 rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-4 text-white">Molecular Input</h3>
-            
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                SMILES String
-              </label>
-              <textarea
-                value={smiles}
-                onChange={(e) => setSmiles(e.target.value)}
-                placeholder="Enter SMILES string (e.g., CC(=O)OC1=CC=CC=C1C(=O)O for aspirin)"
-                className="w-full h-24 px-3 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400 font-mono text-sm"
-              />
-            </div>
+      {/* Error Display */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-900 border border-red-700 text-red-300 rounded-lg">
+          {error}
+        </div>
+      )}
 
-            {/* Example Molecules */}
-            <div className="mb-4">
-              <p className="text-sm font-medium text-gray-300 mb-2">Quick Examples:</p>
-              <div className="grid grid-cols-2 gap-2">
-                {exampleMolecules.map((mol, index) => (
+      {/* Input Section */}
+      <div className="bg-gray-800 border border-gray-700 p-6 rounded-lg shadow-lg mb-6">
+        <div className="space-y-6">
+          {/* SMILES Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              SMILES String *
+            </label>
+            <input
+              type="text"
+              value={smiles}
+              onChange={(e) => setSmiles(e.target.value)}
+              placeholder="e.g., CC(=O)OC1=CC=CC=C1C(=O)O (aspirin)"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            />
+            
+            {/* SMILES Examples */}
+            <div className="mt-3">
+              <label className="block text-xs font-medium text-gray-400 mb-2">
+                📚 Click examples to try:
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {[
+                  { name: 'Aspirin', smiles: 'CC(=O)OC1=CC=CC=C1C(=O)O', type: 'Anti-inflammatory' },
+                  { name: 'Imatinib', smiles: 'Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C', type: 'Cancer Drug' },
+                  { name: 'Caffeine', smiles: 'CN1C=NC2=C1C(=O)N(C(=O)N2C)C', type: 'Stimulant' },
+                  { name: 'Paracetamol', smiles: 'CC(=O)Nc1ccc(O)cc1', type: 'Analgesic' },
+                  { name: 'Penicillin', smiles: 'CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)NC(=O)Cc3ccccc3)C(=O)O)C', type: 'Antibiotic' },
+                  { name: 'Ethanol', smiles: 'CCO', type: 'Simple Alcohol' }
+                ].map((example, index) => (
                   <button
                     key={index}
-                    onClick={() => handleExampleClick(mol.smiles)}
-                    className="px-3 py-2 text-sm bg-gray-600 text-gray-200 border border-gray-500 rounded-lg hover:bg-gray-500 hover:border-purple-400 transition-all text-left"
+                    onClick={() => setSmiles(example.smiles)}
+                    className="text-left p-2 bg-gray-600 hover:bg-gray-500 border border-gray-500 rounded-md transition-colors text-sm"
                   >
-                    <div className="font-medium">{mol.name}</div>
+                    <div className="font-medium text-white">{example.name}</div>
+                    <div className="text-xs text-gray-300">{example.type}</div>
+                    <div className="text-xs text-gray-400 font-mono mt-1 truncate">
+                      {example.smiles.slice(0, 20)}...
+                    </div>
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Model Selection */}
-          <div className="bg-gray-700 border border-gray-600 rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-4 text-white">AI Model Selection</h3>
-            
-            <div className="space-y-3">
-              {predictionModels.map((model) => (
-                <label key={model.id} className={`flex items-start space-x-3 p-3 border rounded-lg hover:bg-gray-600 cursor-pointer transition-all ${
-                  selectedModel === model.id 
-                    ? 'border-purple-400 bg-purple-900/20' 
-                    : 'border-gray-500'
-                } ${
-                  model.isComparison 
-                    ? 'border-l-4 border-l-yellow-400' 
-                    : ''
-                }`}>
-                  <input
-                    type="radio"
-                    name="model"
-                    value={model.id}
-                    checked={selectedModel === model.id}
-                    onChange={(e) => setSelectedModel(e.target.value)}
-                    className="mt-1 w-4 h-4 text-purple-600 border-gray-400 focus:ring-purple-500"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <span className="text-lg">{model.icon}</span>
-                      <div className="font-medium text-white">{model.name}</div>
-                      
-                      {/* Status Badges */}
-                      {model.status === 'production' && (
-                        <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-900 text-green-300 border border-green-700">
-                          <div className="w-1 h-1 bg-green-400 rounded-full mr-1 animate-pulse"></div>
-                          Production
-                        </div>
-                      )}
-                      {model.status === 'testing' && (
-                        <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-900 text-orange-300 border border-orange-700">
-                          <div className="w-1 h-1 bg-orange-400 rounded-full mr-1 animate-pulse"></div>
-                          Testing
-                        </div>
-                      )}
-                      {model.status === 'simulation' && (
-                        <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-900 text-blue-300 border border-blue-700">
-                          Simulation
-                        </div>
-                      )}
-                      {model.isComparison && (
-                        <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-900 text-yellow-300 border border-yellow-700">
-                          ⚔️ Compare
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="text-sm text-gray-400 mb-2">{model.description}</div>
-                    
-                    {/* Performance Data */}
-                    {model.performance && (
-                      <div className="text-xs text-gray-500 mb-2 bg-gray-800 rounded px-2 py-1">
-                        {model.performance.mean_r2 && (
-                          <span>Mean R²: {model.performance.mean_r2} • </span>
-                        )}
-                        {model.performance.targets && (
-                          <span>Targets: {model.performance.targets} • </span>
-                        )}
-                        {model.performance.best_target && (
-                          <span>Best: {model.performance.best_target}</span>
-                        )}
-                        {model.performance.epochs && (
-                          <span>Epochs: {model.performance.epochs} • </span>
-                        )}
-                        {model.performance.architecture && (
-                          <span>{model.performance.architecture}</span>
-                        )}
-                        {model.performance.size_mb && (
-                          <span> • {model.performance.size_mb} MB</span>
-                        )}
+          {/* Dynamic Assay Type Selection */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Select Assay Types (targets filtered in real-time)
+            </label>
+            <div className="grid grid-cols-3 gap-3">
+              {['IC50', 'Ki', 'EC50'].map(assayType => {
+                const isSelected = selectedAssayTypes.includes(assayType);
+                const targetCount = availableTargetsFiltered?.available_targets?.length || 0;
+                
+                return (
+                  <label key={assayType} className={`flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                    isSelected 
+                      ? 'bg-blue-900 border-blue-500 text-blue-200' 
+                      : 'bg-gray-700 border-gray-500 text-gray-300 hover:bg-gray-600'
+                  }`}>
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => handleAssayTypeChange(assayType)}
+                      className="w-4 h-4 mr-3 text-blue-600 bg-gray-600 border-gray-500 rounded focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium">
+                        {assayType === 'IC50' ? 'IC₅₀' : assayType}
                       </div>
-                    )}
-                    
-                    <div className="text-xs text-gray-500">
-                      Models: {model.models.join(', ')}
+                      <div className="text-xs opacity-75">
+                        {assayType === 'IC50' ? 'Binding & Functional' : 
+                         assayType === 'Ki' ? 'Equilibrium binding' : 
+                         'Functional potency'}
+                      </div>
                     </div>
-                  </div>
-                </label>
-              ))}
+                  </label>
+                );
+              })}
             </div>
-          </div>
-        </div>
-
-        {/* Configuration Section */}
-        <div className="xl:col-span-2 space-y-6">
-          {/* Property Selection */}
-          <div className="bg-gray-700 border border-gray-600 rounded-xl p-6">
-            <h3 className="text-lg font-semibold mb-4 text-white">Properties to Predict</h3>
-            
-            <div className="space-y-3">
-              {getAvailableProperties().map((property) => (
-                <label key={property.id} className="flex items-center space-x-3 p-3 border border-gray-500 rounded-lg hover:bg-gray-600 cursor-pointer transition-all">
-                  <input
-                    type="checkbox"
-                    checked={selectedProperties.includes(property.id)}
-                    onChange={() => handlePropertyToggle(property.id)}
-                    className="w-4 h-4 text-purple-600 border-gray-400 rounded focus:ring-purple-500"
-                  />
-                  <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="font-medium text-white">{property.label}</div>
-                    <div className="text-sm text-gray-400">{property.description}</div>
-                    <div className="text-xs text-gray-500">Category: {property.category} | Unit: {property.unit}</div>
-                  </div>
-                </label>
-              ))}
+            <div className="mt-2 p-2 bg-gray-800 rounded-lg">
+              <div className="text-xs text-gray-400">
+                {availableTargetsFiltered?.available_targets?.length || 0} targets available with selected assay types
+              </div>
             </div>
           </div>
 
-          {/* Target Selection (for IC50) */}
-          {selectedProperties.includes('bioactivity_ic50') && (
-            <div className="bg-gray-700 border border-gray-600 rounded-xl p-6">
-              <h3 className="text-lg font-semibold mb-4 text-white">Target Selection (IC₅₀)</h3>
-              
-              <select
-                value={selectedTarget}
-                onChange={(e) => setSelectedTarget(e.target.value)}
-                className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
-              >
-                {availableTargets.map((target) => (
-                  <option key={target.id} value={target.id}>
-                    {target.name} - {target.description}
-                  </option>
-                ))}
-              </select>
-
-              {selectedModel === 'chemberta-multitask' && (
-                <div className="mt-3 p-3 bg-purple-900 bg-opacity-30 rounded-lg">
-                  <div className="text-sm text-purple-300">
-                    <strong>ChemBERTa Multi-Task:</strong> Predicts IC₅₀ for all 10 targets simultaneously
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+          {/* Target Selection */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Target Selection ({selectedTargets.includes('all') ? 'All' : selectedTargets.length} selected)
+            </label>
+            {renderTargetSelection()}
+          </div>
 
           {/* Predict Button */}
           <button
             onClick={handlePredict}
-            disabled={isLoading || !smiles.trim() || selectedProperties.length === 0}
-            className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white py-4 px-6 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all text-lg"
+            disabled={isLoading || !smiles.trim() || !modelInfo?.available}
+            className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
           >
             {isLoading ? (
               <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                Running AI Predictions...
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                {selectedTargets.includes('all') ? (
+                  <span>
+                    Predicting {availableTargets.total_targets || 62} targets × 3 assays... 
+                    <br className="sm:hidden" />
+                    <span className="text-sm opacity-90">(~1-2 minutes)</span>
+                  </span>
+                ) : selectedTargets.length > 10 ? (
+                  <span>
+                    Predicting {selectedTargets.length} targets × 3 assays...
+                    <br className="sm:hidden" />
+                    <span className="text-sm opacity-90">(~30-60 seconds)</span>
+                  </span>
+                ) : (
+                  <span>Predicting...</span>
+                )}
               </div>
             ) : (
-              `Predict with ${predictionModels.find(m => m.id === selectedModel)?.name}`
+              `🔬 Predict with Gnosis I`
             )}
           </button>
         </div>
       </div>
 
-      {/* Error Display */}
-      {error && (
-        <div className="mt-6 bg-red-900 border border-red-700 rounded-xl p-4">
-          <div className="flex items-center">
-            <div className="text-red-300">
-              <h3 className="font-medium">Prediction Error</h3>
-              <p className="text-sm mt-1">{error}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Model Comparison Results */}
-      {predictions?.comparisonMode && (
-        <div className="space-y-6">
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
-            <h3 className="text-xl font-semibold text-white mb-6 flex items-center">
-              ⚔️ Model Architecture Comparison Results
-              <span className="ml-3 text-sm bg-blue-900 text-blue-300 px-2 py-1 rounded">
-                Head-to-Head Analysis
-              </span>
-            </h3>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* ChemBERTa Results */}
-              {predictions.results.chemberta && (
-                <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/20 border border-blue-700/50 rounded-lg p-4">
-                  <div className="flex items-center mb-4">
-                    <div className="w-3 h-3 bg-blue-400 rounded-full mr-3"></div>
-                    <h4 className="text-lg font-semibold text-blue-300">ChemBERTa Transformer</h4>
-                    <span className="ml-2 text-xs bg-green-900 text-green-300 px-2 py-1 rounded">Production</span>
-                  </div>
-                  
-                  <div className="text-sm text-gray-300 mb-4">
-                    BERT-based molecular transformer • Mean R²: 0.594 • 50 epochs training
-                  </div>
-                  
-                  <div className="space-y-3">
-                    {Object.entries(predictions.results.chemberta.predictions || {}).map(([target, data]) => (
-                      <div key={target} className="flex justify-between items-center py-2 border-b border-blue-800/30">
-                        <span className="font-medium text-blue-200">{target}</span>
-                        <div className="text-right">
-                          <div className="text-blue-100 font-semibold">
-                            IC50: {data.ic50_nm ? `${(data.ic50_nm / 1000).toFixed(3)} μM` : 'N/A'}
-                          </div>
-                          <div className="text-xs text-blue-400">
-                            {data.activity_class || data.activity || 'Unknown'}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="mt-4 pt-3 border-t border-blue-800/30 text-xs text-blue-300">
-                    Model: {predictions.results.chemberta.model_info?.model_name || 'ChemBERTa Multi-Task'}
-                  </div>
-                </div>
-              )}
-
-              {/* Chemprop Results */}
-              {(predictions.results['chemprop-real'] || predictions.results['chemprop-simulation']) && (
-                <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-700/50 rounded-lg p-4">
-                  <div className="flex items-center mb-4">
-                    <div className="w-3 h-3 bg-purple-400 rounded-full mr-3"></div>
-                    <h4 className="text-lg font-semibold text-purple-300">Chemprop GNN</h4>
-                    <span className={`ml-2 text-xs px-2 py-1 rounded ${
-                      predictions.results['chemprop-real'] 
-                        ? 'bg-orange-900 text-orange-300' 
-                        : 'bg-gray-900 text-gray-300'
-                    }`}>
-                      {predictions.results['chemprop-real'] ? 'Testing' : 'Simulation'}
-                    </span>
-                  </div>
-                  
-                  <div className="text-sm text-gray-300 mb-4">
-                    5-layer Message Passing Neural Network • 50 epochs • 512 hidden size
-                  </div>
-                  
-                  {predictions.results['chemprop-real'] && predictions.results['chemprop-real'].status === 'success' && (
-                    <div className="space-y-3">
-                      {Object.entries(predictions.results['chemprop-real'].predictions || {}).map(([target, data]) => (
-                        <div key={target} className="flex justify-between items-center py-2 border-b border-purple-800/30">
-                          <span className="font-medium text-purple-200">{target}</span>
-                          <div className="text-right">
-                            <div className="text-purple-100 font-semibold">
-                              IC50: {data.IC50_nM ? `${(data.IC50_nM / 1000).toFixed(3)} μM` : 'N/A'}
-                            </div>
-                            <div className="text-xs text-purple-400">
-                              {data.activity || 'Unknown'}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  
-                  {predictions.results['chemprop-real'] && predictions.results['chemprop-real'].status === 'unavailable' && (
-                    <div className="bg-purple-900/30 border border-purple-700 rounded p-3">
-                      <div className="text-purple-300 text-sm">
-                        🚀 Chemprop 50-Epoch GNN Model
-                      </div>
-                      <div className="text-purple-400 text-xs mt-1">
-                        Real trained model deployment in progress. Connection being established...
-                      </div>
-                      <div className="text-purple-500 text-xs mt-1">
-                        • 50-epoch training completed ✅
-                        • 5-layer Message Passing Neural Network ✅  
-                        • Model size: 25.32 MB ✅
-                      </div>
-                    </div>
-                  )}
-                  
-                  {predictions.results['chemprop-real'] && predictions.results['chemprop-real'].status === 'error' && (
-                    <div className="bg-purple-900/30 border border-purple-700 rounded p-3">
-                      <div className="text-purple-300 text-sm">
-                        ⚠️ Model Connection Issue
-                      </div>
-                      <div className="text-purple-400 text-xs mt-1">
-                        Chemprop model temporarily unavailable. Technical team working on connection.
-                      </div>
-                    </div>
-                  )}
-                  
-                  {predictions.results['chemprop-simulation'] && (
-                    <div className="space-y-3">
-                      {Array.isArray(predictions.results['chemprop-simulation'].predictions) && 
-                       predictions.results['chemprop-simulation'].predictions.map((pred, idx) => (
-                        <div key={idx} className="flex justify-between items-center py-2 border-b border-purple-800/30">
-                          <span className="font-medium text-purple-200">{pred.target || pred.property}</span>
-                          <div className="text-right">
-                            <div className="text-purple-100 font-semibold">
-                              IC50: {pred.ic50_nm ? `${(pred.ic50_nm / 1000).toFixed(3)} μM` : pred.value?.toFixed(3) + ' μM' || 'N/A'}
-                            </div>
-                            <div className="text-xs text-purple-400">
-                              {pred.activity || pred.confidence_level || 'Simulation'}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  
-                  <div className="mt-4 pt-3 border-t border-purple-800/30 text-xs text-purple-300">
-                    Model: {predictions.results['chemprop-real'] 
-                      ? predictions.results['chemprop-real'].model_info?.model_used || 'Real Trained GNN'
-                      : 'Chemprop Simulation'
-                    }
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            {/* Comparison Summary */}
-            {predictions.results.chemberta && (predictions.results['chemprop-real'] || predictions.results['chemprop-simulation']) && (
-              <div className="mt-6 bg-gray-900/50 border border-gray-600 rounded-lg p-4">
-                <h5 className="text-lg font-semibold text-white mb-3">📊 Comparison Analysis</h5>
-                <div className="grid md:grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <div className="text-blue-300 font-medium">ChemBERTa Advantages:</div>
-                    <ul className="text-gray-300 text-xs mt-1 space-y-1">
-                      <li>• Pre-trained on large molecular corpus</li>
-                      <li>• Proven production performance</li>
-                      <li>• Mean R²: 0.516 (validated)</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="text-purple-300 font-medium">Chemprop Advantages:</div>
-                    <ul className="text-gray-300 text-xs mt-1 space-y-1">
-                      <li>• Graph-based molecular representation</li>
-                      <li>• 5-layer deep MPNN architecture</li>
-                      <li>• Extensive 50-epoch training</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="text-green-300 font-medium">Recommendation:</div>
-                    <div className="text-gray-300 text-xs mt-1">
-                      Compare results for your specific compounds. ChemBERTa is production-ready, 
-                      while Chemprop offers alternative graph-based predictions.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Results Display */}
-      {(predictions || chembertaPredictions) && (
-        <div className="mt-6 space-y-6">
-          {/* ChemBERTa Multi-Task Results */}
-          {chembertaPredictions && selectedProperties.includes('bioactivity_ic50') && (
-            <div className="bg-gray-700 border border-gray-600 rounded-xl p-6">
-              <h3 className="text-xl font-bold mb-4 text-white flex items-center">
-                <span className="text-2xl mr-2">🧬</span>
-                ChemBERTa Multi-Task Results
-              </h3>
-              
-              {/* Summary */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="bg-purple-900 bg-opacity-30 rounded-lg p-4 text-center">
-                  <div className="text-xl font-bold text-purple-400">
-                    {chembertaPredictions.summary?.best_target}
-                  </div>
-                  <div className="text-sm text-gray-300">Most Active Target</div>
-                  <div className="text-lg text-white">
-                    {formatIC50(chembertaPredictions.summary?.best_ic50_um)}
-                  </div>
-                </div>
-                <div className="bg-cyan-900 bg-opacity-30 rounded-lg p-4 text-center">
-                  <div className="text-xl font-bold text-cyan-400">
-                    {chembertaPredictions.summary?.highly_active_targets}
-                  </div>
-                  <div className="text-sm text-gray-300">High Activity Targets</div>
-                  <div className="text-xs text-gray-400">(IC50 ≤ 1 μM)</div>
-                </div>
-                <div className="bg-green-900 bg-opacity-30 rounded-lg p-4 text-center">
-                  <div className="text-xl font-bold text-green-400">
-                    {formatIC50(chembertaPredictions.summary?.median_ic50_um)}
-                  </div>
-                  <div className="text-sm text-gray-300">Median IC50</div>
-                  <div className="text-xs text-gray-400">Across all targets</div>
-                </div>
-              </div>
-
-              {/* Target Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-                {Object.entries(chembertaPredictions.predictions || {})
-                  .sort(([, a], [, b]) => a.ic50_um - b.ic50_um)
-                  .map(([target, data], index) => (
-                  <div key={target} className="bg-gray-600 border border-gray-500 rounded-lg p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold text-white text-sm">{target}</span>
-                      <span className="text-xs px-1 py-1 bg-gray-500 text-gray-300 rounded">
-                        #{index + 1}
-                      </span>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-mono text-white">
-                        {formatIC50(data.ic50_um)}
-                      </div>
-                      <div className="text-xs text-gray-400 mt-1">
-                        R² = {data.r2_score.toFixed(3)}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Single Model Results */}
-          {predictions && !predictions.comparisonMode && (
-            <div className="bg-gray-700 border border-gray-600 rounded-xl p-6">
-              <h3 className="text-xl font-bold mb-4 text-white flex items-center">
-                <span className="text-2xl mr-2">🔬</span>
-                Enhanced Multi-Model Predictions
-              </h3>
-
-              {/* Summary */}
-              {predictions.summary && (
-                <div className="bg-gray-600 border border-gray-500 rounded-lg p-4 mb-6">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                    <div className="text-gray-300">
-                      Molecule: <span className="font-mono text-purple-400">{predictions.summary.molecule}</span>
-                    </div>
-                    <div className="text-gray-300">
-                      Target: <span className="font-semibold text-cyan-400">{predictions.summary.target}</span>
-                    </div>
-                    <div className="text-gray-300">
-                      Predictions: <span className="text-white">{predictions.summary.total_predictions}</span>
-                    </div>
-                    <div className="text-gray-300">
-                      Enhanced Models: {predictions.summary.enhanced_models_used ? 
-                        <span className="text-green-400">✅ Active</span> : 
-                        <span className="text-red-400">❌ Not Used</span>
-                      }
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Results Table */}
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-500">
-                  <thead className="bg-gray-600">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Property</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Enhanced Model</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">ChemBERTa</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">Confidence</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-gray-700 divide-y divide-gray-500">
-                    {Array.isArray(predictions.results) && predictions.results.map((result, index) => (
-                      <tr key={index} className="hover:bg-gray-600">
-                        <td className="px-4 py-3 text-sm font-medium text-white">
-                          {propertyTypes.find(p => p.id === result.prediction_type)?.label || result.prediction_type}
-                        </td>
-                        <td className="px-4 py-3 text-sm font-semibold text-purple-400">
-                          {result.enhanced_chemprop_prediction ? (
-                            <div>
-                              {result.enhanced_chemprop_prediction.ic50_nm ? 
-                                formatIC50(result.enhanced_chemprop_prediction.ic50_nm / 1000) :
-                                formatValue(result.enhanced_chemprop_prediction, result.prediction_type)
-                              }
-                              <div className="text-xs text-gray-400">
-                                {result.enhanced_chemprop_prediction.model_type || 'Enhanced'}
-                              </div>
-                            </div>
-                          ) : (
-                            formatValue(result.chemprop_prediction, result.prediction_type)
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-300">
-                          {formatValue(result.molbert_prediction, result.prediction_type)}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            result.confidence > 0.8 ? 'bg-green-900 text-green-300' : 
-                            result.confidence > 0.6 ? 'bg-yellow-900 text-yellow-300' : 
-                            'bg-red-900 text-red-300'
-                          }`}>
-                            {(result.confidence * 100).toFixed(0)}%
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+      {/* Results */}
+      {renderResults()}
     </div>
   );
 };

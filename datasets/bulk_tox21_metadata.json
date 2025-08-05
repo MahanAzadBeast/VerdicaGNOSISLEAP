@@ -1,0 +1,30 @@
+{
+  "extraction_method": "Bulk_Literature_Curated",
+  "data_source": "Literature_EPA_Curated",
+  "extraction_date": "2025-08-03T05:27:35.715916",
+  "total_compounds": 78,
+  "unique_smiles": 26,
+  "cytotoxicity_range_um": {
+    "min": 0.009730587547737049,
+    "max": 11056.757429185149,
+    "median": 85.47293188454302
+  },
+  "sources": [
+    "literature",
+    "EPA",
+    "literature_variation",
+    "EPA_variation"
+  ],
+  "cytotoxicity_distribution": {
+    "Non-Cytotoxic": 22,
+    "Minimal Cytotoxicity": 16,
+    "Low Cytotoxicity": 15,
+    "Moderately Cytotoxic": 13,
+    "Highly Cytotoxic": 12
+  },
+  "ready_for_therapeutic_index": true,
+  "files_created": {
+    "main": "/app/datasets/cytotoxicity_data.csv",
+    "backup": "/app/datasets/bulk_tox21_cytotoxicity_data.csv"
+  }
+}

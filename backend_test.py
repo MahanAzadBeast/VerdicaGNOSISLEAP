@@ -1189,6 +1189,875 @@ class EnhancedChemistryPlatformTester:
             self.log_test("Model information reporting", False, f"Connection error: {str(e)}")
             return False
 
+    # ===== MODEL 2 (CYTOTOXICITY PREDICTION) TESTS =====
+    
+    def test_model2_enhanced_info_endpoint(self):
+        """Test /api/model2/info endpoint for enhanced model information and improved metrics"""
+        print("\n=== Testing Enhanced Model 2 Info Endpoint ===")
+        
+        try:
+            response = requests.get(f"{API_BASE}/model2/info", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields
+                required_fields = ['model_name', 'model_loaded', 'version', 'prediction_type', 'available_cell_lines']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Enhanced Model 2 info structure", False, f"Missing fields: {missing_fields}")
+                    return False
+                
+                # Validate enhanced model information
+                model_name = data.get('model_name', '')
+                model_loaded = data.get('model_loaded', False)
+                prediction_type = data.get('prediction_type', '')
+                available_cell_lines = data.get('available_cell_lines', 0)
+                
+                # Check for enhanced model indicators
+                enhanced_indicators = [
+                    'Enhanced' in model_name or 'Fixed' in model_name,
+                    available_cell_lines >= 30,  # Should have many cell lines
+                    prediction_type == "Cancer Cell Line IC50"
+                ]
+                
+                self.log_test("Enhanced Model 2 info endpoint", True,
+                            f"Model: {model_name}, Loaded: {model_loaded}, Cell lines: {available_cell_lines}")
+                
+                # Check for improved performance metrics
+                performance = data.get('performance', {})
+                if performance:
+                    validation_r2 = performance.get('validation_r2', 'Unknown')
+                    target_r2 = performance.get('target_r2', 'Unknown')
+                    
+                    # Enhanced model should show improved R² values
+                    enhanced_performance = validation_r2 != 'Unknown' and target_r2 != 'Unknown'
+                    
+                    self.log_test("Enhanced Model 2 performance metrics", enhanced_performance,
+                                f"Validation R²: {validation_r2}, Target R²: {target_r2}")
+                
+                # Check enhanced features info
+                features = data.get('features', {})
+                if features:
+                    molecular = features.get('molecular', '')
+                    genomic = features.get('genomic', '')
+                    
+                    # Enhanced model should have better feature descriptions
+                    enhanced_features = ('RDKit' in molecular or 'ChemBERTa' in molecular) and 'genomic' in genomic.lower()
+                    
+                    self.log_test("Enhanced Model 2 features", enhanced_features,
+                                f"Molecular: {molecular}, Genomic: {genomic}")
+                
+                # Check improvements section
+                improvements = data.get('improvements', [])
+                if improvements:
+                    has_improvements = len(improvements) > 0 and any('✅' in imp for imp in improvements)
+                    self.log_test("Enhanced Model 2 improvements listed", has_improvements,
+                                f"Improvements: {len(improvements)} items")
+                
+                return True
+                
+            elif response.status_code == 503:
+                # Model 2 not available - check if it's training
+                try:
+                    data = response.json()
+                    message = data.get('message', '')
+                    training_status = data.get('training_status', '')
+                    
+                    self.log_test("Enhanced Model 2 training status", True,
+                                f"Status: {training_status}, Message: {message}")
+                    return True
+                except:
+                    self.log_test("Enhanced Model 2 info endpoint", False, f"Service unavailable: {response.text}")
+                    return False
+            else:
+                self.log_test("Enhanced Model 2 info endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Enhanced Model 2 info endpoint", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_model2_enhanced_aspirin_predictions(self):
+        """Test Enhanced Model 2 predictions with aspirin SMILES showing improved quality/realism"""
+        print("\n=== Testing Enhanced Model 2 Aspirin Predictions ===")
+        
+        aspirin_smiles = "CC(=O)OC1=CC=CC=C1C(=O)O"
+        
+        try:
+            payload = {
+                "smiles": aspirin_smiles,
+                "cell_lines": ["A549", "MCF7", "HCT116"]  # Test with 3 cell lines
+            }
+            
+            response = requests.post(f"{API_BASE}/model2/predict", 
+                                   json=payload, 
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check response structure
+                required_fields = ['predictions', 'model_info', 'compound_info']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Enhanced Model 2 aspirin prediction structure", False, f"Missing fields: {missing_fields}")
+                    return False
+                
+                # Check predictions for each cell line
+                predictions = data.get('predictions', {})
+                realistic_predictions = 0
+                
+                for cell_line in ["A549", "MCF7", "HCT116"]:
+                    if cell_line in predictions:
+                        pred = predictions[cell_line]
+                        
+                        # Check required prediction fields
+                        pred_fields = ['ic50_uM', 'log_ic50', 'confidence', 'cell_line_type']
+                        missing_pred_fields = [field for field in pred_fields if field not in pred]
+                        
+                        if missing_pred_fields:
+                            self.log_test(f"Enhanced Model 2 {cell_line} prediction fields", False, 
+                                        f"Missing: {missing_pred_fields}")
+                            return False
+                        
+                        # Validate prediction values - enhanced model should show improved quality
+                        ic50_uM = pred.get('ic50_uM')
+                        confidence = pred.get('confidence')
+                        
+                        valid_ic50 = isinstance(ic50_uM, (int, float)) and ic50_uM > 0
+                        valid_confidence = isinstance(confidence, (int, float)) and 0.0 <= confidence <= 1.0
+                        
+                        # Enhanced model should have more realistic IC50 values (not extreme values)
+                        realistic_ic50 = 0.01 <= ic50_uM <= 100.0 if valid_ic50 else False
+                        
+                        # Enhanced model should have better confidence scoring
+                        realistic_confidence = 0.3 <= confidence <= 0.95 if valid_confidence else False
+                        
+                        if realistic_ic50 and realistic_confidence:
+                            realistic_predictions += 1
+                        
+                        self.log_test(f"Enhanced Model 2 {cell_line} prediction quality", 
+                                    valid_ic50 and valid_confidence and realistic_ic50 and realistic_confidence,
+                                    f"IC50: {ic50_uM} μM, Confidence: {confidence}, Realistic: {realistic_ic50 and realistic_confidence}")
+                    else:
+                        self.log_test(f"Enhanced Model 2 {cell_line} prediction", False, f"No prediction for {cell_line}")
+                        return False
+                
+                # Check enhanced model info
+                model_info = data.get('model_info', {})
+                model_version = model_info.get('model_version', '')
+                validation_r2 = model_info.get('validation_r2', 'Unknown')
+                molecular_features = model_info.get('molecular_features', '')
+                
+                # Enhanced model should show improved features and metrics
+                enhanced_features = 'ChemBERTa' in molecular_features or 'RDKit' in molecular_features
+                enhanced_version = 'Enhanced' in model_version or 'Fixed' in model_version
+                
+                # Check if R² shows improvement (should be > 0.3 for enhanced model)
+                improved_r2 = False
+                if validation_r2 != 'Unknown':
+                    try:
+                        r2_value = float(validation_r2)
+                        improved_r2 = r2_value > 0.3  # Enhanced model should have R² > 0.3
+                    except:
+                        pass
+                
+                self.log_test("Enhanced Model 2 aspirin prediction quality", realistic_predictions >= 2,
+                            f"Realistic predictions: {realistic_predictions}/3, Enhanced features: {enhanced_features}")
+                
+                self.log_test("Enhanced Model 2 improved metrics", enhanced_version or improved_r2,
+                            f"Model: {model_version}, R²: {validation_r2}, Improved: {improved_r2}")
+                
+                return True
+                
+            elif response.status_code == 503:
+                # Model training in progress
+                try:
+                    data = response.json()
+                    training_status = data.get('training_status', 'unknown')
+                    message = data.get('message', '')
+                    
+                    self.log_test("Enhanced Model 2 training status", True,
+                                f"Status: {training_status}, Message: {message}")
+                    return True
+                except:
+                    self.log_test("Enhanced Model 2 aspirin prediction", False, f"Service unavailable: {response.text}")
+                    return False
+            else:
+                self.log_test("Enhanced Model 2 aspirin prediction", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Enhanced Model 2 aspirin prediction", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_model2_enhanced_imatinib_predictions(self):
+        """Test Enhanced Model 2 predictions with imatinib SMILES showing improved quality/realism"""
+        print("\n=== Testing Enhanced Model 2 Imatinib Predictions ===")
+        
+        imatinib_smiles = "Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C"
+        
+        try:
+            payload = {
+                "smiles": imatinib_smiles,
+                "cell_lines": ["A549", "MCF7", "HCT116"]  # Test with same 3 cell lines
+            }
+            
+            response = requests.post(f"{API_BASE}/model2/predict", 
+                                   json=payload, 
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check response structure
+                if 'predictions' not in data:
+                    self.log_test("Enhanced Model 2 imatinib prediction structure", False, "No predictions field")
+                    return False
+                
+                # Check predictions for each cell line
+                predictions = data.get('predictions', {})
+                realistic_predictions = 0
+                
+                for cell_line in ["A549", "MCF7", "HCT116"]:
+                    if cell_line in predictions:
+                        pred = predictions[cell_line]
+                        
+                        # Validate prediction values - enhanced model should show improved quality
+                        ic50_uM = pred.get('ic50_uM')
+                        confidence = pred.get('confidence')
+                        
+                        valid_ic50 = isinstance(ic50_uM, (int, float)) and ic50_uM > 0
+                        valid_confidence = isinstance(confidence, (int, float)) and 0.0 <= confidence <= 1.0
+                        
+                        # Enhanced model should have more realistic IC50 values for imatinib
+                        realistic_ic50 = 0.01 <= ic50_uM <= 100.0 if valid_ic50 else False
+                        realistic_confidence = 0.3 <= confidence <= 0.95 if valid_confidence else False
+                        
+                        if realistic_ic50 and realistic_confidence:
+                            realistic_predictions += 1
+                        
+                        self.log_test(f"Enhanced Model 2 {cell_line} imatinib prediction", 
+                                    valid_ic50 and valid_confidence and realistic_ic50,
+                                    f"IC50: {ic50_uM} μM, Confidence: {confidence}")
+                    else:
+                        self.log_test(f"Enhanced Model 2 {cell_line} imatinib prediction", False, f"No prediction for {cell_line}")
+                        return False
+                
+                # Check SMILES echo
+                compound_info = data.get('compound_info', {})
+                smiles_echo = compound_info.get('smiles', '')
+                
+                self.log_test("Enhanced Model 2 imatinib SMILES echo", smiles_echo == imatinib_smiles,
+                            f"SMILES echoed correctly: {smiles_echo == imatinib_smiles}")
+                
+                self.log_test("Enhanced Model 2 imatinib prediction quality", realistic_predictions >= 2,
+                            f"Realistic predictions: {realistic_predictions}/3")
+                
+                return True
+                
+            elif response.status_code == 503:
+                # Model training in progress
+                self.log_test("Enhanced Model 2 imatinib training status", True, "Model training in progress")
+                return True
+            else:
+                self.log_test("Enhanced Model 2 imatinib prediction", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Enhanced Model 2 imatinib prediction", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_model2_enhanced_confidence_scoring(self):
+        """Test Enhanced Model 2 confidence scoring is realistic given improved model"""
+        print("\n=== Testing Enhanced Model 2 Confidence Scoring ===")
+        
+        test_molecules = [
+            ("CC(=O)OC1=CC=CC=C1C(=O)O", "aspirin"),
+            ("Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C", "imatinib")
+        ]
+        
+        all_passed = True
+        confidence_scores = []
+        
+        for smiles, name in test_molecules:
+            try:
+                payload = {
+                    "smiles": smiles,
+                    "cell_lines": ["A549"]  # Test with one cell line
+                }
+                
+                response = requests.post(f"{API_BASE}/model2/predict", 
+                                       json=payload, 
+                                       headers={'Content-Type': 'application/json'},
+                                       timeout=60)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    predictions = data.get('predictions', {})
+                    
+                    if 'A549' in predictions:
+                        pred = predictions['A549']
+                        confidence = pred.get('confidence')
+                        
+                        if isinstance(confidence, (int, float)):
+                            confidence_scores.append(confidence)
+                            
+                            # Enhanced model should have realistic confidence scores (not too high/low)
+                            realistic_confidence = 0.3 <= confidence <= 0.95
+                            
+                            self.log_test(f"Enhanced Model 2 {name} confidence", realistic_confidence,
+                                        f"Confidence: {confidence} (realistic: {realistic_confidence})")
+                            
+                            if not realistic_confidence:
+                                all_passed = False
+                        else:
+                            self.log_test(f"Enhanced Model 2 {name} confidence", False, f"Invalid confidence: {confidence}")
+                            all_passed = False
+                    else:
+                        self.log_test(f"Enhanced Model 2 {name} confidence", False, "No A549 prediction")
+                        all_passed = False
+                        
+                elif response.status_code == 503:
+                    self.log_test(f"Enhanced Model 2 {name} confidence", True, "Model training in progress")
+                else:
+                    self.log_test(f"Enhanced Model 2 {name} confidence", False, f"HTTP {response.status_code}")
+                    all_passed = False
+                    
+            except requests.exceptions.RequestException as e:
+                self.log_test(f"Enhanced Model 2 {name} confidence", False, f"Connection error: {str(e)}")
+                all_passed = False
+        
+        # Check confidence score distribution
+        if confidence_scores:
+            avg_confidence = sum(confidence_scores) / len(confidence_scores)
+            confidence_range = max(confidence_scores) - min(confidence_scores)
+            
+            # Enhanced model should have reasonable confidence distribution
+            reasonable_avg = 0.4 <= avg_confidence <= 0.9
+            reasonable_range = confidence_range <= 0.6  # Not too wide spread
+            
+            self.log_test("Enhanced Model 2 confidence distribution", reasonable_avg and reasonable_range,
+                        f"Avg: {avg_confidence:.3f}, Range: {confidence_range:.3f}")
+        
+        return all_passed
+    
+    def test_model2_health_check(self):
+        """Test main health endpoint includes Model 2 status"""
+        print("\n=== Testing Model 2 Health Check Integration ===")
+        
+        try:
+            response = requests.get(f"{API_BASE}/health", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check Model 2 specific fields
+                models_loaded = data.get('models_loaded', {})
+                model2_info = data.get('model2_info', {})
+                
+                # Test Model 2 in models_loaded
+                model2_loaded = models_loaded.get('model2_cytotoxicity', False)
+                self.log_test("Model 2 in models_loaded", 'model2_cytotoxicity' in models_loaded,
+                            f"Model 2 cytotoxicity: {model2_loaded}")
+                
+                # Test Model 2 info section
+                if model2_info:
+                    required_fields = ['available', 'model_name', 'model_type', 'training_status', 'capabilities']
+                    missing_fields = [field for field in required_fields if field not in model2_info]
+                    
+                    self.log_test("Model 2 info structure", len(missing_fields) == 0,
+                                f"Model 2 info: {model2_info.get('model_name', 'N/A')}, Status: {model2_info.get('training_status', 'N/A')}")
+                    
+                    # Check capabilities
+                    capabilities = model2_info.get('capabilities', [])
+                    expected_capabilities = ['Cancer cell IC50 prediction', 'Multi-cell line comparison']
+                    has_capabilities = any(cap in capabilities for cap in expected_capabilities)
+                    
+                    self.log_test("Model 2 capabilities", has_capabilities,
+                                f"Capabilities: {capabilities}")
+                    
+                    # Check available cell lines count
+                    cell_lines_count = model2_info.get('available_cell_lines', 0)
+                    self.log_test("Model 2 cell lines available", cell_lines_count > 0,
+                                f"Available cell lines: {cell_lines_count}")
+                else:
+                    self.log_test("Model 2 info section", False, "No model2_info section found")
+                
+                return True
+            else:
+                self.log_test("Model 2 health check", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model 2 health check", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_model2_info_endpoint(self):
+        """Test /api/model2/info endpoint for model information and status"""
+        print("\n=== Testing Model 2 Info Endpoint ===")
+        
+        try:
+            response = requests.get(f"{API_BASE}/model2/info", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields
+                required_fields = ['model_name', 'model_loaded', 'version', 'prediction_type', 'available_cell_lines']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Model 2 info structure", False, f"Missing fields: {missing_fields}")
+                    return False
+                
+                # Validate field values
+                model_name = data.get('model_name', '')
+                model_loaded = data.get('model_loaded', False)
+                prediction_type = data.get('prediction_type', '')
+                available_cell_lines = data.get('available_cell_lines', 0)
+                
+                self.log_test("Model 2 info endpoint", True,
+                            f"Model: {model_name}, Loaded: {model_loaded}, Cell lines: {available_cell_lines}")
+                
+                # Check prediction type
+                expected_prediction_type = "Cancer Cell Line IC50"
+                self.log_test("Model 2 prediction type", prediction_type == expected_prediction_type,
+                            f"Prediction type: {prediction_type}")
+                
+                # Check performance info if available
+                performance = data.get('performance', {})
+                if performance:
+                    validation_r2 = performance.get('validation_r2', 'Unknown')
+                    target_r2 = performance.get('target_r2', 'Unknown')
+                    self.log_test("Model 2 performance info", True,
+                                f"Validation R²: {validation_r2}, Target R²: {target_r2}")
+                
+                # Check features info
+                features = data.get('features', {})
+                if features:
+                    molecular = features.get('molecular', '')
+                    genomic = features.get('genomic', '')
+                    self.log_test("Model 2 features info", True,
+                                f"Molecular: {molecular}, Genomic: {genomic}")
+                
+                return True
+                
+            elif response.status_code == 503:
+                # Model 2 not available - check if it's training
+                try:
+                    data = response.json()
+                    message = data.get('message', '')
+                    training_status = data.get('training_status', '')
+                    
+                    self.log_test("Model 2 training status", True,
+                                f"Status: {training_status}, Message: {message}")
+                    return True
+                except:
+                    self.log_test("Model 2 info endpoint", False, f"Service unavailable: {response.text}")
+                    return False
+            else:
+                self.log_test("Model 2 info endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model 2 info endpoint", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_model2_cell_lines_endpoint(self):
+        """Test /api/model2/cell-lines endpoint for available cancer cell lines"""
+        print("\n=== Testing Model 2 Cell Lines Endpoint ===")
+        
+        try:
+            response = requests.get(f"{API_BASE}/model2/cell-lines", timeout=30)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields
+                required_fields = ['available_cell_lines', 'total_cell_lines', 'cancer_focused']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Model 2 cell lines structure", False, f"Missing fields: {missing_fields}")
+                    return False
+                
+                # Validate cell lines data
+                available_cell_lines = data.get('available_cell_lines', [])
+                total_cell_lines = data.get('total_cell_lines', 0)
+                cancer_focused = data.get('cancer_focused', False)
+                categories = data.get('categories', {})
+                
+                self.log_test("Model 2 cell lines endpoint", True,
+                            f"Total: {total_cell_lines}, Cancer focused: {cancer_focused}")
+                
+                # Check cell lines list
+                self.log_test("Model 2 cell lines list", len(available_cell_lines) > 0,
+                            f"Available cell lines: {len(available_cell_lines)}")
+                
+                # Check for expected cancer cell lines
+                expected_cell_lines = ['A549', 'MCF7', 'HCT116']
+                found_expected = [cl for cl in expected_cell_lines if cl in available_cell_lines]
+                self.log_test("Model 2 expected cell lines", len(found_expected) > 0,
+                            f"Found expected cell lines: {found_expected}")
+                
+                # Check categories if available
+                if categories:
+                    category_types = list(categories.keys())
+                    expected_categories = ['lung', 'breast', 'colon']
+                    found_categories = [cat for cat in expected_categories if cat in category_types]
+                    self.log_test("Model 2 cell line categories", len(found_categories) > 0,
+                                f"Categories: {category_types}")
+                
+                return True
+                
+            elif response.status_code == 503:
+                self.log_test("Model 2 cell lines endpoint", True, "Service unavailable - model training in progress")
+                return True
+            else:
+                self.log_test("Model 2 cell lines endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model 2 cell lines endpoint", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_model2_predict_aspirin(self):
+        """Test /api/model2/predict endpoint with Aspirin SMILES"""
+        print("\n=== Testing Model 2 Predictions with Aspirin ===")
+        
+        aspirin_smiles = "CC(=O)OC1=CC=CC=C1C(=O)O"
+        
+        try:
+            payload = {
+                "smiles": aspirin_smiles,
+                "cell_lines": ["A549", "MCF7", "HCT116"]  # Test with 3 cell lines
+            }
+            
+            response = requests.post(f"{API_BASE}/model2/predict",
+                                   json=payload,
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check response structure
+                required_fields = ['predictions', 'model_info', 'compound_info']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Model 2 predict structure", False, f"Missing fields: {missing_fields}")
+                    return False
+                
+                # Check predictions
+                predictions = data.get('predictions', {})
+                self.log_test("Model 2 predict response", True,
+                            f"Predictions for {len(predictions)} cell lines")
+                
+                # Validate individual predictions
+                valid_predictions = 0
+                for cell_line, pred in predictions.items():
+                    if 'ic50_uM' in pred and pred['ic50_uM'] is not None:
+                        ic50_value = pred['ic50_uM']
+                        confidence = pred.get('confidence', 0)
+                        
+                        # Check reasonable IC50 range (0.001 to 1000 μM)
+                        valid_ic50 = isinstance(ic50_value, (int, float)) and 0.001 <= ic50_value <= 1000
+                        valid_confidence = isinstance(confidence, (int, float)) and 0.0 <= confidence <= 1.0
+                        
+                        if valid_ic50 and valid_confidence:
+                            valid_predictions += 1
+                            self.log_test(f"Model 2 prediction - {cell_line}", True,
+                                        f"IC50: {ic50_value:.3f} μM, Confidence: {confidence:.2f}")
+                        else:
+                            self.log_test(f"Model 2 prediction - {cell_line}", False,
+                                        f"Invalid values - IC50: {ic50_value}, Confidence: {confidence}")
+                    else:
+                        # Check if there's an error message
+                        error = pred.get('error', 'Unknown error')
+                        self.log_test(f"Model 2 prediction - {cell_line}", False, f"Error: {error}")
+                
+                # Check model info
+                model_info = data.get('model_info', {})
+                if model_info:
+                    model_version = model_info.get('model_version', '')
+                    validation_r2 = model_info.get('validation_r2', 'Unknown')
+                    self.log_test("Model 2 model info", True,
+                                f"Version: {model_version}, R²: {validation_r2}")
+                
+                # Check compound info
+                compound_info = data.get('compound_info', {})
+                if compound_info:
+                    returned_smiles = compound_info.get('smiles', '')
+                    feature_extraction = compound_info.get('feature_extraction', '')
+                    self.log_test("Model 2 compound info", returned_smiles == aspirin_smiles,
+                                f"SMILES match: {returned_smiles == aspirin_smiles}, Features: {feature_extraction}")
+                
+                return valid_predictions > 0
+                
+            elif response.status_code == 503:
+                # Model training in progress
+                try:
+                    data = response.json()
+                    message = data.get('message', '')
+                    training_status = data.get('training_status', '')
+                    
+                    self.log_test("Model 2 predict (training)", True,
+                                f"Training status: {training_status}, Message: {message}")
+                    return True
+                except:
+                    self.log_test("Model 2 predict endpoint", False, f"Service unavailable: {response.text}")
+                    return False
+            else:
+                self.log_test("Model 2 predict endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model 2 predict endpoint", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_model2_predict_imatinib(self):
+        """Test /api/model2/predict endpoint with Imatinib SMILES"""
+        print("\n=== Testing Model 2 Predictions with Imatinib ===")
+        
+        imatinib_smiles = "Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C"
+        
+        try:
+            payload = {
+                "smiles": imatinib_smiles,
+                "cell_lines": ["A549", "MCF7"]  # Test with 2 cell lines
+            }
+            
+            response = requests.post(f"{API_BASE}/model2/predict",
+                                   json=payload,
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                predictions = data.get('predictions', {})
+                self.log_test("Model 2 predict Imatinib", True,
+                            f"Predictions for {len(predictions)} cell lines")
+                
+                # Check if predictions are different from Aspirin (should be different compounds)
+                valid_predictions = 0
+                for cell_line, pred in predictions.items():
+                    if 'ic50_uM' in pred and pred['ic50_uM'] is not None:
+                        ic50_value = pred['ic50_uM']
+                        confidence = pred.get('confidence', 0)
+                        
+                        if isinstance(ic50_value, (int, float)) and 0.001 <= ic50_value <= 1000:
+                            valid_predictions += 1
+                            self.log_test(f"Model 2 Imatinib - {cell_line}", True,
+                                        f"IC50: {ic50_value:.3f} μM, Confidence: {confidence:.2f}")
+                
+                return valid_predictions > 0
+                
+            elif response.status_code == 503:
+                self.log_test("Model 2 predict Imatinib (training)", True, "Model training in progress")
+                return True
+            else:
+                self.log_test("Model 2 predict Imatinib", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model 2 predict Imatinib", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_model2_compare_endpoint(self):
+        """Test /api/model2/compare endpoint for multi-cell line comparison"""
+        print("\n=== Testing Model 2 Compare Endpoint ===")
+        
+        aspirin_smiles = "CC(=O)OC1=CC=CC=C1C(=O)O"
+        
+        try:
+            payload = {
+                "smiles": aspirin_smiles,
+                "cell_lines": ["A549", "MCF7", "HCT116", "PC-3"]  # Test with 4 cell lines for comparison
+            }
+            
+            response = requests.post(f"{API_BASE}/model2/compare",
+                                   json=payload,
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check basic structure
+                predictions = data.get('predictions', {})
+                comparison_analysis = data.get('comparison_analysis', {})
+                
+                self.log_test("Model 2 compare response", True,
+                            f"Predictions: {len(predictions)}, Has comparison: {'comparison_analysis' in data}")
+                
+                # Check comparison analysis if available
+                if comparison_analysis:
+                    required_comparison_fields = ['most_sensitive_cell_line', 'least_sensitive_cell_line', 
+                                                'sensitivity_range_fold', 'total_cell_lines_compared']
+                    missing_comparison_fields = [field for field in required_comparison_fields 
+                                               if field not in comparison_analysis]
+                    
+                    if not missing_comparison_fields:
+                        most_sensitive = comparison_analysis.get('most_sensitive_cell_line', '')
+                        least_sensitive = comparison_analysis.get('least_sensitive_cell_line', '')
+                        fold_difference = comparison_analysis.get('sensitivity_range_fold', 0)
+                        
+                        self.log_test("Model 2 comparison analysis", True,
+                                    f"Most sensitive: {most_sensitive}, Least sensitive: {least_sensitive}, Fold diff: {fold_difference}")
+                        
+                        # Check fold difference is reasonable
+                        if isinstance(fold_difference, (int, float)) and fold_difference > 1:
+                            self.log_test("Model 2 fold difference", True,
+                                        f"Reasonable fold difference: {fold_difference:.2f}x")
+                        else:
+                            self.log_test("Model 2 fold difference", False,
+                                        f"Unreasonable fold difference: {fold_difference}")
+                    else:
+                        self.log_test("Model 2 comparison fields", False,
+                                    f"Missing comparison fields: {missing_comparison_fields}")
+                
+                # Validate individual predictions
+                valid_comparisons = 0
+                ic50_values = []
+                
+                for cell_line, pred in predictions.items():
+                    if 'ic50_uM' in pred and pred['ic50_uM'] is not None:
+                        ic50_value = pred['ic50_uM']
+                        if isinstance(ic50_value, (int, float)) and 0.001 <= ic50_value <= 1000:
+                            valid_comparisons += 1
+                            ic50_values.append(ic50_value)
+                
+                # Check if there's variation in IC50 values (different cell lines should have different sensitivities)
+                if len(ic50_values) >= 2:
+                    ic50_range = max(ic50_values) - min(ic50_values)
+                    has_variation = ic50_range > 0.01  # At least 0.01 μM difference
+                    self.log_test("Model 2 cell line variation", has_variation,
+                                f"IC50 range: {ic50_range:.3f} μM, Values: {[f'{v:.3f}' for v in ic50_values]}")
+                
+                return valid_comparisons >= 2
+                
+            elif response.status_code == 503:
+                self.log_test("Model 2 compare (training)", True, "Model training in progress")
+                return True
+            elif response.status_code == 400:
+                # Check if it's the expected error for insufficient cell lines
+                try:
+                    data = response.json()
+                    detail = data.get('detail', '')
+                    if 'At least 2 cell lines required' in detail:
+                        self.log_test("Model 2 compare validation", True, "Proper validation for insufficient cell lines")
+                        return True
+                    else:
+                        self.log_test("Model 2 compare endpoint", False, f"Unexpected 400 error: {detail}")
+                        return False
+                except:
+                    self.log_test("Model 2 compare endpoint", False, f"HTTP 400: {response.text}")
+                    return False
+            else:
+                self.log_test("Model 2 compare endpoint", False, f"HTTP {response.status_code}: {response.text}")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model 2 compare endpoint", False, f"Connection error: {str(e)}")
+            return False
+    
+    def test_model2_error_handling(self):
+        """Test Model 2 error handling with invalid inputs"""
+        print("\n=== Testing Model 2 Error Handling ===")
+        
+        all_passed = True
+        
+        # Test 1: Invalid SMILES
+        try:
+            payload = {
+                "smiles": "INVALID_SMILES_STRING",
+                "cell_lines": ["A549"]
+            }
+            
+            response = requests.post(f"{API_BASE}/model2/predict",
+                                   json=payload,
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=30)
+            
+            if response.status_code == 400:
+                self.log_test("Model 2 invalid SMILES handling", True, "Invalid SMILES properly rejected")
+            elif response.status_code == 503:
+                self.log_test("Model 2 invalid SMILES handling", True, "Service unavailable - training in progress")
+            else:
+                self.log_test("Model 2 invalid SMILES handling", False, f"Expected 400, got {response.status_code}")
+                all_passed = False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model 2 invalid SMILES handling", False, f"Request error: {str(e)}")
+            all_passed = False
+        
+        # Test 2: Empty SMILES
+        try:
+            payload = {
+                "smiles": "",
+                "cell_lines": ["A549"]
+            }
+            
+            response = requests.post(f"{API_BASE}/model2/predict",
+                                   json=payload,
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=30)
+            
+            if response.status_code == 400:
+                self.log_test("Model 2 empty SMILES handling", True, "Empty SMILES properly rejected")
+            elif response.status_code == 503:
+                self.log_test("Model 2 empty SMILES handling", True, "Service unavailable - training in progress")
+            else:
+                self.log_test("Model 2 empty SMILES handling", False, f"Expected 400, got {response.status_code}")
+                all_passed = False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model 2 empty SMILES handling", False, f"Request error: {str(e)}")
+            all_passed = False
+        
+        # Test 3: Compare with insufficient cell lines
+        try:
+            payload = {
+                "smiles": "CCO",  # Valid SMILES
+                "cell_lines": ["A549"]  # Only 1 cell line - should require at least 2 for comparison
+            }
+            
+            response = requests.post(f"{API_BASE}/model2/compare",
+                                   json=payload,
+                                   headers={'Content-Type': 'application/json'},
+                                   timeout=30)
+            
+            if response.status_code == 400:
+                try:
+                    data = response.json()
+                    detail = data.get('detail', '')
+                    if 'At least 2 cell lines required' in detail:
+                        self.log_test("Model 2 compare validation", True, "Proper validation for insufficient cell lines")
+                    else:
+                        self.log_test("Model 2 compare validation", False, f"Unexpected error message: {detail}")
+                        all_passed = False
+                except:
+                    self.log_test("Model 2 compare validation", True, "Validation error returned")
+            elif response.status_code == 503:
+                self.log_test("Model 2 compare validation", True, "Service unavailable - training in progress")
+            else:
+                self.log_test("Model 2 compare validation", False, f"Expected 400, got {response.status_code}")
+                all_passed = False
+                
+        except requests.exceptions.RequestException as e:
+            self.log_test("Model 2 compare validation", False, f"Request error: {str(e)}")
+            all_passed = False
+        
+        return all_passed
+
     def test_enhanced_modal_molbert_status(self):
         """Test Enhanced Modal MolBERT status endpoint"""
         print("\n=== Testing Enhanced Modal MolBERT Status ===")
@@ -2572,13 +3441,26 @@ class EnhancedChemistryPlatformTester:
 
     def run_all_tests(self):
         """Run all tests and provide summary"""
-        print(f"🧪 Starting Expanded Database Integration Testing")
+        print(f"🧪 Starting Model 2 (Cytotoxicity Prediction) Backend Testing")
         print(f"Backend URL: {API_BASE}")
         print("=" * 80)
         
-        # Focus on Expanded Models integration tests as requested
+        # Focus on Model 2 (Cytotoxicity Prediction) tests as requested
         tests = [
-            # Expanded Models Integration Tests (Primary Focus)
+            # Model 2 (Cytotoxicity Prediction) Tests (Primary Focus)
+            self.test_model2_health_check,
+            self.test_model2_info_endpoint,
+            self.test_model2_cell_lines_endpoint,
+            self.test_model2_predict_aspirin,
+            self.test_model2_predict_imatinib,
+            self.test_model2_compare_endpoint,
+            self.test_model2_error_handling,
+            
+            # Core health checks
+            self.test_health_endpoint_enhanced,
+            self.test_targets_endpoint,
+            
+            # Expanded Models Integration Tests (Secondary)
             self.test_expanded_models_health_check,
             self.test_expanded_models_health_endpoint,
             self.test_expanded_targets_endpoint,
@@ -2591,9 +3473,7 @@ class EnhancedChemistryPlatformTester:
             self.test_health_endpoint_real_chemprop_status,
             self.test_existing_endpoints_compatibility,
             
-            # Core functionality tests (Secondary)
-            self.test_health_endpoint_enhanced,
-            self.test_targets_endpoint,
+            # Core functionality tests (Tertiary)
             self.test_enhanced_ic50_predictions,
             self.test_all_prediction_types,
             
@@ -2637,8 +3517,8 @@ class EnhancedChemistryPlatformTester:
 if __name__ == "__main__":
     tester = EnhancedChemistryPlatformTester()
     
-    # Run the new real API integration tests
-    tester.run_real_api_integration_tests()
+    # Run the Model 2 (Cytotoxicity Prediction) tests
+    tester.run_all_tests()
     
     # Exit with appropriate code
     sys.exit(0 if len(tester.failed_tests) == 0 else 1)

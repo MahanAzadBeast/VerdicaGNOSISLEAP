@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
 import AIModulesPage from "./components/AIModulesPage";
-import CellLineResponseModel from "./components/CellLineResponseModel";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -12,7 +11,6 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
   const tabs = [
     { id: 'home', label: 'Home' },
     { id: 'ai-modules', label: 'AI Modules' },
-    { id: 'cell-line', label: 'Cell Line Model' },
     { id: 'analysis', label: 'Result Analysis' },
     { id: 'about', label: 'About' }
   ];
@@ -103,7 +101,7 @@ const HomeTab = ({ setActiveTab }) => {
         <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-2 drop-shadow-lg">
-              Start Discovery AI
+              Start GNOSIS
             </h1>
             <p className="text-lg text-gray-300 opacity-80 font-medium">
               Click to access AI modules
@@ -766,7 +764,6 @@ const App = () => {
       
       {activeTab === 'home' && <HomeTab setActiveTab={setActiveTab} />}
       {activeTab === 'ai-modules' && <AIModulesPage />}
-      {activeTab === 'cell-line' && <CellLineResponseModel />}
       {activeTab === 'analysis' && <AnalysisTab analysisData={analysisData} />}
       {activeTab === 'about' && <AboutTab />}
     </div>

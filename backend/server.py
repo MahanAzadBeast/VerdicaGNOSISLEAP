@@ -6,7 +6,7 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Union
 import uuid
 from datetime import datetime
 import asyncio
@@ -15,6 +15,9 @@ from rdkit import Chem
 from rdkit.Chem import Descriptors, Crippen, Lipinski
 import warnings
 import json
+
+# Import routers
+from reports.routes import router as reports_router
 
 warnings.filterwarnings("ignore")
 
@@ -28,6 +31,41 @@ db = client[os.environ['DB_NAME']]
 
 # Global model storage
 models = {}
+
+# Initialize Gnosis I Model
+try:
+    from gnosis_model1_predictor import initialize_gnosis_predictor, get_gnosis_predictor
+    model_path = ROOT_DIR / "models" / "gnosis_model1_best.pt"
+    if model_path.exists():
+        initialize_gnosis_predictor(str(model_path))
+        logging.info("✅ Gnosis I (Model 1) loaded successfully")
+        GNOSIS_I_AVAILABLE = True
+    else:
+        logging.warning("⚠️ Gnosis I model not found")
+        GNOSIS_I_AVAILABLE = False
+except Exception as e:
+    logging.error(f"❌ Failed to load Gnosis I: {e}")
+    GNOSIS_I_AVAILABLE = False
+
+# Initialize Model 2 - Cancer Cell Line Cytotoxicity Predictor
+try:
+    from model2_cytotoxicity_predictor import GnosisModel2Predictor
+    
+    # Create global Model 2 instance
+    model2_predictor = GnosisModel2Predictor(device='cpu')
+    MODEL2_LOADED = model2_predictor.load_model()
+    
+    if MODEL2_LOADED:
+        logging.info("✅ Model 2 (Cancer Cell Line Cytotoxicity Predictor) loaded successfully")
+    else:
+        logging.warning("⚠️ Model 2 training in progress - predictions available when complete")
+        
+    MODEL2_AVAILABLE = True
+    
+except Exception as e:
+    logging.error(f"❌ Failed to load Model 2: {e}")
+    MODEL2_AVAILABLE = False
+    MODEL2_LOADED = False
 
 # Simple import test for oncoprotein
 try:
@@ -143,10 +181,25 @@ except Exception as e:
 
 # Import Cell Line Response Model router
 try:
+    sys.path.append('/app/modal_training')
     from cell_line_backend_integration import router as cell_line_router
     api_router.include_router(cell_line_router)
     logging.info("✅ Cell Line Response Model router added successfully")
     CELL_LINE_MODEL_AVAILABLE = True
+except Exception as e:
+    logging.error(f"❌ Failed to add Cell Line Response Model router: {e}")
+    CELL_LINE_MODEL_AVAILABLE = False
+
+# Import Enhanced Cell Line with Therapeutic Index router
+try:
+    sys.path.append('/app/modal_training')
+    from enhanced_cell_line_backend import router as therapeutic_router
+    api_router.include_router(therapeutic_router)
+    logging.info("✅ Enhanced Cell Line + Therapeutic Index router added successfully")
+    THERAPEUTIC_INDEX_AVAILABLE = True
+except Exception as e:
+    logging.error(f"❌ Failed to add Therapeutic Index router: {e}")
+    THERAPEUTIC_INDEX_AVAILABLE = False
 except Exception as e:
     logging.error(f"❌ Failed to add Cell Line Response Model router: {e}")
     CELL_LINE_MODEL_AVAILABLE = False
@@ -179,6 +232,24 @@ class TargetInfo(BaseModel):
     available: bool
     description: str
     model_type: str = "Enhanced RDKit-based"
+
+# Gnosis I Models
+class GnosisIPredictionInput(BaseModel):
+    smiles: str
+    targets: Union[str, List[str]] = Field(default="all", description="Target protein(s) or 'all'")
+    assay_types: Union[str, List[str]] = Field(default="IC50", description="Assay type(s): IC50, Ki, EC50")
+
+class GnosisIPredictionResult(BaseModel):
+    smiles: str
+    properties: Dict[str, float]  # LogP, LogS
+    predictions: Dict[str, Dict[str, Any]]  # target -> {assay_type, pActivity, activity_nM, etc.}
+    model_info: Dict[str, Any]
+
+class GnosisITargetsResponse(BaseModel):
+    available_targets: List[str]
+    categorized_targets: Dict[str, List[str]]
+    total_targets: int
+    model_info: Dict[str, Any]
 
 # Available protein targets
 AVAILABLE_TARGETS = {
@@ -497,7 +568,10 @@ async def health_check():
             "oncoprotein_chemberta": ONCOPROTEIN_AVAILABLE,
             "chemprop_multitask_simulation": CHEMPROP_MULTITASK_AVAILABLE,
             "cell_line_response_model": CELL_LINE_MODEL_AVAILABLE,
-            "expanded_models": EXPANDED_MODELS_AVAILABLE
+            "therapeutic_index_model": THERAPEUTIC_INDEX_AVAILABLE,
+            "expanded_models": EXPANDED_MODELS_AVAILABLE,
+            "gnosis_i": GNOSIS_I_AVAILABLE,
+            "model2_cytotoxicity": MODEL2_AVAILABLE
         },
         "real_ml_targets": real_models_status,
         "enhanced_predictions": True,  # Enhanced IC50 models available
@@ -509,9 +583,26 @@ async def health_check():
             "chemberta_available": CHEMBERTA_AVAILABLE,
             "chemprop_simulation_available": CHEMPROP_MULTITASK_AVAILABLE,
             "cell_line_model_available": CELL_LINE_MODEL_AVAILABLE,
+            "therapeutic_index_available": THERAPEUTIC_INDEX_AVAILABLE,
             "expanded_models_available": EXPANDED_MODELS_AVAILABLE,
             "propmolflow_generation_available": PROPMOLFLOW_AVAILABLE,
-            "total_ai_models": sum([CHEMBERTA_AVAILABLE, CHEMPROP_MULTITASK_AVAILABLE, CELL_LINE_MODEL_AVAILABLE, EXPANDED_MODELS_AVAILABLE, PROPMOLFLOW_AVAILABLE])
+            "gnosis_i_available": GNOSIS_I_AVAILABLE,
+            "model2_cytotoxicity_available": MODEL2_AVAILABLE,
+            "total_ai_models": sum([CHEMBERTA_AVAILABLE, CHEMPROP_MULTITASK_AVAILABLE, CELL_LINE_MODEL_AVAILABLE, THERAPEUTIC_INDEX_AVAILABLE, EXPANDED_MODELS_AVAILABLE, PROPMOLFLOW_AVAILABLE, GNOSIS_I_AVAILABLE, MODEL2_AVAILABLE])
+        },
+        "therapeutic_index_info": {
+            "available": THERAPEUTIC_INDEX_AVAILABLE,
+            "data_sources": ["GDSC_Cancer_Efficacy", "Tox21_ToxCast_Cytotoxicity"],
+            "features": [
+                "Cancer cell IC50 prediction",
+                "Normal cell cytotoxicity integration",
+                "Therapeutic index calculation",
+                "Safety classification",
+                "Clinical interpretation",
+                "Dosing recommendations"
+            ],
+            "safety_classifications": ["Very Safe", "Safe", "Moderate", "Low Safety", "Toxic"],
+            "therapeutic_window_types": ["Wide", "Moderate", "Narrow"]
         },
         "expanded_models_info": {
             "available": EXPANDED_MODELS_AVAILABLE,
@@ -533,6 +624,27 @@ async def health_check():
             "max_molecules_per_request": 100,
             "supported_properties": ["IC50", "EC50", "Ki"],
             "capabilities": ["property_guided_generation", "multi_objective_optimization", "drug_likeness_filtering"]
+        },
+        "gnosis_i_info": {
+            "available": GNOSIS_I_AVAILABLE,
+            "model_name": "Gnosis I (Model 1)",
+            "model_type": "Ligand Activity Predictor",
+            "r2_score": 0.6281,
+            "capabilities": ["IC50 prediction", "Ki prediction", "EC50 prediction", "LogP calculation", "LogS calculation"],
+            "target_categories": ["oncoproteins", "tumor_suppressors"],
+            "description": "Fine-tuned ChemBERTa model for ligand-target binding affinity prediction"
+        },
+        "model2_info": {
+            "available": MODEL2_AVAILABLE,
+            "model_loaded": MODEL2_LOADED if MODEL2_AVAILABLE else False,
+            "model_name": "Model 2 - Cancer Cell Line Cytotoxicity Predictor",
+            "model_type": "Cancer Cell Line IC50 Prediction",
+            "target_r2": ">0.6",
+            "training_status": "in_progress" if MODEL2_AVAILABLE and not MODEL2_LOADED else "completed" if MODEL2_LOADED else "not_available",
+            "capabilities": ["Cancer cell IC50 prediction", "Multi-cell line comparison", "Genomic context integration"],
+            "data_sources": ["GDSC1", "GDSC2", "Comprehensive Cancer Data"],
+            "available_cell_lines": len(model2_predictor.available_cell_lines) if MODEL2_AVAILABLE else 0,
+            "description": "ChemBERTa-based model for predicting drug cytotoxicity in cancer cell lines with genomic features"
         }
     }
 
@@ -835,6 +947,141 @@ async def get_gpu_training_progress(target: str = "EGFR"):
 
 @api_router.get("/gpu/training-progress")
 async def get_all_gpu_training_progress():
+    """Get GPU training progress for all targets"""
+    all_progress = {}
+    
+    for session_id, progress_list in gpu_training_progress.items():
+        if progress_list:
+            target = session_id.replace("gpu_training_", "")
+            all_progress[target] = {
+                "current_status": progress_list[-1],
+                "total_updates": len(progress_list)
+            }
+    
+    return {
+        "active_sessions": len(all_progress),
+        "targets": all_progress
+    }
+
+# ===== GNOSIS I (MODEL 1) ENDPOINTS =====
+
+@api_router.get("/gnosis-i/targets", response_model=GnosisITargetsResponse)
+async def get_gnosis_i_targets():
+    """Get available targets for Gnosis I Ligand Activity Predictor"""
+    
+    if not GNOSIS_I_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Gnosis I model not available")
+    
+    try:
+        predictor = get_gnosis_predictor()
+        if not predictor:
+            raise HTTPException(status_code=503, detail="Gnosis I predictor not initialized")
+        
+        available_targets = predictor.get_available_targets()
+        categorized_targets = predictor.get_target_categories()
+        
+        return GnosisITargetsResponse(
+            available_targets=available_targets,
+            categorized_targets=categorized_targets,
+            total_targets=len(available_targets),
+            model_info={
+                'name': 'Gnosis I',
+                'r2_score': predictor.metadata.get('r2_score', 0.0),
+                'version': '1.0',
+                'description': 'Ligand Activity Predictor with fine-tuned ChemBERTa'
+            }
+        )
+    
+    except Exception as e:
+        logging.error(f"Error getting Gnosis I targets: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/gnosis-i/predict", response_model=GnosisIPredictionResult)
+async def predict_with_gnosis_i(input_data: GnosisIPredictionInput):
+    """Predict ligand activity using Gnosis I model"""
+    
+    if not GNOSIS_I_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Gnosis I model not available")
+    
+    # Validate SMILES
+    if not validate_smiles(input_data.smiles):
+        raise HTTPException(status_code=400, detail="Invalid SMILES string")
+    
+    try:
+        predictor = get_gnosis_predictor()
+        if not predictor:
+            raise HTTPException(status_code=503, detail="Gnosis I predictor not initialized")
+        
+        # Make prediction with confidence
+        result = predictor.predict_with_confidence(
+            smiles=input_data.smiles,
+            targets=input_data.targets,
+            assay_types=input_data.assay_types,
+            n_samples=30  # Monte-Carlo dropout samples
+        )
+        
+        # Store in MongoDB
+        prediction_record = {
+            "id": str(uuid.uuid4()),
+            "model": "Gnosis I",
+            "smiles": input_data.smiles,
+            "targets": input_data.targets,
+            "assay_types": input_data.assay_types,
+            "predictions": result['predictions'],
+            "properties": result['properties'],
+            "timestamp": datetime.utcnow(),
+            "model_info": result['model_info']
+        }
+        await db.gnosis_predictions.insert_one(prediction_record)
+        
+        return GnosisIPredictionResult(**result)
+    
+    except Exception as e:
+        logging.error(f"Error with Gnosis I prediction: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/gnosis-i/info")
+async def get_gnosis_i_info():
+    """Get Gnosis I model information"""
+    
+    if not GNOSIS_I_AVAILABLE:
+        return {
+            "available": False,
+            "message": "Gnosis I model not loaded"
+        }
+    
+    try:
+        predictor = get_gnosis_predictor()
+        if not predictor:
+            return {
+                "available": False,
+                "message": "Gnosis I predictor not initialized"
+            }
+        
+        return {
+            "available": True,
+            "model_name": "Gnosis I",
+            "model_type": "Ligand Activity Predictor",
+            "r2_score": predictor.metadata.get('r2_score', 0.0),
+            "num_targets": len(predictor.get_available_targets()),
+            "capabilities": [
+                "IC50 prediction",
+                "Ki prediction", 
+                "EC50 prediction",
+                "LogP calculation",
+                "LogS calculation"
+            ],
+            "version": "1.0",
+            "description": "Fine-tuned ChemBERTa model for ligand-target binding affinity prediction"
+        }
+    
+    except Exception as e:
+        logging.error(f"Error getting Gnosis I info: {e}")
+        return {
+            "available": False,
+            "message": f"Error: {str(e)}"
+        }
+async def get_all_gpu_training_progress():
     """Get progress for all GPU training sessions"""
     all_progress = {}
     
@@ -1091,6 +1338,144 @@ if ENHANCED_MODAL_AVAILABLE:
 else:
     logging.info("⚠️ Enhanced Modal MolBERT + Chemprop + ChemBERTa endpoints not available")
 
+# Model 2 - Cancer Cell Line Cytotoxicity Prediction Endpoints
+if MODEL2_AVAILABLE:
+    
+    # Model 2 request/response schemas
+    class Model2CellLinesRequest(BaseModel):
+        smiles: str
+        cell_lines: Optional[List[str]] = None
+        
+    class Model2PredictionResponse(BaseModel):
+        predictions: Dict[str, Any]
+        model_info: Dict[str, Any]
+        compound_info: Dict[str, Any]
+    
+    @api_router.get("/model2/info")
+    async def get_model2_info():
+        """Get Model 2 information and status"""
+        try:
+            return model2_predictor.get_model_info()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Model 2 info error: {str(e)}")
+    
+    @api_router.get("/model2/cell-lines")
+    async def get_model2_cell_lines():
+        """Get available cancer cell lines for Model 2 predictions"""
+        try:
+            return model2_predictor.get_available_cell_lines()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Cell lines retrieval error: {str(e)}")
+    
+    @api_router.post("/model2/predict", response_model=Model2PredictionResponse)
+    async def predict_model2_cytotoxicity(request: Model2CellLinesRequest):
+        """Predict cancer cell line cytotoxicity using Model 2"""
+        try:
+            # Validate SMILES
+            if not validate_smiles(request.smiles):
+                raise HTTPException(status_code=400, detail="Invalid SMILES string")
+            
+            # Make prediction
+            result = model2_predictor.predict_cytotoxicity(
+                smiles=request.smiles,
+                cell_lines=request.cell_lines
+            )
+            
+            # Check for training in progress
+            if "training_status" in result:
+                raise HTTPException(
+                    status_code=503, 
+                    detail={
+                        "message": result["message"],
+                        "training_status": result["training_status"],
+                        "expected_availability": result["expected_availability"]
+                    }
+                )
+            
+            # Store prediction in database
+            prediction_record = {
+                "id": str(uuid.uuid4()),
+                "timestamp": datetime.utcnow().isoformat(),
+                "smiles": request.smiles,
+                "model": "Model2_Cytotoxicity",
+                "prediction_type": "cancer_cell_line_ic50",
+                "result": result,
+                "cell_lines_requested": len(request.cell_lines) if request.cell_lines else len(model2_predictor.available_cell_lines[:10])
+            }
+            
+            await db.predictions.insert_one(prediction_record)
+            
+            return result
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Model 2 prediction error: {str(e)}")
+    
+    @api_router.post("/model2/compare")
+    async def compare_model2_cell_lines(request: Model2CellLinesRequest):
+        """Compare drug sensitivity across multiple cancer cell lines"""
+        try:
+            # Validate SMILES
+            if not validate_smiles(request.smiles):
+                raise HTTPException(status_code=400, detail="Invalid SMILES string")
+            
+            # Ensure we have multiple cell lines for comparison
+            cell_lines = request.cell_lines or model2_predictor.available_cell_lines[:5]
+            if len(cell_lines) < 2:
+                raise HTTPException(
+                    status_code=400, 
+                    detail="At least 2 cell lines required for comparison"
+                )
+            
+            # Get predictions
+            result = model2_predictor.predict_cytotoxicity(
+                smiles=request.smiles,
+                cell_lines=cell_lines
+            )
+            
+            # Check for training in progress
+            if "training_status" in result:
+                raise HTTPException(
+                    status_code=503, 
+                    detail=result
+                )
+            
+            # Add comparison analysis
+            if "predictions" in result:
+                predictions = result["predictions"]
+                ic50_values = {}
+                
+                for cell_line, pred in predictions.items():
+                    if "ic50_uM" in pred and pred["ic50_uM"] is not None:
+                        ic50_values[cell_line] = pred["ic50_uM"]
+                
+                if len(ic50_values) >= 2:
+                    sorted_cell_lines = sorted(ic50_values.items(), key=lambda x: x[1])
+                    most_sensitive = sorted_cell_lines[0]
+                    least_sensitive = sorted_cell_lines[-1]
+                    
+                    result["comparison_analysis"] = {
+                        "most_sensitive_cell_line": most_sensitive[0],
+                        "most_sensitive_ic50_uM": most_sensitive[1],
+                        "least_sensitive_cell_line": least_sensitive[0], 
+                        "least_sensitive_ic50_uM": least_sensitive[1],
+                        "sensitivity_range_fold": least_sensitive[1] / most_sensitive[1] if most_sensitive[1] > 0 else "undefined",
+                        "total_cell_lines_compared": len(ic50_values)
+                    }
+            
+            return result
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Model 2 comparison error: {str(e)}")
+
+    logging.info("✅ Model 2 (Cancer Cell Line Cytotoxicity) endpoints added")
+
+else:
+    logging.warning("⚠️ Model 2 endpoints not available - predictor not loaded")
+
 # Include the router in the main app
 app.include_router(api_router)
 
@@ -1121,6 +1506,9 @@ if PROPMOLFLOW_AVAILABLE:
         logging.info("✅ PropMolFlow molecular generation router included in main app")
     except Exception as e:
         logging.error(f"❌ Failed to include PropMolFlow router: {e}")
+
+# Include routers
+app.include_router(reports_router)
 
 app.add_middleware(
     CORSMiddleware,

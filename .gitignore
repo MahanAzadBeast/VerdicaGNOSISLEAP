@@ -95,3 +95,8 @@ models/molbert_pretrained/molbert_pretrained.zip
 models/molbert_pretrained/molbert_100epochs/checkpoints/last.ckpt
 frontend/node_modules/.cache/default-development/1.pack_
 frontend/node_modules/.cache/default-development/0.pack_
+backend/models/gnosis_model1_ki_backup.pt
+backend/models/gnosis_model1_best.pt
+backend/models/gnosis_model1_ki_fixed.pt
+backend/models/gnosis_model1_real_ki.pt
+backend/models/gnosis_model1_best_backup.pt

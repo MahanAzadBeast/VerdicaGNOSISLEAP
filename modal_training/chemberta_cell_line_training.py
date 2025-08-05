@@ -30,13 +30,13 @@ import torch.optim as optim
 # Modal setup with comprehensive ML and transformer libraries
 image = modal.Image.debian_slim(python_version="3.11").pip_install([
     "torch==2.0.1",
-    "transformers==4.35.0",
+    "transformers==4.35.0", 
     "tokenizers==0.14.1",
     "scikit-learn==1.3.0",
     "pandas==2.0.3",
     "numpy==1.24.3",
     "scipy==1.11.3",
-    "rdkit-pypi==2023.3.2",
+    "rdkit-pypi==2023.3.1b1",  # Use available version
     "tqdm==4.64.0"
 ])
 

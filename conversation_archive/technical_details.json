@@ -1,0 +1,71 @@
+{
+  "model2_evolution": {
+    "baseline": {
+      "performance": "R\u00b2 = 0.0003",
+      "issues": "Tiny dataset, synthetic features, training failures"
+    },
+    "enhanced_local": {
+      "performance": "R\u00b2 = 0.42 (Random Forest)",
+      "features": "20 enhanced RDKit + 25 genomic features",
+      "training_samples": 5000,
+      "approach": "Realistic cancer biology simulation"
+    },
+    "gnosis_transfer": {
+      "target": "R\u00b2 \u2265 0.55",
+      "architecture": "Frozen ChemBERTa + cytotox head",
+      "data": "Real GDSC experimental data only",
+      "status": "Training in progress"
+    }
+  },
+  "backend_architecture": {
+    "current_state": "Model 2 fully functional",
+    "endpoints": [
+      "/api/model2/info - \u2705 Working",
+      "/api/model2/predict - \u2705 Working",
+      "/api/model2/cell-lines - \u2705 Working",
+      "/api/model2/compare - \u2705 Working"
+    ],
+    "cell_lines_available": 36,
+    "prediction_pipeline": "RDKit descriptors + genomic features \u2192 PyTorch model"
+  },
+  "training_scripts": {
+    "model2_local_enhancement.py": {
+      "purpose": "Enhanced local training with realistic data",
+      "results": "R\u00b2 = 0.42 (RF), R\u00b2 = 0.33 (NN)",
+      "status": "Completed successfully"
+    },
+    "model2_gnosis_cytotox_transfer.py": {
+      "purpose": "Transfer learning from GNOSIS ChemBERTa",
+      "target": "R\u00b2 \u2265 0.55",
+      "approach": "Frozen encoder + trainable head",
+      "status": "Currently running on Modal"
+    }
+  },
+  "data_requirements": {
+    "real_data_only": true,
+    "sources": [
+      "GDSC v17",
+      "DepMap PRISM 19Q4"
+    ],
+    "quality_filters": [
+      "R\u00b2 \u2265 0.70 curves",
+      "De-duplication",
+      "pIC50 conversion"
+    ],
+    "splits": "80/10/10 scaffold-stratified",
+    "no_synthetic_allowed": true
+  },
+  "performance_metrics": {
+    "primary": "R\u00b2 \u2265 0.55 on validation",
+    "secondary": [
+      "Spearman \u03c1 \u2265 0.70",
+      "MAE < 0.35",
+      "ECE \u2264 0.10"
+    ],
+    "ablations": [
+      "Transfer gain",
+      "Genomic fusion",
+      "Scaffold split validation"
+    ]
+  }
+}
