@@ -100,3 +100,32 @@ backend/models/gnosis_model1_best.pt
 backend/models/gnosis_model1_ki_fixed.pt
 backend/models/gnosis_model1_real_ki.pt
 backend/models/gnosis_model1_best_backup.pt
+
+# Modal training logs and outputs (can be large)
+modal_training/*.log
+modal_training/trained_gnn_models/*/verbose.log  
+modal_training/trained_gnn_models/*/quiet.log
+modal_training/data/
+
+# Model files (can be very large)
+*.pth
+*.pth.backup
+models/model2_enhanced_v1.pth.backup
+models/model2_production_v1.pth
+
+# Training and test outputs
+*_test.py
+backend_test_results.log
+*test_results*
+
+# Dataset files
+datasets/
+real_*.csv
+*_data.csv
+
+# Conversation archive (can be regenerated)
+conversation_archive/
+
+# Documentation files (temporary)
+FINAL_STATUS_UPDATE.md
+NEXT_AGENT_README.md
