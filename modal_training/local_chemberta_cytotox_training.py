@@ -546,7 +546,7 @@ def train_chemberta_cytotox_model():
     criterion = nn.HuberLoss(delta=1.0)
     optimizer = torch.optim.AdamW(model.parameters(), lr=5e-4, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='max', factor=0.7, patience=10, verbose=True
+        optimizer, mode='max', factor=0.7, patience=10
     )
     
     # Convert to tensors
