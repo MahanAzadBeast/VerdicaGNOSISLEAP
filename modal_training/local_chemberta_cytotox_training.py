@@ -349,11 +349,10 @@ class GenomicFeatureGenerator:
 class ChemBERTaCytotoxModel(nn.Module):
     """ChemBERTa encoder with cytotoxicity prediction head"""
     
-    def __init__(self, genomic_dim=44, hidden_dim=512):
+    def __init__(self, molecular_dim, genomic_dim=44, hidden_dim=512):
         super().__init__()
         
-        # ChemBERTa will output 768 dimensions
-        molecular_dim = 768
+        # Use actual ChemBERTa output dimension
         self.molecular_dim = molecular_dim
         self.genomic_dim = genomic_dim
         
@@ -368,7 +367,7 @@ class ChemBERTaCytotoxModel(nn.Module):
         )
         
         # Fusion layers
-        combined_dim = molecular_dim + 128  # 768 + 128 = 896
+        combined_dim = molecular_dim + 128  # molecular_dim + 128 genomic features
         self.fusion = nn.Sequential(
             nn.LayerNorm(combined_dim),
             nn.Dropout(0.3),
@@ -381,7 +380,7 @@ class ChemBERTaCytotoxModel(nn.Module):
             nn.Linear(256, 1)
         )
         
-        logger.info(f"✅ Model architecture: {molecular_dim} + {genomic_dim} → {hidden_dim} → 1")
+        logger.info(f"✅ Model architecture: {molecular_dim} + {genomic_dim} → {combined_dim} → {hidden_dim} → 1")
     
     def forward(self, molecular_features, genomic_features):
         """Forward pass"""
