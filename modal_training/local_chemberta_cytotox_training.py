@@ -413,7 +413,7 @@ def train_chemberta_cytotox_model():
     logger.info("1️⃣ GENERATING REALISTIC DATASET")
     
     data_generator = SyntheticGDSCDataGenerator()
-    dataset = data_generator.generate_realistic_dataset(n_samples=15000)
+    dataset = data_generator.generate_realistic_dataset(n_samples=50000)
     
     # 2. SETUP CHEMBERTA ENCODER
     logger.info("2️⃣ SETTING UP CHEMBERTA ENCODER")
