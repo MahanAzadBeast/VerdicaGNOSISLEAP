@@ -530,6 +530,7 @@ def train_chemberta_cytotox_model():
     logger.info("8️⃣ CREATING CYTOTOXICITY MODEL")
     
     model = ChemBERTaCytotoxModel(
+        molecular_dim=molecular_dim,
         genomic_dim=X_genomic.shape[1],
         hidden_dim=512
     ).to(device)
