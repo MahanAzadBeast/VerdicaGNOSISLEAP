@@ -106,28 +106,53 @@ class SyntheticGDSCDataGenerator:
             'COC1=CC=C(C=C1)C=CC(=O)C2=CC=C(C=C2)O',           # Chalcone
         ]
         
-        # Extend with more SMILES
+        # Extend with more SMILES - make this much more diverse
         additional_smiles = []
         base_smiles = ['CCO', 'c1ccccc1', 'CC(C)C', 'CCCCCCCC', 'c1ccc2ccccc2c1']
         
+        # Generate many more variants
         for base in base_smiles:
-            for i in range(10):
+            for i in range(50):  # Increase variants
                 # Simple variations
                 if base == 'CCO':
                     variations = [
-                        'CCCO', 'CCCCO', 'CC(C)O', 'CC(O)C', 'CCC(O)CC',
-                        'CC(C)(C)O', 'CCCCCO', 'CC(C)CO', 'CC(CC)O', 'CCC(C)O'
+                        'CCCO', 'CCCCO', 'CC(C)O', 'CC(O)C', 'CCC(O)CC', 'CC(C)(C)O', 'CCCCCO', 'CC(C)CO', 
+                        'CC(CC)O', 'CCC(C)O', 'CCCCCCO', 'CC(C)CCCO', 'CCC(C)(C)O', 'CC(O)CC', 'CCCC(O)C',
+                        'CCO[CH2]', 'CC[NH2]', 'CC(O)C(C)C', 'CCC(O)CCC', 'CC(C)C(O)C',
+                        'CCON', 'CC(O)N', 'CCS', 'CC(O)S', 'CCF', 'CC(O)F', 'CCCl', 'CC(O)Cl'
                     ]
                 elif base == 'c1ccccc1':
                     variations = [
-                        'Cc1ccccc1', 'c1ccc(C)cc1', 'c1ccc(O)cc1', 'c1ccc(N)cc1', 'c1ccc(F)cc1',
-                        'CCc1ccccc1', 'c1ccc(CC)cc1', 'c1ccc(Cl)cc1', 'c1ccc(Br)cc1', 'COc1ccccc1'
+                        'Cc1ccccc1', 'c1ccc(C)cc1', 'c1ccc(O)cc1', 'c1ccc(N)cc1', 'c1ccc(F)cc1', 'CCc1ccccc1', 
+                        'c1ccc(CC)cc1', 'c1ccc(Cl)cc1', 'c1ccc(Br)cc1', 'COc1ccccc1', 'c1ccc(S)cc1', 'c1ccc(CF3)cc1',
+                        'c1ccc(NO2)cc1', 'c1ccc(CN)cc1', 'c1ccc(CO)cc1', 'c1ccc(CCO)cc1', 'c1ccc(CCC)cc1',
+                        'Nc1ccc(C)cc1', 'Oc1ccc(O)cc1', 'Fc1ccc(F)cc1', 'Clc1ccc(Cl)cc1', 'COc1ccc(OC)cc1',
+                        'c1ccc2[nH]c3ccccc3c2c1', 'c1ccc2c(c1)ccc1ccccc12', 'c1cc2ccccc2cc1'
+                    ]
+                elif base == 'CCCCCCCC':
+                    variations = [
+                        'CCCCCCCCC', 'CCCCCCCCCC', 'CC(C)CCCCCC', 'CCC(C)CCCCC', 'CCCC(C)CCCC', 'CCCCC(C)CCC',
+                        'CCCCCC(C)CC', 'CCCCCCC(C)C', 'CC(C)(C)CCCCC', 'CCC(C)(C)CCCC', 'CCCCCCCCCCCC',
+                        'CC(C)CC(C)CCC', 'CCC(C)CC(C)CC', 'CCCCC=CCCC', 'CCCC=CCCCC', 'CCC=CCCCCC'
                     ]
                 else:
                     continue
                     
                 if i < len(variations):
                     additional_smiles.append(variations[i])
+        
+        # Add some realistic drug-like SMILES
+        realistic_drugs = [
+            'CC(C)CC1=CC=C(C=C1)C(C)C(=O)O',  # Ibuprofen
+            'CC(=O)OC1=CC=CC=C1C(=O)O',       # Aspirin
+            'CC(C)NCC(C1=CC=C(O)C=C1)O',      # Albuterol-like
+            'CN1C=NC2=C1C(=O)N(C(=O)N2C)C',   # Caffeine
+            'CCC1=C(C(=CC=C1)C)NC(=O)C',      # Lidocaine-like
+            'CC(C)(C)NCC(C1=CC(=C(C=C1)O)CO)O', # Salbutamol-like
+            'CCCN(CCC)C(=O)C1=C(C=CC=C1Cl)Cl',  # Diclofenac-like
+            'COC1=C(C=C2C(=C1)C=CC(=O)O2)C=CCO', # Coumarin derivative
+        ]
+        additional_smiles.extend(realistic_drugs)
         
         self.drug_smiles.extend(additional_smiles)
         
