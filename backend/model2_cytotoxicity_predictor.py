@@ -427,8 +427,16 @@ class GnosisModel2Predictor:
             
             # Load scalers (only needed for non-RF models)
             if not hasattr(self, 'rf_predictor'):
-                self.mol_scaler = checkpoint.get('mol_scaler')
-                self.gen_scaler = checkpoint.get('gen_scaler')
+                # Try different scaler key names for backward compatibility
+                scalers_dict = checkpoint.get('scalers', {})
+                
+                self.mol_scaler = (scalers_dict.get('molecular_scaler') or 
+                                 scalers_dict.get('mol_scaler') or 
+                                 checkpoint.get('mol_scaler'))
+                                 
+                self.gen_scaler = (scalers_dict.get('genomic_scaler') or
+                                 scalers_dict.get('gen_scaler') or
+                                 checkpoint.get('gen_scaler'))
                 
                 # Validate scalers
                 if self.mol_scaler is None:
