@@ -267,8 +267,9 @@ class GnosisModel2Predictor:
         """Load the trained Model 2"""
         
         if model_path is None:
-            # Check for enhanced model first, then production model
+            # Try the new real GDSC model first, then fallback to other models
             model_paths = [
+                "/app/models/real_gdsc_chemberta_cytotox_v1.pth",
                 "/app/models/model2_enhanced_v1.pth",
                 "/app/models/model2_production_v1.pth",
                 "/app/models/model2_fixed_chemberta.pth", 
@@ -278,6 +279,10 @@ class GnosisModel2Predictor:
             for path in model_paths:
                 if Path(path).exists():
                     model_path = path
+                    if "real_gdsc_chemberta_cytotox_v1.pth" in path:
+                        logger.info("Using real GDSC model: real_gdsc_chemberta_cytotox_v1.pth")
+                    elif "model2_enhanced_v1.pth" in path:
+                        logger.info("Using fallback model: model2_enhanced_v1.pth")
                     break
         
         try:
