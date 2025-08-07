@@ -130,3 +130,4 @@ conversation_archive/
 FINAL_STATUS_UPDATE.md
 NEXT_AGENT_README.md
 MolBERT/
+models/chemberta_local_cytotox_v1.pth
