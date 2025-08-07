@@ -250,7 +250,7 @@ def train_real_gdsc_chemberta_model():
         lr=1e-3, weight_decay=1e-5
     )
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='max', factor=0.7, patience=5, verbose=True
+        optimizer, mode='max', factor=0.7, patience=5
     )
     
     # Convert to tensors
