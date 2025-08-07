@@ -321,7 +321,63 @@ class GnosisModel2Predictor:
                 }
             
             # Initialize model based on type
-            if 'enhanced' in str(model_path):
+            if 'real_gdsc_chemberta_cytotox_v1.pth' in str(model_path):
+                # New real GDSC model with RDKit features
+                logger.info("🧬 Loading Real GDSC Model with experimental IC50 data")
+                
+                # Define the model architecture used in training
+                class RealDataCytotoxModel(nn.Module):
+                    def __init__(self, molecular_dim, genomic_dim):
+                        super().__init__()
+                        
+                        self.molecular_encoder = nn.Sequential(
+                            nn.Linear(molecular_dim, 256),
+                            nn.BatchNorm1d(256),
+                            nn.ReLU(),
+                            nn.Dropout(0.3),
+                            nn.Linear(256, 128),
+                            nn.BatchNorm1d(128),
+                            nn.ReLU(),
+                            nn.Dropout(0.2)
+                        )
+                        
+                        self.genomic_encoder = nn.Sequential(
+                            nn.Linear(genomic_dim, 64),
+                            nn.BatchNorm1d(64),
+                            nn.ReLU(),
+                            nn.Dropout(0.25),
+                            nn.Linear(64, 32),
+                            nn.BatchNorm1d(32),
+                            nn.ReLU(),
+                            nn.Dropout(0.1)
+                        )
+                        
+                        self.cytotox_predictor = nn.Sequential(
+                            nn.Linear(160, 80),  # 128 + 32
+                            nn.BatchNorm1d(80),
+                            nn.ReLU(),
+                            nn.Dropout(0.3),
+                            nn.Linear(80, 40),
+                            nn.ReLU(),
+                            nn.Dropout(0.2),
+                            nn.Linear(40, 20),
+                            nn.ReLU(),
+                            nn.Linear(20, 1)
+                        )
+                    
+                    def forward(self, molecular, genomic):
+                        mol_out = self.molecular_encoder(molecular)
+                        gen_out = self.genomic_encoder(genomic)
+                        combined = torch.cat([mol_out, gen_out], dim=1)
+                        return self.cytotox_predictor(combined)
+                
+                self.model = RealDataCytotoxModel(
+                    molecular_dim=self.model_config.get('molecular_dim', 20),  # RDKit features
+                    genomic_dim=self.model_config.get('genomic_dim', 30)      # Genomic features
+                )
+                logger.info("✅ Real GDSC model architecture loaded")
+                
+            elif 'enhanced' in str(model_path):
                 # Use Random Forest enhanced model directly (achieved R² = 0.42)
                 logger.info("🌲 Loading Enhanced Model 2 (Random Forest approach, R² = 0.42)")
                 from model2_rf_predictor import get_rf_predictor
