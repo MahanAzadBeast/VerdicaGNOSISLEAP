@@ -891,7 +891,7 @@ const LigandActivityPredictor = () => {
               Select Assay Types (targets filtered in real-time)
             </label>
             <div className="grid grid-cols-3 gap-3">
-              {['IC50', 'Ki', 'EC50'].map(assayType => {
+              {['IC50', 'EC50'].map(assayType => {
                 const isSelected = selectedAssayTypes.includes(assayType);
                 const targetCount = availableTargetsFiltered?.available_targets?.length || 0;
                 
