@@ -1086,6 +1086,50 @@ async def get_gnosis_i_info():
             "available": False,
             "message": f"Error: {str(e)}"
         }
+
+@api_router.get("/gnosis-i/training-data")
+async def get_gnosis_i_training_data():
+    """Get training data availability for each target-assay combination"""
+    
+    if not GNOSIS_I_AVAILABLE:
+        return {"available": False, "message": "Gnosis I not available"}
+    
+    try:
+        predictor = get_gnosis_predictor()
+        if not predictor:
+            return {"available": False, "message": "Predictor not initialized"}
+        
+        # Get training data availability for filtering
+        training_data = {}
+        available_targets = predictor.get_available_targets()
+        
+        for target in available_targets:
+            training_data[target] = {}
+            
+            # Check each assay type availability (excluding Ki)
+            for assay_type in ['IC50', 'EC50']:
+                confidence, quality_level, note = predictor.get_target_confidence(target, assay_type)
+                
+                # Only include assay types that would actually return predictions
+                # (quality_level not in ['insufficient', 'not_trained', 'minimal'])
+                has_sufficient_data = quality_level in ['excellent', 'good', 'limited']
+                
+                training_data[target][assay_type] = {
+                    'available': has_sufficient_data,
+                    'quality_level': quality_level,
+                    'confidence': confidence,
+                    'note': note
+                }
+        
+        return {
+            "available": True,
+            "training_data": training_data
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting Gnosis I training data: {e}")
+        return {"available": False, "message": f"Error: {str(e)}"}
+
 async def get_all_gpu_training_progress():
     """Get progress for all GPU training sessions"""
     all_progress = {}
