@@ -97,11 +97,13 @@ const LigandActivityPredictor = () => {
   const [error, setError] = useState('');
   const [availableTargets, setAvailableTargets] = useState({});
   const [modelInfo, setModelInfo] = useState(null);
+  const [trainingData, setTrainingData] = useState({});
 
-  // Load available targets and model info on component mount
+  // Load available targets, model info, and training data on component mount
   useEffect(() => {
     loadGnosisIInfo();
     loadAvailableTargets();
+    loadTrainingData();
   }, []);
 
   const loadGnosisIInfo = async () => {
@@ -110,6 +112,17 @@ const LigandActivityPredictor = () => {
       setModelInfo(response.data);
     } catch (error) {
       console.error('Error loading Gnosis I info:', error);
+    }
+  };
+
+  const loadTrainingData = async () => {
+    try {
+      const response = await axios.get(`${API}/gnosis-i/training-data`);
+      if (response.data.available) {
+        setTrainingData(response.data.training_data);
+      }
+    } catch (error) {
+      console.error('Error loading training data:', error);
     }
   };
 
