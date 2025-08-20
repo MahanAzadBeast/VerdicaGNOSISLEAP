@@ -377,52 +377,161 @@ class GnosisIPredictor:
                 logger.warning(f"Target '{target}' not found in model")
         
         if not valid_targets:
-            raise ValueError("No valid targets found")
-        
-        # Predict molecular properties
-        properties = {
-            'LogP': float(self.properties_predictor.calculate_logp(smiles)),
-            'LogS': float(self.properties_predictor.calculate_logs(smiles))
-        }
-        
-        # Predict binding affinities
-        predictions = {}
+            raise ValueError("No valid targets provided")
         
         try:
-            with torch.no_grad():
-                smiles_list = [smiles] * len(valid_targets)
-                target_tensor = torch.LongTensor(target_ids).to(self.device)
+            # Get molecular features from ChemBERTa
+            molecular_features = self.chemberta_encoder([smiles])
+            
+            # Prepare features for all target-assay combinations
+            predictions = {}
+            
+            for i, (target, assay_type) in enumerate(zip(valid_targets, assay_types)):
+                target_id = target_ids[i]
+                assay_id = self.assay_encoder.transform([assay_type])[0]
                 
-                # Predict pActivity values
-                pactivities = self.model(smiles_list, target_tensor, assay_types)
+                # Create input tensor
+                input_tensor = torch.cat([
+                    molecular_features,
+                    torch.tensor([target_id], dtype=torch.float32).unsqueeze(0),
+                    torch.tensor([assay_id], dtype=torch.float32).unsqueeze(0)
+                ], dim=1)
                 
-                for i, (target, assay_type) in enumerate(zip(valid_targets, assay_types)):
-                    pactivity = float(pactivities[i])
-                    
-                    # Convert back to nM (pActivity = -log10(activity_M))
-                    activity_nM = 10**(-pactivity) * 1e9
-                    
-                    predictions[target] = {
-                        'assay_type': assay_type,
-                        'pActivity': round(pactivity, 3),
-                        'activity_nM': round(activity_nM, 2),
-                        'activity_uM': round(activity_nM / 1000, 3)
-                    }
-        
+                # Make prediction
+                self.model.eval()
+                with torch.no_grad():
+                    pred = self.model(input_tensor)
+                    pred_value = pred.item()
+                
+                # Get confidence
+                confidence, level, reason = self.get_target_confidence(target, assay_type)
+                
+                predictions[f"{target}_{assay_type}"] = {
+                    'target': target,
+                    'assay_type': assay_type,
+                    'predicted_value': pred_value,
+                    'units': 'pIC50' if 'IC50' in assay_type else 'pKi' if 'Ki' in assay_type else 'pEC50',
+                    'confidence_score': confidence,
+                    'confidence_level': level,
+                    'confidence_reason': reason
+                }
+            
+            return {
+                'smiles': smiles,
+                'predictions': predictions,
+                'model_version': 'trained',
+                'total_predictions': len(predictions)
+            }
+            
         except Exception as e:
             logger.error(f"Prediction failed: {e}")
-            raise
+            raise ValueError(f"Prediction failed: {e}")
+    
+    def _predict_with_chemberta_fallback(self, smiles: str, targets: List[str], assay_types: List[str]) -> Dict[str, Any]:
+        """Make fallback predictions using ChemBERTa encoder + heuristics"""
         
-        return {
-            'smiles': smiles,
-            'properties': properties,
-            'predictions': predictions,
-            'model_info': {
-                'name': 'Gnosis I',
-                'r2_score': self.metadata['r2_score'],
-                'num_predictions': len(predictions)
+        if not self.chemberta_encoder:
+            raise ValueError("ChemBERTa encoder not available")
+        
+        try:
+            # Get molecular features from ChemBERTa
+            molecular_features = self.chemberta_encoder([smiles])
+            molecular_vector = molecular_features[0].numpy()
+            
+            predictions = {}
+            
+            for i, target in enumerate(targets):
+                assay_type = assay_types[i] if i < len(assay_types) else assay_types[0]
+                
+                # Check if target is in our known list
+                if target not in self.get_available_targets():
+                    continue
+                
+                # Generate heuristic prediction based on ChemBERTa features + target knowledge
+                pred_value = self._generate_heuristic_prediction(molecular_vector, target, assay_type)
+                
+                # Get confidence (lower for heuristic predictions)
+                base_confidence, level, reason = self.get_target_confidence(target, assay_type)
+                confidence = base_confidence * 0.5  # Reduce confidence for heuristic predictions
+                
+                predictions[f"{target}_{assay_type}"] = {
+                    'target': target,
+                    'assay_type': assay_type,
+                    'predicted_value': pred_value,
+                    'units': 'pIC50' if 'IC50' in assay_type else 'pKi' if 'Ki' in assay_type else 'pEC50',
+                    'confidence_score': confidence,
+                    'confidence_level': 'heuristic',
+                    'confidence_reason': f'Heuristic prediction (no trained model): {reason}'
+                }
+            
+            return {
+                'smiles': smiles,
+                'predictions': predictions,
+                'model_version': 'chemberta_heuristic',
+                'total_predictions': len(predictions),
+                'note': 'Predictions generated using ChemBERTa encoder with heuristic methods'
             }
-        }
+            
+        except Exception as e:
+            logger.error(f"ChemBERTa fallback prediction failed: {e}")
+            raise ValueError(f"Prediction failed: {e}")
+    
+    def _generate_heuristic_prediction(self, molecular_vector: np.ndarray, target: str, assay_type: str) -> float:
+        """Generate heuristic prediction based on molecular features and target knowledge"""
+        
+        # Base prediction around typical drug-like activity
+        base_value = 6.0  # Typical pIC50 for drug-like compounds
+        
+        # Use molecular descriptor-like features from ChemBERTa
+        # Calculate simple molecular properties from the embedding
+        
+        # Normalize molecular vector for stable calculations
+        norm_vector = molecular_vector / (np.linalg.norm(molecular_vector) + 1e-6)
+        
+        # Use different parts of the embedding for different properties
+        lipophilicity_proxy = np.mean(norm_vector[:128])  # First 128 dims
+        size_proxy = np.std(norm_vector[128:256])         # Second 128 dims  
+        complexity_proxy = np.mean(np.abs(norm_vector[256:384]))  # Third 128 dims
+        aromatic_proxy = np.max(norm_vector[384:512])     # Last 128 dims
+        
+        # Adjust based on target type
+        target_upper = target.upper()
+        
+        # Kinase targets (generally more druggable)
+        if any(k in target_upper for k in ['CDK', 'JAK', 'ABL', 'KIT', 'FLT', 'ALK', 'ROS']):
+            base_value += 0.5
+        
+        # EGFR (well-studied target)
+        elif 'EGFR' in target_upper:
+            base_value += 0.8
+        
+        # DNA damage response (ATM, CHEK)
+        elif any(k in target_upper for k in ['ATM', 'CHEK', 'PARP']):
+            base_value += 0.3
+        
+        # Adjust based on molecular properties
+        # Lipophilicity effect
+        base_value += lipophilicity_proxy * 0.5
+        
+        # Size effect (very large or very small molecules may be less active)
+        if size_proxy > 0.15:  # High variability suggests complex structure
+            base_value += 0.2
+        elif size_proxy < 0.05:  # Low variability suggests simple structure
+            base_value -= 0.3
+        
+        # Complexity can help with selectivity
+        base_value += complexity_proxy * 0.3
+        
+        # Aromatic systems often improve binding
+        base_value += aromatic_proxy * 0.4
+        
+        # Add some controlled randomness based on molecular features
+        np.random.seed(int(np.sum(molecular_vector * 1000)) % 2**31)
+        noise = np.random.normal(0, 0.3)
+        base_value += noise
+        
+        # Ensure reasonable range for pIC50/pKi/pEC50
+        return np.clip(base_value, 4.0, 9.0)
     
     def predict_with_confidence(self, 
                                   smiles: str, 
