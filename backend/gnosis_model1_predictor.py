@@ -657,11 +657,23 @@ class GnosisIPredictor:
 # Global instance for backend use
 gnosis_predictor = None
 
-def initialize_gnosis_predictor(model_path: str):
+def initialize_gnosis_predictor(model_path: str = None):
     """Initialize the global Gnosis I predictor"""
     global gnosis_predictor
-    gnosis_predictor = GnosisIPredictor(model_path)
-    return gnosis_predictor
+    try:
+        if model_path and os.path.exists(model_path):
+            gnosis_predictor = GnosisIPredictor(model_path)
+            logger.info("✅ Gnosis I initialized with trained model")
+        else:
+            # Initialize without model file but with ChemBERTa encoder
+            gnosis_predictor = GnosisIPredictor()
+            logger.info("⚠️ Gnosis I initialized without trained model (ChemBERTa encoder available)")
+        return gnosis_predictor
+    except Exception as e:
+        logger.error(f"Failed to initialize Gnosis I: {e}")
+        # Still create an instance for basic functionality
+        gnosis_predictor = GnosisIPredictor()
+        return gnosis_predictor
 
 def get_gnosis_predictor():
     """Get the global Gnosis I predictor instance"""
