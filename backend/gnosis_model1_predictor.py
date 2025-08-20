@@ -662,8 +662,13 @@ class GnosisIPredictor:
                 # Get data-driven confidence for this target-assay combination
                 base_confidence, quality_level, confidence_note = self.get_target_confidence(target, assay_type)
                 
-                # SKIP predictions entirely for assay types without training data
-                if quality_level in ['insufficient', 'not_trained']:
+                # COMPLETELY SKIP Ki predictions - training data appears invalid
+                if assay_type == 'Ki':
+                    # Skip Ki predictions entirely due to unrealistic values in training
+                    continue
+                
+                # SKIP predictions entirely for assay types without sufficient training data
+                if quality_level in ['insufficient', 'not_trained', 'minimal']:
                     # Skip this target-assay combination entirely - no prediction returned
                     continue
                 
