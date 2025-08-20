@@ -106,6 +106,14 @@ const LigandActivityPredictor = () => {
     loadTrainingData();
   }, []);
 
+  // Update filtered targets when assay types or training data changes
+  useEffect(() => {
+    if (availableTargets && trainingData) {
+      const filtered = filterTargetsByAssayTypes(availableTargets, selectedAssayTypes);
+      setAvailableTargetsFiltered(filtered);
+    }
+  }, [availableTargets, selectedAssayTypes, trainingData]);
+
   const loadGnosisIInfo = async () => {
     try {
       const response = await axios.get(`${API}/gnosis-i/info`);
