@@ -621,7 +621,7 @@ const LigandActivityPredictor = () => {
               <tbody className="bg-gray-800 divide-y divide-gray-700">
                 {Object.entries(targetPredictions).map(([target, targetData], index) => {
                   // Show only selected assay types that have data
-                  const assayTypeMap = {'IC50': ['Binding_IC50', 'Functional_IC50'], 'Ki': ['Ki'], 'EC50': ['EC50']};
+                  const assayTypeMap = {'IC50': ['Binding_IC50', 'Functional_IC50'], 'EC50': ['EC50']};
                   const availableAssayTypes = [];
                   
                   selectedAssayTypes.forEach(selectedType => {
