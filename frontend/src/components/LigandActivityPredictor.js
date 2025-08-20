@@ -937,7 +937,7 @@ const LigandActivityPredictor = () => {
           {/* Dynamic Assay Type Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Select Assay Types (targets filtered in real-time)
+              Select Assay Types - {availableTargetsFiltered?.available_targets?.length || 0} targets available for selected assays
             </label>
             <div className="grid grid-cols-2 gap-4">
               {['IC50', 'EC50'].map(assayType => {
