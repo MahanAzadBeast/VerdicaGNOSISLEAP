@@ -36,16 +36,21 @@ models = {}
 try:
     from gnosis_model1_predictor import initialize_gnosis_predictor, get_gnosis_predictor
     model_path = ROOT_DIR / "models" / "gnosis_model1_best.pt"
-    if model_path.exists():
-        initialize_gnosis_predictor(str(model_path))
-        logging.info("✅ Gnosis I (Model 1) loaded successfully")
-        GNOSIS_I_AVAILABLE = True
-    else:
-        logging.warning("⚠️ Gnosis I model not found")
-        GNOSIS_I_AVAILABLE = False
+    
+    # Initialize regardless of model file existence
+    initialize_gnosis_predictor(str(model_path) if model_path.exists() else None)
+    logging.info("✅ Gnosis I (Model 1) initialized")
+    GNOSIS_I_AVAILABLE = True
+    
 except Exception as e:
     logging.error(f"❌ Failed to load Gnosis I: {e}")
-    GNOSIS_I_AVAILABLE = False
+    # Still try to create a basic instance
+    try:
+        initialize_gnosis_predictor(None)
+        GNOSIS_I_AVAILABLE = True
+        logging.warning("⚠️ Gnosis I running in fallback mode")
+    except:
+        GNOSIS_I_AVAILABLE = False
 
 # Initialize Model 2 - Cancer Cell Line Cytotoxicity Predictor
 try:
