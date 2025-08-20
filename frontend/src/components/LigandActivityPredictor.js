@@ -10,35 +10,6 @@ const LigandActivityPredictor = () => {
   const [selectedTargets, setSelectedTargets] = useState(['all']);
   const [selectedAssayTypes, setSelectedAssayTypes] = useState(['IC50', 'Ki', 'EC50']); // User can choose assay types
   const [availableTargetsFiltered, setAvailableTargetsFiltered] = useState(null);
-
-  // Target training data availability (synced with backend)
-  const targetTrainingData = {
-    'ATM': {'IC50': 12, 'Ki': 891, 'EC50': 0},
-    'CHEK2': {'IC50': 358, 'Ki': 524, 'EC50': 3},
-    'CHEK1': {'IC50': 848, 'Ki': 26, 'EC50': 76},
-    'PIK3CB': {'IC50': 785, 'Ki': 86, 'EC50': 0},
-    'PIK3CG': {'IC50': 845, 'Ki': 15, 'EC50': 0},
-    'YES1': {'IC50': 75, 'Ki': 592, 'EC50': 0},
-    'PIK3CA': {'IC50': 315, 'Ki': 521, 'EC50': 0},
-    'ROS1': {'IC50': 418, 'Ki': 426, 'EC50': 0},
-    'FLT4': {'IC50': 238, 'Ki': 588, 'EC50': 12},
-    'PDGFRA': {'IC50': 488, 'Ki': 322, 'EC50': 6},
-    'PARP1': {'IC50': 529, 'Ki': 241, 'EC50': 127},
-    'PLK1': {'IC50': 108, 'Ki': 701, 'EC50': 1},
-    'EGFR': {'IC50': 631, 'Ki': 147, 'EC50': 0},
-    'BRAF': {'IC50': 560, 'Ki': 165, 'EC50': 11},
-    'MET': {'IC50': 581, 'Ki': 143, 'EC50': 4},
-    'ABL1': {'IC50': 401, 'Ki': 143, 'EC50': 0},
-    'CDK4': {'IC50': 792, 'Ki': 61, 'EC50': 0},
-    'CDK2': {'IC50': 734, 'Ki': 58, 'EC50': 0},
-    'RAF1': {'IC50': 865, 'Ki': 3, 'EC50': 0},
-    'AURKA': {'IC50': 746, 'Ki': 116, 'EC50': 0},
-    'MTOR': {'IC50': 835, 'Ki': 43, 'EC50': 1},
-    'PARP2': {'IC50': 570, 'Ki': 45, 'EC50': 0},
-    'KIT': {'IC50': 420, 'Ki': 135, 'EC50': 3},
-    'JAK2': {'IC50': 700, 'Ki': 93, 'EC50': 0},
-    'ALK': {'IC50': 405, 'Ki': 476, 'EC50': 0}
-  };
   const [predictions, setPredictions] = useState(null);
   const [sortBy, setSortBy] = useState({ column: null, direction: 'asc' });
   const [isExporting, setIsExporting] = useState(false);
