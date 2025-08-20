@@ -289,7 +289,12 @@ class GnosisIPredictor:
     
     def get_available_targets(self) -> List[str]:
         """Get list of available protein targets"""
-        return self.target_list.copy() if self.target_list else []
+        # If model is loaded, return loaded targets
+        if self.target_list:
+            return self.target_list.copy()
+        
+        # Fallback: Return available targets from training data if model not loaded
+        return list(self.target_training_data.keys())
     
     def get_target_categories(self) -> Dict[str, List[str]]:
         """Categorize targets into oncoproteins and tumor suppressors"""
