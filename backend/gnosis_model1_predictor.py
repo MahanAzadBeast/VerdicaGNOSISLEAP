@@ -210,8 +210,18 @@ class GnosisIPredictor:
             'minimal': 10      # 10-24 samples = minimal confidence
         }
         
+        # Initialize ChemBERTa encoder regardless of model file availability
+        try:
+            self.chemberta_encoder = FineTunedChemBERTaEncoder()
+            logger.info("✅ ChemBERTa encoder initialized successfully")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize ChemBERTa encoder: {e}")
+            self.chemberta_encoder = None
+        
         if model_path:
             self.load_model(model_path)
+        else:
+            logger.info("ℹ️ Gnosis I initialized without trained model - using ChemBERTa encoder only")
     
     def get_target_confidence(self, target: str, assay_type: str):
         """Get confidence level for target-assay combination based on training data"""
