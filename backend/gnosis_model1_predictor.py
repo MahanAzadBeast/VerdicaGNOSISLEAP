@@ -345,18 +345,25 @@ class GnosisIPredictor:
                       assay_types: Union[str, List[str]] = 'IC50') -> Dict[str, Any]:
         """Predict activity for a single compound against target(s)"""
         
-        if not self.model:
-            raise ValueError("Model not loaded. Call load_model() first.")
-        
         # Handle single target/assay input
         if isinstance(targets, str):
             if targets.lower() == 'all':
-                targets = self.target_list
+                targets = self.get_available_targets()
             else:
                 targets = [targets]
         
         if isinstance(assay_types, str):
             assay_types = [assay_types] * len(targets)
+        
+        # If we have a trained model, use it
+        if self.model:
+            return self._predict_with_trained_model(smiles, targets, assay_types)
+        else:
+            # Fallback: Use ChemBERTa encoder with heuristic predictions
+            return self._predict_with_chemberta_fallback(smiles, targets, assay_types)
+    
+    def _predict_with_trained_model(self, smiles: str, targets: List[str], assay_types: List[str]) -> Dict[str, Any]:
+        """Make predictions using the trained model"""
         
         # Validate targets
         valid_targets = []
