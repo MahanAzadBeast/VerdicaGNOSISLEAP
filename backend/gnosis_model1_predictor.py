@@ -225,33 +225,45 @@ class GnosisIPredictor:
     
     def get_target_confidence(self, target: str, assay_type: str):
         """Get confidence level for target-assay combination based on training data"""
-        if target not in self.target_training_data:
-            return 0.3, 'not_trained', f'Target {target} not in core training set'
         
-        target_data = self.target_training_data[target]
+        # If we have specific training statistics, use them
+        if target in self.target_training_data:
+            target_data = self.target_training_data[target]
+            
+            # Map assay types to training data keys
+            assay_map = {
+                'Binding_IC50': 'IC50', 
+                'Functional_IC50': 'IC50', 
+                'Ki': 'Ki', 
+                'EC50': 'EC50',
+                'Kd': 'Kd'
+            }
+            training_assay = assay_map.get(assay_type, 'IC50')
+            
+            sample_count = target_data.get(training_assay, 0)
+            
+            if sample_count >= self.confidence_thresholds['excellent']:
+                return 0.9, 'excellent', f'{sample_count} training samples'
+            elif sample_count >= self.confidence_thresholds['good']:
+                return 0.8, 'good', f'{sample_count} training samples'
+            elif sample_count >= self.confidence_thresholds['limited']:
+                return 0.6, 'limited', f'{sample_count} training samples'
+            elif sample_count >= self.confidence_thresholds['minimal']:
+                return 0.4, 'minimal', f'{sample_count} training samples'
+            else:
+                return 0.2, 'insufficient', f'Only {sample_count} training samples'
         
-        # Map assay types to training data keys
-        assay_map = {
-            'Binding_IC50': 'IC50', 
-            'Functional_IC50': 'IC50', 
-            'Ki': 'Ki', 
-            'EC50': 'EC50',
-            'Kd': 'Kd'
-        }
-        training_assay = assay_map.get(assay_type, 'IC50')
+        # For targets not in detailed statistics but in model target list, provide moderate confidence
+        elif target in self.target_list:
+            # Model was trained on this target, but we don't have detailed sample counts
+            # EC50 is generally less available than IC50
+            if assay_type == 'EC50':
+                return 0.4, 'limited', f'EC50 data limited for {target}'
+            else:
+                return 0.6, 'good', f'IC50 training available for {target}'
         
-        sample_count = target_data.get(training_assay, 0)
-        
-        if sample_count >= self.confidence_thresholds['excellent']:
-            return 0.9, 'excellent', f'{sample_count} training samples'
-        elif sample_count >= self.confidence_thresholds['good']:
-            return 0.8, 'good', f'{sample_count} training samples'
-        elif sample_count >= self.confidence_thresholds['limited']:
-            return 0.6, 'limited', f'{sample_count} training samples'
-        elif sample_count >= self.confidence_thresholds['minimal']:
-            return 0.4, 'minimal', f'{sample_count} training samples'
         else:
-            return 0.2, 'insufficient', f'Only {sample_count} training samples'
+            return 0.3, 'not_trained', f'Target {target} not in core training set'
 
     def load_model(self, model_path: str):
         """Load the trained Gnosis I model"""
