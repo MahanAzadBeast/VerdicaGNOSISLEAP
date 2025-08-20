@@ -309,7 +309,10 @@ class GnosisIPredictor:
         # Common tumor suppressors  
         tumor_suppressor_keywords = ['TP53', 'RB1', 'BRCA', 'APC', 'VHL', 'NF1', 'PTEN', 'ATM', 'CHEK']
         
-        for target in self.target_list:
+        # Use get_available_targets() instead of self.target_list directly
+        available_targets = self.get_available_targets()
+        
+        for target in available_targets:
             target_upper = target.upper()
             
             if any(keyword in target_upper for keyword in oncoprotein_keywords):
@@ -323,7 +326,7 @@ class GnosisIPredictor:
             'oncoproteins': sorted(oncoproteins),
             'tumor_suppressors': sorted(tumor_suppressors),
             'other_targets': sorted(other_targets),
-            'all_targets': sorted(self.target_list)
+            'all_targets': sorted(available_targets)
         }
     
     def predict_single(self, 
