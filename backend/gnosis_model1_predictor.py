@@ -626,8 +626,14 @@ class GnosisIPredictor:
             target_tensor = torch.LongTensor([self.target_encoder.transform([combo[0]])[0] for combo in all_combinations]).to(self.device)
             assay_list = [combo[1] for combo in all_combinations]
             
-            # Enable dropout for uncertainty estimation
-            self.model.train()
+            # Enable dropout for uncertainty estimation but keep BatchNorm in eval mode
+            # to avoid "Expected more than 1 value per channel" error with single samples
+            self.model.eval()  # Keep in eval mode to avoid BatchNorm issues
+            
+            # Enable only dropout layers for uncertainty estimation
+            for module in self.model.modules():
+                if isinstance(module, nn.Dropout):
+                    module.train()
             
             # Run multiple forward passes with dropout enabled
             mc_predictions = []
@@ -636,7 +642,7 @@ class GnosisIPredictor:
                     pactivities = self.model(smiles_list, target_tensor, assay_list)
                     mc_predictions.append(pactivities.cpu().numpy())
             
-            # Disable dropout for final mode
+            # Ensure model is in eval mode
             self.model.eval()
             
             # Calculate statistics and organize by target
