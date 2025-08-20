@@ -183,39 +183,10 @@ const LigandActivityPredictor = () => {
     setSelectedAssayTypes(newSelectedTypes);
   };
 
-  // Filter available targets based on selected assay types
+  // No filtering needed - backend handles assay availability
   const filterTargetsByAssayTypes = (targets, assayTypes) => {
-    if (!targets || !targets.categorized_targets) return targets;
-
-    const minSampleThresholds = { 'IC50': 10, 'Ki': 10, 'EC50': 10 };
-    
-    const filterTargetList = (targetList) => {
-      return targetList.filter(target => {
-        // Check if target has data in our mapping
-        if (!targetTrainingData[target]) return false;
-        
-        // Check if target has sufficient data for ALL selected assay types
-        return assayTypes.every(assayType => {
-          const samples = targetTrainingData[target][assayType] || 0;
-          return samples >= minSampleThresholds[assayType];
-        });
-      });
-    };
-
-    return {
-      ...targets,
-      categorized_targets: {
-        oncoproteins: filterTargetList(targets.categorized_targets.oncoproteins || []),
-        tumor_suppressors: filterTargetList(targets.categorized_targets.tumor_suppressors || []),
-        other_targets: filterTargetList(targets.categorized_targets.other_targets || []),
-        all_targets: [...filterTargetList(targets.categorized_targets.oncoproteins || []), 
-                     ...filterTargetList(targets.categorized_targets.tumor_suppressors || []), 
-                     ...filterTargetList(targets.categorized_targets.other_targets || [])]
-      },
-      available_targets: [...filterTargetList(targets.categorized_targets.oncoproteins || []), 
-                         ...filterTargetList(targets.categorized_targets.tumor_suppressors || []), 
-                         ...filterTargetList(targets.categorized_targets.other_targets || [])]
-    };
+    // Return all targets - backend will only return predictions for available assay types
+    return targets;
   };
 
   // Update filtered targets when assay types change
