@@ -8,7 +8,7 @@ const API = `${BACKEND_URL}/api`;
 const LigandActivityPredictor = () => {
   const [smiles, setSmiles] = useState('');
   const [selectedTargets, setSelectedTargets] = useState(['all']);
-  const [selectedAssayTypes, setSelectedAssayTypes] = useState(['IC50', 'Ki', 'EC50']); // User can choose assay types
+  const [selectedAssayTypes, setSelectedAssayTypes] = useState(['IC50', 'EC50']); // Removed Ki due to invalid training data
   const [availableTargetsFiltered, setAvailableTargetsFiltered] = useState(null);
   const [predictions, setPredictions] = useState(null);
   const [sortBy, setSortBy] = useState({ column: null, direction: 'asc' });
