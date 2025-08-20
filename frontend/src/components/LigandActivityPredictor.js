@@ -939,10 +939,17 @@ const LigandActivityPredictor = () => {
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Select Assay Types (targets filtered in real-time)
             </label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               {['IC50', 'EC50'].map(assayType => {
                 const isSelected = selectedAssayTypes.includes(assayType);
-                const targetCount = availableTargetsFiltered?.available_targets?.length || 0;
+                
+                // Calculate how many targets have this specific assay type available
+                const targetsWithAssay = availableTargets?.available_targets?.filter(target => {
+                  const targetTraining = trainingData[target];
+                  if (!targetTraining) return false;
+                  const assayData = targetTraining[assayType];
+                  return assayData && assayData.available;
+                }).length || 0;
                 
                 return (
                   <label key={assayType} className={`flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all ${
@@ -961,9 +968,10 @@ const LigandActivityPredictor = () => {
                         {assayType === 'IC50' ? 'IC₅₀' : assayType}
                       </div>
                       <div className="text-xs opacity-75">
-                        {assayType === 'IC50' ? 'Binding & Functional' : 
-                         assayType === 'Ki' ? 'Equilibrium binding' : 
-                         'Functional potency'}
+                        {assayType === 'IC50' ? 'Binding & Functional' : 'Functional potency'}
+                      </div>
+                      <div className="text-xs mt-1 text-blue-300">
+                        {targetsWithAssay} targets available
                       </div>
                     </div>
                   </label>
