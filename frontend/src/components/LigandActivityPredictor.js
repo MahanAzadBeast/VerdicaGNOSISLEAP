@@ -167,10 +167,38 @@ const LigandActivityPredictor = () => {
     setSelectedAssayTypes(newSelectedTypes);
   };
 
-  // No filtering needed - backend handles assay availability
+  // Filter available targets based on selected assay types using training data
   const filterTargetsByAssayTypes = (targets, assayTypes) => {
-    // Return all targets - backend will only return predictions for available assay types
-    return targets;
+    if (!targets || !targets.categorized_targets || !trainingData) return targets;
+
+    const filterTargetList = (targetList) => {
+      return targetList.filter(target => {
+        // Check if target has training data available for ALL selected assay types
+        return assayTypes.every(assayType => {
+          const targetTraining = trainingData[target];
+          if (!targetTraining) return false;
+          
+          // Check if this assay type has sufficient training data
+          const assayData = targetTraining[assayType];
+          return assayData && assayData.available;
+        });
+      });
+    };
+
+    return {
+      ...targets,
+      categorized_targets: {
+        oncoproteins: filterTargetList(targets.categorized_targets.oncoproteins || []),
+        tumor_suppressors: filterTargetList(targets.categorized_targets.tumor_suppressors || []),
+        other_targets: filterTargetList(targets.categorized_targets.other_targets || []),
+        all_targets: [...filterTargetList(targets.categorized_targets.oncoproteins || []), 
+                     ...filterTargetList(targets.categorized_targets.tumor_suppressors || []), 
+                     ...filterTargetList(targets.categorized_targets.other_targets || [])]
+      },
+      available_targets: [...filterTargetList(targets.categorized_targets.oncoproteins || []), 
+                         ...filterTargetList(targets.categorized_targets.tumor_suppressors || []), 
+                         ...filterTargetList(targets.categorized_targets.other_targets || [])]
+    };
   };
 
   // Update filtered targets when assay types change
