@@ -79,10 +79,10 @@ const LigandActivityPredictor = () => {
         valueB = dataB.IC50?.pActivity || 0;
       } else if (sortBy.column === 'confidence') {
         // Sort by average confidence across assay types
-        const avgConfA = ['IC50', 'Ki', 'EC50'].reduce((sum, type) => 
-          sum + (dataA[type]?.confidence || 0), 0) / 3;
-        const avgConfB = ['IC50', 'Ki', 'EC50'].reduce((sum, type) => 
-          sum + (dataB[type]?.confidence || 0), 0) / 3;
+        const avgConfA = ['IC50', 'EC50'].reduce((sum, type) => 
+          sum + (dataA[type]?.confidence || 0), 0) / 2;
+        const avgConfB = ['IC50', 'EC50'].reduce((sum, type) => 
+          sum + (dataB[type]?.confidence || 0), 0) / 2;
         valueA = avgConfA;
         valueB = avgConfB;
       } else {
