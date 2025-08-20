@@ -662,46 +662,16 @@ class GnosisIPredictor:
                 # Get data-driven confidence for this target-assay combination
                 base_confidence, quality_level, confidence_note = self.get_target_confidence(target, assay_type)
                 
-                # Special handling based on assay type and confidence
-                if assay_type == 'Ki':
-                    # Enable Ki predictions for well-trained targets
-                    if quality_level in ['insufficient', 'not_trained']:
-                        predictions[target][assay_type] = {
-                            'pActivity': 0.0,  # Set to 0 to indicate no valid prediction
-                            'activity_nM': 1e9,  # Very high value indicating no binding
-                            'activity_uM': 1e6,  # 1M = no binding
-                            'sigma': 999.0,  # Very high uncertainty
-                            'confidence': 0.0,  # Zero confidence
-                            'mc_samples': int(n_samples),
-                            'is_reliable': False,
-                            'quality_flag': 'not_trained',
-                            'assay_type': assay_type,
-                            'confidence_note': f'Ki predictions not available - {confidence_note}'
-                        }
-                        continue
-                    else:
-                        # Ki predictions available - adjust confidence note
-                        confidence_note = f'Ki prediction based on {confidence_note}'
+                # SKIP predictions entirely for assay types without training data
+                if quality_level in ['insufficient', 'not_trained']:
+                    # Skip this target-assay combination entirely - no prediction returned
+                    continue
                 
+                # Special handling based on assay type (only for trained assays)
+                if assay_type == 'Ki':
+                    confidence_note = f'Ki prediction based on {confidence_note}'
                 elif assay_type == 'EC50':
-                    # Enable EC50 predictions for targets with EC50 training data
-                    if quality_level in ['insufficient', 'not_trained']:
-                        predictions[target][assay_type] = {
-                            'pActivity': 0.0,  # Set to 0 to indicate no valid prediction
-                            'activity_nM': 1e9,  # Very high value indicating no effect
-                            'activity_uM': 1e6,  # 1M = no effect
-                            'sigma': 999.0,  # Very high uncertainty
-                            'confidence': 0.0,  # Zero confidence
-                            'mc_samples': int(n_samples),
-                            'is_reliable': False,
-                            'quality_flag': 'not_trained',
-                            'assay_type': assay_type,
-                            'confidence_note': f'EC50 predictions not available - {confidence_note}'
-                        }
-                        continue
-                    else:
-                        # EC50 predictions available - adjust confidence note
-                        confidence_note = f'EC50 prediction based on {confidence_note}'
+                    confidence_note = f'EC50 prediction based on {confidence_note}'
                 
                 # Set reliability flags based on confidence level
                 if quality_level in ['excellent', 'good']:
