@@ -181,8 +181,8 @@ const LigandActivityPredictor = () => {
 
     const filterTargetList = (targetList) => {
       return targetList.filter(target => {
-        // Check if target has training data available for ALL selected assay types
-        return assayTypes.every(assayType => {
+        // Check if target has training data available for ANY of the selected assay types
+        return assayTypes.some(assayType => {
           const targetTraining = trainingData[target];
           if (!targetTraining) return false;
           
