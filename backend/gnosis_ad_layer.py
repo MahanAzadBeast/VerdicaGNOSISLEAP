@@ -908,7 +908,7 @@ class ApplicabilityDomainLayer:
             # Compute similarities
             neighbors = []
             for _, row in target_fp_df.iterrows():
-                target_fp = np.frombuffer(row['ecfp4_bytes'], dtype=int)
+                target_fp = np.frombuffer(row['ecfp4_bytes'], dtype=np.int8)
                 sim = tanimoto_similarity(query_fp, target_fp)
                 
                 neighbors.append({
