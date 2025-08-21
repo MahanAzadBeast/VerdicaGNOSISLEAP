@@ -1123,7 +1123,7 @@ async def predict_with_gnosis_i_and_ad(input_data: GnosisIPredictionInput):
                             base_prediction=base_prediction
                         )
                         
-                        # Enhance the prediction data with AD information
+                        # Enhance the prediction data with fast AD information
                         enhanced_prediction = prediction_data.copy()
                         enhanced_prediction.update({
                             'ad_score': ad_result.ad_score,
@@ -1132,12 +1132,9 @@ async def predict_with_gnosis_i_and_ad(input_data: GnosisIPredictionInput):
                             'ad_flags': ad_result.flags,
                             'nearest_neighbors': ad_result.nearest_neighbors,
                             'ad_components': {
-                                'tanimoto_score': ad_result.tanimoto_score,
-                                'mahalanobis_score': ad_result.mahalanobis_score,
-                                'knn_score': ad_result.knn_score,
-                                'leverage_score': ad_result.leverage_score,
-                                'protein_context_score': ad_result.protein_context_score,
-                                'assay_context_score': ad_result.assay_context_score
+                                'similarity_score': ad_result.similarity_score,
+                                'density_score': ad_result.density_score,
+                                'context_score': ad_result.context_score
                             }
                         })
                         
