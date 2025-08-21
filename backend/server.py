@@ -1212,7 +1212,26 @@ async def get_gnosis_i_info():
                 "LogS calculation"
             ],
             "version": "1.0",
-            "description": "Fine-tuned ChemBERTa model for ligand-target binding affinity prediction"
+            "description": "Fine-tuned ChemBERTa model for ligand-target binding affinity prediction",
+            "ad_layer": {
+                "available": GNOSIS_AD_AVAILABLE,
+                "capabilities": [
+                    "Multi-view AD scoring",
+                    "Conformal prediction intervals", 
+                    "Confidence calibration",
+                    "Mechanism gating",
+                    "Kinase sanity checks",
+                    "Nearest neighbor explanation"
+                ] if GNOSIS_AD_AVAILABLE else [],
+                "scoring_components": [
+                    "Tanimoto similarity (35%)",
+                    "Mahalanobis distance (25%)",
+                    "kNN density (20%)",
+                    "Leverage (10%)",
+                    "Protein context (5%)",
+                    "Assay context (5%)"
+                ] if GNOSIS_AD_AVAILABLE else []
+            }
         }
     
     except Exception as e:
