@@ -1559,6 +1559,8 @@ if PROPMOLFLOW_AVAILABLE:
 
 # Include routers
 app.include_router(reports_router)
+app.include_router(registry_router, prefix="/api")
+logging.info("✅ Model Registry router included in main app")
 
 app.add_middleware(
     CORSMiddleware,
