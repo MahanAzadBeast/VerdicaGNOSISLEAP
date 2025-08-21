@@ -1065,6 +1065,121 @@ async def predict_with_gnosis_i(input_data: GnosisIPredictionInput):
         logging.error(f"Error with Gnosis I prediction: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.post("/gnosis-i/predict-with-ad")
+async def predict_with_gnosis_i_and_ad(input_data: GnosisIPredictionInput):
+    """Predict ligand activity using Gnosis I model enhanced with Applicability Domain scoring"""
+    
+    if not GNOSIS_I_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Gnosis I model not available")
+    
+    if not GNOSIS_AD_AVAILABLE:
+        # Fall back to regular prediction if AD not available
+        return await predict_with_gnosis_i(input_data)
+    
+    # Validate SMILES
+    if not validate_smiles(input_data.smiles):
+        raise HTTPException(status_code=400, detail="Invalid SMILES string")
+    
+    try:
+        predictor = get_gnosis_predictor()
+        if not predictor:
+            raise HTTPException(status_code=503, detail="Gnosis I predictor not initialized")
+        
+        # Get AD layer
+        ad_layer = get_ad_layer()
+        if not ad_layer:
+            # Fall back to regular prediction
+            return await predict_with_gnosis_i(input_data)
+        
+        # Make regular prediction first
+        gnosis_result = predictor.predict_with_confidence(
+            smiles=input_data.smiles,
+            targets=input_data.targets,
+            assay_types=input_data.assay_types,
+            n_samples=30  # Monte-Carlo dropout samples
+        )
+        
+        # Enhance predictions with AD scoring
+        enhanced_predictions = {}
+        
+        # Process each target in the prediction results
+        target_list = gnosis_result['predictions'].keys()
+        
+        for target in target_list:
+            target_predictions = gnosis_result['predictions'][target]
+            enhanced_target_predictions = {}
+            
+            # Process each assay type for this target
+            for assay_type, prediction_data in target_predictions.items():
+                try:
+                    if assay_type not in ['selectivity_ratio']:  # Skip non-prediction fields
+                        # Get base prediction value (pActivity)
+                        base_prediction = prediction_data.get('pActivity', 6.0)
+                        
+                        # Score with AD layer
+                        ad_result = ad_layer.score_with_ad(
+                            ligand_smiles=input_data.smiles,
+                            target_id=target,
+                            base_prediction=base_prediction
+                        )
+                        
+                        # Enhance the prediction data with AD information
+                        enhanced_prediction = prediction_data.copy()
+                        enhanced_prediction.update({
+                            'ad_score': ad_result.ad_score,
+                            'confidence_calibrated': ad_result.confidence_calibrated,
+                            'potency_ci': ad_result.potency_ci,
+                            'ad_flags': ad_result.flags,
+                            'nearest_neighbors': ad_result.nearest_neighbors,
+                            'ad_components': {
+                                'tanimoto_score': ad_result.tanimoto_score,
+                                'mahalanobis_score': ad_result.mahalanobis_score,
+                                'knn_score': ad_result.knn_score,
+                                'leverage_score': ad_result.leverage_score,
+                                'protein_context_score': ad_result.protein_context_score,
+                                'assay_context_score': ad_result.assay_context_score
+                            }
+                        })
+                        
+                        enhanced_target_predictions[assay_type] = enhanced_prediction
+                    else:
+                        # Copy non-prediction fields as-is
+                        enhanced_target_predictions[assay_type] = prediction_data
+                        
+                except Exception as e:
+                    logging.warning(f"AD scoring failed for {target}/{assay_type}: {e}")
+                    # Fall back to original prediction
+                    enhanced_target_predictions[assay_type] = prediction_data
+            
+            enhanced_predictions[target] = enhanced_target_predictions
+        
+        # Create enhanced result
+        enhanced_result = gnosis_result.copy()
+        enhanced_result['predictions'] = enhanced_predictions
+        enhanced_result['model_info']['ad_enhanced'] = True
+        enhanced_result['model_info']['ad_version'] = '1.0'
+        
+        # Store enhanced prediction in MongoDB
+        prediction_record = {
+            "id": str(uuid.uuid4()),
+            "model": "Gnosis I + AD",
+            "smiles": input_data.smiles,
+            "targets": input_data.targets,
+            "assay_types": input_data.assay_types,
+            "predictions": enhanced_result['predictions'],
+            "properties": enhanced_result['properties'],
+            "timestamp": datetime.utcnow(),
+            "model_info": enhanced_result['model_info'],
+            "ad_enhanced": True
+        }
+        await db.gnosis_predictions.insert_one(prediction_record)
+        
+        return enhanced_result
+    
+    except Exception as e:
+        logging.error(f"Error with Gnosis I + AD prediction: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.get("/gnosis-i/info")
 async def get_gnosis_i_info():
     """Get Gnosis I model information"""
