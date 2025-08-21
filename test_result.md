@@ -102,7 +102,32 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Update database integration pipeline to remove DTC, replace with GDSC, and use real API connections for PubChem, BindingDB, and GDSC. Build Cell Line Response Model with genomic features for IC₅₀ prediction in cancer cell lines."
+user_problem_statement: "Implement the Applicability Domain (AD) layer for Gnosis I (Ligand Activity Predictor) that computes per-target AD scores from multiple views, calibrates confidence and returns conformal intervals, gates or penalizes implausible kinase predictions, and integrates into the existing inference API without retraining."
+
+backend:
+  - task: "Gnosis I AD Layer Foundation"
+    implemented: true
+    working: true
+    file: "/app/backend/gnosis_ad_layer.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "COMPLETED: Implemented comprehensive Applicability Domain layer with all specified components: 1) SMILES standardization using RDKit with salt removal and reionization, 2) Per-target fingerprint database with ECFP4 fingerprints and deduplication, 3) Per-target embedding statistics with Ledoit-Wolf covariance shrinkage and FAISS kNN indices, 4) Multi-view AD scoring (Tanimoto, Mahalanobis, kNN density, leverage, protein/assay context) with weighted aggregation, 5) Conformal prediction intervals with target-specific quantiles, 6) Confidence calibration using isotonic regression, 7) Mechanism gating for kinases with hinge binder classification, 8) Nearest neighbor explanation with top-5 similar compounds, 9) Complete caching system for persistence, 10) Main score_with_ad() API function as specified. Fixed fingerprint computation issues by using DataStructs.ConvertToNumpyArray instead of ToBitString. All tests passing successfully."
+
+  - task: "AD Layer Testing and Validation"
+    implemented: true
+    working: true
+    file: "/app/backend/test_ad_layer.py, /app/backend/ad_mock_data.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "IMPLEMENTED: Created comprehensive test suite for AD layer including: 1) SMILES standardization tests with various molecular structures, 2) Mock training data generator with realistic drug-like compounds across 5 targets, 3) AD layer initialization tests with fingerprint database and PCA-based embedding statistics, 4) AD scoring tests showing proper OOD detection (compounds flagged with AD scores <0.5, confidence <0.2, widened CIs), 5) Integration framework with existing Gnosis I predictor. All tests pass successfully with proper error handling and caching functionality."
 
 backend:
   - task: "Gnosis I Enhanced Multi-Assay Functionality"
