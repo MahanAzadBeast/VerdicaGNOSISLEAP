@@ -332,7 +332,7 @@ class PerTargetEmbeddingStats:
                 ligand_ids = []
                 
                 for _, row in fp_df.iterrows():
-                    fp_array = np.frombuffer(row['ecfp4_bytes'], dtype=int)
+                    fp_array = np.frombuffer(row['ecfp4_bytes'], dtype=np.int8)
                     fps.append(fp_array)
                     ligand_ids.append(row['ligand_id'])
                 
