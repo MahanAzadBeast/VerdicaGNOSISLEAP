@@ -18,6 +18,7 @@ from .schemas import (
 from .database import get_db_manager, DatabaseManager
 from .s3_manager import get_s3_manager, S3Manager
 from .manifest_manager import get_manifest_manager, ManifestManager
+from .agent_discovery import get_discovery_agent, ModelDiscoveryAgent
 
 logger = logging.getLogger(__name__)
 
