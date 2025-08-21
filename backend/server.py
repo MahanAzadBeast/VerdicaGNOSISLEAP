@@ -414,10 +414,14 @@ async def get_gnosis_i_targets():
             ])]
         }
         
-        other_targets = [t for t in targets if t not in categorized_targets["kinases"] 
-                        and t not in categorized_targets["oncoproteins"] 
-                        and t not in categorized_targets["tumor_suppressors"]]
+        # Create other_targets as targets not in any specific category
+        categorized_set = set()
+        categorized_set.update(categorized_targets["kinases"])
+        categorized_set.update(categorized_targets["oncoproteins"]) 
+        categorized_set.update(categorized_targets["tumor_suppressors"])
+        categorized_set.update(categorized_targets["gpcrs"])
         
+        other_targets = [t for t in targets if t not in categorized_set]
         categorized_targets["other_targets"] = other_targets
         
         return {
