@@ -19,7 +19,12 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import hashlib
 
 # Project imports
-from gnosis_model2_predictor import GnosisIIPredictor
+try:
+    from gnosis_model2_predictor import GnosisIIPredictor
+    MODEL2_IMPORT_AVAILABLE = True
+except ImportError:
+    MODEL2_IMPORT_AVAILABLE = False
+    logging.warning("⚠️ gnosis_model2_predictor not available")
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
