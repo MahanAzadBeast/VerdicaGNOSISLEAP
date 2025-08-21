@@ -105,7 +105,7 @@
 user_problem_statement: "Implement the Applicability Domain (AD) layer for Gnosis I (Ligand Activity Predictor) that computes per-target AD scores from multiple views, calibrates confidence and returns conformal intervals, gates or penalizes implausible kinase predictions, and integrates into the existing inference API without retraining. Performance optimization required: Cut latency to <5s without losing accuracy, calibrate AD so drug-like in-domain ligands score high and aspirin-like ligands score low, keep API stable."
 
 backend:
-  - task: "Gnosis I AD Layer Foundation"
+  - task: "Gnosis I High-Performance AD Layer (HP-AD v2.0)"
     implemented: true
     working: true
     file: "/app/backend/hp_ad_layer.py"
