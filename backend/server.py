@@ -358,6 +358,7 @@ async def get_gnosis_i_targets():
         
         return {
             "total_targets": len(targets),
+            "available_targets": targets,  # Frontend expects this key
             "categorized_targets": categorized_targets,
             "target_training_data": target_training_data
         }
