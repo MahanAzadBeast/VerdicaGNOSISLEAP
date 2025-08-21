@@ -475,7 +475,7 @@ async def predict_with_gnosis_i(input_data: GnosisIPredictionInput):
             "timestamp": datetime.utcnow(),
             "model_info": result['model_info']
         }
-        if db:
+        if db is not None:
             await db.gnosis_predictions.insert_one(prediction_record)
         
         return GnosisIPredictionResult(**result)
