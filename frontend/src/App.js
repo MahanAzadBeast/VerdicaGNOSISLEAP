@@ -112,7 +112,7 @@ const HomeTab = ({ setActiveTab }) => {
         {/* Clickable overlay */}
         <div 
           className="absolute inset-0 z-10 cursor-pointer"
-          onClick={handleSplineClick}
+          onClick={handleStartClick}
           title="Click to start prediction"
         />
       </div>
