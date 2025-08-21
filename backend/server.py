@@ -250,15 +250,19 @@ async def predict_molecular_properties(input_data: PredictionInput):
         raise HTTPException(status_code=400, detail="Invalid SMILES string")
     
     try:
-        # Use the production model loader
-        from production_model import ProductionModelLoader
-        
-        loader = ProductionModelLoader()
-        predictions = await loader.predict_molecular_properties(
-            smiles=input_data.smiles,
-            targets=input_data.targets,
-            assay_types=input_data.assay_types
-        )
+        # Use the production model loader if available
+        if model_loader is not None:
+            predictions = await model_loader.predict_molecular_properties(
+                smiles=input_data.smiles,
+                targets=input_data.targets,
+                assay_types=input_data.assay_types
+            )
+        else:
+            # Fallback when production model loader not available
+            predictions = {
+                "smiles": input_data.smiles,
+                "error": "ProductionModelLoader not available - service in maintenance mode"
+            }
         
         # Store in MongoDB if available
         if db:
