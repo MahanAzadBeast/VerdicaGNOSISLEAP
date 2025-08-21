@@ -18,6 +18,7 @@ import json
 
 # Import routers
 from reports.routes import router as reports_router
+from model_registry.api import registry_router
 
 warnings.filterwarnings("ignore")
 
