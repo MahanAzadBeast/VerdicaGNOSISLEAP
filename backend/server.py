@@ -294,20 +294,21 @@ async def batch_predict(input_data: BatchPredictionInput):
         raise HTTPException(status_code=400, detail=f"Invalid SMILES: {invalid_smiles}")
     
     try:
-        from production_model import ProductionModelLoader
-        loader = ProductionModelLoader()
-        
-        results = []
-        for smiles in input_data.smiles_list:
-            predictions = await loader.predict_molecular_properties(
-                smiles=smiles,
-                targets=input_data.targets,
-                assay_types=input_data.assay_types
-            )
-            results.append({
-                "smiles": smiles,
-                "predictions": predictions
-            })
+        if model_loader is not None:
+            results = []
+            for smiles in input_data.smiles_list:
+                predictions = await model_loader.predict_molecular_properties(
+                    smiles=smiles,
+                    targets=input_data.targets,
+                    assay_types=input_data.assay_types
+                )
+                results.append({
+                    "smiles": smiles,
+                    "predictions": predictions
+                })
+        else:
+            results = [{"smiles": smiles, "error": "ProductionModelLoader not available"} 
+                      for smiles in input_data.smiles_list]
         
         return {"results": results}
     
