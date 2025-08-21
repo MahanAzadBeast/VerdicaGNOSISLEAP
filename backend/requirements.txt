@@ -22,3 +22,6 @@ modal
 weasyprint
 jinja2
 reportlab
+pydantic
+PyYAML
+python-multipart
