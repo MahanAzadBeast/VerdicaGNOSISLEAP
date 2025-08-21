@@ -1,0 +1,55 @@
+model:
+  slug: gnosis-i
+  name: Gnosis I - Ligand Activity Predictor
+  version: 1.0.0
+  description: Fine-tuned ChemBERTa model for IC50/Ki/EC50 prediction on 62 oncology
+    targets
+  owner: veridica-ai
+  category: ligand-activity
+  created_at: '2025-08-21T05:20:00.011000Z'
+  git_commit: production-release
+  training_script: training/train_model.py
+artifacts:
+- name: gnosis_model1_best.pt
+  kind: model
+  flavor: pytorch
+  s3_uri: s3://veridicabatabase/models/gnosis-i/1.0.0/gnosis_model1_best.pt
+  sha256: df50cc02e9df8c4071459677b4b867a124077681290840ecf8c814cd7d4aa9e9
+  size_bytes: 181003474
+datasets:
+- name: chembl_bioactivity
+  version: v32
+  role: train
+  s3_prefix: s3://veridicabatabase/datasets/chembl/v32/
+  records_count: 12000
+- name: bindingdb_bioactivity
+  version: v2024
+  role: train
+  s3_prefix: s3://veridicabatabase/datasets/bindingdb/v2024/
+  records_count: 3000
+metrics:
+- name: r2_score
+  value: 0.6281
+  split: test
+- name: num_targets
+  value: 62.0
+  split: all
+- name: training_samples
+  value: 15000.0
+  split: train
+hyperparameters:
+  model_architecture: ChemBERTa
+  base_model: seyonec/ChemBERTa-zinc-base-v1
+  num_targets: 62
+  r2_score: 0.6281
+  training_samples: ChEMBL + BindingDB
+requirements:
+- torch>=1.9.0
+- transformers>=4.33.0
+- rdkit-pypi>=2022.9.5
+- scikit-learn>=1.0.0
+tags:
+- ligand-activity
+- production
+- chemberta
+notes: Production model trained on ChEMBL and BindingDB bioactivity data
