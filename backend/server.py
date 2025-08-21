@@ -36,6 +36,8 @@ models = {}
 # Initialize Gnosis I Model
 try:
     from gnosis_model1_predictor import initialize_gnosis_predictor, get_gnosis_predictor
+    from gnosis_ad_layer import get_ad_layer, initialize_ad_layer
+    
     model_path = ROOT_DIR / "models" / "gnosis_model1_best.pt"
     
     # Initialize regardless of model file existence
@@ -43,15 +45,29 @@ try:
     logging.info("✅ Gnosis I (Model 1) initialized")
     GNOSIS_I_AVAILABLE = True
     
+    # Initialize AD layer with mock data for demonstration
+    # In production, this would use real training data
+    try:
+        from ad_mock_data import generate_mock_training_data
+        training_data = generate_mock_training_data(n_compounds=200, n_targets=10)
+        initialize_ad_layer(training_data)
+        logging.info("✅ Gnosis I AD layer initialized")
+        GNOSIS_AD_AVAILABLE = True
+    except Exception as e:
+        logging.warning(f"⚠️ AD layer initialization failed: {e}")
+        GNOSIS_AD_AVAILABLE = False
+    
 except Exception as e:
     logging.error(f"❌ Failed to load Gnosis I: {e}")
     # Still try to create a basic instance
     try:
         initialize_gnosis_predictor(None)
         GNOSIS_I_AVAILABLE = True
+        GNOSIS_AD_AVAILABLE = False
         logging.warning("⚠️ Gnosis I running in fallback mode")
     except:
         GNOSIS_I_AVAILABLE = False
+        GNOSIS_AD_AVAILABLE = False
 
 # Initialize Model 2 - Cancer Cell Line Cytotoxicity Predictor
 try:
