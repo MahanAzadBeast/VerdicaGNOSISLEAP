@@ -24,7 +24,7 @@ import hashlib
 from dataclasses import dataclass, asdict
 
 # Core imports
-from rdkit import Chem
+from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem, Descriptors, rdMolDescriptors, SaltRemover
 from rdkit.Chem.MolStandardize import rdMolStandardize
 
