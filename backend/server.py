@@ -73,12 +73,18 @@ except Exception as e:
 
 # Initialize Gnosis II Model
 try:
-    gnosis_ii_predictor = GnosisIIPredictor()
-    logging.info("✅ Gnosis II (Model 2) initialized")
-    MODEL2_AVAILABLE = True
+    if MODEL2_IMPORT_AVAILABLE:
+        gnosis_ii_predictor = GnosisIIPredictor()
+        logging.info("✅ Gnosis II (Model 2) initialized")
+        MODEL2_AVAILABLE = True
+    else:
+        MODEL2_AVAILABLE = False
+        gnosis_ii_predictor = None
+        logging.warning("⚠️ Gnosis II (Model 2) not available - import missing")
 except Exception as e:
     logging.error(f"❌ Failed to load Gnosis II: {e}")
     MODEL2_AVAILABLE = False
+    gnosis_ii_predictor = None
 
 # Initialize other models (existing code remains the same)
 try:
