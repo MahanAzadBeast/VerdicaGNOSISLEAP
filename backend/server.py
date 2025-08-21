@@ -590,7 +590,7 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
             "model_info": enhanced_result['model_info'],
             "hp_ad_enhanced": True
         }
-        if db:
+        if db is not None:
             await db.gnosis_predictions.insert_one(prediction_record)
         
         return enhanced_result
