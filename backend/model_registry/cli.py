@@ -9,6 +9,11 @@ import argparse
 import asyncio
 import json
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables
+ROOT_DIR = Path(__file__).parent.parent
+load_dotenv(ROOT_DIR / '.env')
 
 # Add backend to path
 sys.path.append(str(Path(__file__).parent.parent))
