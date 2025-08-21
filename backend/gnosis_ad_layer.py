@@ -132,6 +132,10 @@ def tanimoto_similarity(fp1: np.ndarray, fp2: np.ndarray) -> float:
         Tanimoto similarity (0-1)
     """
     try:
+        # Ensure arrays are binary
+        fp1 = fp1.astype(bool)
+        fp2 = fp2.astype(bool)
+        
         intersection = np.sum(fp1 & fp2)
         union = np.sum(fp1 | fp2)
         
