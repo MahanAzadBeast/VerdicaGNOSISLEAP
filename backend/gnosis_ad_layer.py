@@ -113,10 +113,13 @@ def compute_ecfp4_fingerprint(mol: Chem.Mol, radius: int = 2, n_bits: int = 2048
     """
     try:
         fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius=radius, nBits=n_bits)
-        return np.array(fp.ToBitString(), dtype=int)
+        # Convert to numpy array directly without going through bit string
+        arr = np.zeros((n_bits,), dtype=np.int8)
+        AllChem.DataStructs.ConvertToNumpyArray(fp, arr)
+        return arr
     except Exception as e:
         logger.error(f"Error computing ECFP4: {e}")
-        return np.zeros(n_bits, dtype=int)
+        return np.zeros(n_bits, dtype=np.int8)
 
 def tanimoto_similarity(fp1: np.ndarray, fp2: np.ndarray) -> float:
     """
