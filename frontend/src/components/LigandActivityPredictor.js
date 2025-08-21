@@ -407,7 +407,32 @@ const LigandActivityPredictor = () => {
       setPredictions(response.data);
     } catch (error) {
       console.error('Error making prediction:', error);
-      setError(error.response?.data?.detail || 'Error making prediction');
+      
+      // Handle different types of errors properly
+      let errorMessage = 'Error making prediction';
+      
+      if (error.response?.data) {
+        if (typeof error.response.data === 'string') {
+          errorMessage = error.response.data;
+        } else if (error.response.data.detail) {
+          if (typeof error.response.data.detail === 'string') {
+            errorMessage = error.response.data.detail;
+          } else if (Array.isArray(error.response.data.detail)) {
+            // Handle validation errors array
+            errorMessage = error.response.data.detail.map(err => 
+              typeof err === 'string' ? err : err.msg || 'Validation error'
+            ).join(', ');
+          } else {
+            errorMessage = 'Validation error occurred';
+          }
+        } else if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
