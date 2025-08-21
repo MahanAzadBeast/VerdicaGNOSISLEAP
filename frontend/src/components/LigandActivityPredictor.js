@@ -186,9 +186,21 @@ const LigandActivityPredictor = () => {
           const targetTraining = trainingData[target];
           if (!targetTraining) return false;
           
-          // Check if this assay type has sufficient training data
-          const assayData = targetTraining[assayType];
-          return assayData && assayData.available;
+          // Map frontend assay types to backend training data keys
+          let trainingKeys = [];
+          if (assayType === 'IC50') {
+            trainingKeys = ['IC50']; // Backend has IC50 training data
+          } else if (assayType === 'EC50') {
+            trainingKeys = ['EC50']; // Backend has EC50 training data  
+          } else if (assayType === 'Ki') {
+            trainingKeys = ['Ki']; // Backend has Ki training data
+          }
+          
+          // Check if this assay type has sufficient training data (>= 25 samples)
+          return trainingKeys.some(key => {
+            const sampleCount = targetTraining[key];
+            return sampleCount && sampleCount >= 25; // Minimum threshold for reliable predictions
+          });
         });
       });
     };
