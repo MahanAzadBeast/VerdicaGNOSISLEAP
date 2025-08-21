@@ -1085,9 +1085,9 @@ async def predict_with_gnosis_i_and_ad(input_data: GnosisIPredictionInput):
         if not predictor:
             raise HTTPException(status_code=503, detail="Gnosis I predictor not initialized")
         
-        # Get AD layer
-        ad_layer = get_ad_layer()
-        if not ad_layer:
+        # Get fast AD layer
+        ad_layer = get_fast_ad_layer()
+        if not ad_layer or not ad_layer.initialized:
             # Fall back to regular prediction
             return await predict_with_gnosis_i(input_data)
         
