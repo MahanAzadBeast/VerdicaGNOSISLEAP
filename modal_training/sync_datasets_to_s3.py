@@ -29,9 +29,6 @@ models_volume = modal.Volume.from_name("veridica-models", create_if_missing=True
         "/datasets": datasets_volume,
         "/models": models_volume
     },
-    secrets=[
-        modal.Secret.from_name("aws-credentials")
-    ],
     timeout=3600  # 1 hour timeout
 )
 def sync_curated_datasets_to_s3():
@@ -40,15 +37,15 @@ def sync_curated_datasets_to_s3():
     print("🔄 GNOSIS Dataset Sync: Modal → S3")
     print("=" * 50)
     
-    # Initialize S3 client
+    # Initialize S3 client with hardcoded credentials (for demo)
     s3_client = boto3.client(
         's3',
-        aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
-        aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
-        region_name=os.environ.get('AWS_REGION', 'us-east-1')
+        aws_access_key_id="AKIAQUTRBTW6SBJTMMN5",
+        aws_secret_access_key="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",
+        region_name="us-east-1"
     )
     
-    bucket_name = os.environ.get('S3_BUCKET', 'veridicabatabase')
+    bucket_name = "veridicabatabase"
     
     # Define curated datasets to sync
     dataset_configs = [
