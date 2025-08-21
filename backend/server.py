@@ -612,6 +612,9 @@ async def predict_with_gnosis_ii(input_data: GnosisIIInput):
         raise HTTPException(status_code=400, detail="Invalid SMILES string")
     
     try:
+        if gnosis_ii_predictor is None:
+            raise HTTPException(status_code=503, detail="Gnosis II predictor not initialized")
+            
         result = gnosis_ii_predictor.predict_cytotoxicity(
             smiles=input_data.smiles,
             cell_lines=input_data.cell_lines,
