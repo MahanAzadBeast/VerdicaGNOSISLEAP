@@ -1,6 +1,6 @@
 model:
-  slug: cytotoxicity-predictor
-  name: Gnosis Model 2 - Cancer Cell Line Cytotoxicity Predictor
+  slug: gnosis-ii
+  name: Gnosis II - Cancer Cell Line Cytotoxicity Predictor
   version: 1.0.0
   description: ChemBERTa + genomics model for IC50 prediction on cancer cell lines
     using GDSC data
@@ -13,7 +13,7 @@ artifacts:
 - name: real_gdsc_chemberta_cytotox_v1.pth
   kind: model
   flavor: pytorch
-  s3_uri: s3://veridicabatabase/models/cytotoxicity-predictor/1.0.0/real_gdsc_chemberta_cytotox_v1.pth
+  s3_uri: s3://veridicabatabase/models/gnosis-ii/1.0.0/real_gdsc_chemberta_cytotox_v1.pth
   sha256: 7d0c2cea3583efc6137b0c90e9e10914f91762b981b5e4b6206ab0671e77d086
   size_bytes: 263367
 datasets:
