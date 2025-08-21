@@ -37,9 +37,9 @@ def get_s3() -> S3Manager:
     """Dependency to get S3 manager"""
     return get_s3_manager()
 
-def get_manifest() -> ManifestManager:
-    """Dependency to get manifest manager"""
-    return get_manifest_manager()
+def get_discovery() -> ModelDiscoveryAgent:
+    """Dependency to get discovery agent"""
+    return get_discovery_agent()
 
 @registry_router.get("/health", response_model=RegistryHealthResponse)
 async def registry_health(
