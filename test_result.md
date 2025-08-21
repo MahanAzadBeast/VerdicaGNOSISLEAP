@@ -107,15 +107,18 @@ user_problem_statement: "Implement the Applicability Domain (AD) layer for Gnosi
 backend:
   - task: "Gnosis I AD Layer Foundation"
     implemented: true
-    working: true
+    working: false
     file: "/app/backend/gnosis_ad_layer.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "critical"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: true
           agent: "main"
           comment: "COMPLETED: Implemented comprehensive Applicability Domain layer with all specified components: 1) SMILES standardization using RDKit with salt removal and reionization, 2) Per-target fingerprint database with ECFP4 fingerprints and deduplication, 3) Per-target embedding statistics with Ledoit-Wolf covariance shrinkage and FAISS kNN indices, 4) Multi-view AD scoring (Tanimoto, Mahalanobis, kNN density, leverage, protein/assay context) with weighted aggregation, 5) Conformal prediction intervals with target-specific quantiles, 6) Confidence calibration using isotonic regression, 7) Mechanism gating for kinases with hinge binder classification, 8) Nearest neighbor explanation with top-5 similar compounds, 9) Complete caching system for persistence, 10) Main score_with_ad() API function as specified. Fixed fingerprint computation issues by using DataStructs.ConvertToNumpyArray instead of ToBitString. All tests passing successfully."
+        - working: false
+          agent: "testing"
+          comment: "🔍 COMPREHENSIVE AD LAYER INTEGRATION TESTING COMPLETED: Tested the newly implemented Applicability Domain layer integration with Gnosis I as requested. ✅ HEALTH CHECK VERIFICATION: Backend correctly reports gnosis_i_ad_layer: true and gnosis_i_info shows ad_layer_available: true with expected AD capabilities ['Multi-view AD scoring', 'Conformal prediction intervals', 'Confidence calibration', 'Mechanism gating', 'Kinase sanity checks']. ✅ GNOSIS I INFO ENDPOINT: /api/gnosis-i/info endpoint accessible and returns proper AD layer information including all 6 scoring components with correct weights ['Tanimoto similarity (35%)', 'Mahalanobis distance (25%)', 'kNN density (20%)', 'Leverage (10%)', 'Protein context (5%)', 'Assay context (5%)']. ✅ REGULAR PREDICTION COMPATIBILITY: /api/gnosis-i/predict endpoint works correctly with aspirin (CC(=O)OC1=CC=CC=C1C(=O)O) showing backward compatibility maintained. ❌ CRITICAL ISSUE - AD-ENHANCED PREDICTION TIMEOUT: /api/gnosis-i/predict-with-ad endpoint consistently times out (>30 seconds) when processing requests. Root cause analysis shows AD layer initialization involves computationally expensive operations: FAISS index building, PCA computation on fingerprints, Ledoit-Wolf covariance estimation, and multi-view scoring calculations. The mock training data generation with 500+ compounds and complex statistical computations causes the first AD-enhanced prediction to hang. ❌ PERFORMANCE BOTTLENECK: AD layer performs heavy initialization on first call including: building per-target fingerprint databases, computing PCA embeddings from ECFP4 fingerprints, building FAISS HNSW indices, computing embedding statistics with shrinkage covariance. This blocks the API response. RECOMMENDATION: AD layer needs optimization for production use - implement async initialization, pre-compute indices during startup, or use lighter-weight similarity methods for real-time inference."
 
   - task: "AD Layer Testing and Validation"
     implemented: true
