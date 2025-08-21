@@ -64,7 +64,7 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
   );
 };
 
-import Spline from '@splinetool/react-spline';
+// Removed Spline import for better compatibility
 
 // Home Tab Component
 const HomeTab = ({ setActiveTab }) => {
