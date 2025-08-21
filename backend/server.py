@@ -85,6 +85,7 @@ try:
 except Exception as e:
     logging.error(f"❌ Failed to load models: {e}")
     real_models_available = False
+    model_loader = None
 
 # Try to load MolBERT
 try:
