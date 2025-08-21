@@ -19,7 +19,6 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import hashlib
 
 # Project imports
-from production_model import get_available_models
 from gnosis_model2_predictor import GnosisIIPredictor
 
 # Set up logging
@@ -80,7 +79,7 @@ except Exception as e:
 try:
     from production_model import ProductionModelLoader
     model_loader = ProductionModelLoader()
-    available_models = get_available_models()
+    available_models = []  # Placeholder since get_available_models is not available
     logging.info(f"✅ Available models: {available_models}")
     real_models_available = len(available_models) > 0
 except Exception as e:
