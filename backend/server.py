@@ -36,7 +36,7 @@ models = {}
 # Initialize Gnosis I Model
 try:
     from gnosis_model1_predictor import initialize_gnosis_predictor, get_gnosis_predictor
-    from gnosis_ad_layer import get_ad_layer, initialize_ad_layer
+    from gnosis_ad_layer import get_ad_layer, get_fast_ad_layer, initialize_ad_layer
     
     model_path = ROOT_DIR / "models" / "gnosis_model1_best.pt"
     
