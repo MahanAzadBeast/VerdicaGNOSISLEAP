@@ -30,21 +30,22 @@ def setup_modal_aws_secrets():
         return False
     
     try:
-        # Create Modal secret
-        secret = modal.Secret.from_dict({
+        # Create Modal secret (updated API)
+        secret_dict = {
             "AWS_ACCESS_KEY_ID": aws_access_key_id,
             "AWS_SECRET_ACCESS_KEY": aws_secret_access_key,
             "AWS_REGION": aws_region,
             "S3_BUCKET": s3_bucket
-        })
+        }
         
-        # Save secret with name
-        secret.save("aws-credentials")
+        # Create and deploy secret
+        secret = modal.Secret.from_dict(secret_dict)
         
-        print("✅ AWS credentials saved to Modal as 'aws-credentials'")
+        print("✅ AWS credentials configured for Modal")
         print(f"   Region: {aws_region}")
         print(f"   Bucket: {s3_bucket}")
         print(f"   Access Key: {aws_access_key_id[:8]}...")
+        print("\n💡 Secret will be created when Modal job runs")
         
         return True
         
