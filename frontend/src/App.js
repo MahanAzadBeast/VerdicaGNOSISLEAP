@@ -74,44 +74,38 @@ const HomeTab = ({ setActiveTab }) => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Spline Banner Section - Optimized height with animation positioned higher */}
-      <div className="relative w-full h-[720px] overflow-hidden cursor-pointer flex items-center justify-center" onClick={handleStartClick}>
+      {/* Simplified Banner Section - No external dependencies */}
+      <div className="relative w-full h-[720px] overflow-hidden cursor-pointer flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900" onClick={handleStartClick}>
         <main className="w-full h-full flex items-center justify-center">
-          <div 
-            style={{
-              width: '115%',
-              height: '115%',
-              transform: 'scale(0.75) translateY(-18%)',
-              transformOrigin: 'center center'
-            }}
-            className="flex items-center justify-center"
-          >
-            <Spline
-              scene="https://prod.spline.design/RnIHjsPRp09RPfVl/scene.splinecode"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                objectPosition: 'center center'
-              }}
-            />
+          {/* Central GNOSIS Circle */}
+          <div className="relative flex items-center justify-center">
+            {/* Animated Background Circle */}
+            <div className="w-80 h-80 rounded-full bg-gradient-to-r from-purple-500/20 via-cyan-500/20 to-purple-500/20 animate-pulse flex items-center justify-center border border-purple-400/30">
+              <div className="w-64 h-64 rounded-full bg-gradient-to-r from-gray-800/80 via-purple-800/60 to-gray-800/80 flex items-center justify-center border border-cyan-400/30">
+                <div className="text-center">
+                  <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-2 drop-shadow-lg">
+                    Start GNOSIS
+                  </h1>
+                  <p className="text-gray-300 text-lg opacity-80">
+                    Click to access AI modules
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Floating Particles */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="w-2 h-2 bg-purple-400 rounded-full absolute top-20 left-20 animate-bounce opacity-60"></div>
+              <div className="w-3 h-3 bg-cyan-400 rounded-full absolute top-32 right-24 animate-bounce opacity-40" style={{animationDelay: '0.5s'}}></div>
+              <div className="w-2 h-2 bg-purple-300 rounded-full absolute bottom-24 left-32 animate-bounce opacity-50" style={{animationDelay: '1s'}}></div>
+              <div className="w-2 h-2 bg-cyan-300 rounded-full absolute bottom-20 right-20 animate-bounce opacity-60" style={{animationDelay: '1.5s'}}></div>
+            </div>
           </div>
         </main>
-        {/* Centered Title Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-2 drop-shadow-lg">
-              Start GNOSIS
-            </h1>
-            <p className="text-lg text-gray-300 opacity-80 font-medium">
-              Click to access AI modules
-            </p>
-          </div>
-        </div>
-        
+
         {/* Clickable overlay */}
         <div 
-          className="absolute inset-0 z-10 cursor-pointer"
+          className="absolute inset-0 z-10 cursor-pointer hover:bg-white/5 transition-colors"
           onClick={handleStartClick}
           title="Click to start prediction"
         />
