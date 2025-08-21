@@ -49,7 +49,7 @@ try:
     # In production, this would use real training data
     try:
         from ad_mock_data import generate_mock_training_data
-        training_data = generate_mock_training_data(n_compounds=200, n_targets=10)
+        training_data = generate_mock_training_data(n_compounds=30, n_targets=5)
         initialize_fast_ad_layer_sync(training_data)
         logging.info("✅ Gnosis I AD layer initialized")
         GNOSIS_AD_AVAILABLE = True
