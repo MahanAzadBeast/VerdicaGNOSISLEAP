@@ -344,7 +344,7 @@ async def get_gnosis_i_targets():
         targets = predictor.get_available_targets()
         
         # Get training data stats per target  
-        target_training_data = predictor.get_target_training_data()
+        target_training_data = predictor.target_training_data
         
         # Categorize targets
         categorized_targets = {
