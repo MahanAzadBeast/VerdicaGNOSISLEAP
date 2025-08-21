@@ -593,6 +593,7 @@ async def health_check():
             "therapeutic_index_model": THERAPEUTIC_INDEX_AVAILABLE,
             "expanded_models": EXPANDED_MODELS_AVAILABLE,
             "gnosis_i": GNOSIS_I_AVAILABLE,
+            "gnosis_i_ad_layer": GNOSIS_AD_AVAILABLE,
             "model2_cytotoxicity": MODEL2_AVAILABLE
         },
         "real_ml_targets": real_models_status,
