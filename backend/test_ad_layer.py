@@ -11,7 +11,7 @@ from pathlib import Path
 # Add backend to path
 sys.path.append('/app/backend')
 
-from applicability_domain import (
+from gnosis_ad_layer import (
     ApplicabilityDomainLayer, 
     standardize_smiles,
     get_ad_layer,
