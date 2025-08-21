@@ -36,7 +36,7 @@ models = {}
 # Initialize Gnosis I Model
 try:
     from gnosis_model1_predictor import initialize_gnosis_predictor, get_gnosis_predictor
-    from gnosis_ad_layer import get_ad_layer, get_fast_ad_layer, initialize_ad_layer
+    from fast_ad_layer import get_fast_ad_layer, initialize_fast_ad_layer_sync
     
     model_path = ROOT_DIR / "models" / "gnosis_model1_best.pt"
     
@@ -50,7 +50,7 @@ try:
     try:
         from ad_mock_data import generate_mock_training_data
         training_data = generate_mock_training_data(n_compounds=200, n_targets=10)
-        initialize_ad_layer(training_data)
+        initialize_fast_ad_layer_sync(training_data)
         logging.info("✅ Gnosis I AD layer initialized")
         GNOSIS_AD_AVAILABLE = True
     except Exception as e:
