@@ -1,76 +1,94 @@
 <analysis>
-The previous AI engineer's trajectory was primarily centered on two major objectives: developing the Cytotoxicity Prediction Model (Model 2) using ChemBERTa and real GDSC data, and later, troubleshooting the Ligand Activity Predictor (Model 1). For Model 2, the journey involved extensive debugging of Modal data access, attempts with synthetic data due to real data scarcity, and a persistent struggle with ChemBERTa model loading, leading to a fallback to RDKit descriptors with poor performance. A critical pivot occurred when the user explicitly directed the engineer to reuse Model 1's ChemBERTa encoder for Model 2, which also encountered hanging issues during training with real GDSC data. Concurrently, a severe system failure emerged with GitHub integration and file downloads. The trajectory concluded with the engineer addressing a Failed to load available targets error in Model 1, fixing its ChemBERTa initialization and prediction fallback logic.
+The previous AI engineer's work trajectory was multifaceted, initially focusing on two core applications: developing the Cytotoxicity Prediction Model (Gnosis II/Model 2) and troubleshooting the Ligand Activity Predictor (Gnosis I/Model 1). Significant effort was expended on Model 2, dealing with ChemBERTa integration challenges, data access issues on Modal, and ultimately struggling with training hangs. A critical pivot occurred as the user steered attention to fixing Model 1, involving comprehensive UI and backend refinements for target visibility, accurate prediction filtering (removing Ki, refining EC50), and ensuring only real, trained predictions are displayed. Concurrently, a robust Model Registry was built with S3 integration for model artifacts and curated datasets, establishing an enterprise-grade MLOps foundation. The most recent directive is to implement an Applicability Domain (AD) layer for Gnosis I, a complex task involving multi-view scoring and conformal prediction, for which the initial framework setup has just begun.
 </analysis>
 
 <product_requirements>
 The GNOSIS platform aims to predict molecular properties and drug sensitivity.
-1.  **Ligand Activity Predictor (Model 1 / Gnosis I):** This module predicts IC50, EC50, and Ki values for oncoproteins/tumor suppressors, with a target R² > 0.6. The requirement was to expand beyond IC50 to include genuine Ki/EC50 predictions from comprehensive datasets and update the UI. It relies on a ChemBERTa transferomer.
-2.  **Cytotoxicity Prediction Model (Model 2):** Designed for cancer cell IC50 prediction, integrating genomic context. The core requirement is to achieve R² > 0.7 (initially >0.6), using *only* real, full-scale datasets like GDSC and DepMap PRISM. This involves strict data cleaning (pIC50 conversion, R² filters, deduplication, no synthetic augmentation), real genomic features (hotspot mutations, CNV, tissue type), an 80/10/10 scaffold split, and tissue-stratified training. The model architecture should leverage a frozen Gnosis ChemBERTa encoder (768-dim) concatenated with a 2-layer MLP (128-dim) for genomics, followed by standard layers for pIC50 output. A progressive unfreezing training schedule is required.
+1.  **Ligand Activity Predictor (Gnosis I / Model 1):** Predicts IC50, EC50, and Ki for oncoproteins/tumor suppressors with an R² > 0.6. The requirement evolved to expand beyond IC50 to genuine Ki/EC50 predictions from comprehensive datasets and update the UI. It leverages a ChemBERTa transferomer. Key updates included:
+    *   No synthetic or heuristic predictions; only data-backed predictions.
+    *   Accurate display of available targets in UI.
+    *   Removal of invalid Ki predictions (e.g., values > 100 µM) due to corrupted training data.
+    *   Dynamic filtering of EC50 predictions based on sufficient training data (>= 25 samples).
+    *   Frontend UI to dynamically show only proteins available for selection based on chosen assay types.
+    *   Adding an Applicability Domain (AD) layer to compute per-target AD scores, calibrate confidence, return conformal intervals, gate implausible kinase predictions, and integrate into the existing API without retraining.
+2.  **Cytotoxicity Prediction Model (Gnosis II / Model 2):** Designed for cancer cell IC50 prediction, integrating genomic context. Goal: R² > 0.7 using *only* real, full-scale datasets (GDSC, DepMap PRISM), strict data cleaning (pIC50 conversion, R² filters, deduplication), real genomic features, 80/10/10 scaffold split, tissue-stratified training, and a frozen Gnosis ChemBERTa encoder with a 2-layer MLP for genomics. The user later renamed this module to Gnosis II.
+3.  **Model Registry & Data Management:** Implement a hybrid model registry (MongoDB for metadata, S3 for artifacts and datasets) to organize models, versions, and lineage for reproducibility, with AWS S3 (us-east-1) as the single source of truth for both datasets and model artifacts. Curated datasets and evaluation reports from Modal training should be synced to S3 with checksums. Four new modules were envisioned: Downstream Omics, Toxicity & Safety, Clinical Trials prediction, and a Generative module.
 </product_requirements>
 
 <key_technical_concepts>
--   **Molecular Models**: ChemBERTa, RDKit, PyTorch.
--   **ML Frameworks**: PyTorch, PyTorch Lightning, Hugging Face Transformers.
--   **Web Stack**: React.js, FastAPI, MongoDB.
--   **ML Platform**: Modal.com (for training and data volumes).
--   **Data Sources**: GDSC, ChEMBL, BindingDB.
+-   **Molecular Modeling**: ChemBERTa (fine-tuned), RDKit (SMILES, ECFP4), PyTorch.
+-   **ML Frameworks**: PyTorch Lightning, Hugging Face Transformers, FAISS (kNN).
+-   **Web Stack**: React.js (frontend), FastAPI (backend), MongoDB (metadata).
+-   **Cloud/MLOps**: Modal.com (training, volumes), AWS S3 (artifact/data storage).
 -   **Bioinformatics**: SMILES, IC₅₀/pIC₅₀, EC₅₀/pEC₅₀, Ki/pKi, Genomic Features.
--   **Training Strategies**: Transfer Learning, Fine-tuning, Scaffold Splitting.
+-   **ML Strategies**: Transfer Learning, Fine-tuning, Scaffold Splitting, Conformal Prediction, Applicability Domain (AD).
 </key_technical_concepts>
 
 <code_architecture>
 
 -   ****: Main FastAPI entry point.
-    -   **Importance**: Handles all API routing, including Model 1 and Model 2 endpoints. It's crucial for initializing and exposing the predictor instances.
-    -   **Changes**: Updated to gracefully handle the initialization of  (Model 1) even if its pre-trained model file () is missing. This ensures the  endpoint can still return available targets.
--   ****: Model 2 backend logic.
-    -   **Importance**: Contains the core logic for Model 2 prediction, including molecular and genomic feature extraction, and model loading.
-    -   **Changes**: Initially configured to load  and use RDKit. Later modified to handle scaler key names during model loading. The  was specifically updated to output 30 genomic features, resolving a dimension mismatch error during prediction. The file still points to an RDKit-based model due to ChemBERTa training failures.
--   ****: Model 1 backend logic.
-    -   **Importance**: Defines the  class for the Ligand Activity Predictor, managing ChemBERTa encoder, target lists, and predictions.
-    -   **Changes**: Significantly modified to ensure the  is initialized even when  is . The  method was fixed to correctly use . The  method was enhanced to provide fallback predictions using the ChemBERTa encoder and heuristics if a pre-trained model isn't loaded, resolving Model not loaded errors.
--   ****:
-    -   **Importance**: Script created to verify the contents of the initially located GDSC dataset.
-    -   **Changes**: New file created. Reported only 404 compounds and missing columns.
--   ****:
-    -   **Importance**: Critical script that successfully located and analyzed  on Modal, confirming it contained 7,049 records with 25 unique, *real* IC50-valued compounds.
-    -   **Changes**: New file created.
--   ****:
-    -   **Importance**: Downloads the  (containing 9,603 records after processing) locally as  for training Model 2 with real data.
-    -   **Changes**: New file created.
--   **, , , **:
-    -   **Importance**: A series of scripts attempting to train Model 2 with the real GDSC data using ChemBERTa transfer learning. Each iteration was an attempt to fix hanging issues during ChemBERTa initialization.
-    -   **Changes**: These are new files.  had a scheduler argument fixed. All attempts to run these scripts for full training hung or failed during ChemBERTa loading, preventing R² calculation.
--   ****:
-    -   **Importance**: This is the model artifact that was successfully trained (though using RDKit features, not ChemBERTa due to fallback) and integrated into the Model 2 backend.
-    -   **Changes**: This file was downloaded into .
+    -   **Importance**: Handles all API routing, including Model 1 (Gnosis I), Model 2 (Gnosis II), and the newly added Model Registry endpoints. It manages predictor initialization.
+    -   **Changes**: Modified to gracefully initialize  even if  is missing. Later updated to include  router.
+-   ****: Gnosis I backend logic.
+    -   **Importance**: Defines  for Ligand Activity prediction, managing ChemBERTa encoder, target lists, and predictions.
+    -   **Changes**: Initially updated to initialize  even if  is , and  was enhanced with a fallback. Critically, it was further modified to:
+        *   Remove Ki predictions entirely due to invalid training data producing unrealistic values.
+        *   Refine  to ensure EC50 predictions are only returned for targets with >=25 training samples, eliminating low-quality data.
+        *   Adjust the logic that uses  to ensure all 62 targets the model was trained on are recognized for predictions, rather than a hardcoded subset.
+-   ****: Frontend component for Gnosis I.
+    -   **Importance**: Handles user interaction, input, and displays predictions for Ligand Activity.
+    -   **Changes**: Removed hardcoded  to allow all 62 targets to be visible. Removed Ki from assay type selection. Implemented dynamic target filtering based on selected assay types (IC50, EC50) and their training data availability from a new backend API endpoint. Updated UI elements to reflect filtered target counts.
+-   ****: Gnosis II backend logic.
+    -   **Importance**: Core logic for Gnosis II prediction, including molecular/genomic feature extraction, and model loading.
+    -   **Changes**: Still points to an RDKit-based model due to prior ChemBERTa training failures. ( updated to 30 features). The model was renamed to Gnosis II.
+-   **New Model Registry Files ()**: A suite of new files created to implement the hybrid Model Registry.
+    -   : Initializes the package.
+    -   : Defines 15+ FastAPI endpoints for model registration, versioning, artifact management, and agent discovery.
+    -   : Implements logic for AI agents to discover, select, and load models dynamically.
+    -   : Command-line interface for managing the registry (health checks, model registration).
+    -   : Handles MongoDB schema and interactions for storing model metadata.
+    -   : Script to create YAML manifests for registered models.
+    -   : Manages YAML manifest creation, validation, and parsing.
+    -   : Script to rename models within the registry (e.g., Cytotoxicity Predictor to Gnosis II).
+    -   : Manages S3 interactions for uploading, downloading, and verifying model artifacts and datasets.
+    -   : Script to upload existing model artifacts to S3.
+    -   : Script to update dataset metadata in the MongoDB registry after S3 sync.
+-   **New Modal Training Scripts ()**: Scripts for dataset and model syncing with S3.
+    -   : Modal job to directly transfer curated datasets from Modal volumes to S3.
+    -   : Script to configure AWS credentials as Modal secrets.
+    -   , : Scripts to inspect and list contents of Modal volumes.
+    -   , : Targeted Modal jobs to transfer specific curated datasets and production models to S3.
+    -   , : Scripts for optimizing Modal storage by removing non-essential training artifacts (optimizer states, intermediate checkpoints) and verifying cleanup.
+-   **Frontend Homepage ( or similar)**
+    -   **Importance**: The main landing page for the application.
+    -   **Changes**: Removed a problematic Spline 3D animation/WebGL component that was causing loading failures and click interception issues, replacing it with a simpler, functional CSS-based particle animation.
 
 </code_architecture>
 
 <pending_tasks>
--   Successfully train the ChemBERTa model with a cytotoxic head using the *real* GDSC dataset (9,603 records, 25 compounds), targeting an R² > 0.7. The current training attempts are still hanging during ChemBERTa initialization.
--   Diagnose and resolve the persistent ChemBERTa loading and training hang issues for Model 2 with the real GDSC data, likely related to memory or environment constraints.
--   Address the ongoing technical issues with GitHub integration (Save to GitHub not working, manual download from VS Code view failing).
--   Test the Model 1 (Ligand Activity Predictor) prediction endpoint () to verify the ChemBERTa + heuristics fallback prediction logic works as expected.
+-   Implement the full Applicability Domain (AD) layer for Gnosis I, including:
+    -   Building a per-target fingerprint database.
+    -   Building per-target embedding stats and kNN indices.
+    -   Implementing multi-view AD scoring (Tanimoto, Mahalanobis, kNN density, Leverage, Protein/Assay context).
+    -   Adding inductive conformal prediction for confidence intervals.
+    -   Adding calibrated confidence mapping.
+    -   Implementing mechanism gating and kinase sanity checks (hinge binder classifier, optional micro-docking).
+    -   Exposing a single function .
+-   Further address the Model 2 ChemBERTa training hang issues, if Model 2 development resumes.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was focused on resolving issues with the Ligand Activity Predictor (Model 1). Specifically, the API endpoint for available targets was failing, and subsequent prediction attempts were returning Model not loaded.
+Immediately before this summary request, the AI engineer was tasked with implementing a sophisticated **Applicability Domain (AD) layer** for the Gnosis I (Ligand Activity Predictor) module. This is a significant enhancement aimed at improving the reliability and trustworthiness of predictions by:
+1.  **Computing per-target AD scores** from multiple molecular and contextual views.
+2.  **Calibrating confidence** and providing **conformal prediction intervals**.
+3.  **Gating or penalizing implausible kinase predictions**.
+4.  **Integrating** seamlessly into the existing inference API **without requiring model retraining**.
 
-The engineer identified that the  in  was not robustly handling the scenario where its pre-trained model file () was missing. This prevented proper initialization of the target list and the ChemBERTa encoder.
+The user provided a detailed specification for this feature, including inputs, desired outputs (e.g., , , , , ), high-level tasks, and detailed implementation steps, including pseudocode.
 
-The following precise modifications were made to address this:
-1.  ****: Updated initialization logic to ensure  is always instantiated in a way that allows it to return available targets, even without a loaded model.
-2.  ****:
-    *   The  constructor was updated to always initialize  (), ensuring the ChemBERTa component is ready even if  is .
-    *   The  method was modified to correctly call  which now relies on a pre-populated  (or a default if the model isn't loaded).
-    *   The  method was enhanced to provide a fallback mechanism. If  is not loaded (i.e.,  was ), it now attempts to generate predictions using the initialized ChemBERTa encoder and internal heuristics, preventing the Model not loaded error.
-
-After these changes, the  endpoint for Model 1 successfully returned a list of available targets (Chat Message 375). The last action taken was to restart the backend (Chat Message 390) to apply the newly implemented prediction fallback logic.
-
-While this Model 1 fix was underway, the project was also concurrently experiencing critical technical issues with GitHub integration (inability to push code) and even direct file downloads from the Emergent platform, which were being escalated to support. The Model 2 ChemBERTa training remains in a state where it successfully loads real GDSC data but consistently hangs during ChemBERTa initialization, preventing R² results.
+The current work has just begun with the AI engineer acknowledging the task and identifying the first conceptual Phase 1: Create the AD Framework Structure to begin this complex implementation. No specific file modifications have been reported for the AD layer in the immediate last message, only the overall acceptance of the task.
 </current_work>
 
 <optional_next_step>
-Test the  endpoint for Model 1 to verify the ChemBERTa-based fallback prediction functionality.
+The next step is to begin implementing the  function and the per-target fingerprint database builder as part of the AD layer for Gnosis I.
 </optional_next_step>
