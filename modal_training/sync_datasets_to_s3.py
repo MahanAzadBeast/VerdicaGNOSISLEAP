@@ -209,10 +209,7 @@ def calculate_file_checksum(file_path: Path) -> str:
 @app.function(
     volumes={
         "/models": models_volume
-    },
-    secrets=[
-        modal.Secret.from_name("aws-credentials")
-    ]
+    }
 )
 def sync_eval_reports_to_s3():
     """Sync model evaluation reports to S3"""
@@ -221,12 +218,12 @@ def sync_eval_reports_to_s3():
     
     s3_client = boto3.client(
         's3',
-        aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
-        aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
-        region_name=os.environ.get('AWS_REGION', 'us-east-1')
+        aws_access_key_id="AKIAQUTRBTW6SBJTMMN5",
+        aws_secret_access_key="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",
+        region_name="us-east-1"
     )
     
-    bucket_name = os.environ.get('S3_BUCKET', 'veridicabatabase')
+    bucket_name = "veridicabatabase"
     
     # Look for evaluation reports
     models_path = Path('/models')
