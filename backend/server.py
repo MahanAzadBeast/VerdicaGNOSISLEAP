@@ -376,14 +376,42 @@ async def get_gnosis_i_targets():
         # Get training data stats per target  
         target_training_data = predictor.target_training_data
         
-        # Categorize targets
+        # Categorize targets using proper oncology classification
         categorized_targets = {
             "all_targets": targets,
             "high_confidence": [t for t, data in target_training_data.items() if data.get("samples", 0) >= 100],
-            "kinases": [t for t in targets if any(k in t.upper() for k in ["CDK", "JAK", "ABL", "KIT", "FLT", "ALK", "EGFR", "BRAF"])],
+            "kinases": [t for t in targets if any(k in t.upper() for k in ["CDK", "JAK", "ABL", "KIT", "FLT", "ALK", "EGFR", "BRAF", "ERBB", "SRC", "BTK", "TRK", "AURK", "PLK", "CHK", "WEE", "DYRK", "GSK", "MAPK", "PIK3", "AKT", "MTOR", "ATM", "ATR", "PARP"])],
             "gpcrs": [t for t in targets if "GPCR" in t.upper() or any(g in t.upper() for g in ["ADRB", "HTR", "DRD"])],
-            "oncoproteins": [t for t in targets if any(o in t.upper() for o in ["P53", "MYC", "RAS", "AKT", "MDM"])],
-            "tumor_suppressors": [t for t in targets if any(ts in t.upper() for ts in ["RB1", "BRCA", "VHL", "APC"])]
+            "oncoproteins": [t for t in targets if any(onco in t.upper() for onco in [
+                "EGFR", "ERBB", "MET", "RET", "ALK", "ROS", "PDGFR", "VEGFR", "FLT", "KIT", "FGFR",  # Growth factor receptors
+                "BRAF", "KRAS", "NRAS", "RAF", "MEK", "ERK",  # MAPK pathway
+                "PI3K", "AKT", "MTOR", "TSC", "RICTOR", "RAPTOR",  # PI3K/AKT/mTOR pathway  
+                "MYC", "MYCN", "MYCL",  # MYC family
+                "BCL2", "MCL1", "BCLXL",  # Anti-apoptotic proteins
+                "MDM2", "HDM2",  # P53 regulators
+                "CDK", "CCND", "CCNE",  # Cell cycle regulators
+                "E2F", "RB",  # Cell cycle transcription
+                "WNT", "CTNNB", "TCF", "LEF",  # WNT signaling
+                "NOTCH", "RBPJ", "HES",  # NOTCH signaling
+                "JAK", "STAT", "SRC", "ABL",  # Kinase oncoproteins
+                "TERT", "TERC"  # Telomerase
+            ])],
+            "tumor_suppressors": [t for t in targets if any(ts in t.upper() for ts in [
+                "TP53", "P53",  # P53
+                "RB1", "RB",  # Retinoblastoma
+                "BRCA1", "BRCA2",  # BRCA family
+                "PTEN",  # PTEN
+                "VHL",  # Von Hippel-Lindau
+                "APC",  # Adenomatous Polyposis Coli
+                "NF1", "NF2",  # Neurofibromatosis
+                "CDKN", "P16", "P21", "P27",  # CDK inhibitors
+                "ARF", "INK4",  # Cell cycle inhibitors
+                "LKB1", "STK11",  # LKB1
+                "SMAD", "TGF",  # TGF-beta pathway
+                "DCC", "DPC4",  # Deleted in Colorectal Cancer
+                "WT1",  # Wilms Tumor
+                "MSH", "MLH", "PMS"  # DNA mismatch repair
+            ])]
         }
         
         other_targets = [t for t in targets if t not in categorized_targets["kinases"] 
