@@ -386,6 +386,12 @@ async def get_gnosis_i_targets():
             "tumor_suppressors": [t for t in targets if any(ts in t.upper() for ts in ["RB1", "BRCA", "VHL", "APC"])]
         }
         
+        other_targets = [t for t in targets if t not in categorized_targets["kinases"] 
+                        and t not in categorized_targets["oncoproteins"] 
+                        and t not in categorized_targets["tumor_suppressors"]]
+        
+        categorized_targets["other_targets"] = other_targets
+        
         return {
             "total_targets": len(targets),
             "available_targets": targets,  # Frontend expects this key
