@@ -316,3 +316,70 @@ async def get_registry_stats(db: DatabaseManager = Depends(get_db)):
     except Exception as e:
         logger.error(f"Failed to get registry stats: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get stats: {str(e)}")
+
+@registry_router.get("/discover")
+async def discover_available_models(
+    category: Optional[str] = Query(None, description="Filter by model category"),
+    discovery: ModelDiscoveryAgent = Depends(get_discovery)
+):
+    """Discover available models for agents"""
+    try:
+        models = await discovery.get_available_models(category)
+        return {"models": models, "count": len(models)}
+    except Exception as e:
+        logger.error(f"Failed to discover models: {e}")
+        raise HTTPException(status_code=500, detail=f"Model discovery failed: {str(e)}")
+
+@registry_router.get("/discover/summary")
+async def get_discovery_summary(discovery: ModelDiscoveryAgent = Depends(get_discovery)):
+    """Get comprehensive model registry summary for agents"""
+    try:
+        summary = await discovery.generate_model_summary()
+        return summary
+    except Exception as e:
+        logger.error(f"Failed to generate discovery summary: {e}")
+        raise HTTPException(status_code=500, detail=f"Summary generation failed: {str(e)}")
+
+@registry_router.get("/discover/capabilities/{slug}")
+async def get_model_capabilities(
+    slug: str,
+    discovery: ModelDiscoveryAgent = Depends(get_discovery)
+):
+    """Get detailed capabilities for a specific model"""
+    try:
+        model_info = await discovery.get_model_info(slug)
+        if not model_info:
+            raise HTTPException(status_code=404, detail=f"Model '{slug}' not found")
+        
+        return model_info.get('capabilities', {})
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to get capabilities for {slug}: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get capabilities: {str(e)}")
+
+@registry_router.get("/discover/best")
+async def find_best_model(
+    task_type: str = Query(..., description="Task category (e.g., 'ligand-activity', 'cytotoxicity')"),
+    metric: str = Query("r2_score", description="Performance metric to optimize"),
+    discovery: ModelDiscoveryAgent = Depends(get_discovery)
+):
+    """Find the best model for a specific task"""
+    try:
+        best_model = await discovery.get_best_model_for_task(task_type, metric)
+        if not best_model:
+            raise HTTPException(status_code=404, detail=f"No models found for task type '{task_type}'")
+        
+        # Get full model info
+        model_info = await discovery.get_model_info(best_model)
+        return {
+            "best_model": best_model,
+            "task_type": task_type,
+            "optimized_metric": metric,
+            "model_info": model_info
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to find best model for {task_type}: {e}")
+        raise HTTPException(status_code=500, detail=f"Best model search failed: {str(e)}")
