@@ -654,7 +654,9 @@ async def health_check():
             "r2_score": 0.6281,
             "capabilities": ["IC50 prediction", "Ki prediction", "EC50 prediction", "LogP calculation", "LogS calculation"],
             "target_categories": ["oncoproteins", "tumor_suppressors"],
-            "description": "Fine-tuned ChemBERTa model for ligand-target binding affinity prediction"
+            "description": "Fine-tuned ChemBERTa model for ligand-target binding affinity prediction",
+            "ad_layer_available": GNOSIS_AD_AVAILABLE,
+            "ad_capabilities": ["Multi-view AD scoring", "Conformal prediction intervals", "Confidence calibration", "Mechanism gating", "Kinase sanity checks"] if GNOSIS_AD_AVAILABLE else []
         },
         "model2_info": {
             "available": MODEL2_AVAILABLE,
