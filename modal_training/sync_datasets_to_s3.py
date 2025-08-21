@@ -20,9 +20,9 @@ image = modal.Image.debian_slim().pip_install([
 
 app = modal.App("gnosis-dataset-sync", image=image)
 
-# Volume references (adjust these to your actual Modal volume names)
-datasets_volume = modal.Volume.from_name("veridica-datasets", create_if_missing=True)
-models_volume = modal.Volume.from_name("veridica-models", create_if_missing=True)
+# Volume references (using actual Modal volume names)
+datasets_volume = modal.Volume.from_name("gnosis-ai-datasets", create_if_missing=True)
+models_volume = modal.Volume.from_name("trained-models", create_if_missing=True)
 
 @app.function(
     volumes={
