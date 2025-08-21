@@ -1116,8 +1116,8 @@ async def predict_with_gnosis_i_and_ad(input_data: GnosisIPredictionInput):
                         # Get base prediction value (pActivity)
                         base_prediction = prediction_data.get('pActivity', 6.0)
                         
-                        # Score with AD layer
-                        ad_result = ad_layer.score_with_ad(
+                        # Score with fast AD layer
+                        ad_result = ad_layer.fast_score_with_ad(
                             ligand_smiles=input_data.smiles,
                             target_id=target,
                             base_prediction=base_prediction
