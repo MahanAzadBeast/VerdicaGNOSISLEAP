@@ -150,7 +150,7 @@ async def lifespan(app: FastAPI):
         yield
     finally:
         # Shutdown
-        if db:
+        if db is not None:
             db.client.close()
 
 app = FastAPI(
