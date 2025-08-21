@@ -391,9 +391,14 @@ const LigandActivityPredictor = () => {
     setPredictions(null);
 
     try {
+      // Prepare targets array - if 'all' is selected, use all available targets
+      const targetsToPredict = selectedTargets.includes('all') 
+        ? availableTargets.available_targets || []
+        : selectedTargets;
+      
       const response = await axios.post(`${API}/gnosis-i/predict`, {
         smiles: smiles.trim(),
-        targets: selectedTargets.includes('all') ? 'all' : selectedTargets,
+        targets: targetsToPredict,
         assay_types: selectedAssayTypes // Send selected assay types to backend
       }, {
         timeout: 120000 // 2 minutes timeout for large predictions
