@@ -68,7 +68,7 @@ const Navigation = ({ activeTab, setActiveTab, health }) => {
 
 // Home Tab Component
 const HomeTab = ({ setActiveTab }) => {
-  const handleSplineClick = () => {
+  const handleStartClick = () => {
     setActiveTab('ai-modules');
   };
 
