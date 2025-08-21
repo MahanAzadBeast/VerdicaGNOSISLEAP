@@ -554,7 +554,7 @@ class MultiViewADScorer:
             similarities = []
             
             for _, row in target_fp_df.iterrows():
-                target_fp = np.frombuffer(row['ecfp4_bytes'], dtype=int)
+                target_fp = np.frombuffer(row['ecfp4_bytes'], dtype=np.int8)
                 sim = tanimoto_similarity(query_fp, target_fp)
                 similarities.append(sim)
                 max_sim = max(max_sim, sim)
