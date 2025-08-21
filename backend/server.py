@@ -328,6 +328,36 @@ async def batch_predict(input_data: BatchPredictionInput):
         raise HTTPException(status_code=500, detail=str(e))
 
 # Gnosis I endpoints
+@api_router.get("/gnosis-i/training-data")
+async def get_gnosis_i_training_data():
+    """Get Gnosis I training data statistics"""
+    
+    if not GNOSIS_I_AVAILABLE:
+        return {
+            "available": False,
+            "message": "Gnosis I not available"
+        }
+    
+    try:
+        predictor = get_gnosis_predictor()
+        if not predictor:
+            return {
+                "available": False,
+                "message": "Gnosis I predictor not initialized"
+            }
+        
+        return {
+            "available": True,
+            "training_data": predictor.target_training_data
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting Gnosis I training data: {e}")
+        return {
+            "available": False,
+            "message": f"Error: {str(e)}"
+        }
+
 @api_router.get("/gnosis-i/targets")
 async def get_gnosis_i_targets():
     """Get available targets for Gnosis I"""
