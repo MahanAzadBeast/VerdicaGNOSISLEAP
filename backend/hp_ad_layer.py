@@ -1230,6 +1230,8 @@ class HighPerformanceAD:
                 why=["error_creating_gated_result"],
                 evidence={}
             )
+    
+    def _build_neighbors_explanation(self, target_id: str, top_indices: List[int], similarities: np.ndarray) -> List[Dict[str, Any]]:
         """Build nearest neighbors explanation"""
         try:
             if target_id not in self.fp_db.ligand_metadata:
