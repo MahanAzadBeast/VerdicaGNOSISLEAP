@@ -150,7 +150,6 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
                 # Only include in potency ranking if not gated and activity < 100 μM
                 if pred_status == 'OK' and quality_flag != 'not_trained' and activity_um <= 100:
                     potencies.append((target, activity_um, assay_type))
-            assay_bg, assay_color = get_assay_colors(assay_type)
             
             assay_bg, assay_color = get_assay_colors(assay_type)
             
@@ -169,8 +168,9 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
                 assay_color=assay_color
             ))
             
-            confidences.append(confidence)
-            potencies.append((target, activity_um, assay_type))
+            # Only include confidence in average if not gated
+            if pred_status == 'OK':
+                confidences.append(confidence)
     
     # Calculate summary statistics
     avg_conf = int(sum(confidences) / len(confidences) * 100) if confidences else 0
