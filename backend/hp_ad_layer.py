@@ -828,7 +828,7 @@ class LearnedADScorer:
         """
         try:
             # Get raw components
-            components = self._compute_raw_ad_components(smiles, target_id)
+            components = self._compute_raw_ad_components(smiles, target_id, assay_type)
             if components is None:
                 return self._default_ad_result()
             
