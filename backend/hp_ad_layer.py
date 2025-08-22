@@ -26,10 +26,11 @@ import time
 from functools import lru_cache
 import threading
 from concurrent.futures import ThreadPoolExecutor
+import re
 
 # Core imports
 from rdkit import Chem, DataStructs
-from rdkit.Chem import AllChem, Descriptors, SaltRemover
+from rdkit.Chem import AllChem, Descriptors, SaltRemover, Crippen
 from rdkit.Chem.MolStandardize import rdMolStandardize
 
 # Scientific computing
