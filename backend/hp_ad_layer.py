@@ -743,7 +743,8 @@ class LearnedADScorer:
                 'similarity_max': s_max,
                 'density_score': density_score,
                 'context_score': context_score,
-                'mechanism_score': mechanism_score
+                'mechanism_score': mechanism_score,
+                'neighbor_stats': neighbor_stats  # Include for gating decisions
             }
             
         except Exception as e:
