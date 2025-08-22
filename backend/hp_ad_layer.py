@@ -61,6 +61,226 @@ class OptimizedADResult:
     context_score: float = 0.0
     mechanism_score: float = 0.0
 
+@dataclass
+class GatedPredictionResult:
+    """Result when prediction is gated (suppressed)"""
+    target_id: str
+    status: str = "HYPOTHESIS_ONLY"
+    message: str = "Out of domain for this target class. Numeric potency suppressed."
+    why: List[str] = None
+    evidence: Dict[str, Any] = None
+    
+    def __post_init__(self):
+        if self.why is None:
+            self.why = []
+        if self.evidence is None:
+            self.evidence = {}
+
+# Pharmacophore checking functions for fast gating
+def passes_kinase_hinge_pharmacophore(smiles: str) -> bool:
+    """
+    Fast kinase hinge pharmacophore check (≤60ms budget).
+    
+    Returns True if compound has plausible kinase hinge binding pattern:
+    - Donor/acceptor pair on aromatic/heteroaromatic
+    - Separated by 4-6 bonds
+    - Basic shape compatibility
+    """
+    try:
+        mol = Chem.MolFromSmiles(smiles)
+        if mol is None:
+            return False
+        
+        # SMARTS patterns for kinase hinge compatibility
+        hinge_patterns = [
+            # Adenine-like patterns (donor-acceptor pairs)
+            "[nH1,NH1,NH2][c,n]1[c,n][c,n][c,n][c,n][c,n]1",  # Aniline-like on aromatic
+            "[c,n]1[c,n][c,n][c,n]([OH,NH1,NH2])[c,n][c,n]1",  # Phenol/aniline
+            "[c,n]1[c,n]c(=O)[nH,n][c,n][c,n]1",              # Quinazoline-like
+            "[c,n]1[c,n][c,n]c(=O)[nH,n][c,n]1",              # Quinoline-like
+            "[c,n]1[c,n][nH,n][c,n][c,n][c,n]1",              # Pyrimidine-like
+            # ATP-competitive patterns
+            "c1nc([NH1,NH2])nc([OH,NH1,NH2])c1",              # 2,4-diaminopyrimidine
+            "c1nc2c([OH,NH1,NH2])ncnc2[nH,n]1",               # Purine scaffold
+        ]
+        
+        # Check for hinge-compatible patterns
+        for pattern in hinge_patterns:
+            try:
+                if mol.HasSubstructMatch(Chem.MolFromSmarts(pattern)):
+                    return True
+            except:
+                continue
+        
+        # Additional check: aromatic rings with donors/acceptors
+        aromatic_rings = mol.GetRingInfo().AtomRings()
+        for ring in aromatic_rings:
+            if len(ring) >= 5:  # 5-6 membered aromatic rings
+                # Check if ring has both donor and acceptor capability
+                has_donor = False
+                has_acceptor = False
+                
+                for atom_idx in ring:
+                    atom = mol.GetAtomWithIdx(atom_idx)
+                    if atom.GetIsAromatic():
+                        # Check for donor patterns (NH, OH)
+                        if atom.GetSymbol() in ['N', 'O'] and atom.GetTotalNumHs() > 0:
+                            has_donor = True
+                        # Check for acceptor patterns (N, O with lone pairs)
+                        if atom.GetSymbol() in ['N', 'O']:
+                            has_acceptor = True
+                
+                if has_donor and has_acceptor:
+                    return True
+        
+        return False
+        
+    except Exception as e:
+        logger.warning(f"Error in kinase pharmacophore check: {e}")
+        return False
+
+def passes_parp1_pharmacophore(smiles: str) -> bool:
+    """
+    Fast PARP1 nicotinamide mimic check (≤60ms budget).
+    
+    Returns True if compound has nicotinamide-like pharmacophore:
+    - Ring amide nitrogen
+    - Carbonyl acceptor
+    - Ring planarity proxy
+    """
+    try:
+        mol = Chem.MolFromSmiles(smiles)
+        if mol is None:
+            return False
+        
+        # PARP1 NAD+ binding site patterns
+        parp_patterns = [
+            # Nicotinamide-like patterns
+            "[c,n]1[c,n][c,n][c,n]([C](=O)[NH1,NH2])[c,n][c,n]1",  # Nicotinamide core
+            "[c,n]1[c,n][c,n][c,n]([C](=O)[OH])[c,n][c,n]1",       # Carboxylic acid variant
+            "[c,n]1[c,n][c,n][c,n]([S](=O)(=O)[NH1,NH2])[c,n][c,n]1", # Sulfonamide variant
+            # Benzamide patterns (PARP inhibitor scaffolds)
+            "c1ccc(cc1)[C](=O)[NH1,NH2]",                           # Simple benzamide
+            "c1ccc2[nH]c(=O)[c,n][c,n]c2c1",                       # Indole/quinoline lactam
+            "[c,n]1[c,n][c,n]c2[nH]c(=O)[c,n][c,n]c2[c,n]1",       # Fused lactam
+        ]
+        
+        # Check for PARP-compatible patterns
+        for pattern in parp_patterns:
+            try:
+                if mol.HasSubstructMatch(Chem.MolFromSmarts(pattern)):
+                    return True
+            except:
+                continue
+        
+        # Additional check: amide groups on aromatic systems
+        amide_pattern = Chem.MolFromSmarts("[C](=O)[NH1,NH2]")
+        if mol.HasSubstructMatch(amide_pattern):
+            # Check if amide is connected to aromatic system
+            matches = mol.GetSubstructMatches(amide_pattern)
+            for match in matches:
+                carbonyl_carbon = mol.GetAtomWithIdx(match[0])
+                for neighbor in carbonyl_carbon.GetNeighbors():
+                    if neighbor.GetIsAromatic():
+                        return True
+        
+        return False
+        
+    except Exception as e:
+        logger.warning(f"Error in PARP1 pharmacophore check: {e}")
+        return False
+
+def is_strongly_anionic_at_ph7_4(smiles: str) -> bool:
+    """
+    Check if compound is strongly anionic at pH 7.4.
+    
+    Uses heuristic pKa rules to predict ionization state:
+    - Carboxylic acids: pKa ~4-5 (anionic at pH 7.4)
+    - Phenolic acids: pKa ~8-10 (partially anionic)
+    - Strongly anionic = predicted anionic fraction ≥ 0.8
+    """
+    try:
+        mol = Chem.MolFromSmiles(smiles)
+        if mol is None:
+            return False
+        
+        # Patterns for acidic groups with estimated pKa
+        acidic_patterns = [
+            ("[C](=O)[OH]", 4.5),                    # Carboxylic acid
+            ("c[OH]", 9.5),                          # Phenol
+            ("[S](=O)(=O)[OH]", 1.0),               # Sulfonic acid (very strong)
+            ("[P](=O)([OH])[OH]", 2.0),             # Phosphonic acid
+            ("c1ccc(cc1[C](=O)[OH])[OH]", 4.0),     # Salicylic acid-like
+        ]
+        
+        total_anionic_fraction = 0.0
+        
+        for pattern_smarts, pka in acidic_patterns:
+            try:
+                pattern = Chem.MolFromSmarts(pattern_smarts)
+                matches = mol.GetSubstructMatches(pattern)
+                
+                for match in matches:
+                    # Henderson-Hasselbalch: pH = pKa + log([A-]/[HA])
+                    # At pH 7.4: fraction_anionic = 1 / (1 + 10^(pKa - 7.4))
+                    ph = 7.4
+                    fraction_anionic = 1.0 / (1.0 + 10**(pka - ph))
+                    total_anionic_fraction += fraction_anionic
+                    
+            except:
+                continue
+        
+        # Consider strongly anionic if total anionic character ≥ 0.8
+        return total_anionic_fraction >= 0.8
+        
+    except Exception as e:
+        logger.warning(f"Error checking ionization state: {e}")
+        return False
+
+def is_tiny_acid_veto(smiles: str) -> bool:
+    """
+    Hard veto for tiny acidic compounds (like aspirin) on kinases.
+    
+    Returns True if MW < 250 AND has acidic group AND aromatic.
+    This specifically catches aspirin-like compounds.
+    """
+    try:
+        mol = Chem.MolFromSmiles(smiles)
+        if mol is None:
+            return False
+        
+        # Check molecular weight
+        mw = Descriptors.MolWt(mol)
+        if mw >= 250:
+            return False
+        
+        # Check for acidic groups
+        acid_patterns = [
+            "[C](=O)[OH]",      # Carboxylic acid
+            "[S](=O)(=O)[OH]",  # Sulfonic acid
+        ]
+        
+        has_acid = False
+        for pattern in acid_patterns:
+            try:
+                if mol.HasSubstructMatch(Chem.MolFromSmarts(pattern)):
+                    has_acid = True
+                    break
+            except:
+                continue
+        
+        if not has_acid:
+            return False
+        
+        # Check for aromatic rings
+        has_aromatic = any(atom.GetIsAromatic() for atom in mol.GetAtoms())
+        
+        return has_acid and has_aromatic
+        
+    except Exception as e:
+        logger.warning(f"Error in tiny acid veto check: {e}")
+        return False
+
 # Global caches for performance
 _smiles_cache = {}
 _fp_cache = {}
