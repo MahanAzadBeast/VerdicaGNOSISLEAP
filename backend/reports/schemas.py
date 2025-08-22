@@ -108,31 +108,48 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
             pred = target_data.get(assay_type)
             if not pred:
                 continue
+            
+            # Check if prediction was gated (numeric potency suppressed)
+            pred_status = pred.get('status', 'OK')
+            
+            if pred_status == 'HYPOTHESIS_ONLY':
+                # Gated prediction - show as hypothesis only
+                display_ic50 = "Hypothesis only"
+                pic50_display = "Out of domain"
+                confidence = 0.0  # No confidence for gated predictions
                 
-            p_value = pred.get('pActivity', 0)
-            activity_um = pred.get('activity_uM', 0)
-            confidence = pred.get('confidence', 0.8)
-            
-            # Format display values with quality handling
-            quality_flag = pred.get('quality_flag', 'good')
-            
-            if quality_flag == 'not_trained':
-                display_ic50 = "Not trained"
-                pic50_display = f"({assay_type} unavailable)"
-            elif activity_um > 100:
-                display_ic50 = "> 100 μM"
-                pic50_display = "—"
-            else:
-                display_ic50 = f"{activity_um:.1f} μM"
-                pic50_display = f"{max(0, p_value):.2f}"
-            
-            # Get colors with quality handling
-            if quality_flag == 'not_trained':
+                # Use gray styling for gated predictions
                 heat_bg = 'hsl(0, 0%, 25%)'  # Dark gray
                 opacity = 0.8
+                
             else:
-                heat_bg = get_heat_color(p_value, confidence)
-                opacity = 0.4 + 0.6 * confidence
+                # Normal prediction processing
+                p_value = pred.get('pActivity', 0)
+                activity_um = pred.get('activity_uM', 0)
+                confidence = pred.get('confidence', 0.8)
+                
+                # Format display values with quality handling
+                quality_flag = pred.get('quality_flag', 'good')
+                
+                if quality_flag == 'not_trained':
+                    display_ic50 = "Not trained"
+                    pic50_display = f"({assay_type} unavailable)"
+                    heat_bg = 'hsl(0, 0%, 25%)'  # Dark gray
+                    opacity = 0.8
+                elif activity_um > 100:
+                    display_ic50 = "> 100 μM"
+                    pic50_display = "—"
+                    heat_bg = get_heat_color(p_value, confidence)
+                    opacity = 0.4 + 0.6 * confidence
+                else:
+                    display_ic50 = f"{activity_um:.1f} μM"
+                    pic50_display = f"{max(0, p_value):.2f}"
+                    heat_bg = get_heat_color(p_value, confidence)
+                    opacity = 0.4 + 0.6 * confidence
+                
+                # Only include in potency ranking if not gated and activity < 100 μM
+                if pred_status == 'OK' and quality_flag != 'not_trained' and activity_um <= 100:
+                    potencies.append((target, activity_um, assay_type))
             assay_bg, assay_color = get_assay_colors(assay_type)
             
             assay_bg, assay_color = get_assay_colors(assay_type)
