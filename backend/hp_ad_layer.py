@@ -711,7 +711,7 @@ class LearnedADScorer:
         # Build AD-aware conformal quantiles
         self._build_ad_aware_conformal(features, labels, target_groups)
     
-    def _compute_raw_ad_components(self, smiles: str, target_id: str) -> Optional[Dict[str, float]]:
+    def _compute_raw_ad_components(self, smiles: str, target_id: str, assay_type: Optional[str] = None) -> Optional[Dict[str, float]]:
         """Compute raw AD components for training"""
         try:
             smiles_std = cached_standardize_smiles(smiles)
