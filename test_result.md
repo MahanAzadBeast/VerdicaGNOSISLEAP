@@ -105,9 +105,20 @@
 user_problem_statement: "Implement Numeric Potency Gating system for Gnosis I that prevents biologically implausible predictions (like aspirin ERBB4 2.3 μM) from being displayed as numbers. Instead show 'HYPOTHESIS_ONLY' status with clear evidence. The system should implement comprehensive gating logic including AD gates, pharmacophore checks, neighbor analysis, and mechanism validation to ensure only plausible predictions show numeric potencies."
 
 backend:
-  - task: "Gnosis I High-Performance AD Layer (HP-AD v2.0)"
+  - task: "Numeric Potency Gating System Implementation"
     implemented: true
     working: true
+    file: "/app/backend/hp_ad_layer.py, /app/backend/server.py, /app/backend/reports/schemas.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "COMPLETED: Successfully implemented comprehensive Numeric Potency Gating system to prevent biologically implausible predictions. 1) COMPREHENSIVE GATING LOGIC: Added 7 gating conditions including AD score < 0.5, kinase mechanism fail (score < 0.25), insufficient neighbors (S_max < 0.45 or <20 same-assay neighbors), pharmacophore failures (kinase hinge patterns, PARP1 nicotinamide), ionization realism (tiny anionic compounds in ATP pockets), and tiny acid veto for kinase targets. 2) FAST PHARMACOPHORE CHECKS: Implemented kinase hinge pattern detection using SMARTS (≤60ms budget), PARP1 nicotinamide mimic validation, and ionization state prediction using Henderson-Hasselbalch equation with pKa heuristics. 3) ENHANCED NEIGHBOR ANALYSIS: Added mandatory same-assay-class filtering, counting only neighbors with matching assay types (IC50/EC50/Ki groupings), with graceful fallback and 'assay_mismatch_possible' flagging. 4) GATED RESPONSE SCHEMA: Returns 'HYPOTHESIS_ONLY' status with suppressed numeric fields (pActivity, potency_ci omitted), detailed 'why' reasons, and comprehensive evidence including similarity metrics, neighbor counts, and AD components. 5) REPORT INTEGRATION: Updated report generation to respect gating status, exclude gated predictions from 'Highest Potency' selection, show 'Hypothesis only' styling, and prevent misleading potency-based sorting. 6) API INTEGRATION: Modified /api/gnosis-i/predict-with-hp-ad endpoint to handle gated results, pass assay types for neighbor filtering, and maintain backward compatibility with existing prediction format."
+        - working: true
+          agent: "main"
+          comment: "VALIDATION COMPLETED: Tested gating logic with aspirin on kinase targets (ERBB4, AKT2, PARP1) - all properly gated with status='HYPOTHESIS_ONLY' and comprehensive reasons including 'Kinase_pharmacophore_fail', 'tiny_acid_veto', 'OOD_chem', 'Physchem_implausible_for_ATP_pocket'. API endpoint returning correct gated responses with numeric potencies suppressed. Pharmacophore functions working correctly: aspirin fails kinase hinge (False) and triggers tiny acid veto (True), imatinib passes kinase hinge (True). Performance maintained <5s. Ready for Phase 2 frontend integration testing."
     file: "/app/backend/hp_ad_layer.py"
     stuck_count: 0
     priority: "critical"
