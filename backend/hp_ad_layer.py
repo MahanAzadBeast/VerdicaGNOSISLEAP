@@ -443,7 +443,8 @@ class OptimizedFingerprintDB:
     def fast_similarity_search(self, 
                               query_smiles: str, 
                               target_id: str, 
-                              top_k: int = 256) -> Tuple[float, List[int], np.ndarray]:
+                              top_k: int = 256,
+                              assay_type: Optional[str] = None) -> Tuple[float, List[int], np.ndarray, Dict[str, Any]]:
         """
         Two-stage similarity search:
         Stage 1: Fast approximate search for top candidates
