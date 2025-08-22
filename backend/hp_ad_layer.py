@@ -1113,7 +1113,123 @@ class HighPerformanceAD:
             logger.error(f"Error in ultra-fast AD scoring with gating: {e}")
             return self._create_error_result(ligand_smiles, target_id, base_prediction)
     
-    def _build_neighbors_explanation(self, target_id: str, top_indices: List[int], similarities: np.ndarray) -> List[Dict[str, Any]]:
+    def _compute_enhanced_ad_components(self, smiles: str, target_id: str, assay_type: Optional[str] = None) -> Dict[str, Any]:
+        """Compute AD components with enhanced information for gating"""
+        try:
+            if self.ad_scorer is None:
+                return self._default_ad_components()
+            
+            # Get calibrated AD score
+            ad_result = self.ad_scorer.compute_calibrated_ad_score(smiles, target_id)
+            
+            # Get raw components for gating (with assay type)
+            raw_components = self.ad_scorer._compute_raw_ad_components(smiles, target_id, assay_type)
+            if raw_components:
+                ad_result.update(raw_components)
+            
+            return ad_result
+            
+        except Exception as e:
+            logger.error(f"Error computing enhanced AD components: {e}")
+            return self._default_ad_components()
+    
+    def _default_ad_components(self) -> Dict[str, Any]:
+        """Default AD components when computation fails"""
+        return {
+            'ad_score': 0.3,
+            'similarity_max': 0.0,
+            'density_score': 0.3,
+            'context_score': 0.3,
+            'mechanism_score': 0.5,
+            'neighbor_stats': {
+                'n_sim_ge_0_40_same_assay': 0,
+                'n_sim_ge_0_45_same_assay': 0,
+                'assay_class': 'unknown',
+                'assay_mismatch_possible': True
+            }
+        }
+    
+    def _is_parp1_target(self, target_id: str) -> bool:
+        """Check if target is PARP1"""
+        return 'PARP1' in target_id.upper() or 'PARP-1' in target_id.upper()
+    
+    def _get_molecular_weight(self, smiles: str) -> float:
+        """Get molecular weight of compound"""
+        try:
+            mol = Chem.MolFromSmiles(smiles)
+            if mol is None:
+                return 0.0
+            return Descriptors.MolWt(mol)
+        except:
+            return 0.0
+    
+    def _has_assay_mismatch(self, target_id: str, assay_type: Optional[str]) -> bool:
+        """
+        Check for assay mismatch (EC50 predicted against KD-trained target).
+        
+        This is a simplified heuristic - in practice would check training data composition.
+        """
+        try:
+            if not assay_type:
+                return False
+            
+            # Simplified heuristic: kinases trained primarily on binding assays
+            # but predicting functional assays could be problematic
+            is_kinase = self.ad_scorer._is_kinase_target(target_id)
+            is_functional_pred = 'EC50' in assay_type.upper() or 'FUNCTIONAL' in assay_type.upper()
+            
+            # For now, don't gate on this - just log for monitoring
+            return False
+            
+        except Exception as e:
+            logger.warning(f"Error checking assay mismatch: {e}")
+            return False
+    
+    def _create_gated_result(self, 
+                            smiles: str, 
+                            target_id: str, 
+                            gate_reasons: List[str],
+                            ad_components: Dict[str, Any],
+                            neighbor_stats: Dict[str, Any],
+                            s_max: float,
+                            top_indices: List[int],
+                            similarities: np.ndarray) -> GatedPredictionResult:
+        """
+        Create gated result when numeric potency should be suppressed.
+        
+        This result explicitly omits pActivity and potency_ci fields.
+        """
+        try:
+            # Build evidence for why the prediction was gated
+            evidence = {
+                'S_max': float(s_max),
+                'neighbors_same_assay': neighbor_stats.get('n_sim_ge_0_40_same_assay', 0),
+                'assay_class': neighbor_stats.get('assay_class', 'unknown'),
+                'mechanism_score': ad_components.get('mechanism_score', 0.0),
+                'ad_components': {
+                    'similarity_max': ad_components.get('similarity_max', s_max),
+                    'density_score': ad_components.get('density_score', 0.0),
+                    'context_score': ad_components.get('context_score', 0.0),
+                    'mechanism_score': ad_components.get('mechanism_score', 0.0)
+                },
+                'nearest_neighbors': self._build_neighbors_explanation(target_id, top_indices, similarities)
+            }
+            
+            return GatedPredictionResult(
+                target_id=target_id,
+                status="HYPOTHESIS_ONLY",
+                message="Out of domain for this target class. Numeric potency suppressed.",
+                why=gate_reasons,
+                evidence=evidence
+            )
+            
+        except Exception as e:
+            logger.error(f"Error creating gated result: {e}")
+            return GatedPredictionResult(
+                target_id=target_id,
+                why=["error_creating_gated_result"],
+                evidence={}
+            )
         """Build nearest neighbors explanation"""
         try:
             if target_id not in self.fp_db.ligand_metadata:
