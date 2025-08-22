@@ -821,7 +821,7 @@ class LearnedADScorer:
         
         logger.info(f"AD-aware conformal quantiles: {self.conformal_quantiles}")
     
-    def compute_calibrated_ad_score(self, smiles: str, target_id: str) -> Dict[str, float]:
+    def compute_calibrated_ad_score(self, smiles: str, target_id: str, assay_type: Optional[str] = None) -> Dict[str, float]:
         """
         Compute calibrated AD score using learned models.
         Returns properly calibrated scores that correlate with prediction accuracy.
