@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Implement the Applicability Domain (AD) layer for Gnosis I (Ligand Activity Predictor) that computes per-target AD scores from multiple views, calibrates confidence and returns conformal intervals, gates or penalizes implausible kinase predictions, and integrates into the existing inference API without retraining. Performance optimization required: Cut latency to <5s without losing accuracy, calibrate AD so drug-like in-domain ligands score high and aspirin-like ligands score low, keep API stable."
+user_problem_statement: "Implement Numeric Potency Gating system for Gnosis I that prevents biologically implausible predictions (like aspirin ERBB4 2.3 μM) from being displayed as numbers. Instead show 'HYPOTHESIS_ONLY' status with clear evidence. The system should implement comprehensive gating logic including AD gates, pharmacophore checks, neighbor analysis, and mechanism validation to ensure only plausible predictions show numeric potencies."
 
 backend:
   - task: "Gnosis I High-Performance AD Layer (HP-AD v2.0)"
