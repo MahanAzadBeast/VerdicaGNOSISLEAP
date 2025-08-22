@@ -952,10 +952,15 @@ class HighPerformanceAD:
     def ultra_fast_score_with_ad(self, 
                                 ligand_smiles: str, 
                                 target_id: str,
-                                base_prediction: Optional[float] = None) -> OptimizedADResult:
+                                base_prediction: Optional[float] = None,
+                                assay_type: Optional[str] = None) -> Union[OptimizedADResult, GatedPredictionResult]:
         """
-        Ultra-fast AD scoring targeting <5s latency.
-        Uses all performance optimizations and proper AD calibration.
+        Ultra-fast AD scoring with comprehensive gating logic.
+        
+        Implements numeric potency gating to prevent biologically implausible
+        predictions from being displayed as numbers.
+        
+        Returns OptimizedADResult if passes all gates, GatedPredictionResult if gated.
         """
         start_time = time.time()
         
@@ -971,15 +976,15 @@ class HighPerformanceAD:
             # Parallel computation of AD components
             futures = []
             
-            # Submit AD scoring task
+            # Submit AD scoring task with assay type
             future_ad = self.thread_pool.submit(
-                self.ad_scorer.compute_calibrated_ad_score, smiles_std, target_id
+                self._compute_enhanced_ad_components, smiles_std, target_id, assay_type
             )
-            futures.append(('ad_score', future_ad))
+            futures.append(('ad_components', future_ad))
             
-            # Submit similarity search task
+            # Submit similarity search task with enhanced neighbor analysis
             future_sim = self.thread_pool.submit(
-                self.fp_db.fast_similarity_search, smiles_std, target_id, 5
+                self.fp_db.fast_similarity_search, smiles_std, target_id, 5, assay_type
             )
             futures.append(('similarity', future_sim))
             
@@ -990,23 +995,73 @@ class HighPerformanceAD:
                     results[name] = future.result(timeout=3.0)  # 3s timeout per component
                 except Exception as e:
                     logger.warning(f"Component {name} failed: {e}")
-                    if name == 'ad_score':
-                        results[name] = self.ad_scorer._default_ad_result()
+                    if name == 'ad_components':
+                        results[name] = self._default_ad_components()
                     else:
-                        results[name] = (0.0, [], np.array([]))
+                        results[name] = (0.0, [], np.array([]), {})
             
             # Extract results
-            ad_results = results.get('ad_score', self.ad_scorer._default_ad_result())
-            s_max, top_indices, similarities = results.get('similarity', (0.0, [], np.array([])))
+            ad_components = results.get('ad_components', self._default_ad_components())
+            s_max, top_indices, similarities, neighbor_stats = results.get('similarity', (0.0, [], np.array([]), {}))
             
-            ad_score = ad_results['ad_score']
+            # **COMPREHENSIVE GATING LOGIC**
+            gate_reasons = []
             
-            # Apply updated thresholds and policies from spec
+            # 1. AD gate fail
+            ad_score = ad_components.get('ad_score', 0.3)
+            if ad_score < 0.50:
+                gate_reasons.append("OOD_chem")
+            
+            # 2. Mechanism gate fail for kinases
+            is_kinase = self.ad_scorer._is_kinase_target(target_id)
+            mechanism_score = ad_components.get('mechanism_score', 0.5)
+            if is_kinase and mechanism_score < 0.25:
+                gate_reasons.append("Kinase_mechanism_fail")
+            
+            # 3. Neighbor sanity fail (same-target, same-assay-class)
+            n_same_assay_40 = neighbor_stats.get('n_sim_ge_0_40_same_assay', 0)
+            if s_max < 0.45 or n_same_assay_40 < 20:
+                gate_reasons.append("Insufficient_in-class_neighbors")
+            
+            # Add assay mismatch warning if applicable
+            if neighbor_stats.get('assay_mismatch_possible', False):
+                gate_reasons.append("assay_mismatch_possible")
+            
+            # 4. Family pharmacophore fail
+            if is_kinase and not passes_kinase_hinge_pharmacophore(smiles_std):
+                gate_reasons.append("Kinase_pharmacophore_fail")
+            
+            if self._is_parp1_target(target_id) and not passes_parp1_pharmacophore(smiles_std):
+                gate_reasons.append("PARP_pharmacophore_fail")
+            
+            # 5. Ionization/size realism for deep ATP pockets
+            mol_weight = self._get_molecular_weight(smiles_std)
+            if is_kinase and mol_weight < 250 and is_strongly_anionic_at_ph7_4(smiles_std):
+                gate_reasons.append("Physchem_implausible_for_ATP_pocket")
+            
+            # 6. Hard veto for tiny acids on kinases
+            if is_kinase and is_tiny_acid_veto(smiles_std):
+                gate_reasons.append("tiny_acid_veto")
+            
+            # 7. Label consistency fail (assay mismatch)
+            if self._has_assay_mismatch(target_id, assay_type):
+                gate_reasons.append("Assay_mismatch_caution")
+            
+            # **GATING DECISION**
+            if gate_reasons:
+                # Return gated result with suppressed numeric potency
+                return self._create_gated_result(
+                    smiles_std, target_id, gate_reasons, ad_components, 
+                    neighbor_stats, s_max, top_indices, similarities
+                )
+            
+            # **PASSES ALL GATES - RETURN NUMERIC PREDICTION**
+            # Apply existing AD-aware policies for confidence and CI
             flags = []
             confidence_calibrated = 0.7  # Default confidence
             
             # Updated thresholds as per spec
-            if ad_score < 0.5:  # OOD_chem threshold moved from 0.4 to 0.5
+            if ad_score < 0.5:  # This case already gated above, but keep for safety
                 flags.append("OOD_chem")
                 confidence_calibrated = 0.2
                 ci_multiplier = 2.5
@@ -1017,15 +1072,9 @@ class HighPerformanceAD:
                 confidence_calibrated = 0.7
                 ci_multiplier = 1.0
             
-            # Kinase-specific gating
-            if self.ad_scorer._is_kinase_target(target_id):
-                mechanism_score = ad_results['mechanism_score']
-                if mechanism_score < 0.25:  # Updated threshold
-                    flags.append("Kinase_sanity_fail")
-                    confidence_calibrated = min(confidence_calibrated, 0.2)
-                    # Apply 10x potency penalty (would be applied to base_prediction)
-                    ci_multiplier *= 2.0
-                elif mechanism_score < 0.5:
+            # Additional kinase flags (non-gating)
+            if is_kinase:
+                if mechanism_score < 0.5:
                     flags.append("Kinase_mech_low")
                     confidence_calibrated = min(confidence_calibrated, 0.4)
             
@@ -1054,14 +1103,14 @@ class HighPerformanceAD:
                 confidence_calibrated=confidence_calibrated,
                 flags=flags,
                 nearest_neighbors=neighbors,
-                similarity_max=ad_results['similarity_max'],
-                density_score=ad_results['density_score'],
-                context_score=ad_results['context_score'],
-                mechanism_score=ad_results['mechanism_score']
+                similarity_max=ad_components.get('similarity_max', s_max),
+                density_score=ad_components.get('density_score', 0.3),
+                context_score=ad_components.get('context_score', 0.3),
+                mechanism_score=mechanism_score
             )
             
         except Exception as e:
-            logger.error(f"Error in ultra-fast AD scoring: {e}")
+            logger.error(f"Error in ultra-fast AD scoring with gating: {e}")
             return self._create_error_result(ligand_smiles, target_id, base_prediction)
     
     def _build_neighbors_explanation(self, target_id: str, top_indices: List[int], similarities: np.ndarray) -> List[Dict[str, Any]]:
