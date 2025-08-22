@@ -446,18 +446,20 @@ class OptimizedFingerprintDB:
                               top_k: int = 256,
                               assay_type: Optional[str] = None) -> Tuple[float, List[int], np.ndarray, Dict[str, Any]]:
         """
-        Two-stage similarity search:
+        Two-stage similarity search with enhanced neighbor analysis:
         Stage 1: Fast approximate search for top candidates
         Stage 2: Exact Tanimoto on candidates for S_max and top-k
+        
+        Returns: (s_max, top_indices, similarities, neighbor_stats)
         """
         try:
             if target_id not in self.db_rdkit:
-                return 0.0, [], np.array([])
+                return 0.0, [], np.array([]), {}
             
             # Generate query fingerprint
             mol = Chem.MolFromSmiles(query_smiles)
             if mol is None:
-                return 0.0, [], np.array([])
+                return 0.0, [], np.array([]), {}
             
             query_fp_rdkit = AllChem.GetMorganFingerprintAsBitVect(mol, radius=2, nBits=2048)
             target_fps_rdkit = self.db_rdkit[target_id]
@@ -475,11 +477,101 @@ class OptimizedFingerprintDB:
             else:
                 top_indices = np.argsort(similarities)[::-1]
             
-            return float(s_max), top_indices.tolist(), similarities
+            # Enhanced neighbor analysis for gating
+            neighbor_stats = self._analyze_neighbors_for_gating(
+                target_id, similarities, assay_type
+            )
+            
+            return float(s_max), top_indices.tolist(), similarities, neighbor_stats
             
         except Exception as e:
             logger.error(f"Error in fast similarity search: {e}")
-            return 0.0, [], np.array([])
+            return 0.0, [], np.array([]), {}
+    
+    def _analyze_neighbors_for_gating(self, 
+                                     target_id: str, 
+                                     similarities: np.ndarray, 
+                                     assay_type: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Analyze neighbors for gating decisions with mandatory assay-class filtering.
+        """
+        try:
+            if target_id not in self.ligand_metadata:
+                return {
+                    'n_sim_ge_0_40_same_assay': 0,
+                    'n_sim_ge_0_45_same_assay': 0, 
+                    'assay_class': assay_type or 'unknown',
+                    'assay_mismatch_possible': True
+                }
+            
+            metadata = self.ligand_metadata[target_id]
+            assay_types = metadata.get('assay_types', [])
+            
+            # Count same-assay neighbors above thresholds
+            n_sim_40_same_assay = 0
+            n_sim_45_same_assay = 0
+            assay_mismatch_possible = False
+            
+            if assay_type and len(assay_types) == len(similarities):
+                # Count only same-assay-type neighbors
+                for i, (sim, train_assay) in enumerate(zip(similarities, assay_types)):
+                    if self._assays_match(assay_type, train_assay):
+                        if sim >= 0.40:
+                            n_sim_40_same_assay += 1
+                        if sim >= 0.45:
+                            n_sim_45_same_assay += 1
+            else:
+                # Fall back to all neighbors but flag mismatch
+                assay_mismatch_possible = True
+                for sim in similarities:
+                    if sim >= 0.40:
+                        n_sim_40_same_assay += 1
+                    if sim >= 0.45:
+                        n_sim_45_same_assay += 1
+            
+            return {
+                'n_sim_ge_0_40_same_assay': n_sim_40_same_assay,
+                'n_sim_ge_0_45_same_assay': n_sim_45_same_assay,
+                'assay_class': assay_type or 'mixed',
+                'assay_mismatch_possible': assay_mismatch_possible,
+                'total_neighbors': len(similarities)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error analyzing neighbors: {e}")
+            return {
+                'n_sim_ge_0_40_same_assay': 0,
+                'n_sim_ge_0_45_same_assay': 0,
+                'assay_class': 'error',
+                'assay_mismatch_possible': True
+            }
+    
+    def _assays_match(self, pred_assay: str, train_assay: str) -> bool:
+        """
+        Check if prediction and training assay types match.
+        
+        Groups related assays:
+        - IC50 variants: 'IC50', 'Binding_IC50', 'Functional_IC50'
+        - EC50 variants: 'EC50', 'Functional_EC50'
+        - Ki variants: 'Ki', 'Binding_Ki'
+        """
+        # Normalize assay names
+        pred_normalized = pred_assay.upper().replace('_', '').replace('BINDING', '').replace('FUNCTIONAL', '')
+        train_normalized = train_assay.upper().replace('_', '').replace('BINDING', '').replace('FUNCTIONAL', '')
+        
+        # Group similar assays
+        ic50_group = {'IC50', 'IC'}
+        ec50_group = {'EC50', 'EC'}
+        ki_group = {'KI', 'KD'}
+        
+        if pred_normalized in ic50_group and train_normalized in ic50_group:
+            return True
+        elif pred_normalized in ec50_group and train_normalized in ec50_group:
+            return True
+        elif pred_normalized in ki_group and train_normalized in ki_group:
+            return True
+        else:
+            return pred_normalized == train_normalized
     
     def _save_cache(self):
         """Save optimized cache"""
