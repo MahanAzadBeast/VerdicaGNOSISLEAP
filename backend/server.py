@@ -604,28 +604,43 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                         # Get base prediction value (pActivity)
                         base_prediction = prediction_data.get('pActivity', 6.0)
                         
-                        # Score with high-performance AD layer
+                        # Score with high-performance AD layer (with gating)
                         ad_result = hp_ad_layer.ultra_fast_score_with_ad(
                             ligand_smiles=input_data.smiles,
                             target_id=target,
-                            base_prediction=base_prediction
+                            base_prediction=base_prediction,
+                            assay_type=assay_type  # Pass assay type for neighbor filtering
                         )
                         
-                        # Enhance the prediction data with HP AD information
-                        enhanced_prediction = prediction_data.copy()
-                        enhanced_prediction.update({
-                            'ad_score': ad_result.ad_score,
-                            'confidence_calibrated': ad_result.confidence_calibrated,
-                            'potency_ci': ad_result.potency_ci,
-                            'ad_flags': ad_result.flags,
-                            'nearest_neighbors': ad_result.nearest_neighbors,
-                            'ad_components': {
-                                'similarity_max': ad_result.similarity_max,
-                                'density_score': ad_result.density_score,
-                                'context_score': ad_result.context_score,
-                                'mechanism_score': ad_result.mechanism_score
+                        # Check if result was gated (numeric potency suppressed)
+                        if hasattr(ad_result, 'status') and ad_result.status == "HYPOTHESIS_ONLY":
+                            # Return gated result - numeric fields explicitly omitted
+                            enhanced_prediction = {
+                                'target_id': ad_result.target_id,
+                                'status': ad_result.status,
+                                'message': ad_result.message,
+                                'why': ad_result.why,
+                                'evidence': ad_result.evidence,
+                                'assay_type': assay_type,
+                                # Explicitly omit: pActivity, potency_ci, IC50_nM, etc.
                             }
-                        })
+                        else:
+                            # Normal prediction - include all numeric fields
+                            enhanced_prediction = prediction_data.copy()
+                            enhanced_prediction.update({
+                                'status': 'OK',
+                                'ad_score': ad_result.ad_score,
+                                'confidence_calibrated': ad_result.confidence_calibrated,
+                                'potency_ci': ad_result.potency_ci,
+                                'ad_flags': ad_result.flags,
+                                'nearest_neighbors': ad_result.nearest_neighbors,
+                                'ad_components': {
+                                    'similarity_max': ad_result.similarity_max,
+                                    'density_score': ad_result.density_score,
+                                    'context_score': ad_result.context_score,
+                                    'mechanism_score': ad_result.mechanism_score
+                                }
+                            })
                         
                         enhanced_target_predictions[assay_type] = enhanced_prediction
                     else:
