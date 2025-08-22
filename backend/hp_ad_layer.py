@@ -718,8 +718,10 @@ class LearnedADScorer:
             if not smiles_std:
                 return None
             
-            # Fast similarity search
-            s_max, top_indices, _ = self.fp_db.fast_similarity_search(smiles_std, target_id, top_k=32)
+            # Fast similarity search with assay-aware neighbor analysis
+            s_max, top_indices, _, neighbor_stats = self.fp_db.fast_similarity_search(
+                smiles_std, target_id, top_k=32, assay_type=assay_type
+            )
             
             # Simple density score (mean of top similarities)
             if len(top_indices) > 0:
