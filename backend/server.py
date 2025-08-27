@@ -647,10 +647,10 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                                 }
                             })
                             
-                            # **EXPLICIT NUMERIC FIELD REMOVAL FOR GATED** - Double safety check
-                            if enhanced_prediction.get('status') == "HYPOTHESIS_ONLY":
-                                for k in ("pActivity", "potency_ci", "confidence_calibrated", "IC50_nM", "activity_uM"):
-                                    enhanced_prediction.pop(k, None)
+                            # **EXPLICIT NUMERIC FIELD REMOVAL** - Never leak numerics on gated rows
+                            numeric_fields = ["pActivity", "potency_ci", "confidence_calibrated", "IC50_nM", "activity_uM", "Binding_IC50", "Functional_IC50", "EC50"]
+                            for k in numeric_fields:
+                                enhanced_prediction.pop(k, None)
                         
                         enhanced_target_predictions[assay_type] = enhanced_prediction
                     else:
