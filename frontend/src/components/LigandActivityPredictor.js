@@ -758,18 +758,23 @@ const LigandActivityPredictor = () => {
                     const prediction = targetData[assayType];
                     if (!prediction) return null;
                     
-                    const pValue = prediction.pActivity;
-                    const activityUM = prediction.activity_uM;
+                    // **UNIVERSAL GATING SYSTEM** - Handle gated predictions
+                    const status = prediction.status || 'OK';
+                    const isGated = status === 'HYPOTHESIS_ONLY';
+                    
+                    // For gated predictions, numeric fields are suppressed by backend
+                    const pValue = isGated ? null : prediction.pActivity;
+                    const activityUM = isGated ? null : prediction.activity_uM;
                     const confidence = prediction.confidence || 0.8;
                     const sigma = prediction.sigma || 0.2;
                     const reliability = Math.exp(-sigma * sigma);
                     const qualityFlag = prediction.quality_flag || 'good';
                     const confidenceNote = prediction.confidence_note || '';
                     
-                    const potencyDisplay = formatPotencyDisplay(pValue, activityUM, assayType, qualityFlag);
-                    const potencyColor = calculatePotencyColor(pValue, confidence, potencyDisplay.isUnreliable, potencyDisplay.isNotTrained);
-                    const inactive = isInactive(pValue, activityUM);
-                    const potencyDesc = getPotencyDescription(Math.max(0, pValue));
+                    const potencyDisplay = formatPotencyDisplay(pValue, activityUM, assayType, qualityFlag, status);
+                    const potencyColor = calculatePotencyColor(pValue, confidence, potencyDisplay.isUnreliable, potencyDisplay.isNotTrained, potencyDisplay.isGated);
+                    const inactive = isGated ? false : isInactive(pValue, activityUM);
+                    const potencyDesc = isGated ? 'Gated prediction' : getPotencyDescription(Math.max(0, pValue || 0));
 
                     return (
                       <tr key={`${target}-${assayType}`} className="hover:bg-gray-700 transition-colors">
