@@ -27,6 +27,7 @@ from functools import lru_cache
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import re
+import math
 
 # Core imports
 from rdkit import Chem, DataStructs
@@ -40,6 +41,9 @@ from sklearn.decomposition import PCA
 from sklearn.metrics import log_loss
 import warnings
 warnings.filterwarnings('ignore')
+
+# Import config constants
+from hp_ad_layer_config import *
 
 logger = logging.getLogger(__name__)
 
