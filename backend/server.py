@@ -49,44 +49,32 @@ try:
     
     # Initialize high-performance AD layer with REAL ChEMBL training data
     try:
-        from chembl_data_manager import ChEMBLDataManager
-        import asyncio
+        # First try to load real ChEMBL data if available 
+        real_data_loaded = False
+        try:
+            # Check if there's cached ChEMBL data already available
+            cached_chembl_file = Path("/app/backend/data/training_data.csv")
+            if cached_chembl_file.exists():
+                training_data = pd.read_csv(cached_chembl_file)
+                if len(training_data) > 0 and 'smiles' in training_data.columns:
+                    # Ensure compatibility with AD layer format
+                    training_data['target_id'] = training_data.get('target_id', 'EGFR')
+                    training_data['split'] = training_data.get('split', 'train')
+                    training_data['assay_type'] = training_data.get('assay_type', 'IC50') 
+                    training_data['ligand_id'] = training_data.get('ligand_id', 
+                        [f'CHEMBL_COMPOUND_{i:04d}' for i in range(len(training_data))])
+                    real_data_loaded = True
+                    logging.info(f"✅ Loaded real ChEMBL training data: {len(training_data)} compounds")
+        except Exception as e:
+            logging.warning(f"⚠️ Could not load cached ChEMBL data: {e}")
         
-        async def load_real_training_data():
-            """Load real ChEMBL training data for AD layer"""
-            chembl_manager = ChEMBLDataManager()
-            all_data = []
-            
-            # Load data for multiple targets to build comprehensive AD database
-            targets = ['EGFR', 'BRAF', 'CDK2', 'PARP1', 'BCL2', 'VEGFR2']
-            
-            for target in targets:
-                try:
-                    # Get cached data first, or download fresh if needed
-                    target_data = await chembl_manager.prepare_training_data(target, limit=200)
-                    if target_data is not None and len(target_data) > 0:
-                        # Add target_id and split columns for AD layer compatibility
-                        target_data['target_id'] = target
-                        target_data['split'] = 'train'  # Mark as training data
-                        target_data['assay_type'] = 'IC50'  # Assume IC50 for now
-                        target_data['ligand_id'] = [f'{target}_COMPOUND_{i:04d}' for i in range(len(target_data))]
-                        all_data.append(target_data)
-                        logging.info(f"✅ Loaded {len(target_data)} compounds for {target}")
-                except Exception as e:
-                    logging.warning(f"⚠️ Could not load {target} data: {e}")
-                    
-            if all_data:
-                # Combine all target data
-                training_data = pd.concat(all_data, ignore_index=True)
-                logging.info(f"✅ Combined ChEMBL training data: {len(training_data)} records across {len(all_data)} targets")
-                return training_data
-            else:
-                logging.warning("⚠️ No real ChEMBL data available, falling back to mock data")
-                from ad_mock_data import generate_mock_training_data
-                return generate_mock_training_data(n_compounds=100, n_targets=8)
+        if not real_data_loaded:
+            # Fall back to enhanced mock data with realistic drug scaffolds
+            logging.info("📊 Loading enhanced mock data with realistic drug scaffolds...")
+            from ad_mock_data import generate_mock_training_data
+            training_data = generate_mock_training_data(n_compounds=500, n_targets=8)
+            logging.info(f"✅ Generated enhanced mock training data: {len(training_data)} compounds")
         
-        # Load real training data synchronously
-        training_data = asyncio.run(load_real_training_data())
         initialize_hp_ad_layer_sync(training_data)
         logging.info("✅ Gnosis I High-Performance AD layer initialized")
         GNOSIS_AD_AVAILABLE = True
