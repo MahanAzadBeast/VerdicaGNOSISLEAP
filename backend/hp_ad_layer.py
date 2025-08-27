@@ -1811,80 +1811,60 @@ class HighPerformanceAD:
             ad_components = results.get('ad_components', self._default_ad_components())
             s_max, top_indices, similarities, neighbor_stats = results.get('similarity', (0.0, [], np.array([]), {}))
             
-            # **COMPREHENSIVE HARDENED GATING LOGIC**
-            gate_reasons = []
-            gate_failures = 0
-            
-            # 1. AD gate fail
-            ad_score = ad_components.get('ad_score', 0.3)
-            if ad_score < 0.50:
-                gate_reasons.append("OOD_chem")
-                gate_failures += 1
-            
-            # 2. Mechanism gate fail for kinases
-            is_kinase = self.ad_scorer._is_kinase_target(target_id)
-            mechanism_score = ad_components.get('mechanism_score', 0.5)
-            if is_kinase and mechanism_score < 0.25:
-                gate_reasons.append("Kinase_mechanism_fail")
-                gate_failures += 1
-            
-            # 3. Neighbor sanity fail (same-target, same-assay-class) - HARDENED THRESHOLDS
-            n_same_assay_40 = neighbor_stats.get('n_sim_ge_0_40_same_assay', 0)
-            if s_max < 0.50 or n_same_assay_40 < 30:
-                gate_reasons.append("Insufficient_in-class_neighbors")
-                gate_failures += 1
-            
-            # Add assay mismatch warning if applicable
-            if neighbor_stats.get('assay_mismatch_possible', False):
-                gate_reasons.append("assay_mismatch_possible")
-                # Don't increment gate_failures - this is a warning, not a hard gate
-            
-            # 4. HARDENED Family pharmacophore failures
+            # **COMPREHENSIVE CROSS-ASSAY GATING WITH FAMILY ENVELOPES**
             mol = Chem.MolFromSmiles(smiles_std) if smiles_std else None
-            if is_kinase and not passes_kinase_pharmacophore_v3(mol):
-                gate_reasons.append("Kinase_pharmacophore_fail")
-                gate_failures += 1
+            ad_score = ad_components.get('ad_score', 0.3)
+            mechanism_score = ad_components.get('mechanism_score', 0.5)
             
-            if self._is_parp1_target(target_id) and not passes_parp1_pharmacophore_v3(mol):
-                gate_reasons.append("PARP_pharmacophore_fail")
-                gate_failures += 1
+            # Determine protein family for family-specific gates
+            family = determine_protein_family(target_id)
             
-            # 5. Ionization/size realism for deep ATP pockets
-            mol_weight = self._get_molecular_weight(smiles_std)
-            if is_kinase and mol_weight < 250 and strongly_anionic_pH74_v2(mol):
-                gate_reasons.append("Physchem_implausible_for_ATP_pocket")
-                gate_failures += 1
+            # Prepare assay data (placeholder - in real implementation would extract from base_prediction)
+            assays = {
+                "Binding_IC50": None,    # Would be populated from actual predictions
+                "Functional_IC50": None, # Would be populated from actual predictions  
+                "EC50": None             # Would be populated from actual predictions
+            }
             
-            # 6. ENHANCED Hard veto for tiny acids on kinases
-            if is_kinase and tiny_acid_veto_v2(mol):
-                gate_reasons.append("tiny_acid_veto")
-                gate_failures += 1
+            # Enhanced mechanism info
+            mech_info = {
+                "reasons": [],
+                "score": mechanism_score
+            }
             
-            # 7. kNN plausibility cross-check
+            # Check AD gate
+            ad_ok = ad_score >= 0.50
+            
+            # Check basic mechanism gate
+            if family == "kinase" and mechanism_score < 0.25:
+                mech_info["reasons"].append("Kinase_mechanism_fail")
+            
+            # Apply comprehensive gating system
+            suppress, hard_flag, gate_reasons, evidence = aggregate_gates_v3(
+                mol=mol,
+                target_id=target_id,
+                family=family,
+                ad_ok=ad_ok,
+                mech_info=mech_info,
+                nn_info=neighbor_stats,
+                assays=assays
+            )
+            
+            # Add kNN cross-check if base prediction available
             if base_prediction:
                 should_gate_knn, knn_pred, knn_reason = compute_knn_cross_check(
                     smiles_std, target_id, base_prediction, self.fp_db
                 )
                 if should_gate_knn:
                     gate_reasons.append(knn_reason)
-                    gate_failures += 1
+                    suppress = True  # kNN discordance also triggers gating
             
-            # 8. Label consistency fail (assay mismatch)
-            if self._has_assay_mismatch(target_id, assay_type):
-                gate_reasons.append("Assay_mismatch_caution")
-                gate_failures += 1
+            # Add mechanistically implausible tag if ≥3 gate failures
+            if hard_flag and "Mechanistically_implausible" not in gate_reasons:
+                gate_reasons.append("Mechanistically_implausible")
             
-            # **CUMULATIVE GATING RULE**
-            # If ≥ 2 gates fail: suppress numeric
-            # If ≥ 3 gates fail: suppress numeric and add "mechanistically implausible" tag
-            should_gate = gate_failures >= 2
-            
-            if gate_failures >= 3:
-                if "Mechanistically_implausible" not in gate_reasons:
-                    gate_reasons.append("Mechanistically_implausible")
-            
-            # **GATING DECISION**
-            if should_gate:
+            # **RESPONSE SHAPING - SUPPRESS NUMERICS WHEN GATED**
+            if suppress:
                 # Return gated result with suppressed numeric potency
                 return self._create_gated_result(
                     smiles_std, target_id, gate_reasons, ad_components, 
@@ -1895,9 +1875,10 @@ class HighPerformanceAD:
             # Apply existing AD-aware policies for confidence and CI
             flags = []
             confidence_calibrated = 0.7  # Default confidence
+            is_kinase = family == "kinase"
             
             # Updated thresholds as per spec
-            if ad_score < 0.5:  # This case already gated above, but keep for safety
+            if ad_score < 0.5:  # This case should be gated above, but keep for safety
                 flags.append("OOD_chem")
                 confidence_calibrated = 0.2
                 ci_multiplier = 2.5
