@@ -737,7 +737,7 @@ except Exception as e:
 # Include reports API  
 try:
     from reports.routes import router as reports_router
-    app.include_router(reports_router, prefix="/api/reports", tags=["Reports"])
+    app.include_router(reports_router, tags=["Reports"])
     logging.info("✅ Reports API included")
 except Exception as e:
     logging.error(f"❌ Failed to include Reports API: {e}")
