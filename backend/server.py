@@ -47,35 +47,29 @@ try:
     logging.info("✅ Gnosis I (Model 1) initialized")
     GNOSIS_I_AVAILABLE = True
     
-    # Initialize high-performance AD layer with REAL ChEMBL training data
+    # Initialize high-performance AD layer with REAL ChEMBL data ONLY (no mock data)
     try:
-        # First try to load real ChEMBL data if available 
-        real_data_loaded = False
-        try:
-            # Check if there's cached ChEMBL data already available
-            cached_chembl_file = Path("/app/backend/data/training_data.csv")
-            if cached_chembl_file.exists():
-                training_data = pd.read_csv(cached_chembl_file)
-                if len(training_data) > 0 and 'smiles' in training_data.columns:
-                    # Ensure compatibility with AD layer format
-                    training_data['target_id'] = training_data.get('target_id', 'EGFR')
-                    training_data['split'] = training_data.get('split', 'train')
-                    training_data['assay_type'] = training_data.get('assay_type', 'IC50') 
-                    training_data['ligand_id'] = training_data.get('ligand_id', 
-                        [f'CHEMBL_COMPOUND_{i:04d}' for i in range(len(training_data))])
-                    real_data_loaded = True
-                    logging.info(f"✅ Loaded real ChEMBL training data: {len(training_data)} compounds")
-        except Exception as e:
-            logging.warning(f"⚠️ Could not load cached ChEMBL data: {e}")
+        from real_chembl_loader import load_real_chembl_for_ad
         
-        if not real_data_loaded:
-            # Fall back to enhanced mock data with realistic drug scaffolds
-            logging.info("📊 Loading enhanced mock data with realistic drug scaffolds...")
-            from ad_mock_data import generate_mock_training_data
-            training_data = generate_mock_training_data(n_compounds=500, n_targets=8)
-            logging.info(f"✅ Generated enhanced mock training data: {len(training_data)} compounds")
+        logging.info("🎯 Loading REAL ChEMBL training data for AD layer (NO MOCK DATA)...")
         
-        initialize_hp_ad_layer_sync(training_data)
+        # Load only real ChEMBL data - same data Gnosis I was trained on
+        real_training_data = load_real_chembl_for_ad(max_targets=8)
+        
+        if real_training_data is not None:
+            logging.info(f"✅ Real ChEMBL data loaded: {len(real_training_data)} compounds")
+            initialize_hp_ad_layer_sync(real_training_data)
+            logging.info("✅ Gnosis I High-Performance AD layer initialized with REAL data")
+            GNOSIS_AD_AVAILABLE = True
+        else:
+            logging.error("❌ CRITICAL: No real ChEMBL data available")
+            logging.error("❌ AD layer disabled - cannot use mock data as per requirements")
+            GNOSIS_AD_AVAILABLE = False
+            
+    except Exception as e:
+        logging.error(f"❌ High-Performance AD layer initialization failed: {e}")
+        logging.error("❌ AD layer disabled - real data loading failed")
+        GNOSIS_AD_AVAILABLE = False
         logging.info("✅ Gnosis I High-Performance AD layer initialized")
         GNOSIS_AD_AVAILABLE = True
     except Exception as e:
