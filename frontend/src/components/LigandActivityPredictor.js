@@ -408,7 +408,7 @@ const LigandActivityPredictor = () => {
         ? availableTargets.available_targets || []
         : selectedTargets;
       
-      const response = await axios.post(`${API}/gnosis-i/predict`, {
+      const response = await axios.post(`${API}/gnosis-i/predict-with-hp-ad`, {
         smiles: smiles.trim(),
         targets: targetsToPredict,
         assay_types: selectedAssayTypes // Send selected assay types to backend
