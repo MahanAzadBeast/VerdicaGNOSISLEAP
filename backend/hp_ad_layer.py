@@ -2006,85 +2006,77 @@ class HighPerformanceAD:
             ad_components = results.get('ad_components', self._default_ad_components())
             s_max, top_indices, similarities, neighbor_stats = results.get('similarity', (0.0, [], np.array([]), {}))
             
-            # **COMPREHENSIVE CROSS-ASSAY GATING WITH FAMILY ENVELOPES**
+            # **UNIVERSAL GATING SYSTEM - APPLIES TO ALL COMPOUNDS**
             mol = Chem.MolFromSmiles(smiles_std) if smiles_std else None
             ad_score = ad_components.get('ad_score', 0.3)
             mechanism_score = ad_components.get('mechanism_score', 0.5)
             
-            # Determine protein family for family-specific gates
+            # Universal protein family determination 
             family = determine_protein_family(target_id)
             
-            # Prepare assay data (placeholder - in real implementation would extract from base_prediction)
-            assays = {
-                "Binding_IC50": None,    # Would be populated from actual predictions
-                "Functional_IC50": None, # Would be populated from actual predictions  
-                "EC50": None             # Would be populated from actual predictions
+            # Universal assay data preparation (would be populated from actual predictions)
+            assay_vals = {
+                "Binding_IC50": None,    # Placeholder - would extract from base_prediction
+                "Functional_IC50": None, # Placeholder - would extract from base_prediction
+                "EC50": None,            # Placeholder - would extract from base_prediction
+                "smiles": smiles_std,
+                "profile_family": family
             }
             
-            # Enhanced mechanism info
-            mech_info = {
-                "reasons": [],
-                "score": mechanism_score
-            }
-            
-            # Check AD gate
+            # Universal AD gate check
             ad_ok = ad_score >= 0.50
             
-            # Check basic mechanism gate
-            if family == "kinase" and mechanism_score < 0.25:
-                mech_info["reasons"].append("Kinase_mechanism_fail")
-            
-            # Apply comprehensive gating system
-            suppress, hard_flag, gate_reasons, evidence = aggregate_gates_v3(
+            # Apply universal gating system - no compound-specific logic
+            suppress, hard_flag, gate_reasons, evidence = aggregate_gates_universal(
                 mol=mol,
                 target_id=target_id,
                 family=family,
                 ad_ok=ad_ok,
-                mech_info=mech_info,
                 nn_info=neighbor_stats,
-                assays=assays
+                assay_vals=assay_vals,
+                mech_score=mechanism_score
             )
             
-            # Add kNN cross-check if base prediction available
+            # Universal kNN cross-check (if base prediction available)
             if base_prediction:
                 should_gate_knn, knn_pred, knn_reason = compute_knn_cross_check(
                     smiles_std, target_id, base_prediction, self.fp_db
                 )
                 if should_gate_knn:
                     gate_reasons.append(knn_reason)
-                    suppress = True  # kNN discordance also triggers gating
+                    suppress = True  # kNN discordance universally triggers gating
             
-            # Add mechanistically implausible tag if ≥3 gate failures
+            # Universal hard flag application
             if hard_flag and "Mechanistically_implausible" not in gate_reasons:
                 gate_reasons.append("Mechanistically_implausible")
             
-            # **RESPONSE SHAPING - SUPPRESS NUMERICS WHEN GATED**
+            # **UNIVERSAL RESPONSE SHAPING - SUPPRESS NUMERICS WHEN GATED**
             if suppress:
-                # Return gated result with suppressed numeric potency
+                # Return gated result with universally suppressed numeric potency
                 return self._create_gated_result(
                     smiles_std, target_id, gate_reasons, ad_components, 
                     neighbor_stats, s_max, top_indices, similarities
                 )
             
-            # **PASSES ALL GATES - RETURN NUMERIC PREDICTION**
-            # Apply existing AD-aware policies for confidence and CI
+            # **PASSES ALL UNIVERSAL GATES - RETURN NUMERIC PREDICTION**
+            # Apply universal AD-aware policies for confidence and CI
             flags = []
-            confidence_calibrated = 0.7  # Default confidence
+            confidence_calibrated = 0.7  # Universal default confidence
             is_kinase = family == "kinase"
             
-            # Updated thresholds as per spec
+            # Universal thresholds
             if ad_score < 0.5:  # This case should be gated above, but keep for safety
                 flags.append("OOD_chem")
                 confidence_calibrated = 0.2
                 ci_multiplier = 2.5
-            elif ad_score < 0.65:  # Low-confidence but in-domain
+            elif ad_score < 0.65:  # Universal low-confidence threshold
                 confidence_calibrated = 0.45
                 ci_multiplier = 1.5
-            else:  # Good domain
+            else:  # Universal good domain threshold
                 confidence_calibrated = 0.7
                 ci_multiplier = 1.0
             
-            # Additional kinase flags (non-gating)
+            # Universal kinase-specific adjustments (non-gating)
             if is_kinase:
                 if mechanism_score < 0.5:
                     flags.append("Kinase_mech_low")
