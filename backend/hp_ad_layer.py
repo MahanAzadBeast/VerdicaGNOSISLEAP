@@ -101,9 +101,13 @@ def passes_kinase_hinge_pharmacophore_v2(smiles: str) -> bool:
             "c1nc2c([nH1,NH1,NH2])ncnc2[nH,n]1",                   # Purine core with amino
             "[nH1,NH1]c1cccc([OH])c1",                              # Aniline + phenol (erlotinib-like)
             "c1cc([OH,NH1,NH2])ccc1[nH1,NH1,NH2]",                 # Para-substituted aniline
-            # Quinazoline/quinoline frameworks
+            # Quinazoline/quinoline frameworks (gefitinib, lapatinib patterns)
             "[nH1,NH1,NH2]c1nc2ccccc2c([OH,NH1,NH2])c1",           # Quinazoline scaffold
             "c1ccc2nc([nH1,NH1,NH2])c([OH,NH1,NH2])cc2c1",         # Quinoline scaffold
+            # Common kinase inhibitor patterns
+            "c1cc(F)c([Cl,F,Br])cc1[NH1,NH2]",                     # Halogenated aniline (gefitinib)
+            "[NH1,NH2]c1nc2c(cc([OCH3,OCC])c([OCCCN,OCCN])c2)c(n1)", # Quinazoline + methoxy
+            "c1nc(nc(c1)[NH1,NH2])c2cccnc2",                       # Pyrimidine-pyridine (imatinib-like)
         ]
         
         # Count validated hinge patterns
