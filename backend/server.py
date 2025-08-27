@@ -624,6 +624,11 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                                 'assay_type': assay_type,
                                 # Explicitly omit: pActivity, potency_ci, IC50_nM, etc.
                             }
+                            
+                            # **EXPLICIT NUMERIC FIELD REMOVAL** - Never leak numerics on gated rows
+                            for k in ("pActivity", "potency_ci", "confidence_calibrated", "IC50_nM", "activity_uM"):
+                                enhanced_prediction.pop(k, None)
+                                
                         else:
                             # Normal prediction - include all numeric fields
                             enhanced_prediction = prediction_data.copy()
@@ -641,6 +646,11 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                                     'mechanism_score': ad_result.mechanism_score
                                 }
                             })
+                            
+                            # **EXPLICIT NUMERIC FIELD REMOVAL FOR GATED** - Double safety check
+                            if enhanced_prediction.get('status') == "HYPOTHESIS_ONLY":
+                                for k in ("pActivity", "potency_ci", "confidence_calibrated", "IC50_nM", "activity_uM"):
+                                    enhanced_prediction.pop(k, None)
                         
                         enhanced_target_predictions[assay_type] = enhanced_prediction
                     else:
