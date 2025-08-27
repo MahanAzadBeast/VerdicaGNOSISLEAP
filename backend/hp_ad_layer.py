@@ -172,10 +172,27 @@ def passes_parp1_pharmacophore_v2(smiles: str) -> bool:
             "[c,n]1[c,n][c,n][c,n]([C](=O)[NH1,NH2])[c,n][c,n]1",  # Ring-amide core
             "[c,n]1[c,n][c,n]c2[nH]c(=O)[c,n][c,n]c2[c,n]1",       # Lactam fused rings
             "c1ccc2[nH]c(=O)c([NH1,NH2])cc2c1",                     # Quinoline-2-one amide
-            # Benzamide variants (common PARP scaffolds)
+            # Benzamide variants (common PARP scaffolds) - but NOT imatinib-like
             "c1ccc(cc1)[C](=O)[NH1,NH2]",                           # Simple benzamide
             "[F,Cl,Br]c1ccc(cc1)[C](=O)[NH1,NH2]",                 # Halogenated benzamide
+            # Olaparib-like patterns
+            "c1ccc2oc(=O)nc2c1",                                    # Benzoxazinone core (olaparib)
+            "NC(=O)c1ccc2c(c1)oc(=O)n2",                           # Phthalazinone amide
         ]
+        
+        # EXCLUDE patterns that shouldn't be PARP (like imatinib)
+        exclude_from_parp = [
+            "c1nc(nc(c1)[NH1,NH2])c2cccnc2",                       # Pyrimidine-pyridine (imatinib)
+            "c1ccc(cc1Nc2nccc(n2)c3cccnc3)",                       # Imatinib-specific pattern
+        ]
+        
+        # First check exclusions
+        for pattern in exclude_from_parp:
+            try:
+                if mol.HasSubstructMatch(Chem.MolFromSmarts(pattern)):
+                    return False  # Explicit exclusion
+            except:
+                continue
         
         # Require at least one validated PARP pharmacophore
         has_parp_core = False
