@@ -37,10 +37,11 @@ CUMULATIVE_GATE_HARD = 3          # >=3 reasons => add Mechanistically_implausib
 
 # Universal mechanism gate SMARTS patterns
 KINASE_HINGE_SMARTS = [
-    "n1c(N)nc(N)n1",        # hinge-capable motifs
-    "n1cnc2ncnn12",         # purine-like
-    "Nc1ncnc(N)n1",         # aminopyrimidine
-    "O=C-Nc1ncccc1"         # benzamide-like HBA/HBD near ring
+    "[nH1,NH2]c1ncnc([nH1,NH2])n1",     # diaminopyrimidine
+    "[nH1,NH2]c1nc([nH1,NH2])nc([nH1,NH2])n1",  # triaminopyrimidine  
+    "n1cnc2ncnn12",                      # purine-like
+    "O=C-Nc1ncccc1",                     # benzamide-like HBA/HBD near ring
+    "c1nc([nH1,NH2])nc([nH1,NH2])c1"    # simple diaminopyrimidine
 ]
 
 PARP_POS_SMARTS = [
