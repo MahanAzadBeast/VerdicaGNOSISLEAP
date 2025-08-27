@@ -1263,7 +1263,7 @@ class HighPerformanceAD:
                 gate_reasons.append("assay_mismatch_possible")
             
             # 4. Family pharmacophore fail
-            if is_kinase and not passes_kinase_hinge_pharmacophore(smiles_std):
+            if is_kinase and not passes_kinase_hinge_pharmacophore_v2(smiles_std):
                 gate_reasons.append("Kinase_pharmacophore_fail")
             
             if self._is_parp1_target(target_id) and not passes_parp1_pharmacophore(smiles_std):
