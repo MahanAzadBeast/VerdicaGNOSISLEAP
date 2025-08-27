@@ -97,7 +97,7 @@ def test_universal_mechanism_gates():
     print("\n🧪 Testing Universal Mechanism Gates")
     
     # Generic test molecules based on structural patterns only
-    hinge_like = Chem.MolFromSmiles("Nc1nc(N)nc(N)c1")  # Generic diaminopyrimidine pattern
+    hinge_like = Chem.MolFromSmiles("CCCc1nc(N)c(N=O)nc1N")  # More complex kinase-like with multiple features
     non_hinge = Chem.MolFromSmiles("CCCCCC")  # Generic aliphatic (no hinge features)
     benzamide_like = Chem.MolFromSmiles("NC(=O)c1ccccc1")  # Generic benzamide pattern
     salicylate_like = Chem.MolFromSmiles("O=C(O)c1ccccc1O")  # Generic salicylate pattern (negative)
