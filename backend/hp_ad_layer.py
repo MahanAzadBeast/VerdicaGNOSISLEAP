@@ -81,7 +81,255 @@ class GatedPredictionResult:
             self.evidence = {}
 
 # Pharmacophore checking functions for fast gating
-# Hardened gating constants and functions (exact implementation per specification)
+# Cross-Assay Consistency Functions
+def _floor_clamp_um(x):
+    """Floor clamp to prevent unrealistic sub-nM predictions"""
+    return max(x, EC50_FLOOR_UM) if x is not None else None
+
+def _log10(x):
+    """Safe log10 for µM values"""
+    return math.log10(max(x, 1e-12))
+
+def assay_consistency_check(binding_um, functional_um, ec50_um, is_enzyme=True):
+    """
+    Cross-assay consistency check for Binding_IC50, Functional_IC50, EC50.
+    
+    Returns: (ok, reasons)
+    """
+    reasons = []
+    
+    # Floor clamp all values
+    b = _floor_clamp_um(binding_um) if binding_um is not None else None
+    f = _floor_clamp_um(functional_um) if functional_um is not None else None
+    e = _floor_clamp_um(ec50_um) if ec50_um is not None else None
+    
+    # Flag if any values were floor clamped
+    if any(v is not None and v <= EC50_FLOOR_UM for v in [binding_um, functional_um, ec50_um]):
+        reasons.append("floor_clamped")
+    
+    # Helper for log delta calculation
+    def dlog(x, y): 
+        return abs(_log10(x) - _log10(y))
+    
+    # Check binding vs functional consistency (≤10x difference)
+    if b is not None and f is not None and dlog(b, f) > ASSAY_DELTA_MAX_LOG:
+        reasons.append("Assay_discordance_BvsF")
+    
+    # Check binding/functional vs EC50 consistency
+    if e is not None and (b is not None or f is not None):
+        bf_min = min([v for v in [b, f] if v is not None])
+        if dlog(bf_min, e) > ASSAY_DELTA_MAX_LOG:
+            reasons.append("Assay_discordance_BFvsE")
+    
+    # Enzyme monotonicity prior: binding/functional potency should be ≤ EC50 (within tolerance)
+    if is_enzyme and (b is not None or f is not None) and e is not None:
+        bf_min = min([v for v in [b, f] if v is not None])
+        if _log10(bf_min) - _log10(e) > ASSAY_MONOTONIC_TOL_LOG:
+            reasons.append("Enzyme_monotonicity_fail")
+    
+    ok = len(reasons) == 0
+    return ok, reasons
+
+# Family Property Envelope Functions
+def calc_clogp(mol):
+    """Lightweight cLogP calculation using RDKit"""
+    try:
+        return Crippen.MolLogP(mol)
+    except:
+        return 0.0
+
+def ring_count(mol):
+    """Get number of rings in molecule"""
+    try:
+        return mol.GetRingInfo().NumRings()
+    except:
+        return 0
+
+def aromatic_ring_count(mol):
+    """Count aromatic rings"""
+    try:
+        aromatic_atoms = [atom for atom in mol.GetAtoms() if atom.GetIsAromatic()]
+        aromatic_rings = set()
+        for ring in mol.GetRingInfo().AtomRings():
+            if any(mol.GetAtomWithIdx(idx).GetIsAromatic() for idx in ring):
+                aromatic_rings.add(tuple(sorted(ring)))
+        return len(aromatic_rings)
+    except:
+        return 0
+
+def hba_count(mol):
+    """Count hydrogen bond acceptors"""
+    try:
+        return Descriptors.NumHBA(mol)
+    except:
+        return 0
+
+def hbd_count(mol):
+    """Count hydrogen bond donors"""
+    try:
+        return Descriptors.NumHDonors(mol)
+    except:
+        return 0
+
+def has_cationic_center(mol):
+    """Check for cationizable nitrogen"""
+    try:
+        # Look for tertiary amines and quaternary nitrogens
+        cationic_patterns = [
+            "[N+]",              # Quaternary nitrogen
+            "[nH0]([C,c])([C,c])[C,c]",  # Tertiary amine (simplified)
+            "c1ccncc1",          # Pyridine-like
+            "c1cccnc1"           # Pyrimidine-like
+        ]
+        for pattern in cationic_patterns:
+            try:
+                if mol.HasSubstructMatch(Chem.MolFromSmarts(pattern)):
+                    return True
+            except:
+                continue
+        return False
+    except:
+        return False
+
+def family_physchem_gate(mol, family):
+    """Family-specific physicochemical property gates"""
+    reasons = []
+    
+    try:
+        mw_val = Descriptors.MolWt(mol)
+        rings = ring_count(mol)
+        clogp = calc_clogp(mol)
+        
+        if family == "kinase":
+            if mw_val < MW_MIN_KINASE: 
+                reasons.append("Kinase_physchem_MW_low")
+            if rings < RINGS_MIN_KINASE: 
+                reasons.append("Kinase_physchem_rings_low")
+            if strongly_anionic_pH74_v2(mol): 
+                reasons.append("Kinase_physchem_anionic")
+                
+        elif family == "gpcr":
+            if not (MW_RANGE_GPCR[0] <= mw_val <= MW_RANGE_GPCR[1]): 
+                reasons.append("GPCR_physchem_MW_out")
+            if clogp < CLoGP_MIN_GPCR: 
+                reasons.append("GPCR_physchem_logP_low")
+                
+        elif family == "ppi":
+            if mw_val < MW_MIN_PPI: 
+                reasons.append("PPI_physchem_MW_low")
+            if rings < RINGS_MIN_PPI: 
+                reasons.append("PPI_physchem_rings_low")
+                
+    except Exception as e:
+        logger.warning(f"Error in family physchem gate: {e}")
+        reasons.append("Physchem_calculation_error")
+    
+    return len(reasons) == 0, reasons
+
+# Enhanced Mechanism Gates by Family
+def kinase_mechanism_gate_v2(mol):
+    """Enhanced kinase hinge gate requiring ≥2 hinge-capable features OR fast shape ≥ P90"""
+    try:
+        hits = 0
+        
+        for smarts in KINASE_HINGE_SMARTS:
+            try:
+                if mol.HasSubstructMatch(Chem.MolFromSmarts(smarts)):
+                    hits += 1
+            except:
+                continue
+        
+        if hits >= 2:
+            return True, []
+        
+        # Fallback: fast shape/pharmacophore percentile (simplified for now)
+        # In full implementation, would use cached HER/EGFR template
+        basic_kinase_features = [
+            "c1nc2c(N)ncnc2n1",                      # adenine-like
+            "[nH1,NH1,NH2]c1ncnc(c1)",             # aminopyrimidine
+            "c1ccc2nc([NH1,NH2])ccc2c1",           # aminoquinoline
+        ]
+        
+        basic_hits = sum(int(mol.HasSubstructMatch(Chem.MolFromSmarts(s))) for s in basic_kinase_features)
+        if basic_hits >= 1:  # More permissive fallback approximates P90 threshold
+            return True, []
+            
+        return False, ["Kinase_pharmacophore_fail"]
+        
+    except Exception as e:
+        logger.warning(f"Error in kinase mechanism gate: {e}")
+        return False, ["Kinase_pharmacophore_fail"]
+
+def parp1_mechanism_gate_v2(mol):
+    """Enhanced PARP1 pharmacophore with positive + negative patterns"""
+    try:
+        pos = any(mol.HasSubstructMatch(Chem.MolFromSmarts(s)) for s in PARP_POS_SMARTS)
+        neg = any(mol.HasSubstructMatch(Chem.MolFromSmarts(s)) for s in PARP_NEG_SMARTS)
+        
+        if pos and not neg:
+            return True, []
+        
+        return False, ["PARP_pharmacophore_fail"]
+        
+    except Exception as e:
+        logger.warning(f"Error in PARP1 mechanism gate: {e}")
+        return False, ["PARP_pharmacophore_fail"]
+
+def gpcr_mechanism_gate(mol):
+    """Minimal GPCR check: HBA + (HBD or cationic N) + aromatic ring"""
+    try:
+        has_hba = hba_count(mol) >= 1
+        has_hbd_or_cation = hbd_count(mol) >= 1 or has_cationic_center(mol)
+        has_aromatic = aromatic_ring_count(mol) >= 1
+        
+        ok = has_hba and has_hbd_or_cation and has_aromatic
+        return ok, [] if ok else ["GPCR_pharmacophore_fail"]
+        
+    except Exception as e:
+        logger.warning(f"Error in GPCR mechanism gate: {e}")
+        return False, ["GPCR_pharmacophore_fail"]
+
+# Assay-Specific Neighbor Sanity
+def in_assay_neighbors_ok(nn_info):
+    """Enhanced neighbor checks per assay label"""
+    try:
+        smax = nn_info.get("S_max_in_assay", nn_info.get("S_max", 0.0))
+        n040 = nn_info.get("n_sim_ge_0_40_in_assay", nn_info.get("n_sim_ge_0_40_same_assay", 0))
+        
+        ok = (smax >= NEIGHBOR_SMAX_MIN) and (n040 >= NEIGHBOR_MIN_COUNT_040)
+        reasons = [] if ok else ["Insufficient_in-assay_neighbors"]
+        
+        return ok, reasons, {
+            "S_max": smax, 
+            "neighbors_in_assay": n040
+        }
+        
+    except Exception as e:
+        logger.warning(f"Error in assay neighbor check: {e}")
+        return False, ["Insufficient_in-assay_neighbors"], {"S_max": 0.0, "neighbors_in_assay": 0}
+
+def fast_shape_percentile(mol, template="HER/EGFR_hinge"):
+    """
+    Placeholder for fast shape/pharmacophore percentile check.
+    In full implementation, would use cached template matching.
+    """
+    # Simplified approximation - in real implementation would use proper shape matching
+    try:
+        # For now, return a reasonable approximation based on molecular complexity
+        mw = Descriptors.MolWt(mol)
+        rings = ring_count(mol)
+        hba = hba_count(mol)
+        
+        # Simple scoring based on kinase-like properties
+        score = 0.0
+        if 300 <= mw <= 600: score += 0.3
+        if rings >= 2: score += 0.3  
+        if hba >= 2: score += 0.4
+        
+        return score
+        
+    except:
+        return 0.0
 NEIGHBOR_SMAX_MIN = 0.50
 NEIGHBOR_MIN_COUNT_040 = 30  # same-target + same-assay
 
