@@ -104,7 +104,8 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
     ok_predictions = {}
     for target, target_data in predictions.items():
         ok_target_predictions = {}
-        for assay_type in ['IC50', 'Ki', 'EC50']:
+        # Handle all actual assay types returned by backend
+        for assay_type in ['Binding_IC50', 'Functional_IC50', 'Ki', 'EC50', 'IC50']:
             pred = target_data.get(assay_type)
             if pred and pred.get('status', 'OK') == 'OK':  # Only OK status
                 ok_target_predictions[assay_type] = pred
