@@ -1239,51 +1239,78 @@ class HighPerformanceAD:
             ad_components = results.get('ad_components', self._default_ad_components())
             s_max, top_indices, similarities, neighbor_stats = results.get('similarity', (0.0, [], np.array([]), {}))
             
-            # **COMPREHENSIVE GATING LOGIC**
+            # **COMPREHENSIVE HARDENED GATING LOGIC**
             gate_reasons = []
+            gate_failures = 0
             
             # 1. AD gate fail
             ad_score = ad_components.get('ad_score', 0.3)
             if ad_score < 0.50:
                 gate_reasons.append("OOD_chem")
+                gate_failures += 1
             
             # 2. Mechanism gate fail for kinases
             is_kinase = self.ad_scorer._is_kinase_target(target_id)
             mechanism_score = ad_components.get('mechanism_score', 0.5)
             if is_kinase and mechanism_score < 0.25:
                 gate_reasons.append("Kinase_mechanism_fail")
+                gate_failures += 1
             
             # 3. Neighbor sanity fail (same-target, same-assay-class) - HARDENED THRESHOLDS
             n_same_assay_40 = neighbor_stats.get('n_sim_ge_0_40_same_assay', 0)
             if s_max < 0.50 or n_same_assay_40 < 30:
                 gate_reasons.append("Insufficient_in-class_neighbors")
+                gate_failures += 1
             
             # Add assay mismatch warning if applicable
             if neighbor_stats.get('assay_mismatch_possible', False):
                 gate_reasons.append("assay_mismatch_possible")
+                # Don't increment gate_failures - this is a warning, not a hard gate
             
-            # 4. Family pharmacophore fail
+            # 4. HARDENED Family pharmacophore failures
             if is_kinase and not passes_kinase_hinge_pharmacophore_v2(smiles_std):
                 gate_reasons.append("Kinase_pharmacophore_fail")
+                gate_failures += 1
             
             if self._is_parp1_target(target_id) and not passes_parp1_pharmacophore_v2(smiles_std):
                 gate_reasons.append("PARP_pharmacophore_fail")
+                gate_failures += 1
             
             # 5. Ionization/size realism for deep ATP pockets
             mol_weight = self._get_molecular_weight(smiles_std)
             if is_kinase and mol_weight < 250 and is_strongly_anionic_at_ph7_4(smiles_std):
                 gate_reasons.append("Physchem_implausible_for_ATP_pocket")
+                gate_failures += 1
             
-            # 6. Hard veto for tiny acids on kinases
+            # 6. ENHANCED Hard veto for tiny acids on kinases
             if is_kinase and tiny_acid_veto_classifier(smiles_std):
                 gate_reasons.append("tiny_acid_veto")
+                gate_failures += 1
             
-            # 7. Label consistency fail (assay mismatch)
+            # 7. kNN plausibility cross-check
+            if base_prediction:
+                should_gate_knn, knn_pred, knn_reason = compute_knn_cross_check(
+                    smiles_std, target_id, base_prediction, self.fp_db
+                )
+                if should_gate_knn:
+                    gate_reasons.append(knn_reason)
+                    gate_failures += 1
+            
+            # 8. Label consistency fail (assay mismatch)
             if self._has_assay_mismatch(target_id, assay_type):
                 gate_reasons.append("Assay_mismatch_caution")
+                gate_failures += 1
+            
+            # **CUMULATIVE GATING RULE**
+            # If ≥ 2 gates fail: suppress numeric
+            # If ≥ 3 gates fail: suppress numeric and add "mechanistically implausible" tag
+            should_gate = gate_failures >= 2
+            
+            if gate_failures >= 3:
+                gate_reasons.append("Mechanistically_implausible")
             
             # **GATING DECISION**
-            if gate_reasons:
+            if should_gate:
                 # Return gated result with suppressed numeric potency
                 return self._create_gated_result(
                     smiles_std, target_id, gate_reasons, ad_components, 
