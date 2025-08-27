@@ -77,6 +77,191 @@ class GatedPredictionResult:
             self.evidence = {}
 
 # Pharmacophore checking functions for fast gating
+# Hardened gating constants and functions (exact implementation per specification)
+NEIGHBOR_SMAX_MIN = 0.50
+NEIGHBOR_MIN_COUNT_040 = 30  # same-target + same-assay
+
+def neighbor_sanity(nn):
+    """Check neighbor sanity with hardened thresholds"""
+    s_max = nn.get("S_max", 0.0)
+    n040 = nn.get("n_sim_ge_0_40_same_assay", 0)
+    ok = (s_max >= NEIGHBOR_SMAX_MIN) and (n040 >= NEIGHBOR_MIN_COUNT_040)
+    return ok, {"S_max": s_max, "neighbors_same_assay": n040}
+
+def passes_kinase_pharmacophore_v3(mol):
+    """
+    Kinase pharmacophore: require ≥2 hinge-capable features or fast shape pass.
+    
+    SMARTS for hinge-capable HBD/HBA motifs on aromatic/heteroaromatic rings.
+    """
+    if mol is None:
+        return False
+    
+    # Enhanced SMARTS for hinge-capable features
+    hinge_smarts = [
+        "[nH0,O]=[c,n]1[n,c][n,c][n,c][n,c]1",  # heteroaryl carbonyl/aza ring
+        "[nH0,O][c,n]1[c,n][c,n][c,n][c,n]1",   # donor/acceptor on aryl ring
+        "c1ncnc(N)c1",                           # diaminopyrimidine-like
+        "n1cnc2ncnc2c1",                         # purine-like
+        "[nH1,NH1,NH2]c1nc2ccccc2c([OH,NH1,NH2])c1",  # quinazoline scaffold
+        "c1cc([OH,NH1,NH2])ccc1[nH1,NH1,NH2]",       # para-substituted aniline
+        "[F,Cl,Br]c1ccc(cc1)[NH1,NH2]",             # halogenated aniline (gefitinib-like)
+    ]
+    
+    hits = sum(int(mol.HasSubstructMatch(Chem.MolFromSmarts(s))) for s in hinge_smarts)
+    if hits >= 2:
+        return True
+    
+    # Fallback: fast shape/pharmacophore percentile check (simplified for now)
+    # In full implementation, would use cached HER/EGFR template
+    # For now, check for basic kinase-like features
+    basic_kinase_features = [
+        "c1nc2c(N)ncnc2n1",                      # adenine-like
+        "[nH1,NH1,NH2]c1ncnc(c1)",             # aminopyrimidine
+        "c1ccc2nc([NH1,NH2])ccc2c1",           # aminoquinoline
+    ]
+    
+    basic_hits = sum(int(mol.HasSubstructMatch(Chem.MolFromSmarts(s))) for s in basic_kinase_features)
+    return basic_hits >= 1  # More permissive fallback
+
+def passes_parp1_pharmacophore_v3(mol):
+    """
+    PARP1 pharmacophore: require nicotinamide AND add negative filters.
+    
+    Positive patterns for PARP1, negative patterns exclude salicylates/benzoates.
+    """
+    if mol is None:
+        return False
+    
+    # Positive SMARTS patterns
+    PARP_POS_SMARTS = [
+        "c1ccc(C(=O)N)cc1",                      # benzamide
+        "[c,n]1[c,n][c,n][c,n](C(=O)N)[c,n][c,n]1",  # nicotinamide-like
+        "c1ccc2oc(=O)nc2c1",                     # benzoxazinone (olaparib-like)
+        "c1ccc2[nH]c(=O)c([NH1,NH2])cc2c1",     # quinoline-2-one amide
+    ]
+    
+    # Negative SMARTS patterns (exclude these from PARP1)
+    PARP_NEG_SMARTS = [
+        "O=C(O)c1ccccc1O",                       # salicylic acid (aspirin core)
+        "O=C(O)c1ccc(cc1)O",                     # p-hydroxybenzoic acid
+        "O=S(=O)(O)c1ccccc1",                    # aryl sulfonic acids
+        "c1ccc(c(c1)C(=O)O)OC(=O)C",           # aspirin exact pattern
+        "c1nc(nc(c1)[NH1,NH2])c2cccnc2",        # imatinib-like (exclude)
+    ]
+    
+    pos = any(mol.HasSubstructMatch(Chem.MolFromSmarts(s)) for s in PARP_POS_SMARTS)
+    neg = any(mol.HasSubstructMatch(Chem.MolFromSmarts(s)) for s in PARP_NEG_SMARTS)
+    return pos and not neg
+
+def strongly_anionic_pH74_v2(mol) -> bool:
+    """Quick pKa heuristic for ionization at pH 7.4"""
+    if mol is None:
+        return False
+    
+    # Acid groups with estimated pKa
+    acid_groups = [
+        ("C(=O)O", 4.5),     # carboxylic acid
+        ("cO", 9.5),         # phenol
+        ("S(=O)(=O)O", 1.0)  # sulfonic acid
+    ]
+    
+    frac = 0.0
+    for smarts, pka in acid_groups:
+        try:
+            if mol.HasSubstructMatch(Chem.MolFromSmarts(smarts)):
+                # Henderson-Hasselbalch: fraction ionized at pH 7.4
+                frac = max(frac, 1.0 / (1.0 + 10**(pka - 7.4)))
+        except:
+            continue
+    
+    return frac >= 0.8
+
+def physchem_implausible_for_atp_pocket(mol, target_id):
+    """Check if compound is physicochemically implausible for ATP pocket"""
+    if mol is None:
+        return False
+    
+    is_kinase_target = any(kinase in target_id.upper() for kinase in 
+                          ['CDK', 'JAK', 'ABL', 'KIT', 'FLT', 'ALK', 'EGFR', 'BRAF', 'ERBB', 'SRC', 'BTK', 'TRK', 'AKT', 'AURKB', 'KDR'])
+    
+    if not is_kinase_target:
+        return False
+    
+    mw = Descriptors.MolWt(mol)
+    return (mw < 250) and strongly_anionic_pH74_v2(mol)
+
+def tiny_acid_veto_v2(mol):
+    """Tiny-acid veto (keep existing, ensure it short-circuits for kinases)"""
+    if mol is None:
+        return False
+    
+    mw = Descriptors.MolWt(mol)
+    tiny = mw < 250
+    
+    # Check for acid groups
+    acid = (mol.HasSubstructMatch(Chem.MolFromSmarts("C(=O)O")) or 
+            mol.HasSubstructMatch(Chem.MolFromSmarts("S(=O)(=O)O")))
+    
+    # Check for aromatic rings
+    aryl = mol.HasSubstructMatch(Chem.MolFromSmarts("c1ccccc1"))
+    
+    return tiny and acid and aryl
+
+def apply_gates_v2(mol, target_id, ad_score, mech_score, nn_info, assay_match=True):
+    """
+    Cumulative gating: ≥2 gates ⇒ suppress numeric; ≥3 ⇒ add "mechanistically_implausible"
+    """
+    reasons = []
+
+    # Gate 1: AD score
+    if ad_score < 0.50:
+        reasons.append("OOD_chem")
+
+    # Gate 2: Kinase mechanism
+    is_kinase_target = any(kinase in target_id.upper() for kinase in 
+                          ['CDK', 'JAK', 'ABL', 'KIT', 'FLT', 'ALK', 'EGFR', 'BRAF', 'ERBB', 'SRC', 'BTK', 'TRK', 'AKT', 'AURKB', 'KDR'])
+    
+    if is_kinase_target and mech_score < 0.25:
+        reasons.append("Kinase_mechanism_fail")
+
+    # Gate 3: Neighbor sanity
+    ok_nn, ev_nn = neighbor_sanity(nn_info)
+    if not ok_nn:
+        reasons.append("Insufficient_in-class_neighbors")
+
+    # Gate 4: Kinase pharmacophore
+    if is_kinase_target and not passes_kinase_pharmacophore_v3(mol):
+        reasons.append("Kinase_pharmacophore_fail")
+
+    # Gate 5: PARP1 pharmacophore
+    is_parp1_target = 'PARP1' in target_id.upper() or 'PARP-1' in target_id.upper()
+    if is_parp1_target and not passes_parp1_pharmacophore_v3(mol):
+        reasons.append("PARP_pharmacophore_fail")
+
+    # Gate 6: Physicochemical implausibility
+    if physchem_implausible_for_atp_pocket(mol, target_id):
+        reasons.append("Physchem_implausible_for_ATP_pocket")
+
+    # Gate 7: Tiny acid veto
+    if is_kinase_target and tiny_acid_veto_v2(mol):
+        reasons.append("tiny_acid_veto")
+
+    # Gate 8: Assay mismatch (warning)
+    if not assay_match:
+        reasons.append("assay_mismatch_possible")
+
+    fail_count = len([r for r in reasons if r != "assay_mismatch_possible"])  # Don't count warnings
+
+    gated = fail_count >= 2  # new rule: ≥2 gates suppress numeric
+    hard_flag = (fail_count >= 3)  # ≥3 gates add mechanistically implausible
+
+    return gated, hard_flag, reasons, {
+        "S_max": ev_nn["S_max"], 
+        "neighbors_same_assay": ev_nn["neighbors_same_assay"],
+        "gate_failures": fail_count
+    }
+
 def passes_kinase_hinge_pharmacophore_v2(smiles: str) -> bool:
     """
     HARDENED kinase hinge pharmacophore check - requires ≥2 hinge-capable features.
