@@ -116,7 +116,8 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
         selectivity_ratio = target_data.get('selectivity_ratio')
         sel_label, sel_class, sel_icon = get_selectivity_display(selectivity_ratio)
         
-        for assay_type in ['IC50', 'Ki', 'EC50']:
+        # Handle all actual assay types returned by backend API
+        for assay_type in ['Binding_IC50', 'Functional_IC50', 'Ki', 'EC50', 'IC50']:
             pred = target_data.get(assay_type)
             if not pred:
                 continue
