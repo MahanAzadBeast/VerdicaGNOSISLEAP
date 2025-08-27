@@ -1483,11 +1483,12 @@ class HighPerformanceAD:
                 # Don't increment gate_failures - this is a warning, not a hard gate
             
             # 4. HARDENED Family pharmacophore failures
-            if is_kinase and not passes_kinase_hinge_pharmacophore_v2(smiles_std):
+            mol = Chem.MolFromSmiles(smiles_std) if smiles_std else None
+            if is_kinase and not passes_kinase_pharmacophore_v3(mol):
                 gate_reasons.append("Kinase_pharmacophore_fail")
                 gate_failures += 1
             
-            if self._is_parp1_target(target_id) and not passes_parp1_pharmacophore_v2(smiles_std):
+            if self._is_parp1_target(target_id) and not passes_parp1_pharmacophore_v3(mol):
                 gate_reasons.append("PARP_pharmacophore_fail")
                 gate_failures += 1
             
