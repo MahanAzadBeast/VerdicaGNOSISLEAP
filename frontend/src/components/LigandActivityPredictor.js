@@ -831,13 +831,19 @@ const LigandActivityPredictor = () => {
                               <div className="text-xs text-slate-300 opacity-90">{potencyDisplay.secondaryText}</div>
                             </div>
                             <div className="text-xs text-gray-400 mt-1">
-                              {potencyDisplay.isNotTrained ? 'Training data unavailable' : potencyDesc}
+                              {potencyDisplay.isGated ? 'Gated prediction' : 
+                               potencyDisplay.isNotTrained ? 'Training data unavailable' : potencyDesc}
+                              {potencyDisplay.isGated && (
+                                <div className="text-amber-400 text-xs mt-1">
+                                  🛡️ Universal Gating System
+                                </div>
+                              )}
                               {qualityFlag === 'not_trained' && (
                                 <div className="text-amber-400 text-xs mt-1">
                                   🚫 Requires {assayType}-specific training
                                 </div>
                               )}
-                              {qualityFlag === 'uncertain' && !potencyDisplay.isNotTrained && (
+                              {qualityFlag === 'uncertain' && !potencyDisplay.isNotTrained && !potencyDisplay.isGated && (
                                 <div className="text-yellow-400 text-xs mt-1">
                                   ⚠️ {qualityFlag === 'low_confidence' ? 'Low confidence' : 'Uncertain'}
                                 </div>
