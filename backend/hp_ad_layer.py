@@ -1018,9 +1018,9 @@ class HighPerformanceAD:
             if is_kinase and mechanism_score < 0.25:
                 gate_reasons.append("Kinase_mechanism_fail")
             
-            # 3. Neighbor sanity fail (same-target, same-assay-class)
+            # 3. Neighbor sanity fail (same-target, same-assay-class) - HARDENED THRESHOLDS
             n_same_assay_40 = neighbor_stats.get('n_sim_ge_0_40_same_assay', 0)
-            if s_max < 0.45 or n_same_assay_40 < 20:
+            if s_max < 0.50 or n_same_assay_40 < 30:
                 gate_reasons.append("Insufficient_in-class_neighbors")
             
             # Add assay mismatch warning if applicable
