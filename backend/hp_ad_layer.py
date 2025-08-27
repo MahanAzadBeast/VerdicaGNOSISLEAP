@@ -130,6 +130,132 @@ def assay_consistency_check(binding_um, functional_um, ec50_um, is_enzyme_family
     
     return (len(reasons) == 0), reasons
 
+# Universal Family Property Envelope System
+def family_physchem_gate(mol, family: str):
+    """
+    Universal physchem envelope gate applied to ALL compounds by target family.
+    
+    No compound-specific logic - purely family-based rules.
+    """
+    try:
+        env = FAMILY_ENVELOPES.get(family.lower())
+        reasons = []
+        
+        if not env: 
+            return True, reasons  # families not listed get no extra envelope
+        
+        # Universal molecular properties
+        mw_val = Descriptors.MolWt(mol)
+        rings = mol.GetRingInfo().NumRings()
+        clogp = Crippen.MolLogP(mol)
+        
+        # Universal envelope checks
+        if "mw_min" in env and mw_val < env["mw_min"]:
+            reasons.append(f"{family}_physchem_MW_low")
+        if "mw_max" in env and mw_val > env["mw_max"]:
+            reasons.append(f"{family}_physchem_MW_high")
+        if "rings_min" in env and rings < env["rings_min"]:
+            reasons.append(f"{family}_physchem_rings_low")
+        if env.get("forbid_strong_anion") and strongly_anionic_pH74_v2(mol):
+            reasons.append(f"{family}_physchem_strong_anion")
+        if "clogp_min" in env and clogp < env["clogp_min"]:
+            reasons.append(f"{family}_physchem_logP_low")
+        
+        return (len(reasons) == 0), reasons
+        
+    except Exception as e:
+        logger.warning(f"Error in family physchem gate: {e}")
+        return False, ["physchem_calculation_error"]
+
+# Universal Assay-Specific Neighbor Sanity
+def in_assay_neighbors_ok(nn_info):
+    """
+    Universal neighbor sanity check - requires support within same assay type.
+    
+    Applies same thresholds to ALL compounds universally.
+    """
+    try:
+        # Universal neighbor requirements
+        smax = nn_info.get("S_max_in_assay", nn_info.get("S_max", 0.0))
+        n040 = nn_info.get("n_sim_ge_0_40_in_assay", nn_info.get("n_sim_ge_0_40_same_assay", 0))
+        
+        ok = (smax >= NEIGHBOR_SMAX_MIN) and (n040 >= NEIGHBOR_MIN_COUNT_040)
+        reasons = [] if ok else ["Insufficient_in-assay_neighbors"]
+        ev = {"S_max": smax, "neighbors_in_assay": n040}
+        
+        return ok, reasons, ev
+        
+    except Exception as e:
+        logger.warning(f"Error in assay neighbor check: {e}")
+        return False, ["neighbor_calculation_error"], {"S_max": 0.0, "neighbors_in_assay": 0}
+
+# Universal Mechanism Gates by Family (no compound-specific logic)
+def kinase_mechanism_gate(mol):
+    """Universal kinase mechanism gate - applies to ALL compounds"""
+    try:
+        hits = 0
+        
+        for smarts in KINASE_HINGE_SMARTS:
+            try:
+                if mol.HasSubstructMatch(Chem.MolFromSmarts(smarts)):
+                    hits += 1
+            except:
+                continue
+        
+        if hits >= 2:
+            return True, []
+        
+        # Universal fast shape percentile fallback
+        if fast_shape_percentile(mol, template="HER/EGFR_hinge") >= FAST_SHAPE_PCTL_KINASE:
+            return True, []
+        
+        return False, ["Kinase_pharmacophore_fail"]
+        
+    except Exception as e:
+        logger.warning(f"Error in kinase mechanism gate: {e}")
+        return False, ["Kinase_pharmacophore_fail"]
+
+def parp1_mechanism_gate(mol):
+    """Universal PARP1 mechanism gate - applies to ALL compounds"""
+    try:
+        pos = any(mol.HasSubstructMatch(Chem.MolFromSmarts(s)) for s in PARP_POS_SMARTS)
+        neg = any(mol.HasSubstructMatch(Chem.MolFromSmarts(s)) for s in PARP_NEG_SMARTS)
+        
+        result = pos and not neg
+        return result, [] if result else ["PARP_pharmacophore_fail"]
+        
+    except Exception as e:
+        logger.warning(f"Error in PARP1 mechanism gate: {e}")
+        return False, ["PARP_pharmacophore_fail"]
+
+def gpcr_mechanism_gate(mol):
+    """Universal GPCR mechanism gate - applies to ALL compounds"""
+    try:
+        hba = Descriptors.NumHBA(mol)
+        hbd = Descriptors.NumHDonors(mol)
+        aromatic_rings = len([ring for ring in mol.GetRingInfo().AtomRings() 
+                             if any(mol.GetAtomWithIdx(idx).GetIsAromatic() for idx in ring)])
+        
+        # Universal GPCR requirements
+        has_hba = hba >= 1
+        has_hbd_or_cation = hbd >= 1 or has_cationic_center(mol)
+        has_aromatic = aromatic_rings >= 1
+        
+        ok = has_hba and has_hbd_or_cation and has_aromatic
+        return ok, [] if ok else ["GPCR_pharmacophore_fail"]
+        
+    except Exception as e:
+        logger.warning(f"Error in GPCR mechanism gate: {e}")
+        return False, ["GPCR_pharmacophore_fail"]
+
+# Universal Mechanism Gate Registry
+MECH_GATE_BY_FAMILY = {
+    "kinase": kinase_mechanism_gate,
+    "tyrosine_kinase": kinase_mechanism_gate,
+    "parp": parp1_mechanism_gate,
+    "gpcr": gpcr_mechanism_gate
+}
+
 # Family Property Envelope Functions
 def calc_clogp(mol):
     """Lightweight cLogP calculation using RDKit"""
