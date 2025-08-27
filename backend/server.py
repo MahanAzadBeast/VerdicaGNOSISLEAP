@@ -70,11 +70,6 @@ try:
         logging.error(f"❌ High-Performance AD layer initialization failed: {e}")
         logging.error("❌ AD layer disabled - real data loading failed")
         GNOSIS_AD_AVAILABLE = False
-        logging.info("✅ Gnosis I High-Performance AD layer initialized")
-        GNOSIS_AD_AVAILABLE = True
-    except Exception as e:
-        logging.warning(f"⚠️ High-Performance AD layer initialization failed: {e}")
-        GNOSIS_AD_AVAILABLE = False
     
 except Exception as e:
     logging.error(f"❌ Failed to load Gnosis I: {e}")
