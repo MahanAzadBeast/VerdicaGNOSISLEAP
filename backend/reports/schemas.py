@@ -100,17 +100,21 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
     confidences = []
     potencies = []
     
-    # Only include OK status predictions in potency ranking (exclude gated predictions)
-    ok_predictions = {}
+    # **UNIVERSAL RULE: Only status="OK" rows may be used for numeric tables and banners**
+    # This applies to ALL compounds - no special cases by molecule name
+    ok_rows = {}
     for target, target_data in predictions.items():
         ok_target_predictions = {}
-        # Handle all actual assay types returned by backend
+        # Handle all actual assay types returned by backend - universally applied
         for assay_type in ['Binding_IC50', 'Functional_IC50', 'Ki', 'EC50', 'IC50']:
             pred = target_data.get(assay_type)
-            if pred and pred.get('status', 'OK') == 'OK':  # Only OK status
+            # Universal gate: only status="OK" predictions are eligible for numeric display
+            if pred and pred.get('status', 'OK') == 'OK':
                 ok_target_predictions[assay_type] = pred
         if ok_target_predictions:
-            ok_predictions[target] = ok_target_predictions
+            ok_rows[target] = ok_target_predictions
+    
+    # Universal processing: gated predictions excluded from ALL numeric operations
     
     for target, target_data in predictions.items():
         selectivity_ratio = target_data.get('selectivity_ratio')
