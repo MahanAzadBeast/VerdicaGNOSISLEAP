@@ -43,7 +43,7 @@ async def deploy_modal_training(request: ModalDeploymentRequest):
         from modal_training.modal_api_deployment import deploy_with_credentials
         
         # Set webhook URL to this app's progress endpoint
-        webhook_url = f"{os.environ.get('BACKEND_URL', 'https://kinase-predict.preview.emergentagent.com')}/api/gpu/training-progress"
+        webhook_url = f"{os.environ.get('BACKEND_URL', 'https://molecule-reliability.preview.emergentagent.com')}/api/gpu/training-progress"
         
         # Deploy to Modal
         result = deploy_with_credentials(

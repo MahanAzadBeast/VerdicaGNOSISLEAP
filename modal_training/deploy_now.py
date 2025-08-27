@@ -40,7 +40,7 @@ def deploy_molbert_to_modal(modal_token_id, modal_token_secret):
         
         # Start training for all targets
         print("🎯 Starting training for all 6 targets...")
-        webhook_url = "https://kinase-predict.preview.emergentagent.com/api/gpu/training-progress"
+        webhook_url = "https://molecule-reliability.preview.emergentagent.com/api/gpu/training-progress"
         
         result = train_all_targets.remote(
             targets=["EGFR", "BRAF", "CDK2", "PARP1", "BCL2", "VEGFR2"],
