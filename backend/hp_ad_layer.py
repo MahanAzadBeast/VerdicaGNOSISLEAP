@@ -1523,7 +1523,8 @@ class HighPerformanceAD:
             should_gate = gate_failures >= 2
             
             if gate_failures >= 3:
-                gate_reasons.append("Mechanistically_implausible")
+                if "Mechanistically_implausible" not in gate_reasons:
+                    gate_reasons.append("Mechanistically_implausible")
             
             # **GATING DECISION**
             if should_gate:
