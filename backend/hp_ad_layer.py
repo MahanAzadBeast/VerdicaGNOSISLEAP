@@ -93,43 +93,42 @@ def _log10_um(x):
 
 def assay_consistency_check(binding_um, functional_um, ec50_um, is_enzyme_family):
     """
-    Cross-assay consistency check for Binding_IC50, Functional_IC50, EC50.
+    Universal cross-assay consistency check for ALL compounds.
+    
+    No special-casing by molecule name - applies systematic rules only.
     
     Returns: (ok, reasons)
     """
     reasons = []
     
-    # Floor clamp all values
-    b = _floor_clamp_um(binding_um) if binding_um is not None else None
-    f = _floor_clamp_um(functional_um) if functional_um is not None else None
-    e = _floor_clamp_um(ec50_um) if ec50_um is not None else None
+    # Universal floor clamping
+    b = _floor_um(binding_um)
+    f = _floor_um(functional_um)
+    e = _floor_um(ec50_um)
     
-    # Flag if any values were floor clamped
-    if any(v is not None and v <= EC50_FLOOR_UM for v in [binding_um, functional_um, ec50_um]):
+    # Flag if any values were floor clamped (universal artifact detection)
+    if any(v is not None and v <= EC_MIN_FLOOR_UM for v in (binding_um, functional_um, ec50_um)):
         reasons.append("floor_clamped")
     
-    # Helper for log delta calculation
+    # Universal pairwise delta checks
     def dlog(x, y): 
-        return abs(_log10(x) - _log10(y))
+        return abs(_log10_um(x) - _log10_um(y))
     
-    # Check binding vs functional consistency (≤10x difference)
     if b is not None and f is not None and dlog(b, f) > ASSAY_DELTA_MAX_LOG:
         reasons.append("Assay_discordance_BvsF")
     
-    # Check binding/functional vs EC50 consistency
     if e is not None and (b is not None or f is not None):
-        bf_min = min([v for v in [b, f] if v is not None])
+        bf_min = min([v for v in (b, f) if v is not None])
         if dlog(bf_min, e) > ASSAY_DELTA_MAX_LOG:
             reasons.append("Assay_discordance_BFvsE")
     
-    # Enzyme monotonicity prior: binding/functional potency should be ≤ EC50 (within tolerance)
-    if is_enzyme and (b is not None or f is not None) and e is not None:
-        bf_min = min([v for v in [b, f] if v is not None])
-        if _log10(bf_min) - _log10(e) > ASSAY_MONOTONIC_TOL_LOG:
+    # Universal enzyme monotonicity check (for enzyme families)
+    if is_enzyme_family and e is not None and (b is not None or f is not None):
+        bf_min = min([v for v in (b, f) if v is not None])
+        if (_log10_um(bf_min) - _log10_um(e)) > ASSAY_MONOTONIC_TOL_LOG:
             reasons.append("Enzyme_monotonicity_fail")
     
-    ok = len(reasons) == 0
-    return ok, reasons
+    return (len(reasons) == 0), reasons
 
 # Family Property Envelope Functions
 def calc_clogp(mol):
