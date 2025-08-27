@@ -242,7 +242,19 @@ const LigandActivityPredictor = () => {
   }, [availableTargets, selectedAssayTypes]);
 
   // Heat-map color calculation with continuous HSL gradient
-  const calculatePotencyColor = (pValue, confidence = 0.8, isUnreliable = false, isNotTrained = false) => {
+  const calculatePotencyColor = (pValue, confidence = 0.8, isUnreliable = false, isNotTrained = false, isGated = false) => {
+    // **UNIVERSAL GATING SYSTEM** - Special styling for gated predictions
+    if (isGated) {
+      return {
+        backgroundColor: 'hsl(0, 0%, 30%)', // Gray for gated predictions
+        opacity: 0.9,
+        color: '#fbbf24', // Amber text for gated
+        fontWeight: 'bold',
+        border: '2px solid #f59e0b',
+        textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+      };
+    }
+    
     // Special styling for not trained predictions (Ki)
     if (isNotTrained) {
       return {
