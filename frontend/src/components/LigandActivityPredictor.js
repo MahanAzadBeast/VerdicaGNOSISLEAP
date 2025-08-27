@@ -801,6 +801,13 @@ const LigandActivityPredictor = () => {
                                 `${potencyDesc} (p${assayType} = ${Math.max(0, pValue || 0).toFixed(2)}), σ = ${sigma.toFixed(2)}, RI = ${reliability.toFixed(2)}${confidenceNote ? ` - ${confidenceNote}` : ''}`
                               }
                             >
+                              {/* **UNIVERSAL GATING SYSTEM** - Gating indicator */}
+                              {potencyDisplay.isGated && (
+                                <span className="absolute -top-1 -left-1 text-amber-400 text-sm" title="Prediction gated by Universal Gating System">
+                                  🛡️
+                                </span>
+                              )}
+                              
                               {/* Quality warning for unreliable predictions */}
                               {qualityFlag === 'not_trained' && (
                                 <span className="absolute -top-1 -left-1 text-amber-400 text-sm" title="Not trained on this assay type">
@@ -808,14 +815,14 @@ const LigandActivityPredictor = () => {
                                 </span>
                               )}
                               
-                              {qualityFlag === 'uncertain' && (
+                              {qualityFlag === 'uncertain' && !potencyDisplay.isGated && (
                                 <span className="absolute -top-1 -left-1 text-yellow-400 text-xs" title={`Prediction quality: ${qualityFlag}`}>
                                   ⚠️
                                 </span>
                               )}
                               
                               {/* Color-blind aid for inactive compounds */}
-                              {inactive && !potencyDisplay.isNotTrained && (
+                              {inactive && !potencyDisplay.isNotTrained && !potencyDisplay.isGated && (
                                 <span className="absolute -top-1 -right-1 text-white text-xs">❌</span>
                               )}
                               
