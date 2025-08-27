@@ -1,52 +1,55 @@
 # hp_ad_layer_config.py
 """
-Configuration constants for HP AD Layer Cross-Assay Gating & Reliability Hardening
+Universal configuration for HP AD Layer - applies to ALL compounds and targets
 """
 
-# Neighbor sanity thresholds
+# Universal neighbor sanity thresholds
 NEIGHBOR_SMAX_MIN = 0.50
-NEIGHBOR_MIN_COUNT_040 = 30  # same target + same assay
+NEIGHBOR_MIN_COUNT_040 = 30       # same-target + same-assay neighbors
 
 # Cross-assay consistency thresholds
-ASSAY_DELTA_MAX_LOG = 1.0    # 10x mismatch threshold
-ASSAY_MONOTONIC_TOL_LOG = 1.0
-
-# Family physicochemical envelopes
-MW_MIN_KINASE = 300
-RINGS_MIN_KINASE = 2
-EC50_FLOOR_UM = 0.01
+ASSAY_DELTA_MAX_LOG = 1.0         # 10x mismatch allowed before gating
+ASSAY_MONOTONIC_TOL_LOG = 1.0     # min(B,F) should not be >> EC50 for enzymes
+EC_MIN_FLOOR_UM = 0.01            # clamp 0.0 artifacts
 FAST_SHAPE_PCTL_KINASE = 0.90
 
-# GPCR envelopes
-CLoGP_MIN_GPCR = 1.5
-MW_RANGE_GPCR = (250, 600)
-
-# PPI (Protein-Protein Interaction) envelopes
-MW_MIN_PPI = 400
-RINGS_MIN_PPI = 3
+# Family envelopes (generic, applies to all compounds)
+FAMILY_ENVELOPES = {
+    "kinase": {
+        "mw_min": 300, 
+        "rings_min": 2, 
+        "forbid_strong_anion": True
+    },
+    "gpcr": {
+        "mw_min": 250, 
+        "mw_max": 600, 
+        "clogp_min": 1.5
+    },
+    "ppi": {
+        "mw_min": 400, 
+        "rings_min": 3
+    }
+}
 
 # Cumulative gating rules
-CUMULATIVE_GATE_SUPPRESS = 2  # >=2 gates => suppress numerics
-CUMULATIVE_GATE_HARD = 3      # >=3 gates => add Mechanistically_implausible
+CUMULATIVE_GATE_SUPPRESS = 2      # >=2 reasons => no numerics
+CUMULATIVE_GATE_HARD = 3          # >=3 reasons => add Mechanistically_implausible
 
-# Pharmacophore patterns
+# Universal mechanism gate SMARTS patterns
+KINASE_HINGE_SMARTS = [
+    "n1c(N)nc(N)n1",        # hinge-capable motifs
+    "n1cnc2ncnn12",         # purine-like
+    "Nc1ncnc(N)n1",         # aminopyrimidine
+    "O=C-Nc1ncccc1"         # benzamide-like HBA/HBD near ring
+]
+
 PARP_POS_SMARTS = [
     "c1ccc(C(=O)N)cc1",                      # benzamide
     "[c,n]1[c,n][c,n][c,n](C(=O)N)[c,n][c,n]1"  # nicotinamide-like
 ]
 
 PARP_NEG_SMARTS = [
-    "O=C(O)c1ccccc1O",                       # salicylic acid
-    "O=C(O)c1ccc(cc1)O",                     # p-hydroxybenzoic acid  
-    "O=S(=O)(O)c1ccccc1"                     # aryl sulfonic acids
-]
-
-KINASE_HINGE_SMARTS = [
-    "n1c(N)nc(N)n1",                         # diaminopyrimidine-like
-    "n1cnc2ncnc2c1",                         # purine-like
-    "Nc1ncnc(N)c1",                          # hinge donors/acceptors
-    "O=C-Nc1ncccc1",                         # benzamide-like HBA/HBD near ring
-    "[nH1,NH1,NH2]c1nc2ccccc2c([OH,NH1,NH2])c1",  # quinazoline scaffold
-    "c1cc([OH,NH1,NH2])ccc1[nH1,NH1,NH2]",       # para-substituted aniline
-    "[F,Cl,Br]c1ccc(cc1)[NH1,NH1,NH2]"           # halogenated aniline
+    "O=C(O)c1ccccc1O",       # salicylic acid
+    "O=C(O)c1ccc(cc1)O",     # p-hydroxybenzoic acid  
+    "O=S(=O)(O)c1ccccc1"     # aryl sulfonic acids
 ]
