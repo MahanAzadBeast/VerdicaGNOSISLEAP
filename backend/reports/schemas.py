@@ -124,17 +124,19 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
             pred_status = pred.get('status', 'OK')
             
             if pred_status == 'HYPOTHESIS_ONLY':
-                # Gated prediction - show as hypothesis only
+                # **GATED PREDICTION - RENDER AS GREY "HYPOTHESIS ONLY" CARD**
                 display_ic50 = "Hypothesis only"
                 pic50_display = "Out of domain"
                 confidence = 0.0  # No confidence for gated predictions
                 
-                # Use gray styling for gated predictions
+                # Use grey styling for gated predictions
                 heat_bg = 'hsl(0, 0%, 25%)'  # Dark gray
                 opacity = 0.8
                 
+                # DO NOT ADD TO POTENCY RANKING - gated predictions excluded from "Highest Potency"
+                
             else:
-                # Normal prediction processing
+                # **NORMAL PREDICTION PROCESSING - INCLUDE IN POTENCY RANKING**
                 p_value = pred.get('pActivity', 0)
                 activity_um = pred.get('activity_uM', 0)
                 confidence = pred.get('confidence', 0.8)
@@ -158,7 +160,7 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
                     heat_bg = get_heat_color(p_value, confidence)
                     opacity = 0.4 + 0.6 * confidence
                 
-                # Only include in potency ranking if not gated and activity < 100 μM
+                # **ONLY ADD OK PREDICTIONS TO POTENCY RANKING** - excludes gated from "Highest Potency"
                 if pred_status == 'OK' and quality_flag != 'not_trained' and activity_um <= 100:
                     potencies.append((target, activity_um, assay_type))
             
