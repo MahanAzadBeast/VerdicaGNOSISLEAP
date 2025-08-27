@@ -317,40 +317,7 @@ def has_cationic_center(mol):
     except:
         return False
 
-def family_physchem_gate(mol, family):
-    """Family-specific physicochemical property gates"""
-    reasons = []
-    
-    try:
-        mw_val = Descriptors.MolWt(mol)
-        rings = ring_count(mol)
-        clogp = calc_clogp(mol)
-        
-        if family == "kinase":
-            if mw_val < MW_MIN_KINASE: 
-                reasons.append("Kinase_physchem_MW_low")
-            if rings < RINGS_MIN_KINASE: 
-                reasons.append("Kinase_physchem_rings_low")
-            if strongly_anionic_pH74_v2(mol): 
-                reasons.append("Kinase_physchem_anionic")
-                
-        elif family == "gpcr":
-            if not (MW_RANGE_GPCR[0] <= mw_val <= MW_RANGE_GPCR[1]): 
-                reasons.append("GPCR_physchem_MW_out")
-            if clogp < CLoGP_MIN_GPCR: 
-                reasons.append("GPCR_physchem_logP_low")
-                
-        elif family == "ppi":
-            if mw_val < MW_MIN_PPI: 
-                reasons.append("PPI_physchem_MW_low")
-            if rings < RINGS_MIN_PPI: 
-                reasons.append("PPI_physchem_rings_low")
-                
-    except Exception as e:
-        logger.warning(f"Error in family physchem gate: {e}")
-        reasons.append("Physchem_calculation_error")
-    
-    return len(reasons) == 0, reasons
+
 
 # Enhanced Mechanism Gates by Family
 def kinase_mechanism_gate_v2(mol):
