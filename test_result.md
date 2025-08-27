@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Implement Numeric Potency Gating system for Gnosis I that prevents biologically implausible predictions (like aspirin ERBB4 2.3 μM) from being displayed as numbers. Instead show 'HYPOTHESIS_ONLY' status with clear evidence. The system should implement comprehensive gating logic including AD gates, pharmacophore checks, neighbor analysis, and mechanism validation to ensure only plausible predictions show numeric potencies."
+user_problem_statement: "Complete the Universal Gating & Reliability Hardening system for Gnosis I that prevents biologically implausible predictions from being displayed as numbers. The system should implement comprehensive gating logic including cross-assay consistency, family physicochemical envelopes, mechanism validation, neighbor sanity checks, and profile consistency gates to ensure only plausible predictions show numeric potencies. Implement the precise code-level specifications with universal application to ALL compounds and targets."
 
 backend:
   - task: "Numeric Potency Gating System Implementation"
