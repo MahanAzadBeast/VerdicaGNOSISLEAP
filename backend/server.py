@@ -47,11 +47,46 @@ try:
     logging.info("✅ Gnosis I (Model 1) initialized")
     GNOSIS_I_AVAILABLE = True
     
-    # Initialize high-performance AD layer with optimized mock data
+    # Initialize high-performance AD layer with REAL ChEMBL training data
     try:
-        from ad_mock_data import generate_mock_training_data
-        # Use larger dataset for better calibration, but still reasonable for initialization
-        training_data = generate_mock_training_data(n_compounds=100, n_targets=8)
+        from chembl_data_manager import ChEMBLDataManager
+        import asyncio
+        
+        async def load_real_training_data():
+            """Load real ChEMBL training data for AD layer"""
+            chembl_manager = ChEMBLDataManager()
+            all_data = []
+            
+            # Load data for multiple targets to build comprehensive AD database
+            targets = ['EGFR', 'BRAF', 'CDK2', 'PARP1', 'BCL2', 'VEGFR2']
+            
+            for target in targets:
+                try:
+                    # Get cached data first, or download fresh if needed
+                    target_data = await chembl_manager.prepare_training_data(target, limit=200)
+                    if target_data is not None and len(target_data) > 0:
+                        # Add target_id and split columns for AD layer compatibility
+                        target_data['target_id'] = target
+                        target_data['split'] = 'train'  # Mark as training data
+                        target_data['assay_type'] = 'IC50'  # Assume IC50 for now
+                        target_data['ligand_id'] = [f'{target}_COMPOUND_{i:04d}' for i in range(len(target_data))]
+                        all_data.append(target_data)
+                        logging.info(f"✅ Loaded {len(target_data)} compounds for {target}")
+                except Exception as e:
+                    logging.warning(f"⚠️ Could not load {target} data: {e}")
+                    
+            if all_data:
+                # Combine all target data
+                training_data = pd.concat(all_data, ignore_index=True)
+                logging.info(f"✅ Combined ChEMBL training data: {len(training_data)} records across {len(all_data)} targets")
+                return training_data
+            else:
+                logging.warning("⚠️ No real ChEMBL data available, falling back to mock data")
+                from ad_mock_data import generate_mock_training_data
+                return generate_mock_training_data(n_compounds=100, n_targets=8)
+        
+        # Load real training data synchronously
+        training_data = asyncio.run(load_real_training_data())
         initialize_hp_ad_layer_sync(training_data)
         logging.info("✅ Gnosis I High-Performance AD layer initialized")
         GNOSIS_AD_AVAILABLE = True
