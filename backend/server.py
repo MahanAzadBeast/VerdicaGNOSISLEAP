@@ -614,7 +614,7 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                         
                         # Check if result was gated (numeric potency suppressed)
                         if hasattr(ad_result, 'status') and ad_result.status == "HYPOTHESIS_ONLY":
-                            # Return gated result - numeric fields explicitly omitted
+                            # Return gated result - ALL numeric fields universally suppressed
                             enhanced_prediction = {
                                 'target_id': ad_result.target_id,
                                 'status': ad_result.status,
@@ -622,13 +622,9 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                                 'why': ad_result.why,
                                 'evidence': ad_result.evidence,
                                 'assay_type': assay_type,
-                                # Explicitly omit: pActivity, potency_ci, IC50_nM, etc.
+                                # Explicitly omit ALL numeric fields universally
                             }
                             
-                            # **EXPLICIT NUMERIC FIELD REMOVAL** - Never leak numerics on gated rows
-                            for k in ("pActivity", "potency_ci", "confidence_calibrated", "IC50_nM", "activity_uM"):
-                                enhanced_prediction.pop(k, None)
-                                
                         else:
                             # Normal prediction - include all numeric fields
                             enhanced_prediction = prediction_data.copy()
@@ -646,11 +642,20 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                                     'mechanism_score': ad_result.mechanism_score
                                 }
                             })
-                            
-                            # **EXPLICIT NUMERIC FIELD REMOVAL** - Never leak numerics on gated rows
-                            numeric_fields = ["pActivity", "potency_ci", "confidence_calibrated", "IC50_nM", "activity_uM", "Binding_IC50", "Functional_IC50", "EC50"]
-                            for k in numeric_fields:
-                                enhanced_prediction.pop(k, None)
+                        
+                        # **UNIVERSAL NUMERIC FIELD SUPPRESSION** - Zero tolerance for numeric leaks
+                        if enhanced_prediction.get('status') == "HYPOTHESIS_ONLY":
+                            # Universal list of ALL possible numeric fields - applies to every compound
+                            numeric_fields = [
+                                "pActivity", "potency_ci", "confidence_calibrated", 
+                                "IC50_nM", "activity_uM", 
+                                "Binding_IC50", "Functional_IC50", "EC50",
+                                "binding_ic50", "functional_ic50", "ec50",  # Handle different casings
+                                "binding_um", "functional_um", "ec50_um",
+                                "activity_µM", "potency_µM"  # Unicode variants
+                            ]
+                            for field in numeric_fields:
+                                enhanced_prediction.pop(field, None)
                         
                         enhanced_target_predictions[assay_type] = enhanced_prediction
                     else:
