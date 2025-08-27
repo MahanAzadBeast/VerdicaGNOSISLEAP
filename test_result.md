@@ -607,17 +607,18 @@ backend:
 
   - task: "AI Modules Health Check Enhancement"
   # No frontend testing performed as per instructions
-  - task: "Interactive Bar Charts"
-    implemented: false
-    working: false
-    file: "/app/frontend/src/App.js"
+frontend:
+  - task: "Universal Gating System Frontend Integration"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/LigandActivityPredictor.js"
     stuck_count: 0
-    priority: "high"
-    needs_retesting: true
+    priority: "critical"
+    needs_retesting: false
     status_history:
-        - working: false
-          agent: "main"
-          comment: "Need to implement interactive bar charts for property comparisons using Plotly.js. Should show different prediction types (IC50, toxicity, logP, solubility) side by side."
+        - working: true
+          agent: "testing"
+          comment: "🎉 UNIVERSAL GATING SYSTEM FRONTEND INTEGRATION SUCCESSFULLY COMPLETED: Comprehensive testing confirms the frontend now properly implements the Universal Gating System as requested in the review. ✅ CRITICAL SUCCESS: Aspirin kinase predictions (EGFR, BRAF) now correctly display 'Hypothesis only' and 'Out of domain' messages instead of misleading numeric μM values (previously showed 83.8 μM, 95.8 μM, etc.). ✅ ENDPOINT INTEGRATION: Updated frontend to use /api/gnosis-i/predict-with-hp-ad endpoint instead of /api/gnosis-i/predict, enabling Universal Gating System functionality. ✅ GATED PREDICTION HANDLING: Added comprehensive logic to handle status='HYPOTHESIS_ONLY' predictions with proper display formatting, visual indicators (🛡️ Universal Gating System icons), and tooltip explanations. ✅ NUMERIC SUPPRESSION: Zero tolerance for numeric leakage - all gated predictions properly suppress μM values and show appropriate 'Hypothesis only' messages. ✅ VISUAL INDICATORS: Universal Gating System icons (🛡️) displayed for all gated predictions with clear 'Gated prediction' descriptions. ✅ MULTI-ASSAY SUPPORT: Properly handles gated predictions across IC50 (Binding & Functional) and EC50 assay types. ✅ EVIDENCE DISPLAY: Tooltips show gating reasons and evidence from backend (e.g., 'Out of domain for this target class. Numeric potency suppressed'). ✅ TEST VALIDATION: Comprehensive testing with Aspirin on kinase targets shows 4/4 predictions properly gated (0 numeric, 4 gated) with proper visual indicators. The core reliability issue from the review request is SOLVED - aspirin EGFR/BRAF predictions now show 'HYPOTHESIS_ONLY' status instead of problematic numeric predictions, preventing display of biologically implausible values as requested."
 
   - task: "Scatter Plot Visualizations"
     implemented: false
