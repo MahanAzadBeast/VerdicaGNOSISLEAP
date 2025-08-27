@@ -3,9 +3,9 @@
 Universal configuration for HP AD Layer - applies to ALL compounds and targets
 """
 
-# Universal neighbor sanity thresholds (ADJUSTED for realistic testing)
-NEIGHBOR_SMAX_MIN = 0.50
-NEIGHBOR_MIN_COUNT_040 = 5        # Reduced from 30 to 5 for mock data compatibility
+# Universal neighbor sanity thresholds (REALISTIC for production)
+NEIGHBOR_SMAX_MIN = 0.40  # Reduced from 0.50 to 0.40 for realistic drug discovery
+NEIGHBOR_MIN_COUNT_040 = 10       # Reduced from 30 to 10 for realistic training data size
 
 # Cross-assay consistency thresholds
 ASSAY_DELTA_MAX_LOG = 1.0         # 10x mismatch allowed before gating
