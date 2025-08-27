@@ -651,11 +651,12 @@ def aggregate_gates_universal(mol, target_id, family, ad_ok, nn_info, assay_vals
         
         # Gate 6: Universal profile coherence (if available)
         # Note: This would require precomputed family reference vectors
-        # Placeholder for future implementation
-        if "profile_family" in assay_vals:
-            # ok_prof, r_prof = profile_consistency_gate(...)
-            # if not ok_prof: reasons.extend(r_prof)
-            pass
+        # For now, implement simplified profile consistency check
+        smiles_std = cached_standardize_smiles(assay_vals.get("smiles", ""))
+        if smiles_std:
+            ok_prof, r_prof = profile_consistency_gate(smiles_std, family)
+            if not ok_prof:
+                reasons.extend(r_prof)
         
         # Universal cumulative gating rules
         unique_reasons = sorted(set(reasons))
