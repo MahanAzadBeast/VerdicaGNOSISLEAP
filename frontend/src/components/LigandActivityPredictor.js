@@ -296,7 +296,19 @@ const LigandActivityPredictor = () => {
   };
 
   // Format potency display with extreme value capping and assay-specific handling
-  const formatPotencyDisplay = (pValue, activityUM, assayType, qualityFlag) => {
+  const formatPotencyDisplay = (pValue, activityUM, assayType, qualityFlag, status) => {
+    // **UNIVERSAL GATING SYSTEM** - Handle HYPOTHESIS_ONLY status
+    if (status === 'HYPOTHESIS_ONLY') {
+      return {
+        primaryText: "Hypothesis only",
+        secondaryText: "Out of domain", 
+        isExtreme: true,
+        isUnreliable: true,
+        isGated: true,
+        isNotTrained: false
+      };
+    }
+    
     const clippedPValue = Math.max(0, pValue);
     
     // Special handling for Ki predictions that were not trained
@@ -306,7 +318,8 @@ const LigandActivityPredictor = () => {
         secondaryText: "(No Ki data)", 
         isExtreme: true,
         isUnreliable: true,
-        isNotTrained: true
+        isNotTrained: true,
+        isGated: false
       };
     }
     
@@ -317,7 +330,8 @@ const LigandActivityPredictor = () => {
         secondaryText: `(${assayType} unreliable)`, 
         isExtreme: true,
         isUnreliable: true,
-        isNotTrained: false
+        isNotTrained: false,
+        isGated: false
       };
     }
     
@@ -327,7 +341,8 @@ const LigandActivityPredictor = () => {
         secondaryText: "—", // Omit pIC50 for extreme values
         isExtreme: true,
         isUnreliable: false,
-        isNotTrained: false
+        isNotTrained: false,
+        isGated: false
       };
     }
     
@@ -336,7 +351,8 @@ const LigandActivityPredictor = () => {
       secondaryText: `p${assayType} = ${clippedPValue.toFixed(2)}`,
       isExtreme: false,
       isUnreliable: false,
-      isNotTrained: false
+      isNotTrained: false,
+      isGated: false
     };
   };
 
