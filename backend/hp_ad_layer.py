@@ -586,7 +586,76 @@ def tiny_acid_veto_v2(mol):
     
     return tiny and acid and aryl
 
-def aggregate_gates_v3(mol, target_id, family, ad_ok, mech_info, nn_info, assays):
+def aggregate_gates_universal(mol, target_id, family, ad_ok, nn_info, assay_vals, mech_score=None):
+    """
+    Universal cumulative gate aggregation - applies to ALL compounds and targets.
+    
+    One place decides whether numerics are allowed. Nothing compound-specific.
+    No special cases by molecule name or target name - purely systematic.
+    
+    Returns: (suppress, hard_flag, reasons, evidence)
+    """
+    reasons = []
+    
+    try:
+        # Gate 1: Universal AD check
+        if not ad_ok:
+            reasons.append("OOD_chem")
+        
+        # Gate 2: Universal family physicochemical envelope
+        ok_env, r_env = family_physchem_gate(mol, family)
+        if not ok_env:
+            reasons.extend(r_env)
+        
+        # Gate 3: Universal mechanism gate (if family has one)
+        mech_fn = MECH_GATE_BY_FAMILY.get(family.lower())
+        if mech_fn:
+            ok_mech, r_mech = mech_fn(mol)
+            if not ok_mech:
+                reasons.extend(r_mech)
+        
+        # Gate 4: Universal assay-specific neighbor sanity
+        ok_nn, r_nn, ev_nn = in_assay_neighbors_ok(nn_info)
+        if not ok_nn:
+            reasons.extend(r_nn)
+        
+        # Gate 5: Universal cross-assay consistency
+        is_enzyme_family = family.lower() in ("kinase", "tyrosine_kinase", "parp")
+        ok_assay, r_assay = assay_consistency_check(
+            assay_vals.get("Binding_IC50"),
+            assay_vals.get("Functional_IC50"), 
+            assay_vals.get("EC50"),
+            is_enzyme_family=is_enzyme_family
+        )
+        if not ok_assay:
+            reasons.extend(r_assay)
+        
+        # Gate 6: Universal profile coherence (if available)
+        # Note: This would require precomputed family reference vectors
+        # Placeholder for future implementation
+        if "profile_family" in assay_vals:
+            # ok_prof, r_prof = profile_consistency_gate(...)
+            # if not ok_prof: reasons.extend(r_prof)
+            pass
+        
+        # Universal cumulative gating rules
+        unique_reasons = sorted(set(reasons))
+        fail_count = len(unique_reasons)
+        suppress = fail_count >= CUMULATIVE_GATE_SUPPRESS  # >=2 reasons => no numerics
+        hard_flag = fail_count >= CUMULATIVE_GATE_HARD     # >=3 reasons => add flag
+        
+        evidence = {
+            **ev_nn,
+            "gate_failures": fail_count,
+            "family": family,
+            "assay_consistency": ok_assay
+        }
+        
+        return suppress, hard_flag, unique_reasons, evidence
+        
+    except Exception as e:
+        logger.error(f"Error in universal gate aggregation: {e}")
+        return True, True, ["gate_aggregation_error"], {"gate_failures": 1}
     """
     Comprehensive gate aggregation with cross-assay consistency and family envelopes.
     
