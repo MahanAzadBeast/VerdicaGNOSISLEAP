@@ -1275,7 +1275,7 @@ class HighPerformanceAD:
                 gate_reasons.append("Physchem_implausible_for_ATP_pocket")
             
             # 6. Hard veto for tiny acids on kinases
-            if is_kinase and is_tiny_acid_veto(smiles_std):
+            if is_kinase and tiny_acid_veto_classifier(smiles_std):
                 gate_reasons.append("tiny_acid_veto")
             
             # 7. Label consistency fail (assay mismatch)
