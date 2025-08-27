@@ -32,18 +32,30 @@ def generate_mock_training_data(n_compounds: int = 1000,
     # Define realistic targets based on Gnosis I target list
     targets = ['EGFR', 'BRAF', 'CDK2', 'PARP1', 'ALK', 'MET', 'JAK2', 'PLK1', 'AURKA', 'MTOR'][:n_targets]
     
-    # Drug-like SMILES templates for realistic molecules
+    # Drug-like SMILES templates for realistic molecules (UPDATED with real drug scaffolds)
     smiles_templates = [
+        # Real kinase inhibitor scaffolds
+        "Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C",  # Imatinib-like
+        "Nc1ncnc2c1cnn2",  # Purine scaffold 
+        "Nc1nc(N)nc(N)c1N",  # Triaminopyrimidine
+        "c1ccc2nc(N)nc(N)c2c1",  # Quinazoline
+        "COc1cc2ncnc(N)c2cc1OC",  # Quinazoline with methoxy
+        "Fc1ccc(cc1)C(=O)Nc2nc(N)nc(N)c2",  # Fluorinated kinase inhibitor
+        "c1ccc(cc1)C(=O)Nc2ncnc3c2cnc(N)n3",  # Complex purine derivative
+        # PARP inhibitor scaffolds
+        "NC(=O)c1ccc2c(c1)oc(=O)n2",  # Olaparib-like
+        "NC(=O)c1ccc(cc1)CN2CCC(CC2)",  # Benzamide scaffold
+        "c1ccc(cc1)C(=O)NC2CCCCC2",  # Cyclohexyl benzamide
+        # GPCR ligand scaffolds
+        "c1ccc2c(c1)nccc2N",  # Quinoline amine
+        "CN(C)CCc1ccc2c(c1)cccc2O",  # Naphthalene derivative
+        "c1ccc(cc1)OCCN(C)C",  # Phenoxyethyl amine
+        # Original simple scaffolds (keep some for diversity)
         "c1ccccc1",  # Benzene ring
         "c1cccnc1",  # Pyridine
-        "c1ccncc1",  # Pyrimidine  
-        "c1cncc1",   # Pyrazine
-        "c1ccsc1",   # Thiophene
-        "c1ccoc1",   # Furan
-        "C1CCC(CC1)",  # Cyclohexyl
-        "C1CCOCC1",    # Morpholine
+        "c1ccncc1",  # Pyrimidine
+        "C1CCC(CC1)N",  # Cyclohexylamine
         "C1CCNCC1",    # Piperidine
-        "C1CN(C)CC1",  # N-methylpiperazine
     ]
     
     # Generate compounds
