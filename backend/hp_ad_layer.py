@@ -81,16 +81,17 @@ class GatedPredictionResult:
             self.evidence = {}
 
 # Pharmacophore checking functions for fast gating
-# Cross-Assay Consistency Functions
-def _floor_clamp_um(x):
-    """Floor clamp to prevent unrealistic sub-nM predictions"""
-    return max(x, EC50_FLOOR_UM) if x is not None else None
+# Universal Cross-Assay Consistency System (applies to ALL compounds)
+def _floor_um(x):
+    """Universal floor clamping to prevent 0.0 μM artifacts"""
+    return None if x is None else max(x, EC_MIN_FLOOR_UM)
 
-def _log10(x):
-    """Safe log10 for µM values"""
-    return math.log10(max(x, 1e-12))
+def _log10_um(x):
+    """Universal log10 for μM values with safe handling"""
+    import math
+    return None if x is None else math.log10(max(x, 1e-12))
 
-def assay_consistency_check(binding_um, functional_um, ec50_um, is_enzyme=True):
+def assay_consistency_check(binding_um, functional_um, ec50_um, is_enzyme_family):
     """
     Cross-assay consistency check for Binding_IC50, Functional_IC50, EC50.
     
