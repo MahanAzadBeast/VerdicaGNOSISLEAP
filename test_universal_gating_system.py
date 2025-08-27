@@ -72,7 +72,7 @@ def test_universal_family_envelopes():
     
     # Create generic test molecules (no specific compound names)
     tiny_anionic_acid = Chem.MolFromSmiles("CC(=O)O")  # Simple acetic acid (generic tiny anionic)
-    large_kinase_like = Chem.MolFromSmiles("CCc1ccc2nc(Nc3ccc(F)cc3)ncc2c1")  # Generic kinase-like
+    large_kinase_like = Chem.MolFromSmiles("Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C")  # Imatinib-like (MW > 300, multiple rings)
     polar_small = Chem.MolFromSmiles("O")  # Water (generic polar small molecule)
     
     # Test 1: Universal kinase envelope - tiny anionic should fail
