@@ -1494,12 +1494,12 @@ class HighPerformanceAD:
             
             # 5. Ionization/size realism for deep ATP pockets
             mol_weight = self._get_molecular_weight(smiles_std)
-            if is_kinase and mol_weight < 250 and is_strongly_anionic_at_ph7_4(smiles_std):
+            if is_kinase and mol_weight < 250 and strongly_anionic_pH74_v2(mol):
                 gate_reasons.append("Physchem_implausible_for_ATP_pocket")
                 gate_failures += 1
             
             # 6. ENHANCED Hard veto for tiny acids on kinases
-            if is_kinase and tiny_acid_veto_classifier(smiles_std):
+            if is_kinase and tiny_acid_veto_v2(mol):
                 gate_reasons.append("tiny_acid_veto")
                 gate_failures += 1
             
