@@ -792,11 +792,13 @@ const LigandActivityPredictor = () => {
                             <div
                               className="inline-block px-3 py-2 rounded-lg font-mono cursor-pointer relative"
                               style={potencyColor}
-                              title={potencyDisplay.isNotTrained ? 
+                              title={potencyDisplay.isGated ? 
+                                `${assayType} prediction gated: ${prediction.message || 'Out of domain for this target class. Numeric potency suppressed.'} Reasons: ${prediction.why ? prediction.why.join(', ') : 'Biologically implausible'}` :
+                                potencyDisplay.isNotTrained ? 
                                 `${assayType} predictions not available: Insufficient training data for this target. Only targets with ≥10 experimental samples provide reliable predictions.` :
                                 potencyDisplay.isUnreliable ? 
                                 `${assayType} prediction unreliable: ${confidenceNote || 'Model uncertainty too high for reliable prediction'}` :
-                                `${potencyDesc} (p${assayType} = ${Math.max(0, pValue).toFixed(2)}), σ = ${sigma.toFixed(2)}, RI = ${reliability.toFixed(2)}${confidenceNote ? ` - ${confidenceNote}` : ''}`
+                                `${potencyDesc} (p${assayType} = ${Math.max(0, pValue || 0).toFixed(2)}), σ = ${sigma.toFixed(2)}, RI = ${reliability.toFixed(2)}${confidenceNote ? ` - ${confidenceNote}` : ''}`
                               }
                             >
                               {/* Quality warning for unreliable predictions */}
