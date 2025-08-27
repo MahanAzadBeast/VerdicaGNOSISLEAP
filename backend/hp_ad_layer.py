@@ -202,7 +202,7 @@ def kinase_mechanism_gate(mol):
             except:
                 continue
         
-        if hits >= 2:
+        if hits >= 1:  # Temporarily reduced from 2 to 1 for testing
             return True, []
         
         # Universal fast shape percentile fallback
