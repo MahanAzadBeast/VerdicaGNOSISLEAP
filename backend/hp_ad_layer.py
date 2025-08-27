@@ -460,7 +460,112 @@ def tiny_acid_veto_v2(mol):
     
     return tiny and acid and aryl
 
-def apply_gates_v2(mol, target_id, ad_score, mech_score, nn_info, assay_match=True):
+def aggregate_gates_v3(mol, target_id, family, ad_ok, mech_info, nn_info, assays):
+    """
+    Comprehensive gate aggregation with cross-assay consistency and family envelopes.
+    
+    Returns: (suppress, hard_flag, reasons, evidence)
+    """
+    reasons = []
+    
+    try:
+        # 1. AD / mechanism gates
+        if not ad_ok:
+            reasons.append("OOD_chem")
+        
+        reasons.extend(mech_info.get("reasons", []))
+        
+        # 2. Family physicochemical envelope
+        ok_phys, r_phys = family_physchem_gate(mol, family)
+        if not ok_phys:
+            reasons.extend(r_phys)
+        
+        # 3. Assay-specific neighbor sanity
+        ok_nn, r_nn, ev_nn = in_assay_neighbors_ok(nn_info)
+        if not ok_nn:
+            reasons.extend(r_nn)
+        
+        # 4. Cross-assay consistency check
+        is_enzyme = (family == "kinase" or "PARP" in target_id.upper())
+        ok_assay, r_assay = assay_consistency_check(
+            assays.get("Binding_IC50"), 
+            assays.get("Functional_IC50"), 
+            assays.get("EC50"),
+            is_enzyme=is_enzyme
+        )
+        if not ok_assay:
+            reasons.extend(r_assay)
+        
+        # 5. Enhanced family-specific mechanism gates
+        if family == "kinase":
+            ok_kinase, r_kinase = kinase_mechanism_gate_v2(mol)
+            if not ok_kinase:
+                reasons.extend(r_kinase)
+                
+        elif "PARP" in target_id.upper():
+            ok_parp, r_parp = parp1_mechanism_gate_v2(mol)
+            if not ok_parp:
+                reasons.extend(r_parp)
+                
+        elif family == "gpcr":
+            ok_gpcr, r_gpcr = gpcr_mechanism_gate(mol)
+            if not ok_gpcr:
+                reasons.extend(r_gpcr)
+        
+        # 6. Optional profile consistency (placeholder)
+        if family in ("kinase", "tyrosine_kinase") and "profile_score" in mech_info:
+            if mech_info["profile_score"] < 0.5:
+                reasons.append("Profile_inconsistent")
+        
+        # Remove duplicates and count unique failures
+        unique_reasons = sorted(set(reasons))
+        fail_count = len(unique_reasons)
+        
+        # Apply cumulative gating rules
+        suppress = fail_count >= CUMULATIVE_GATE_SUPPRESS  # ≥2 gates
+        hard_flag = fail_count >= CUMULATIVE_GATE_HARD     # ≥3 gates
+        
+        return suppress, hard_flag, unique_reasons, {
+            **ev_nn,
+            "gate_failures": fail_count,
+            "family": family,
+            "assay_consistency": ok_assay
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in aggregate gates: {e}")
+        return True, True, ["Gate_aggregation_error"], {"gate_failures": 1}
+
+def determine_protein_family(target_id):
+    """Determine protein family from target ID"""
+    target_upper = target_id.upper()
+    
+    # Kinase families
+    kinase_keywords = [
+        'CDK', 'JAK', 'ABL', 'KIT', 'FLT', 'ALK', 'EGFR', 'BRAF', 'ERBB', 
+        'SRC', 'BTK', 'TRK', 'AKT', 'AURKB', 'KDR', 'PDGFR', 'MET', 'RET',
+        'LCK', 'FYN', 'YES', 'HCK', 'FGR', 'BLK', 'LYN', 'KINASE'
+    ]
+    
+    if any(keyword in target_upper for keyword in kinase_keywords):
+        return "kinase"
+    
+    # PARP family
+    if 'PARP' in target_upper:
+        return "parp"
+    
+    # GPCR family (simplified detection)
+    gpcr_keywords = ['GPCR', 'RECEPTOR', 'ADRB', 'DRD', 'HTR', 'CHRM']
+    if any(keyword in target_upper for keyword in gpcr_keywords):
+        return "gpcr"
+    
+    # PPI (protein-protein interaction) targets
+    ppi_keywords = ['BCL', 'MDM', 'P53', 'XIAP', 'BRD']
+    if any(keyword in target_upper for keyword in ppi_keywords):
+        return "ppi"
+    
+    # Default to kinase for unknown targets (conservative)
+    return "kinase"
     """
     Cumulative gating: ≥2 gates ⇒ suppress numeric; ≥3 ⇒ add "mechanistically_implausible"
     """
