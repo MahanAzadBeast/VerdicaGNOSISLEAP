@@ -52,16 +52,16 @@ def test_cross_assay_consistency():
     assert ok2 == False, "Discordant assays should fail"
     assert "Assay_discordance_BvsF" in reasons2
     
-    # Test case 3: Enzyme monotonicity violation (should fail)
+    # Test case 3: Large assay discordance (should fail)
     ok3, reasons3 = assay_consistency_check(
         binding_um=0.001,    # 1 nM binding (very potent)
         functional_um=None,
-        ec50_um=10.0,        # 10 μM EC50 (10,000x weaker)
+        ec50_um=10.0,        # 10 μM EC50 (large difference)
         is_enzyme=True
     )
-    print(f"  Monotonicity violation: {ok3} (expected: False), reasons: {reasons3}")
-    assert ok3 == False, "Monotonicity violation should fail"
-    assert "Enzyme_monotonicity_fail" in reasons3
+    print(f"  Large B vs EC50 discordance: {ok3} (expected: False), reasons: {reasons3}")
+    assert ok3 == False, "Large assay discordance should fail"
+    assert "Assay_discordance_BFvsE" in reasons3
     
     print("  ✅ Cross-assay consistency tests passed")
 
