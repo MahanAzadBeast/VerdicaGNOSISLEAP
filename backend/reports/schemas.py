@@ -100,6 +100,17 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
     confidences = []
     potencies = []
     
+    # Only include OK status predictions in potency ranking (exclude gated predictions)
+    ok_predictions = {}
+    for target, target_data in predictions.items():
+        ok_target_predictions = {}
+        for assay_type in ['IC50', 'Ki', 'EC50']:
+            pred = target_data.get(assay_type)
+            if pred and pred.get('status', 'OK') == 'OK':  # Only OK status
+                ok_target_predictions[assay_type] = pred
+        if ok_target_predictions:
+            ok_predictions[target] = ok_target_predictions
+    
     for target, target_data in predictions.items():
         selectivity_ratio = target_data.get('selectivity_ratio')
         sel_label, sel_class, sel_icon = get_selectivity_display(selectivity_ratio)
