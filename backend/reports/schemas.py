@@ -120,34 +120,34 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
         selectivity_ratio = target_data.get('selectivity_ratio')
         sel_label, sel_class, sel_icon = get_selectivity_display(selectivity_ratio)
         
-        # Handle all actual assay types returned by backend API
+        # **UNIVERSAL ASSAY PROCESSING** - Handle all actual assay types universally
         for assay_type in ['Binding_IC50', 'Functional_IC50', 'Ki', 'EC50', 'IC50']:
             pred = target_data.get(assay_type)
             if not pred:
                 continue
             
-            # Check if prediction was gated (numeric potency suppressed)
+            # **UNIVERSAL GATING CHECK** - applies to ALL compounds
             pred_status = pred.get('status', 'OK')
             
             if pred_status == 'HYPOTHESIS_ONLY':
-                # **GATED PREDICTION - RENDER AS GREY "HYPOTHESIS ONLY" CARD**
+                # **UNIVERSAL GATED PREDICTION RENDERING** - same for all compounds
                 display_ic50 = "Hypothesis only"
                 pic50_display = "Out of domain"
                 confidence = 0.0  # No confidence for gated predictions
                 
-                # Use grey styling for gated predictions
+                # Universal grey styling for gated predictions
                 heat_bg = 'hsl(0, 0%, 25%)'  # Dark gray
                 opacity = 0.8
                 
-                # DO NOT ADD TO POTENCY RANKING - gated predictions excluded from "Highest Potency"
+                # **UNIVERSAL RULE: DO NOT ADD TO POTENCY RANKING** - gated predictions excluded from "Highest Potency"
                 
             else:
-                # **NORMAL PREDICTION PROCESSING - INCLUDE IN POTENCY RANKING**
+                # **UNIVERSAL OK PREDICTION PROCESSING** - same logic for all compounds
                 p_value = pred.get('pActivity', 0)
                 activity_um = pred.get('activity_uM', 0)
                 confidence = pred.get('confidence', 0.8)
                 
-                # Format display values with quality handling
+                # Universal quality handling
                 quality_flag = pred.get('quality_flag', 'good')
                 
                 if quality_flag == 'not_trained':
@@ -166,7 +166,8 @@ def format_predictions_for_pdf(predictions_data: Dict[str, Any]) -> PredictionBa
                     heat_bg = get_heat_color(p_value, confidence)
                     opacity = 0.4 + 0.6 * confidence
                 
-                # **ONLY ADD OK PREDICTIONS TO POTENCY RANKING** - excludes gated from "Highest Potency"
+                # **UNIVERSAL RULE: ONLY OK PREDICTIONS ELIGIBLE FOR POTENCY RANKING**
+                # This prevents sub-μM banner artifacts anywhere, for any compound
                 if pred_status == 'OK' and quality_flag != 'not_trained' and activity_um <= 100:
                     potencies.append((target, activity_um, assay_type))
             
