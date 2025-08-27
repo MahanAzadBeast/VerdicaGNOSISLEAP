@@ -131,7 +131,34 @@ class RealChEMBLLoader:
     def _load_sync_fallback(self) -> Optional[pd.DataFrame]:
         """Synchronous fallback to load any available real data"""
         
-        # Check for any existing real ChEMBL data files
+        # Check for the main real ChEMBL training data file
+        main_data_file = Path("/app/backend/data/training_data.csv")
+        
+        if main_data_file.exists():
+            try:
+                df = pd.read_csv(main_data_file)
+                logger.info(f"📂 Found real ChEMBL data file: {len(df)} compounds")
+                
+                if len(df) > 0 and 'smiles' in df.columns:
+                    # Format for AD layer using the real ChEMBL structure
+                    formatted = pd.DataFrame({
+                        'ligand_id': [f'CHEMBL_{i:04d}' for i in range(len(df))],
+                        'smiles': df['smiles'],
+                        'target_id': df.get('target', df.get('target_id', 'EGFR')),
+                        'split': 'train',
+                        'assay_type': self._map_chembl_assay_type(df.get('assay_type', 'B')),
+                        'pActivity': df.get('pic50', df.get('pActivity', 5.0))
+                    })
+                    
+                    logger.info(f"✅ Real ChEMBL data formatted: {len(formatted)} compounds")
+                    logger.info(f"📊 Targets: {formatted['target_id'].unique()}")
+                    logger.info(f"📊 Assay types: {formatted['assay_type'].value_counts().to_dict()}")
+                    return formatted
+                    
+            except Exception as e:
+                logger.error(f"❌ Error loading real ChEMBL data: {e}")
+        
+        # Check for any other real data files
         data_files = list(self.cache_dir.glob("*training_data*.csv"))
         
         for data_file in data_files:
@@ -147,13 +174,31 @@ class RealChEMBLLoader:
                         'assay_type': 'Binding_IC50',
                         'pActivity': df.get('pic50', df.get('pActivity', 5.0))
                     })
-                    logger.info(f"✅ Loaded real data from {data_file.name}: {len(formatted)} compounds")
+                    logger.info(f"✅ Loaded additional real data from {data_file.name}: {len(formatted)} compounds")
                     return formatted
             except Exception as e:
                 logger.warning(f"Could not load {data_file}: {e}")
                 
         logger.error("❌ No real ChEMBL data files found")
         return None
+        
+    def _map_chembl_assay_type(self, chembl_assay_type):
+        """Map ChEMBL assay type codes to AD layer format"""
+        
+        # ChEMBL uses single letter codes
+        if isinstance(chembl_assay_type, pd.Series):
+            # Handle series by taking the first value
+            chembl_assay_type = chembl_assay_type.iloc[0] if len(chembl_assay_type) > 0 else 'B'
+            
+        mapping = {
+            'B': 'Binding_IC50',     # Binding assay
+            'F': 'Functional_IC50',  # Functional assay  
+            'A': 'EC50',             # ADME/activity assay
+            'T': 'Binding_IC50',     # Toxicology -> treat as binding
+            'P': 'Binding_IC50',     # Physicochemical -> treat as binding
+        }
+        
+        return mapping.get(str(chembl_assay_type).upper(), 'Binding_IC50')
 
 
 def load_real_chembl_for_ad(max_targets: int = 6) -> Optional[pd.DataFrame]:
