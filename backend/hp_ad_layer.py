@@ -170,18 +170,18 @@ def family_physchem_gate(mol, family: str):
 # Universal Assay-Specific Neighbor Sanity
 def in_assay_neighbors_ok(nn_info):
     """
-    Universal neighbor sanity check - requires support within same assay type.
+    Universal neighbor sanity check with REALISTIC thresholds for drug discovery.
     
-    Applies same thresholds to ALL compounds universally.
+    Updated for sparse training data: S_max ≥ 0.25, ≥3 neighbors at 0.25+ similarity
     """
     try:
-        # Universal neighbor requirements
+        # Use realistic neighbor requirements for drug discovery scenarios
         smax = nn_info.get("S_max_in_assay", nn_info.get("S_max", 0.0))
-        n040 = nn_info.get("n_sim_ge_0_40_in_assay", nn_info.get("n_sim_ge_0_40_same_assay", 0))
+        n025 = nn_info.get("n_sim_ge_0_25_same_assay", nn_info.get("n_sim_ge_0_40_same_assay", 0))  # Fallback to old key
         
-        ok = (smax >= NEIGHBOR_SMAX_MIN) and (n040 >= NEIGHBOR_MIN_COUNT_040)
+        ok = (smax >= NEIGHBOR_SMAX_MIN) and (n025 >= NEIGHBOR_MIN_COUNT_040)
         reasons = [] if ok else ["Insufficient_in-assay_neighbors"]
-        ev = {"S_max": smax, "neighbors_in_assay": n040}
+        ev = {"S_max": smax, "neighbors_in_assay": n025}
         
         return ok, reasons, ev
         
