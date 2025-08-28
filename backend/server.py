@@ -692,9 +692,12 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                 
                 logging.info("✅ Real experimental fallback completed")
                 
-        except Exception as e:
-            logging.warning(f"⚠️ Real model inference failed: {e}")
-            raise Exception(f"Real model inference failed: {e}")
+            except Exception as e:
+                logging.error(f"❌ Real S3 model inference failed: {e}")
+                logging.error(f"❌ Exception details: {type(e).__name__}: {str(e)}")
+                import traceback
+                logging.error(f"❌ Traceback: {traceback.format_exc()}")
+                raise Exception(f"Real S3 model inference failed: {e}")
 
             
             if gpu_result and gpu_result.get('status') != 'error':
