@@ -1953,15 +1953,27 @@ class HighPerformanceAD:
             # Initialize learned AD scorer
             self.ad_scorer = LearnedADScorer(self.fp_db)
             
-            # Train calibration models (use part of training data as validation proxy)
-            if training_data is not None:
-                val_data = training_data[training_data['split'] == 'val']
-                if len(val_data) == 0:
-                    # Use 20% of training data as validation proxy
-                    train_data = training_data[training_data['split'] == 'train']
-                    val_data = train_data.sample(frac=0.2, random_state=42)
-                
-                self.ad_scorer.train_ad_calibration(val_data)
+            # Train calibration models (temporarily disabled to fix startup issues)
+            try:
+                if training_data is not None:
+                    val_data = training_data[training_data['split'] == 'val']
+                    if len(val_data) == 0:
+                        # Use 20% of training data as validation proxy
+                        train_data = training_data[training_data['split'] == 'train']
+                        val_data = train_data.sample(frac=0.2, random_state=42)
+                    
+                    # Only train if we have proper validation data
+                    if len(val_data) > 10 and 'label' in val_data.columns:
+                        self.ad_scorer.train_ad_calibration(val_data)
+                    else:
+                        logger.warning("⚠️ Insufficient validation data - using default AD calibration")
+                        self.ad_scorer._build_default_calibration()
+                else:
+                    logger.warning("⚠️ No training data - using default AD calibration")
+                    self.ad_scorer._build_default_calibration()
+            except Exception as e:
+                logger.warning(f"⚠️ AD calibration failed: {e} - using default calibration")
+                self.ad_scorer._build_default_calibration()
             
             self.initialized = True
             init_time = time.time() - start_time
