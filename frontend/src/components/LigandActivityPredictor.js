@@ -445,6 +445,14 @@ const LigandActivityPredictor = () => {
       });
 
       setPredictions(response.data);
+      
+      // **UX IMPROVEMENT**: Auto-scroll to results after prediction completes
+      setTimeout(() => {
+        const resultsElement = document.getElementById('prediction-results');
+        if (resultsElement) {
+          resultsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     } catch (error) {
       console.error('Error making prediction:', error);
       
