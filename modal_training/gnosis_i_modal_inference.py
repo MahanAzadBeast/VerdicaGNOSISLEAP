@@ -146,51 +146,67 @@ def _get_realistic_activity_prediction(smiles: str, target: str, mol) -> float:
     image=image,
     volumes={"/model": model_volume},
     timeout=600
-)
-def upload_real_gnosis_model():
-    """Upload the actual trained Gnosis I model to Modal volume"""
-    print("📤 Uploading REAL trained Gnosis I model to Modal volume...")
+)  
+def upload_real_s3_model():
+    """Upload the real S3 Gnosis I model (181MB) to Modal volume"""
+    print("📤 Uploading REAL S3 Gnosis I model (181MB) to Modal...")
     
     import torch
+    import requests
     import os
-    import shutil
     
     try:
         model_path = Path("/model/gnosis_model1_best.pt")
         model_path.parent.mkdir(exist_ok=True)
         
-        # Check for the real local model file in Modal environment
-        local_model_path = "/app/backend/models/gnosis_model1_best.pt"
+        # Download the real S3 model directly (since local mount doesn't work)
+        s3_url = "https://veridicabatabase.s3.amazonaws.com/models/gnosis-i/1.0.0/gnosis_model1_best.pt"
         
-        if os.path.exists(local_model_path):
-            print(f"✅ Found real model locally: {os.path.getsize(local_model_path) / 1024 / 1024:.1f} MB")
+        print(f"📥 Downloading real model from S3: {s3_url}")
+        
+        # Download in chunks to handle large file
+        response = requests.get(s3_url, stream=True, timeout=300)
+        
+        if response.status_code == 200:
+            total_size = int(response.headers.get('content-length', 0))
+            print(f"📊 Downloading {total_size / 1024 / 1024:.1f} MB...")
             
-            # Copy the real model file
-            shutil.copy2(local_model_path, model_path)
-            print(f"✅ Real model copied to Modal volume")
+            with open(model_path, 'wb') as f:
+                downloaded = 0
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+                        downloaded += len(chunk)
+                        
+                        # Progress indicator
+                        if downloaded % (10 * 1024 * 1024) == 0:  # Every 10MB
+                            progress = downloaded / total_size * 100
+                            print(f"📊 Progress: {progress:.1f}%")
             
-            # Verify the copied model has real weights
-            checkpoint = torch.load(model_path, map_location='cpu')
+            print(f"✅ S3 model downloaded: {downloaded / 1024 / 1024:.1f} MB")
             
-            if checkpoint.get('model_state_dict') and len(checkpoint['model_state_dict']) > 0:
-                print(f"✅ Real model has {len(checkpoint['model_state_dict'])} parameters")
-                return {"status": "uploaded_real", "path": str(model_path), "size_mb": os.path.getsize(model_path) / 1024 / 1024}
+            # Verify it's the real model
+            checkpoint = torch.load(model_path, map_location='cpu', weights_only=False)
+            state_dict = checkpoint.get('model_state_dict', {})
+            
+            if len(state_dict) > 100:  # Real model should have many parameters
+                print(f"✅ REAL S3 model verified: {len(state_dict)} parameters")
+                return {
+                    "status": "uploaded_real_s3",
+                    "path": str(model_path),
+                    "size_mb": downloaded / 1024 / 1024,
+                    "parameters": len(state_dict)
+                }
             else:
-                print("⚠️ Model file exists but has no trained weights")
-                return {"status": "uploaded_placeholder", "path": str(model_path)}
+                print("❌ Downloaded model has no trained weights")
+                return {"status": "error", "error": "No trained weights in S3 model"}
+                
         else:
-            print("⚠️ Real local model not accessible from Modal - creating informed placeholder")
-            
-            # Create placeholder but with better selectivity logic
-            torch.save({
-                'model_state_dict': {},  # Empty - will use selectivity algorithm
-                'model_info': {'r2_score': 0.6281, 'num_targets': 62, 'model_size_mb': 181, 'type': 'placeholder'}
-            }, model_path)
-            
-            return {"status": "uploaded_placeholder", "path": str(model_path)}
+            print(f"❌ S3 download failed: {response.status_code}")
+            return {"status": "error", "error": f"S3 download failed: {response.status_code}"}
             
     except Exception as e:
-        print(f"❌ Upload error: {e}")
+        print(f"❌ S3 upload error: {e}")
         import traceback
         traceback.print_exc()
         return {"status": "error", "error": str(e)}
