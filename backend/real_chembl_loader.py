@@ -151,7 +151,8 @@ class RealChEMBLLoader:
                         'target_id': df.get('target', df.get('target_id', 'EGFR')),
                         'split': 'train',
                         'assay_type': self._map_chembl_assay_type(df.get('assay_type', 'B')),
-                        'pActivity': df.get('pic50', df.get('pActivity', 5.0))
+                        'pActivity': df.get('pic50', df.get('pActivity', 5.0)),
+                        'label': df.get('pic50', df.get('pActivity', 5.0))  # Add label for AD calibration
                     })
                     
                     logger.info(f"✅ Real ChEMBL data formatted: {len(formatted)} compounds")
