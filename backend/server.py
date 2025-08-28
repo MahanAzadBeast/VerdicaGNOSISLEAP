@@ -48,18 +48,57 @@ try:
     logging.info("✅ Gnosis I (Model 1) initialized")
     GNOSIS_I_AVAILABLE = True
     
-    # TEMPORARILY DISABLE HP AD layer initialization to fix system performance issues
+    # Initialize HP-AD layer with REAL ChEMBL data for gating (FIXED)
     try:
-        logging.info("⚠️ HP AD layer initialization TEMPORARILY DISABLED due to performance issues")
-        logging.info("⚠️ System will use basic predictions without gating until HP AD layer is fixed") 
-        GNOSIS_AD_AVAILABLE = False
+        logging.info("🎯 Initializing HP-AD layer with real ChEMBL data for Universal Gating...")
         
-        # TODO: Fix HP AD layer initialization performance and memory issues
-        # The current implementation causes system overload (CPU >100%, timeouts)
-        # Need to optimize fingerprint database building and similarity calculations
+        # Load real ChEMBL data directly (bypass complex async loader)
+        chembl_data_file = Path("/app/backend/data/training_data.csv")
         
+        if chembl_data_file.exists():
+            chembl_df = pd.read_csv(chembl_data_file)
+            logging.info(f"📂 Loaded ChEMBL data: {len(chembl_df)} compounds")
+            
+            if len(chembl_df) > 100:
+                # Format for HP-AD layer (correct format)
+                real_training_data = pd.DataFrame({
+                    'ligand_id': [f'CHEMBL_{i:04d}' for i in range(len(chembl_df))],
+                    'smiles': chembl_df['smiles'],
+                    'target_id': chembl_df.get('target', 'EGFR'),  # Use target column
+                    'split': 'train',
+                    'assay_type': 'Binding_IC50',
+                    'pActivity': chembl_df.get('pic50', 5.0),
+                    'label': chembl_df.get('pic50', 5.0)
+                })
+                
+                # Initialize HP-AD layer synchronously
+                initialize_hp_ad_layer_sync(real_training_data)
+                
+                # Verify it worked
+                hp_ad_verify = get_hp_ad_layer()
+                if (hp_ad_verify and hp_ad_verify.initialized and 
+                    hp_ad_verify.fp_db and hp_ad_verify.fp_db.db_rdkit):
+                    targets = list(hp_ad_verify.fp_db.db_rdkit.keys())
+                    logging.info(f"✅ HP-AD layer initialized with targets: {targets}")
+                    
+                    for target in targets:
+                        count = len(hp_ad_verify.fp_db.db_rdkit[target])
+                        logging.info(f"✅ {target}: {count} compounds in fingerprint DB")
+                    
+                    GNOSIS_AD_AVAILABLE = True
+                    logging.info("✅ Universal Gating System ready")
+                else:
+                    logging.error("❌ HP-AD initialization verification failed")
+                    GNOSIS_AD_AVAILABLE = False
+            else:
+                logging.error("❌ Insufficient ChEMBL data")
+                GNOSIS_AD_AVAILABLE = False
+        else:
+            logging.error("❌ ChEMBL data file not found")
+            GNOSIS_AD_AVAILABLE = False
+            
     except Exception as e:
-        logging.error(f"❌ Error during HP AD layer handling: {e}")
+        logging.error(f"❌ HP-AD initialization failed: {e}")
         GNOSIS_AD_AVAILABLE = False
     
 except Exception as e:
