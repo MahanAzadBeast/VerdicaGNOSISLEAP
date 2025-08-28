@@ -1,6 +1,6 @@
 """
-Modal GPU Inference for Real Gnosis I Trained Model
-Loads the actual trained ChemBERTa model from S3 and runs inference on GPU
+Modal GPU Inference for Real Gnosis I Trained Model  
+Loads the actual trained ChemBERTa model and runs inference on GPU
 """
 
 import modal
@@ -11,7 +11,6 @@ import torch.nn as nn
 from typing import Dict, List, Any
 import json
 from pathlib import Path
-import boto3
 from transformers import AutoTokenizer, AutoModel
 
 # GPU image with ML libraries for the real model
@@ -21,14 +20,16 @@ image = modal.Image.debian_slim(python_version="3.11").pip_install([
     "torch",
     "transformers>=4.33.0",
     "scikit-learn",
-    "rdkit==2023.9.6",
-    "boto3"
+    "rdkit==2023.9.6"
 ])
 
 app = modal.App("gnosis-i-real-inference")
 
 # Model volume for caching the trained model
 model_volume = modal.Volume.from_name("gnosis-models", create_if_missing=True)
+
+# Mount the local model directory to access real trained weights
+local_models = modal.Mount.from_local_dir("/app/backend/models", remote_path="/local_models")
 
 # Copy the actual Gnosis I model architecture from the backend
 class FineTunedChemBERTaEncoder(nn.Module):
