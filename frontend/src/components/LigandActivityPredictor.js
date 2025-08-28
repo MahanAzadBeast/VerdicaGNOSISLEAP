@@ -429,6 +429,9 @@ const LigandActivityPredictor = () => {
     setIsLoading(true);
     setError('');
     setPredictions(null);
+    
+    // **UX IMPROVEMENT**: Show immediate visual feedback
+    console.log('🔄 Starting prediction with Universal Gating System...');
 
     try {
       // Prepare targets array - if 'all' is selected, use all available targets
