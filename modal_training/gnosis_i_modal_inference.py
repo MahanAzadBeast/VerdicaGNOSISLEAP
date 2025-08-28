@@ -186,6 +186,7 @@ def upload_real_gnosis_model():
         else:
             print("⚠️ Real local model not found - creating placeholder")
             
+            import torch
             # Create placeholder with empty weights
             torch.save({
                 'model_state_dict': {},
