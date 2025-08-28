@@ -704,18 +704,10 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                                 
                                 def apply_universal_family_gating(smiles, target_id, target_family, base_prediction, assay_type):
                                     """Apply universal family-based gating without neighbor similarity"""
-                                    # Create a mock AD result for universal gating
-                                    class MockADResult:
-                                        def __init__(self):
-                                            self.status = "OK"
-                                            self.target_id = target_id
-                                            self.message = "Universal family-based gating applied"
-                                            self.why = f"Family-based rules for {target_family}"
-                                            self.evidence = f"Target family: {target_family}"
-                                    
-                                    # Apply basic family-based rules (can be expanded)
-                                    # For now, just return OK status - this is a placeholder for future enhancement
-                                    return MockADResult()
+                                    from universal_family_gating import UniversalFamilyGating
+                                    return UniversalFamilyGating.apply_family_gating(
+                                        smiles, target_id, target_family, base_prediction, assay_type
+                                    )
                                 
                                 target_family = determine_target_family(target)
                                 
