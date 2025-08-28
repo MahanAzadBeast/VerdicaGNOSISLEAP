@@ -721,13 +721,7 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                     targets=input_data.targets,
                     assay_types=input_data.assay_types
                 )
-            
-            # Call real trained model on Modal GPU  
-            gpu_result = predict_fn.remote(
-                smiles=input_data.smiles,
-                targets=input_data.targets,
-                assay_types=input_data.assay_types
-            )
+
             
             if gpu_result and gpu_result.get('status') != 'error':
                 logging.info("✅ Real Gnosis I ChemBERTa GPU prediction successful")
