@@ -47,71 +47,18 @@ try:
     logging.info("✅ Gnosis I (Model 1) initialized")
     GNOSIS_I_AVAILABLE = True
     
-    # Initialize high-performance AD layer with REAL ChEMBL data ONLY (no mock data)
+    # TEMPORARILY DISABLE HP AD layer initialization to fix system performance issues
     try:
-        logging.info("🎯 Loading REAL ChEMBL training data for AD layer (NO MOCK DATA)...")
+        logging.info("⚠️ HP AD layer initialization TEMPORARILY DISABLED due to performance issues")
+        logging.info("⚠️ System will use basic predictions without gating until HP AD layer is fixed") 
+        GNOSIS_AD_AVAILABLE = False
         
-        # Load real ChEMBL data directly from file (simpler approach)
-        chembl_data_file = Path("/app/backend/data/training_data.csv")
+        # TODO: Fix HP AD layer initialization performance and memory issues
+        # The current implementation causes system overload (CPU >100%, timeouts)
+        # Need to optimize fingerprint database building and similarity calculations
         
-        if chembl_data_file.exists():
-            chembl_df = pd.read_csv(chembl_data_file)
-            logging.info(f"📂 Found ChEMBL data file: {len(chembl_df)} compounds")
-            
-            if len(chembl_df) > 100:
-                # Format for HP AD layer
-                real_training_data = pd.DataFrame({
-                    'ligand_id': [f'CHEMBL_{i:04d}' for i in range(len(chembl_df))],
-                    'smiles': chembl_df['smiles'],
-                    'target_id': chembl_df.get('target', 'EGFR'),
-                    'split': 'train',
-                    'assay_type': 'Binding_IC50',  # ChEMBL data is binding assays
-                    'pActivity': chembl_df.get('pic50', 5.0),
-                    'label': chembl_df.get('pic50', 5.0)
-                })
-                
-                logging.info(f"✅ Real ChEMBL data formatted: {len(real_training_data)} compounds")
-                
-                # Initialize HP AD layer with real data
-                initialize_hp_ad_layer_sync(real_training_data)
-                
-                # Verify initialization worked
-                hp_ad_verify = get_hp_ad_layer()
-                if hp_ad_verify and hp_ad_verify.initialized:
-                    logging.info("✅ Gnosis I High-Performance AD layer initialized with REAL ChEMBL data")
-                    GNOSIS_AD_AVAILABLE = True
-                    
-                    # Verify fingerprint database has data
-                    if (hp_ad_verify.fp_db and 
-                        hp_ad_verify.fp_db.db_rdkit and 
-                        len(hp_ad_verify.fp_db.db_rdkit) > 0):
-                        targets = list(hp_ad_verify.fp_db.db_rdkit.keys())
-                        logging.info(f"✅ Fingerprint database ready: {targets}")
-                        
-                        # Log compound counts for verification
-                        for target in targets:
-                            count = len(hp_ad_verify.fp_db.db_rdkit[target])
-                            logging.info(f"✅ {target}: {count} compounds in fingerprint DB")
-                            
-                    else:
-                        logging.error("❌ Fingerprint database empty - initialization failed")
-                        GNOSIS_AD_AVAILABLE = False
-                else:
-                    logging.error("❌ HP AD layer initialization verification failed")
-                    GNOSIS_AD_AVAILABLE = False
-            else:
-                logging.error("❌ Insufficient ChEMBL data in file")
-                GNOSIS_AD_AVAILABLE = False
-        else:
-            logging.error("❌ CRITICAL: ChEMBL data file not found")
-            logging.error("❌ AD layer disabled - no real training data available")
-            GNOSIS_AD_AVAILABLE = False
-            
     except Exception as e:
-        logging.error(f"❌ High-Performance AD layer initialization failed: {e}")
-        logging.error("❌ AD layer disabled - real data loading failed")
-        import traceback
-        logging.error(traceback.format_exc())
+        logging.error(f"❌ Error during HP AD layer handling: {e}")
         GNOSIS_AD_AVAILABLE = False
     
 except Exception as e:
