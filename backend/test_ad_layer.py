@@ -17,7 +17,7 @@ from gnosis_ad_layer import (
     get_ad_layer,
     initialize_ad_layer
 )
-from ad_mock_data import generate_mock_training_data
+from real_chembl_loader import load_real_chembl_for_ad  # Use real data instead of mock
 
 # Configure logging
 logging.basicConfig(
@@ -46,12 +46,12 @@ def test_standardize_smiles():
         logger.info(f"'{smiles}' -> '{result}'")
 
 def test_ad_layer_initialization():
-    """Test AD layer initialization with mock data"""
+    """Test AD layer initialization with real data"""
     logger.info("Testing AD layer initialization...")
     
-    # Generate mock training data
-    logger.info("Generating mock training data...")
-    training_data = generate_mock_training_data(n_compounds=100, n_targets=5)
+    # Load real ChEMBL training data
+    logger.info("Loading real ChEMBL training data...")
+    training_data = load_real_chembl_for_ad(max_targets=5)
     
     # Initialize AD layer
     logger.info("Initializing AD layer...")
@@ -126,8 +126,8 @@ def test_integration_with_gnosis():
             
             logger.info(f"Gnosis I result keys: {gnosis_result.keys()}")
             
-            # Initialize AD layer with mock data for demonstration
-            training_data = generate_mock_training_data(n_compounds=50, n_targets=3)
+            # Initialize AD layer with real data for demonstration
+            training_data = load_real_chembl_for_ad(max_targets=3)
             ad_layer = initialize_ad_layer(training_data)
             
             # Score with AD layer
