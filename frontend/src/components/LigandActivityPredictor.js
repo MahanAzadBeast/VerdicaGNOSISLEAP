@@ -241,8 +241,8 @@ const LigandActivityPredictor = () => {
     }
   }, [availableTargets, selectedAssayTypes]);
 
-  // Heat-map color calculation with continuous HSL gradient
-  const calculatePotencyColor = (pValue, confidence = 0.8, isUnreliable = false, isNotTrained = false, isGated = false) => {
+  // Heat-map color calculation with enhanced precision handling
+  const calculatePotencyColor = (pValue, confidence = 0.8, isUnreliable = false, isNotTrained = false, isGated = false, isPotent = false) => {
     // **UNIVERSAL GATING SYSTEM** - Special styling for gated predictions
     if (isGated) {
       return {
@@ -252,6 +252,18 @@ const LigandActivityPredictor = () => {
         fontWeight: 'bold',
         border: '2px solid #f59e0b',
         textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+      };
+    }
+    
+    // **ENHANCED STYLING** - Special styling for very potent compounds (nM range)
+    if (isPotent) {
+      return {
+        backgroundColor: 'hsl(120, 80%, 25%)', // Bright green for very potent
+        opacity: 0.95,
+        color: '#ffffff',
+        fontWeight: 'bold',
+        border: '2px solid #22c55e',
+        textShadow: '0 1px 2px rgba(0,0,0,0.7)'
       };
     }
     
