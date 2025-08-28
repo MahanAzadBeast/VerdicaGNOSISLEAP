@@ -4,6 +4,7 @@ Applies biological plausibility rules even without target-specific training data
 """
 
 import logging
+import numpy as np
 from typing import Dict, Any, List
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Crippen
