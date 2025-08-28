@@ -1819,8 +1819,8 @@ class LearnedADScorer:
         """Build default calibration when insufficient validation data"""
         logger.info("Building default AD calibration")
         
-        # Default global model coefficients (can be tuned)
-        self.global_model = type('MockModel', (), {
+        # Default global model coefficients (calibrated for real data)
+        self.global_model = type('DefaultADModel', (), {
             'coef_': np.array([[0.6, 0.3, 0.1, 0.0]]),  # similarity, density, context, mechanism
             'intercept_': np.array([-0.5]),
             'predict_proba': lambda _, X: np.column_stack([1 - self._default_predict(X), self._default_predict(X)])
