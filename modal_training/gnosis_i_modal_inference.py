@@ -199,60 +199,95 @@ def predict_gnosis_i_real_gpu(smiles: str, targets: List[str], assay_types: List
         print("🔄 Loading real trained Gnosis I model...")
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-        # For now, use a simplified prediction while model architecture is set up
-        # This will be replaced with actual model loading once architecture is confirmed
+        # Load the real model checkpoint 
+        checkpoint = torch.load(model_path, map_location=device)
         
-        # Validate SMILES first
-        from rdkit import Chem
-        mol = Chem.MolFromSmiles(smiles)
-        if mol is None:
-            return {
-                "status": "error", 
-                "error": "Invalid SMILES",
-                "smiles": smiles
-            }
-        
-        # Generate realistic predictions (placeholder for real model)
-        predictions = {}
-        
-        for target in targets:
-            target_predictions = {}
+        # Check if this is a real trained model or placeholder
+        if not checkpoint.get('model_state_dict') or len(checkpoint['model_state_dict']) == 0:
+            print("⚠️ WARNING: Model file contains placeholder/empty weights")
+            print("⚠️ Using selectivity-aware prediction algorithm until real weights available")
             
-            for assay_type in assay_types:
-                # Realistic prediction for this target-compound pair
-                # Based on typical kinase inhibitor ranges
-                if target == 'EGFR' and 'kinase' in smiles.lower():
-                    base_activity = 7.0  # Strong for known kinase inhibitors
-                elif target == 'EGFR':
-                    base_activity = 6.0  # Moderate for other compounds
-                else:
-                    base_activity = 5.5  # Default
-                
-                # Add some realistic variation
-                pactivity = base_activity + np.random.normal(0, 0.3)
-                pactivity = np.clip(pactivity, 4.0, 8.5)
-                
-                ic50_nm = 10 ** (9 - pactivity)
-                activity_um = ic50_nm / 1000
-                
-                # Map assay types
-                if assay_type == 'IC50':
-                    assay_key = 'Binding_IC50'
-                else:
-                    assay_key = assay_type
-                
-                target_predictions[assay_key] = {
-                    "pActivity": float(pactivity),
-                    "activity_uM": float(activity_um),
-                    "confidence": 0.9,  # High confidence for real model
-                    "sigma": 0.15,
-                    "source": "Real_Gnosis_I_ChemBERTa_GPU"
-                }
+            # Use biologically-informed predictions based on known selectivity
+            predictions = {}
             
-            if len(targets) > 1:
-                target_predictions["selectivity_ratio"] = 1.0
+            # Validate SMILES first
+            from rdkit import Chem
+            mol = Chem.MolFromSmiles(smiles)
+            if mol is None:
+                return {"status": "error", "error": "Invalid SMILES", "smiles": smiles}
             
-            predictions[target] = target_predictions
+            for target in targets:
+                target_predictions = {}
+                
+                for assay_type in assay_types:
+                    # **BIOLOGICALLY INFORMED PREDICTIONS** based on known drug selectivity
+                    pactivity = _get_realistic_activity_prediction(smiles, target, mol)
+                    
+                    ic50_nm = 10 ** (9 - pactivity)
+                    activity_um = ic50_nm / 1000
+                    
+                    # Map assay types
+                    assay_key = 'Binding_IC50' if assay_type == 'IC50' else assay_type
+                    
+                    target_predictions[assay_key] = {
+                        "pActivity": float(pactivity),
+                        "activity_uM": float(activity_um),
+                        "confidence": 0.7,  # Lower confidence for algorithmic predictions
+                        "sigma": 0.3,
+                        "source": "Selectivity_Aware_Algorithm_GPU"
+                    }
+                
+                if len(targets) > 1:
+                    target_predictions["selectivity_ratio"] = 1.0
+                
+                predictions[target] = target_predictions
+                
+        else:
+            print("✅ Loading real trained ChemBERTa weights...")
+            
+            # Initialize real model architecture  
+            model = GnosisIRealModel(num_targets=62)
+            model.load_state_dict(checkpoint['model_state_dict'])
+            model.to(device)
+            model.eval()
+            
+            print(f"✅ Real Gnosis I model loaded on {device}")
+            
+            # Run real transformer inference
+            with torch.no_grad():
+                predictions_raw = model([smiles], targets)
+            
+            # Process real model outputs
+            predictions = {}
+            for target in targets:
+                if target in predictions_raw:
+                    target_pred_tensor = predictions_raw[target][0]
+                    target_predictions = {}
+                    
+                    # Map assay types to tensor indices
+                    assay_map = {'IC50': 0, 'Ki': 1, 'EC50': 2}
+                    
+                    for assay_type in assay_types:
+                        if assay_type in assay_map:
+                            idx = assay_map[assay_type]
+                            pactivity = float(target_pred_tensor[idx].item())
+                            ic50_nm = 10 ** (9 - pactivity)
+                            activity_um = ic50_nm / 1000
+                            
+                            assay_key = 'Binding_IC50' if assay_type == 'IC50' else assay_type
+                            
+                            target_predictions[assay_key] = {
+                                "pActivity": pactivity,
+                                "activity_uM": activity_um,
+                                "confidence": 0.9,
+                                "sigma": 0.15,
+                                "source": "Real_Trained_ChemBERTa_GPU"
+                            }
+                    
+                    if len(targets) > 1:
+                        target_predictions["selectivity_ratio"] = 1.0
+                    
+                    predictions[target] = target_predictions
         
         # Calculate molecular properties
         from rdkit.Chem import Crippen
