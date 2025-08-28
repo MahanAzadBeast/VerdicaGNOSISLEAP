@@ -826,11 +826,13 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                 
         # Fallback to lightweight local inference when Modal unavailable
         
-        # Fallback to lightweight local inference (fast, no transformers)
+        # Fallback to lightweight local inference only if absolutely necessary
         try:
+            # Last resort: use lightweight inference if real model completely failed
+            logging.warning("⚠️ All real model inference attempts failed - using lightweight fallback")
+            
             from lightweight_gnosis_predictor import get_lightweight_predictor
             
-            logging.info("⚡ Using fast lightweight inference (RDKit descriptors)")
             lightweight_predictor = get_lightweight_predictor()
             
             # Fast local prediction without heavy ML models
@@ -840,21 +842,15 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                 assay_types=input_data.assay_types
             )
             
-            # Add HP-AD gating if available
-            hp_ad_layer = get_hp_ad_layer()
-            if hp_ad_layer and hp_ad_layer.initialized:
-                logging.info("📊 Applying HP-AD gating to lightweight results")
-                # Apply gating logic here (future enhancement)
-                lightweight_result['model_info']['hp_ad_enhanced'] = True
-                lightweight_result['model_info']['gating_note'] = 'Lightweight inference with gating'
-            else:
-                lightweight_result['model_info']['hp_ad_enhanced'] = False
-                lightweight_result['model_info']['gating_note'] = 'Lightweight inference without gating'
+            # Mark as fallback
+            lightweight_result['model_info']['hp_ad_enhanced'] = False
+            lightweight_result['model_info']['gating_note'] = 'Lightweight fallback - real model failed'
+            lightweight_result['model_info']['fallback_used'] = True
             
             return lightweight_result
             
         except Exception as e:
-            logging.error(f"❌ Lightweight inference failed: {e}")
+            logging.error(f"❌ Even lightweight inference failed: {e}")
             raise HTTPException(status_code=500, detail=f"All inference methods failed: {str(e)}")
         
         # Original HP-AD enhanced prediction (disabled due to performance issues)
