@@ -1511,16 +1511,16 @@ class OptimizedFingerprintDB:
                                      similarities: np.ndarray, 
                                      assay_type: Optional[str] = None) -> Dict[str, Any]:
         """
-        Analyze neighbors for gating decisions with HARDENED mandatory assay-class filtering.
+        Analyze neighbors for gating decisions with REALISTIC thresholds for drug discovery.
         
-        Updated thresholds: S_max ≥ 0.50 and ≥ 30 same-assay neighbors with sim ≥ 0.40
+        Updated thresholds: S_max ≥ 0.25 and ≥ 3 same-assay neighbors (realistic for sparse datasets)
         """
         try:
             if target_id not in self.ligand_metadata:
                 return {
+                    'n_sim_ge_0_25_same_assay': 0,  # Updated threshold
+                    'n_sim_ge_0_30_same_assay': 0,
                     'n_sim_ge_0_40_same_assay': 0,
-                    'n_sim_ge_0_45_same_assay': 0,
-                    'n_sim_ge_0_50_same_assay': 0,  # New threshold
                     'assay_class': assay_type or 'unknown',
                     'assay_mismatch_possible': True
                 }
@@ -1528,37 +1528,37 @@ class OptimizedFingerprintDB:
             metadata = self.ligand_metadata[target_id]
             assay_types = metadata.get('assay_types', [])
             
-            # Count same-assay neighbors above hardened thresholds
-            n_sim_40_same_assay = 0
-            n_sim_45_same_assay = 0
-            n_sim_50_same_assay = 0  # New hardened threshold
+            # Count same-assay neighbors above realistic thresholds
+            n_sim_25_same_assay = 0  # New realistic threshold
+            n_sim_30_same_assay = 0  
+            n_sim_40_same_assay = 0  # Keep for reference
             assay_mismatch_possible = False
             
             if assay_type and len(assay_types) == len(similarities):
                 # Count only same-assay-type neighbors
                 for i, (sim, train_assay) in enumerate(zip(similarities, assay_types)):
                     if self._assays_match(assay_type, train_assay):
+                        if sim >= 0.25:  # New realistic threshold
+                            n_sim_25_same_assay += 1
+                        if sim >= 0.30:
+                            n_sim_30_same_assay += 1
                         if sim >= 0.40:
                             n_sim_40_same_assay += 1
-                        if sim >= 0.45:
-                            n_sim_45_same_assay += 1
-                        if sim >= 0.50:  # Hardened threshold
-                            n_sim_50_same_assay += 1
             else:
                 # Fall back to all neighbors but flag mismatch and suppress numerics
                 assay_mismatch_possible = True
                 for sim in similarities:
+                    if sim >= 0.25:  # New realistic threshold
+                        n_sim_25_same_assay += 1
+                    if sim >= 0.30:
+                        n_sim_30_same_assay += 1
                     if sim >= 0.40:
                         n_sim_40_same_assay += 1
-                    if sim >= 0.45:
-                        n_sim_45_same_assay += 1
-                    if sim >= 0.50:
-                        n_sim_50_same_assay += 1
             
             return {
+                'n_sim_ge_0_25_same_assay': n_sim_25_same_assay,  # Updated key
+                'n_sim_ge_0_30_same_assay': n_sim_30_same_assay,
                 'n_sim_ge_0_40_same_assay': n_sim_40_same_assay,
-                'n_sim_ge_0_45_same_assay': n_sim_45_same_assay,
-                'n_sim_ge_0_50_same_assay': n_sim_50_same_assay,
                 'assay_class': assay_type or 'mixed',
                 'assay_mismatch_possible': assay_mismatch_possible,
                 'total_neighbors': len(similarities)
