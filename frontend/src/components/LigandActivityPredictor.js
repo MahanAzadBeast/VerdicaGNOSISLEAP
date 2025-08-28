@@ -790,13 +790,14 @@ const LigandActivityPredictor = () => {
                     // For gated predictions, numeric fields are suppressed by backend
                     const pValue = isGated ? null : prediction.pActivity;
                     const activityUM = isGated ? null : prediction.activity_uM;
+                    const ic50_nM = isGated ? null : prediction.ic50_nM;  // Get nM value for precision
                     const confidence = prediction.confidence || 0.8;
                     const sigma = prediction.sigma || 0.2;
                     const reliability = Math.exp(-sigma * sigma);
                     const qualityFlag = prediction.quality_flag || 'good';
                     const confidenceNote = prediction.confidence_note || '';
                     
-                    const potencyDisplay = formatPotencyDisplay(pValue, activityUM, assayType, qualityFlag, status);
+                    const potencyDisplay = formatPotencyDisplay(pValue, activityUM, assayType, qualityFlag, status, ic50_nM);
                     const potencyColor = calculatePotencyColor(pValue, confidence, potencyDisplay.isUnreliable, potencyDisplay.isNotTrained, potencyDisplay.isGated);
                     const inactive = isGated ? false : isInactive(pValue, activityUM);
                     const potencyDesc = isGated ? 'Gated prediction' : getPotencyDescription(Math.max(0, pValue || 0));
