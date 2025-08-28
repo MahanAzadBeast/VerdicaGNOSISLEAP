@@ -103,26 +103,30 @@ class RealChEMBLLoader:
             
             if combined_cache_file.exists():
                 logger.info("📂 Loading cached real ChEMBL training data...")
-                cached_data = pd.read_csv(combined_cache_file)
-                if len(cached_data) > 100:  # Reasonable minimum
-                    logger.info(f"✅ Loaded cached real data: {len(cached_data)} compounds")
-                    return cached_data
+                try:
+                    cached_data = pd.read_csv(combined_cache_file)
+                    if len(cached_data) > 100:  # Reasonable minimum
+                        logger.info(f"✅ Loaded cached real data: {len(cached_data)} compounds")
+                        return cached_data
+                except Exception as e:
+                    logger.warning(f"⚠️ Error loading cached data: {e}")
             
-            # Load fresh data (avoid asyncio.run if already in event loop)
-            try:
-                loop = asyncio.get_running_loop()
-                # We're in an event loop - use a different approach
-                logger.warning("⚠️ In event loop - using synchronous ChEMBL data loading...")
-                return self._load_sync_fallback()
-            except RuntimeError:
-                # No running loop - safe to use asyncio.run
-                real_data = asyncio.run(self.load_real_training_data(max_targets))
-                
-                # Cache the combined real data
-                if real_data is not None:
+            # Load fresh data using the synchronous fallback (which works)
+            logger.info("📊 Loading fresh real ChEMBL data...")
+            real_data = self._load_sync_fallback()
+            
+            # Cache the combined real data if successful
+            if real_data is not None and len(real_data) > 0:
+                try:
                     real_data.to_csv(combined_cache_file, index=False)
+                    logger.info(f"💾 Cached real ChEMBL data: {len(real_data)} compounds")
+                except Exception as e:
+                    logger.warning(f"⚠️ Could not cache data: {e}")
                     
                 return real_data
+            else:
+                logger.error("❌ No real data available from fallback method")
+                return None
                 
         except Exception as e:
             logger.error(f"❌ Failed to load real ChEMBL data: {e}")
