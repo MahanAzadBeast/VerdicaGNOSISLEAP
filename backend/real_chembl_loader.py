@@ -145,11 +145,15 @@ class RealChEMBLLoader:
                 
                 if len(df) > 0 and 'smiles' in df.columns:
                     # Format for AD layer using the real ChEMBL structure
+                    # Create train/val split for AD calibration (80/20 split)
+                    n_train = int(0.8 * len(df))
+                    splits = ['train'] * n_train + ['val'] * (len(df) - n_train)
+                    
                     formatted = pd.DataFrame({
                         'ligand_id': [f'CHEMBL_{i:04d}' for i in range(len(df))],
                         'smiles': df['smiles'],
                         'target_id': df.get('target', df.get('target_id', 'EGFR')),
-                        'split': 'train',
+                        'split': splits,  # Proper train/val split
                         'assay_type': self._map_chembl_assay_type(df.get('assay_type', 'B')),
                         'pActivity': df.get('pic50', df.get('pActivity', 5.0)),
                         'label': df.get('pic50', df.get('pActivity', 5.0))  # Add label for AD calibration
