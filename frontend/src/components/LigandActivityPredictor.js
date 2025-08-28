@@ -639,7 +639,7 @@ const LigandActivityPredictor = () => {
     const { properties, predictions: targetPredictions, model_info } = predictions;
 
     return (
-      <div className="mt-8 space-y-6">
+      <div id="prediction-results" className="mt-8 space-y-6">
         {/* Warning Banner */}
         <div className="bg-gradient-to-r from-amber-900 to-orange-900 border border-amber-700 rounded-lg p-3 text-center">
           <span className="text-amber-200">🔍 In-silico estimates – wet-lab validation required.</span>
