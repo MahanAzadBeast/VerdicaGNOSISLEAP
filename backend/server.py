@@ -1,3 +1,4 @@
+import modal
 from fastapi import FastAPI, APIRouter, HTTPException, File, UploadFile, Form, BackgroundTasks
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
