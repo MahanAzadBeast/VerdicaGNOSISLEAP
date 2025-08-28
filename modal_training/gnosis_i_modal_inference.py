@@ -200,7 +200,6 @@ def upload_real_gnosis_model():
 
 @app.function(
     image=image,
-    mounts=[local_models],  # Mount local models directory
     volumes={"/model": model_volume},
     gpu="T4",  # Fast inference on T4 GPU
     memory=8192,
