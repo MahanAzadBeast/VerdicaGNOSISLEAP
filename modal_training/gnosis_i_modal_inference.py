@@ -145,28 +145,58 @@ def _get_realistic_activity_prediction(smiles: str, target: str, mol) -> float:
     volumes={"/model": model_volume},
     timeout=600
 )
-def upload_local_model():
-    """Upload the local Gnosis I model to Modal volume"""
-    print("📤 Uploading local Gnosis I model to Modal volume...")
+def upload_real_gnosis_model():
+    """Upload the actual trained Gnosis I model to Modal volume"""
+    print("📤 Uploading REAL trained Gnosis I model to Modal volume...")
     
-    # The model would be uploaded from local filesystem in practice
-    # For now, create a placeholder to test the inference pipeline
-    model_path = Path("/model/gnosis_model1_best.pt")
-    model_path.parent.mkdir(exist_ok=True)
+    import os
+    import shutil
     
-    # Create a minimal model for testing (will be replaced with real upload)
-    print("📝 Creating model placeholder...")
-    torch.save({
-        'model_state_dict': {},
-        'model_info': {
-            'r2_score': 0.6281,
-            'num_targets': 62,
-            'model_size_mb': 181
-        }
-    }, model_path)
-    
-    print(f"✅ Model uploaded to {model_path}")
-    return {"status": "uploaded", "path": str(model_path)}
+    try:
+        # Check if we can access the real model file
+        # In production, this would copy from the local backend
+        model_path = Path("/model/gnosis_model1_best.pt")
+        model_path.parent.mkdir(exist_ok=True)
+        
+        # For now, copy the real local model structure (simulated)
+        # TODO: In production, copy actual trained weights from /app/backend/models/gnosis_model1_best.pt
+        
+        print("📝 Creating real model structure...")
+        
+        # Load the real local model to check its structure
+        local_model_path = "/app/backend/models/gnosis_model1_best.pt"
+        
+        if os.path.exists(local_model_path):
+            print(f"✅ Found real model locally: {os.path.getsize(local_model_path) / 1024 / 1024:.1f} MB")
+            
+            # Copy the real model file
+            shutil.copy2(local_model_path, model_path)
+            print(f"✅ Real model copied to Modal volume")
+            
+            # Verify the copied model has real weights
+            import torch
+            checkpoint = torch.load(model_path, map_location='cpu')
+            
+            if checkpoint.get('model_state_dict') and len(checkpoint['model_state_dict']) > 0:
+                print(f"✅ Real model has {len(checkpoint['model_state_dict'])} parameters")
+                return {"status": "uploaded_real", "path": str(model_path), "size_mb": os.path.getsize(model_path) / 1024 / 1024}
+            else:
+                print("⚠️ Model file exists but has no trained weights")
+                return {"status": "uploaded_placeholder", "path": str(model_path)}
+        else:
+            print("⚠️ Real local model not found - creating placeholder")
+            
+            # Create placeholder with empty weights
+            torch.save({
+                'model_state_dict': {},
+                'model_info': {'r2_score': 0.6281, 'num_targets': 62, 'model_size_mb': 181}
+            }, model_path)
+            
+            return {"status": "uploaded_placeholder", "path": str(model_path)}
+            
+    except Exception as e:
+        print(f"❌ Upload error: {e}")
+        return {"status": "error", "error": str(e)}
 
 @app.function(
     image=image,
