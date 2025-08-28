@@ -307,8 +307,8 @@ const LigandActivityPredictor = () => {
     return pValue < 3 || activityUM > 100;
   };
 
-  // Format potency display with extreme value capping and assay-specific handling
-  const formatPotencyDisplay = (pValue, activityUM, assayType, qualityFlag, status) => {
+  // Format potency display with enhanced precision for very potent compounds
+  const formatPotencyDisplay = (pValue, activityUM, assayType, qualityFlag, status, ic50_nM) => {
     // **UNIVERSAL GATING SYSTEM** - Handle HYPOTHESIS_ONLY status
     if (status === 'HYPOTHESIS_ONLY') {
       return {
@@ -358,8 +358,22 @@ const LigandActivityPredictor = () => {
       };
     }
     
+    // **ENHANCED PRECISION**: Show nM values for very potent compounds (< 1000 nM)
+    if (ic50_nM && ic50_nM < 1000) {
+      return {
+        primaryText: `${ic50_nM.toFixed(1)} nM`,
+        secondaryText: `p${assayType} = ${clippedPValue.toFixed(2)}`,
+        isExtreme: false,
+        isUnreliable: false,
+        isNotTrained: false,
+        isGated: false,
+        isPotent: true  // Flag for very potent compounds
+      };
+    }
+    
+    // Standard μM display for moderate potencies
     return {
-      primaryText: `${activityUM.toFixed(1)} μM`,
+      primaryText: `${activityUM.toFixed(2)} μM`,  // Increased precision to 2 decimal places
       secondaryText: `p${assayType} = ${clippedPValue.toFixed(2)}`,
       isExtreme: false,
       isUnreliable: false,
