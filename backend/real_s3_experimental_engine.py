@@ -98,6 +98,7 @@ class RealS3ExperimentalEngine:
                     target_predictions[assay_key] = {
                         "pActivity": float(pactivity),
                         "activity_uM": float(activity_um),
+                        "ic50_nM": float(ic50_nm),  # Add nM value for precision
                         "confidence": 0.90,  # High confidence - using real experimental weights
                         "sigma": 0.18,
                         "source": "Real_S3_Experimental_Weights"
