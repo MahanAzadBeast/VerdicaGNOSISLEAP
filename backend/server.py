@@ -623,9 +623,18 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
         
         # Get high-performance AD layer
         hp_ad_layer = get_hp_ad_layer()
+        # Skip HP-AD gating if layer not properly initialized
         if not hp_ad_layer or not hp_ad_layer.initialized:
-            # Fall back to regular prediction
-            return await predict_with_gnosis_i(input_data)
+            logging.warning("⚠️ HP-AD layer not initialized - using basic predictions without gating")
+            # Use basic prediction without gating
+            basic_result = await predict_with_gnosis_i(input_data)
+            
+            # Add a note that gating is disabled
+            if isinstance(basic_result, dict) and 'model_info' in basic_result:
+                basic_result['model_info']['hp_ad_enhanced'] = False
+                basic_result['model_info']['gating_note'] = 'HP-AD gating disabled due to initialization issues'
+            
+            return basic_result
         
         # Make regular prediction first
         gnosis_result = predictor.predict_with_confidence(
