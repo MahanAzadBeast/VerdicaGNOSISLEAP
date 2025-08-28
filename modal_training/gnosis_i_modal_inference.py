@@ -29,7 +29,8 @@ app = modal.App("gnosis-i-real-inference")
 model_volume = modal.Volume.from_name("gnosis-models", create_if_missing=True)
 
 # Mount the local model directory to access real trained weights
-local_models = modal.mount.from_local_dir(
+from modal.mount import Mount
+local_models = Mount.from_local_dir(
     local_path="/app/backend/models", 
     remote_path="/local_models"
 )
