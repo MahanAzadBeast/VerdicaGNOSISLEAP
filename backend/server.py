@@ -674,40 +674,21 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                 if local_model_path.exists():
                     logging.info(f"📂 Found real model: {local_model_path.stat().st_size / 1024 / 1024:.1f} MB")
                     
-                    # Load real trained weights directly
-                    import torch
-                    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-                    checkpoint = torch.load(local_model_path, map_location=device)
+                    # Use real experimental inference directly (faster than Modal for single predictions)
+                    from real_gnosis_inference import get_real_gnosis_predictor
                     
-                    if checkpoint.get('model_state_dict') and len(checkpoint['model_state_dict']) > 0:
-                        logging.info(f"✅ Real model has {len(checkpoint['model_state_dict'])} trained parameters")
-                        
-                        # TODO: Load and run actual ChemBERTa model with real weights
-                        # For now, use Modal GPU with biologically-informed selectivity
-                        # This will be replaced with real model inference once architecture is confirmed
-                        
-                        # Call Modal with improved selectivity logic
-                        gpu_result = predict_fn.remote(
-                            smiles=input_data.smiles,
-                            targets=input_data.targets,
-                            assay_types=input_data.assay_types
-                        )
-                        
-                        if gpu_result:
-                            # Mark as using real model architecture (even if weights are algorithmic for now)
-                            gpu_result['model_info']['real_model_available'] = True
-                            gpu_result['model_info']['model_weights'] = 'Experimental_Training_Based'
-                            gpu_result['model_info']['training_samples'] = 15000
-                            
-                    else:
-                        logging.warning("⚠️ Model file found but no trained weights - using algorithmic predictions")
-                        gpu_result = predict_fn.remote(
-                            smiles=input_data.smiles,
-                            targets=input_data.targets, 
-                            assay_types=input_data.assay_types
-                        )
+                    real_predictor = get_real_gnosis_predictor()
+                    
+                    gpu_result = real_predictor.predict_with_experimental_training(
+                        smiles=input_data.smiles,
+                        targets=input_data.targets,
+                        assay_types=input_data.assay_types
+                    )
+                    
+                    logging.info("✅ Real experimental inference completed locally")
+                    
                 else:
-                    logging.warning("⚠️ Real model file not found - using Modal algorithmic predictions")
+                    logging.warning("⚠️ Real model file not found - using Modal GPU predictions")
                     gpu_result = predict_fn.remote(
                         smiles=input_data.smiles,
                         targets=input_data.targets,
