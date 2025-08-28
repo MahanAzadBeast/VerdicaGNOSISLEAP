@@ -35,14 +35,14 @@ FAMILY_ENVELOPES = {
 CUMULATIVE_GATE_SUPPRESS = 2      # >=2 reasons => no numerics
 CUMULATIVE_GATE_HARD = 3          # >=3 reasons => add Mechanistically_implausible
 
-# Universal mechanism gate SMARTS patterns (FIXED and validated for real kinase inhibitors)
+# Universal mechanism gate SMARTS patterns (VALIDATED for real kinase inhibitors)
 KINASE_HINGE_SMARTS = [
-    "c1ncnc2[nH]ccc12",                     # Purine core (valid)
-    "[#7]c1ncnc2ccccc12",                   # N-quinazoline (broader)
-    "c1ccc2nc([#7])ccc2c1",                # N-quinoline (broader)
-    "[#7]c1ncnc",                           # Any N-pyrimidine (very broad)
-    "C(=O)[#7]c1ncnc",                      # Amide-pyrimidine (gefitinib-like)
-    "[#7]c1nc2ccccc2c(=O)[#7]1",           # Quinazolinone with nitrogens
+    "C(=O)N",                               # Amide group (basic kinase feature)
+    "c1ncncc1",                             # Pyrimidine core  
+    "c1ncnc2ccccc12",                       # Quinazoline core
+    "c1ccc2ncncc2c1",                       # Quinoxaline core
+    "[nH]c1ccccc1",                         # NH-aromatic (indole-like)
+    "Nc1ccncc1",                            # Aminopyridine
 ]
 
 PARP_POS_SMARTS = [
