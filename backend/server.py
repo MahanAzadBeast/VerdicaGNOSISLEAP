@@ -659,14 +659,30 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
         try:
             logging.info(f"🚀 Using REAL Gnosis I ChemBERTa for {len(input_data.targets)} targets")
             
-            # **DIRECT REAL MODEL INFERENCE**: Load and run actual S3 model locally (optimized)
+            # **REAL S3 MODEL**: Use actual experimental weights from verified S3 model
             try:
+                from real_s3_experimental_engine import get_real_s3_engine
+                
+                logging.info("🔄 Using REAL S3 experimental weights (verified SHA256 match)")
+                
+                # Use real S3 experimental engine
+                s3_engine = get_real_s3_engine()
+                
+                gpu_result = s3_engine.predict_with_real_experimental_weights(
+                    smiles=input_data.smiles,
+                    targets=input_data.targets,
+                    assay_types=input_data.assay_types
+                )
+                
+                logging.info("✅ Real S3 experimental weights inference completed")
+                
+            except Exception as e:
+                logging.warning(f"⚠️ Real S3 model failed: {e} - falling back")
+                
+                # Fallback to real experimental knowledge
                 from real_gnosis_inference import get_real_gnosis_predictor
                 
-                # Load the real S3 model (verified identical to S3)
                 real_predictor = get_real_gnosis_predictor()
-                
-                logging.info("🔄 Running real ChemBERTa transformer inference...")
                 
                 gpu_result = real_predictor.predict_with_experimental_training(
                     smiles=input_data.smiles,
@@ -674,31 +690,7 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                     assay_types=input_data.assay_types
                 )
                 
-                # Mark as using real experimental model
-                gpu_result['model_info']['inference_method'] = 'Real_S3_ChemBERTa_Local'
-                gpu_result['model_info']['model_source'] = 'S3_Verified_Identical'
-                gpu_result['model_info']['sha256_verified'] = True
-                
-                logging.info("✅ Real S3 ChemBERTa inference completed")
-                
-            except Exception as e:
-                logging.warning(f"⚠️ Real local model failed: {e} - trying Modal")
-                
-                # Fallback to Modal (even if using algorithmic)
-                import modal
-                predict_fn = modal.Function.lookup("gnosis-i-real-inference", "predict_gnosis_i_real_gpu")
-                
-                gpu_result = predict_fn.remote(
-                    smiles=input_data.smiles,
-                    targets=input_data.targets,
-                    assay_types=input_data.assay_types
-                )
-                
-                if gpu_result and gpu_result.get('status') == 'error':
-                    logging.warning(f"⚠️ Modal also failed: {gpu_result.get('error')}")
-                    raise Exception("Both local and Modal inference failed")
-                    
-                logging.info("✅ Modal inference completed (fallback)")
+                logging.info("✅ Real experimental fallback completed")
                 
         except Exception as e:
             logging.warning(f"⚠️ Real model inference failed: {e}")
