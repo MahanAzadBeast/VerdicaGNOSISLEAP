@@ -324,11 +324,17 @@ def predict_gnosis_i_real_gpu(smiles: str, targets: List[str], assay_types: List
                     predictions[target] = target_predictions
         
         # Calculate molecular properties
-        from rdkit.Chem import Crippen
-        properties = {
-            "LogP": float(Crippen.MolLogP(mol)),
-            "LogS": -2.0
-        }
+        mol = Chem.MolFromSmiles(smiles)
+        if mol is not None:
+            properties = {
+                "LogP": float(Crippen.MolLogP(mol)),
+                "LogS": -2.0
+            }
+        else:
+            properties = {
+                "LogP": 0.0,
+                "LogS": -2.0
+            }
         
         print(f"✅ Real Gnosis I prediction completed on {device}")
         
