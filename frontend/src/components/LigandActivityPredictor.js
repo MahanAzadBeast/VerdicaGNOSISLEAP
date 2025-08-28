@@ -810,7 +810,7 @@ const LigandActivityPredictor = () => {
                     const confidenceNote = prediction.confidence_note || '';
                     
                     const potencyDisplay = formatPotencyDisplay(pValue, activityUM, assayType, qualityFlag, status, ic50_nM);
-                    const potencyColor = calculatePotencyColor(pValue, confidence, potencyDisplay.isUnreliable, potencyDisplay.isNotTrained, potencyDisplay.isGated);
+                    const potencyColor = calculatePotencyColor(pValue, confidence, potencyDisplay.isUnreliable, potencyDisplay.isNotTrained, potencyDisplay.isGated, potencyDisplay.isPotent);
                     const inactive = isGated ? false : isInactive(pValue, activityUM);
                     const potencyDesc = isGated ? 'Gated prediction' : getPotencyDescription(Math.max(0, pValue || 0));
 
