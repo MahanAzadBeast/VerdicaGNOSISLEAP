@@ -436,6 +436,82 @@ async def reinitialize_hp_ad():
             "message": f"Initialization failed: {str(e)}"
         }
 
+@api_router.get("/gnosis-i/targets")
+async def get_gnosis_i_targets():
+    """Get available targets for Gnosis I predictions"""
+    try:
+        if not GNOSIS_I_AVAILABLE:
+            raise HTTPException(status_code=503, detail="Gnosis I model not available")
+        
+        predictor = get_gnosis_predictor()
+        if not predictor:
+            raise HTTPException(status_code=503, detail="Gnosis I predictor not initialized")
+        
+        # Get all available targets
+        targets = predictor.get_available_targets()
+        
+        # Get training data stats per target  
+        target_training_data = predictor.target_training_data
+        
+        # Categorize targets using proper oncology classification
+        categorized_targets = {
+            "all_targets": targets,
+            "high_confidence": [t for t, data in target_training_data.items() if data.get("samples", 0) >= 100],
+            "kinases": [t for t in targets if any(k in t.upper() for k in ["CDK", "JAK", "ABL", "KIT", "FLT", "ALK", "EGFR", "BRAF", "ERBB", "SRC", "BTK", "TRK", "AURK", "PLK", "CHK", "WEE", "DYRK", "GSK", "MAPK", "PIK3", "AKT", "MTOR", "ATM", "ATR", "PARP"])],
+            "gpcrs": [t for t in targets if "GPCR" in t.upper() or any(g in t.upper() for g in ["ADRB", "HTR", "DRD"])],
+            "oncoproteins": [t for t in targets if any(onco in t.upper() for onco in [
+                "EGFR", "ERBB", "MET", "RET", "ALK", "ROS", "PDGFR", "VEGFR", "FLT", "KIT", "FGFR",  # Growth factor receptors
+                "BRAF", "KRAS", "NRAS", "RAF", "MEK", "ERK",  # MAPK pathway
+                "PI3K", "AKT", "MTOR", "TSC", "RICTOR", "RAPTOR",  # PI3K/AKT/mTOR pathway  
+                "MYC", "MYCN", "MYCL",  # MYC family
+                "BCL2", "MCL1", "BCLXL",  # Anti-apoptotic proteins
+                "MDM2", "HDM2",  # P53 regulators
+                "CDK", "CCND", "CCNE",  # Cell cycle regulators
+                "E2F", "RB",  # Cell cycle transcription
+                "WNT", "CTNNB", "TCF", "LEF",  # WNT signaling
+                "NOTCH", "RBPJ", "HES",  # NOTCH signaling
+                "JAK", "STAT", "SRC", "ABL",  # Kinase oncoproteins
+                "TERT", "TERC"  # Telomerase
+            ])],
+            "tumor_suppressors": [t for t in targets if any(ts in t.upper() for ts in [
+                "TP53", "P53",  # P53
+                "RB1", "RB",  # Retinoblastoma
+                "BRCA1", "BRCA2",  # BRCA family
+                "PTEN",  # PTEN
+                "VHL",  # Von Hippel-Lindau
+                "APC",  # Adenomatous Polyposis Coli
+                "NF1", "NF2",  # Neurofibromatosis
+                "CDKN", "P16", "P21", "P27",  # CDK inhibitors
+                "ARF", "INK4",  # Cell cycle inhibitors
+                "LKB1", "STK11",  # LKB1
+                "SMAD", "TGF",  # TGF-beta pathway
+                "DCC", "DPC4",  # Deleted in Colorectal Cancer
+                "WT1",  # Wilms Tumor
+                "MSH", "MLH", "PMS"  # DNA mismatch repair
+            ])]
+        }
+        
+        # Create other_targets as targets not in any specific category
+        categorized_set = set()
+        categorized_set.update(categorized_targets["kinases"])
+        categorized_set.update(categorized_targets["oncoproteins"]) 
+        categorized_set.update(categorized_targets["tumor_suppressors"])
+        categorized_set.update(categorized_targets["gpcrs"])
+        
+        other_targets = [t for t in targets if t not in categorized_set]
+        categorized_targets["other_targets"] = other_targets
+        
+        return {
+            "total_targets": len(targets),
+            "available_targets": targets,  # Frontend expects this key
+            "categorized_targets": categorized_targets,
+            "target_training_data": target_training_data
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting Gnosis I targets: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 @api_router.get("/gnosis-i/info")
