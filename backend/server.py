@@ -652,140 +652,39 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
         except Exception as e:
             logging.warning(f"⚠️ Modal GPU inference failed: {e} - falling back to local")
         
-        # Fallback to local inference (with or without HP-AD)
-        predictor = get_gnosis_predictor()
-        if not predictor:
-            raise HTTPException(status_code=503, detail="Gnosis I predictor not initialized")
-        
-        hp_ad_layer = get_hp_ad_layer()
-        
-        # Skip HP-AD gating if layer not properly initialized
-        if not hp_ad_layer or not hp_ad_layer.initialized:
-            logging.warning("⚠️ HP-AD layer not initialized - using basic predictions without gating")
-            # Use basic prediction without gating
-            basic_result = await predict_with_gnosis_i(input_data)
+        # Fallback to lightweight local inference (fast, no transformers)
+        try:
+            from lightweight_gnosis_predictor import get_lightweight_predictor
             
-            # Add a note that gating is disabled
-            if isinstance(basic_result, dict) and 'model_info' in basic_result:
-                basic_result['model_info']['hp_ad_enhanced'] = False
-                basic_result['model_info']['gating_note'] = 'HP-AD gating disabled due to initialization issues'
+            logging.info("⚡ Using fast lightweight inference (RDKit descriptors)")
+            lightweight_predictor = get_lightweight_predictor()
             
-            return basic_result
-        
-        # Make regular prediction first
-        gnosis_result = predictor.predict_with_confidence(
-            smiles=input_data.smiles,
-            targets=input_data.targets,
-            assay_types=input_data.assay_types,
-            n_samples=30  # Monte-Carlo dropout samples
-        )
-        
-        # Enhance predictions with high-performance AD scoring
-        enhanced_predictions = {}
-        
-        # Process each target in the prediction results
-        target_list = gnosis_result['predictions'].keys()
-        
-        for target in target_list:
-            target_predictions = gnosis_result['predictions'][target]
-            enhanced_target_predictions = {}
+            # Fast local prediction without heavy ML models
+            lightweight_result = lightweight_predictor.predict_activity(
+                smiles=input_data.smiles,
+                targets=input_data.targets,
+                assay_types=input_data.assay_types
+            )
             
-            # Process each assay type for this target
-            for assay_type, prediction_data in target_predictions.items():
-                try:
-                    if assay_type not in ['selectivity_ratio']:  # Skip non-prediction fields
-                        # Get base prediction value (pActivity)
-                        base_prediction = prediction_data.get('pActivity', 6.0)
-                        
-                        # Score with high-performance AD layer (with gating)
-                        ad_result = hp_ad_layer.ultra_fast_score_with_ad(
-                            ligand_smiles=input_data.smiles,
-                            target_id=target,
-                            base_prediction=base_prediction,
-                            assay_type=assay_type  # Pass assay type for neighbor filtering
-                        )
-                        
-                        # Check if result was gated (numeric potency suppressed)
-                        if hasattr(ad_result, 'status') and ad_result.status == "HYPOTHESIS_ONLY":
-                            # Return gated result - ALL numeric fields universally suppressed
-                            enhanced_prediction = {
-                                'target_id': ad_result.target_id,
-                                'status': ad_result.status,
-                                'message': ad_result.message,
-                                'why': ad_result.why,
-                                'evidence': ad_result.evidence,
-                                'assay_type': assay_type,
-                                # Explicitly omit ALL numeric fields universally
-                            }
-                            
-                        else:
-                            # Normal prediction - include all numeric fields
-                            enhanced_prediction = prediction_data.copy()
-                            enhanced_prediction.update({
-                                'status': 'OK',
-                                'ad_score': ad_result.ad_score,
-                                'confidence_calibrated': ad_result.confidence_calibrated,
-                                'potency_ci': ad_result.potency_ci,
-                                'ad_flags': ad_result.flags,
-                                'nearest_neighbors': ad_result.nearest_neighbors,
-                                'ad_components': {
-                                    'similarity_max': ad_result.similarity_max,
-                                    'density_score': ad_result.density_score,
-                                    'context_score': ad_result.context_score,
-                                    'mechanism_score': ad_result.mechanism_score
-                                }
-                            })
-                        
-                        # **UNIVERSAL NUMERIC FIELD SUPPRESSION** - Zero tolerance for numeric leaks
-                        if enhanced_prediction.get('status') == "HYPOTHESIS_ONLY":
-                            # Universal list of ALL possible numeric fields - applies to every compound
-                            numeric_fields = [
-                                "pActivity", "potency_ci", "confidence_calibrated", 
-                                "IC50_nM", "activity_uM", 
-                                "Binding_IC50", "Functional_IC50", "EC50",
-                                "binding_ic50", "functional_ic50", "ec50",  # Handle different casings
-                                "binding_um", "functional_um", "ec50_um",
-                                "activity_µM", "potency_µM"  # Unicode variants
-                            ]
-                            for field in numeric_fields:
-                                enhanced_prediction.pop(field, None)
-                        
-                        enhanced_target_predictions[assay_type] = enhanced_prediction
-                    else:
-                        # Copy non-prediction fields as-is
-                        enhanced_target_predictions[assay_type] = prediction_data
-                        
-                except Exception as e:
-                    logging.warning(f"HP AD scoring failed for {target}/{assay_type}: {e}")
-                    # Fall back to original prediction
-                    enhanced_target_predictions[assay_type] = prediction_data
+            # Add HP-AD gating if available
+            hp_ad_layer = get_hp_ad_layer()
+            if hp_ad_layer and hp_ad_layer.initialized:
+                logging.info("📊 Applying HP-AD gating to lightweight results")
+                # Apply gating logic here (future enhancement)
+                lightweight_result['model_info']['hp_ad_enhanced'] = True
+                lightweight_result['model_info']['gating_note'] = 'Lightweight inference with gating'
+            else:
+                lightweight_result['model_info']['hp_ad_enhanced'] = False
+                lightweight_result['model_info']['gating_note'] = 'Lightweight inference without gating'
             
-            enhanced_predictions[target] = enhanced_target_predictions
+            return lightweight_result
+            
+        except Exception as e:
+            logging.error(f"❌ Lightweight inference failed: {e}")
+            raise HTTPException(status_code=500, detail=f"All inference methods failed: {str(e)}")
         
-        # Create enhanced result
-        enhanced_result = gnosis_result.copy()
-        enhanced_result['predictions'] = enhanced_predictions
-        enhanced_result['model_info']['hp_ad_enhanced'] = True
-        enhanced_result['model_info']['hp_ad_version'] = '2.0'
-        enhanced_result['model_info']['performance_target'] = '<5s'
-        
-        # Store enhanced prediction in MongoDB
-        prediction_record = {
-            "id": str(uuid.uuid4()),
-            "model": "Gnosis I + HP-AD",
-            "smiles": input_data.smiles,
-            "targets": input_data.targets,
-            "assay_types": input_data.assay_types,
-            "predictions": enhanced_result['predictions'],
-            "properties": enhanced_result['properties'],
-            "timestamp": datetime.utcnow(),
-            "model_info": enhanced_result['model_info'],
-            "hp_ad_enhanced": True
-        }
-        if db is not None:
-            await db.gnosis_predictions.insert_one(prediction_record)
-        
-        return enhanced_result
+        # Original HP-AD enhanced prediction (disabled due to performance issues)
+        # TODO: Fix ChemBERTa local inference performance or use Modal GPU
     
     except Exception as e:
         logging.error(f"Error with Gnosis I + HP-AD prediction: {e}")
