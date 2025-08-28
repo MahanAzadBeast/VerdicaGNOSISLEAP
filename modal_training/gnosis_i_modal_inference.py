@@ -29,7 +29,10 @@ app = modal.App("gnosis-i-real-inference")
 model_volume = modal.Volume.from_name("gnosis-models", create_if_missing=True)
 
 # Mount the local model directory to access real trained weights
-local_models = modal.Mount.from_local_dir("/app/backend/models", remote_path="/local_models")
+local_models = modal.Mount.from_local_dir(
+    local_path="/app/backend/models", 
+    remote_path="/local_models"
+)
 
 # Copy the actual Gnosis I model architecture from the backend
 class FineTunedChemBERTaEncoder(nn.Module):
