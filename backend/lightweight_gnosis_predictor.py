@@ -56,11 +56,11 @@ class LightweightGnosisPredictor:
                 "LogS": float(-2.0)  # Simplified LogS approximation (can be enhanced)
             }
             
-            # Get molecular descriptors for prediction
+            # Get molecular descriptors for prediction (using correct RDKit attributes)
             mw = Descriptors.MolWt(mol)
             logp = properties["LogP"]
-            hba = Descriptors.NumHBA(mol)
-            hbd = Descriptors.NumHDonors(mol)
+            hba = Descriptors.NOCount(mol)  # Number of H-bond acceptors (N, O)
+            hbd = Descriptors.NHOHCount(mol)  # Number of H-bond donors (NH, OH)
             rings = mol.GetRingInfo().NumRings()
             
             predictions = {}
