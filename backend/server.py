@@ -633,15 +633,69 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
             if gpu_result and gpu_result.get('status') != 'error':
                 logging.info("✅ Real Gnosis I ChemBERTa GPU prediction successful")
                 
-                # Apply HP-AD gating to real model results if available
+                # **CRITICAL: Apply Universal Gating System to real model results**
                 hp_ad_layer = get_hp_ad_layer()
                 if hp_ad_layer and hp_ad_layer.initialized:
-                    logging.info("📊 HP-AD Universal Gating applied to real ChemBERTa results")
+                    logging.info("📊 Applying Universal Gating System to real ChemBERTa results...")
+                    
+                    # Apply gating to each prediction from the real model
+                    gated_predictions = {}
+                    
+                    for target, target_data in gpu_result['predictions'].items():
+                        gated_target_predictions = {}
+                        
+                        for assay_type, prediction_data in target_data.items():
+                            if assay_type != 'selectivity_ratio' and isinstance(prediction_data, dict):
+                                # Get base prediction from real model
+                                base_prediction = prediction_data.get('pActivity', 6.0)
+                                
+                                # Apply Universal Gating System
+                                ad_result = hp_ad_layer.ultra_fast_score_with_ad(
+                                    ligand_smiles=input_data.smiles,
+                                    target_id=target,
+                                    base_prediction=base_prediction,
+                                    assay_type=assay_type
+                                )
+                                
+                                # Check if gated (biologically implausible)
+                                if hasattr(ad_result, 'status') and ad_result.status == "HYPOTHESIS_ONLY":
+                                    # Gate the prediction - suppress all numeric fields
+                                    gated_target_predictions[assay_type] = {
+                                        'target_id': ad_result.target_id,
+                                        'status': ad_result.status,
+                                        'message': ad_result.message,
+                                        'why': ad_result.why,
+                                        'evidence': ad_result.evidence,
+                                        'assay_type': assay_type,
+                                        # NO NUMERIC FIELDS for gated predictions
+                                    }
+                                    logging.info(f"🛡️ {target}/{assay_type} gated: {ad_result.why}")
+                                else:
+                                    # Keep real model prediction with AD enhancement
+                                    gated_target_predictions[assay_type] = prediction_data.copy()
+                                    gated_target_predictions[assay_type].update({
+                                        'status': 'OK',
+                                        'ad_score': ad_result.ad_score,
+                                        'confidence_calibrated': ad_result.confidence_calibrated,
+                                        'ad_flags': ad_result.flags,
+                                    })
+                                    logging.info(f"✅ {target}/{assay_type} passed gating")
+                            else:
+                                # Non-prediction fields (like selectivity_ratio)
+                                gated_target_predictions[assay_type] = prediction_data
+                        
+                        gated_predictions[target] = gated_target_predictions
+                    
+                    # Update result with gated predictions
+                    gpu_result['predictions'] = gated_predictions
                     gpu_result['model_info']['hp_ad_enhanced'] = True
                     gpu_result['model_info']['gating_note'] = 'Real ChemBERTa with Universal Gating System'
+                    
+                    logging.info("✅ Universal Gating System applied to real model results")
+                    
                 else:
                     gpu_result['model_info']['hp_ad_enhanced'] = False
-                    gpu_result['model_info']['gating_note'] = 'Real ChemBERTa without gating'
+                    gpu_result['model_info']['gating_note'] = 'Real ChemBERTa without gating (HP-AD not initialized)'
                 
                 return gpu_result
             else:
