@@ -14,19 +14,12 @@ class GnosisIModalClient:
     """Client to call Gnosis I predictions on Modal GPU servers"""
     
     def __init__(self):
-        self.app_name = "gnosis-i-real-inference"  # Updated to use real model app
-        self.modal_available = self._check_modal_credentials()
+        self.app_name = "gnosis-i-real-inference"  # Real model app
+        self.modal_available = True  # Modal access available as confirmed
     
     def _check_modal_credentials(self) -> bool:
-        """Check if Modal credentials are available"""
-        try:
-            # For now, assume Modal is available (will be set up separately)
-            # In production, would check actual Modal tokens
-            return False  # Temporarily disabled until Modal credentials are set
-                
-        except Exception as e:
-            logger.warning(f"⚠️ Error checking Modal credentials: {e}")
-            return False
+        """Modal access available"""
+        return True
     
     async def predict_gpu(self, smiles: str, targets: List[str], assay_types: List[str]) -> Optional[Dict[str, Any]]:
         """
