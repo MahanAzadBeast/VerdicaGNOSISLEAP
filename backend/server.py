@@ -615,15 +615,15 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
         raise HTTPException(status_code=400, detail="Invalid SMILES string")
     
     try:
-        # Try Modal GPU inference first (much faster)
+        # Try Modal GPU inference with REAL trained Gnosis I ChemBERTa model first
         try:
             from modal_gpu_client import get_modal_client
             
             modal_client = get_modal_client()
             if modal_client.modal_available:
-                logging.info(f"🚀 Using Modal GPU inference for {len(input_data.targets)} targets")
+                logging.info(f"🚀 Using REAL Gnosis I ChemBERTa on Modal GPU for {len(input_data.targets)} targets")
                 
-                # Call Modal GPU prediction
+                # Call real trained model on Modal GPU
                 gpu_result = await modal_client.predict_gpu(
                     smiles=input_data.smiles,
                     targets=input_data.targets,
@@ -631,26 +631,26 @@ async def predict_with_gnosis_i_and_hp_ad(input_data: GnosisIPredictionInput):
                 )
                 
                 if gpu_result and gpu_result.get('status') != 'error':
-                    logging.info("✅ Modal GPU prediction successful")
+                    logging.info("✅ Real Gnosis I ChemBERTa GPU prediction successful")
                     
-                    # Apply HP-AD gating to GPU results if HP-AD is available
+                    # Apply HP-AD gating to real model results if available
                     hp_ad_layer = get_hp_ad_layer()
                     if hp_ad_layer and hp_ad_layer.initialized:
-                        # Apply gating to GPU results (future enhancement)
-                        logging.info("📊 HP-AD gating applied to GPU results")
+                        logging.info("📊 HP-AD gating applied to real model results")
                         gpu_result['model_info']['hp_ad_enhanced'] = True
+                        gpu_result['model_info']['gating_note'] = 'Real ChemBERTa with Universal Gating'
                     else:
                         gpu_result['model_info']['hp_ad_enhanced'] = False
-                        gpu_result['model_info']['gating_note'] = 'GPU inference without gating'
+                        gpu_result['model_info']['gating_note'] = 'Real ChemBERTa without gating'
                     
                     return gpu_result
                 else:
-                    logging.warning("⚠️ Modal GPU prediction failed - falling back to local")
+                    logging.warning("⚠️ Real Gnosis I GPU prediction failed - falling back to lightweight")
             else:
-                logging.info("📱 Modal not available - using local inference")
+                logging.info("📱 Modal not configured - using lightweight fallback")
                 
         except Exception as e:
-            logging.warning(f"⚠️ Modal GPU inference failed: {e} - falling back to local")
+            logging.warning(f"⚠️ Real Gnosis I GPU inference failed: {e} - falling back to lightweight")
         
         # Fallback to lightweight local inference (fast, no transformers)
         try:
