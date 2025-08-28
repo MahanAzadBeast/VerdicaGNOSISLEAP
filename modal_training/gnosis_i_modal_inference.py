@@ -196,31 +196,39 @@ def upload_real_gnosis_model():
 
 @app.function(
     image=image,
+    mounts=[local_models],  # Mount local models directory
     volumes={"/model": model_volume},
     gpu="T4",  # Fast inference on T4 GPU
     memory=8192,
     timeout=300,
-    container_idle_timeout=600
+    scaledown_window=600  # Updated from container_idle_timeout
 )
 def predict_gnosis_i_real_gpu(smiles: str, targets: List[str], assay_types: List[str]) -> Dict[str, Any]:
     """
     Real Gnosis I inference using the actual trained ChemBERTa model on GPU
-    Uses uploaded model from local backend instead of S3 download
+    Uses mounted local model with real experimental training weights
     """
     
     print(f"🚀 Real Gnosis I GPU inference for: {smiles}")
     print(f"📊 Targets: {targets}")
     
     try:
-        # Check for uploaded model
-        model_path = Path("/model/gnosis_model1_best.pt")
+        # Try to load the real trained model from mounted directory
+        real_model_path = Path("/local_models/gnosis_model1_best.pt")
+        cached_model_path = Path("/model/gnosis_model1_best.pt")
+        
+        # Use real model if available, otherwise cached version
+        model_path = real_model_path if real_model_path.exists() else cached_model_path
         
         if not model_path.exists():
             return {
                 "status": "error",
-                "error": "Real Gnosis I model not uploaded to Modal volume yet",
+                "error": "Real Gnosis I model not found in Modal environment",
                 "smiles": smiles
             }
+        
+        print(f"📂 Using model: {model_path}")
+        print(f"📊 Model size: {model_path.stat().st_size / 1024 / 1024:.1f} MB")
         
         print("🔄 Loading real trained Gnosis I model...")
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
