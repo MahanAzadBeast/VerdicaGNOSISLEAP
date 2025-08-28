@@ -12,6 +12,8 @@ from typing import Dict, List, Any
 import json
 from pathlib import Path
 from transformers import AutoTokenizer, AutoModel
+from rdkit import Chem
+from rdkit.Chem import Descriptors, Crippen
 
 # GPU image with ML libraries for the real model
 image = modal.Image.debian_slim(python_version="3.11").pip_install([
