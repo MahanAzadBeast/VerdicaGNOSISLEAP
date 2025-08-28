@@ -58,9 +58,28 @@ try:
         
         if real_training_data is not None:
             logging.info(f"✅ Real ChEMBL data loaded: {len(real_training_data)} compounds")
+            
+            # Force initialization without catching exceptions
             initialize_hp_ad_layer_sync(real_training_data)
-            logging.info("✅ Gnosis I High-Performance AD layer initialized with REAL data")
-            GNOSIS_AD_AVAILABLE = True
+            
+            # Verify initialization worked
+            hp_ad_verify = get_hp_ad_layer()
+            if hp_ad_verify and hp_ad_verify.initialized:
+                logging.info("✅ Gnosis I High-Performance AD layer initialized with REAL data")
+                GNOSIS_AD_AVAILABLE = True
+                
+                # Verify fingerprint database
+                if (hp_ad_verify.fp_db and 
+                    hp_ad_verify.fp_db.db_rdkit and 
+                    hp_ad_verify.fp_db.ligand_metadata and
+                    len(hp_ad_verify.fp_db.db_rdkit) > 0):
+                    logging.info(f"✅ Fingerprint database ready: {list(hp_ad_verify.fp_db.db_rdkit.keys())}")
+                else:
+                    logging.error("❌ Fingerprint database incomplete")
+                    GNOSIS_AD_AVAILABLE = False
+            else:
+                logging.error("❌ HP AD layer initialization verification failed")
+                GNOSIS_AD_AVAILABLE = False
         else:
             logging.error("❌ CRITICAL: No real ChEMBL data available")
             logging.error("❌ AD layer disabled - cannot use mock data as per requirements")
@@ -69,6 +88,8 @@ try:
     except Exception as e:
         logging.error(f"❌ High-Performance AD layer initialization failed: {e}")
         logging.error("❌ AD layer disabled - real data loading failed")
+        import traceback
+        logging.error(traceback.format_exc())
         GNOSIS_AD_AVAILABLE = False
     
 except Exception as e:
