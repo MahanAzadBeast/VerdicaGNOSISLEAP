@@ -28,12 +28,20 @@ def main():
     trials_with_smiles = mapper.map_trials_to_smiles(raw_trials)
     logger.info(f"Mapped {len(trials_with_smiles[trials_with_smiles['smiles'].notna()])} trials to SMILES")
     
-    # TODO: Step 3: Create outcome labels
-    # TODO: Step 4: Engineer features  
+    # Step 3: Create outcome labels
+    labeler = OutcomeLabeler()
+    trials_with_outcomes = labeler.label_outcomes(trials_with_smiles)
+    logger.info(f"Created outcome labels for {len(trials_with_outcomes)} trials")
+    
+    # Step 4: Engineer features
+    engineer = FeatureEngineer()
+    trials_with_features = engineer.engineer_all_features(trials_with_outcomes)
+    logger.info(f"Engineered {len(trials_with_features.columns)} total features")
+    
     # TODO: Step 5: Quality control
     # TODO: Step 6: Save final dataset
     
-    logger.info("Steps 1-2 completed!")
+    logger.info("Steps 1-4 completed!")
 
 if __name__ == "__main__":
     main()

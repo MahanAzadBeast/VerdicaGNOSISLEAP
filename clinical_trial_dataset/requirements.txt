@@ -8,3 +8,4 @@ numpy
 icd10-cm
 python-dateutil
 retrying
+scikit-learn
