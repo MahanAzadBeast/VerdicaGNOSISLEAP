@@ -1,0 +1,20 @@
+{
+  "dataset_info": {
+    "total_compounds": 3480,
+    "train_compounds": 2436,
+    "val_compounds": 522,
+    "test_compounds": 522,
+    "smiles_coverage": "100%",
+    "data_sources": [
+      "ChEMBL_API",
+      "PubChem_API"
+    ],
+    "collection_date": "2025-09-01T15:19:27.044208",
+    "dataset_type": "Real Pharmaceutical Compounds"
+  },
+  "data_quality": {
+    "duplicate_smiles_removed": true,
+    "all_compounds_have_smiles": true,
+    "molecular_properties_included": true
+  }
+}
