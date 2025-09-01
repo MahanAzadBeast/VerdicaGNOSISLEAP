@@ -23,13 +23,17 @@ def main():
     raw_trials = collector.collect_all_trials(max_records=config.TARGET_RECORDS)
     logger.info(f"Collected {len(raw_trials)} clinical trials")
     
-    # TODO: Step 2: Map drugs to SMILES
+    # Step 2: Map drugs to SMILES
+    mapper = SMILESMapper()
+    trials_with_smiles = mapper.map_trials_to_smiles(raw_trials)
+    logger.info(f"Mapped {len(trials_with_smiles[trials_with_smiles['smiles'].notna()])} trials to SMILES")
+    
     # TODO: Step 3: Create outcome labels
-    # TODO: Step 4: Engineer features
+    # TODO: Step 4: Engineer features  
     # TODO: Step 5: Quality control
     # TODO: Step 6: Save final dataset
     
-    logger.info("Step 1 completed!")
+    logger.info("Steps 1-2 completed!")
 
 if __name__ == "__main__":
     main()
