@@ -1,0 +1,17 @@
+2025-09-01 07:52:04,595 - __main__ - INFO - 🚀 Starting Clinical Trial Dataset Creation Pipeline...
+2025-09-01 07:52:04,595 - __main__ - INFO - 
+==================================================
+2025-09-01 07:52:04,595 - __main__ - INFO - STEP 1: COLLECTING CLINICAL TRIALS DATA
+2025-09-01 07:52:04,595 - __main__ - INFO - ==================================================
+2025-09-01 07:52:04,596 - src.data_collectors.clinicaltrials_gov - INFO - Starting data collection, target: 50000 records
+2025-09-01 07:52:04,662 - src.data_collectors.clinicaltrials_gov - INFO - Collected 42 valid records, Total: 42
+2025-09-01 07:52:05,729 - src.data_collectors.clinicaltrials_gov - INFO - Collected 46 valid records, Total: 88
+2025-09-01 07:52:06,794 - src.data_collectors.clinicaltrials_gov - INFO - Collected 38 valid records, Total: 126
+2025-09-01 07:52:07,857 - src.data_collectors.clinicaltrials_gov - INFO - Collected 38 valid records, Total: 164
+2025-09-01 07:52:08,927 - src.data_collectors.clinicaltrials_gov - INFO - Collected 39 valid records, Total: 203
+2025-09-01 07:52:09,994 - src.data_collectors.clinicaltrials_gov - INFO - Collected 37 valid records, Total: 240
+2025-09-01 07:52:11,050 - src.data_collectors.clinicaltrials_gov - INFO - Collected 32 valid records, Total: 272
+2025-09-01 07:52:12,109 - src.data_collectors.clinicaltrials_gov - INFO - Collected 39 valid records, Total: 311
+2025-09-01 07:52:13,174 - src.data_collectors.clinicaltrials_gov - INFO - Collected 38 valid records, Total: 349
+2025-09-01 07:52:14,238 - src.data_collectors.clinicaltrials_gov - INFO - Collected 42 valid records, Total: 391
+2025-09-01 07:52:15,305 - src.data_collectors.clinicaltrials_gov - INFO - Collected 36 valid records, Total: 427
