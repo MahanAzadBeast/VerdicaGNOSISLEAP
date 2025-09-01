@@ -2,7 +2,6 @@ requests
 pandas
 pyarrow
 pubchempy
-rdkit-pypi
 tqdm
 numpy
 icd10-cm

@@ -19,13 +19,17 @@ def main():
     logger.info("Starting Clinical Trial Dataset Creation...")
     
     # Step 1: Collect clinical trials data
-    # Step 2: Map drugs to SMILES
-    # Step 3: Create outcome labels
-    # Step 4: Engineer features
-    # Step 5: Quality control
-    # Step 6: Save final dataset
+    collector = ClinicalTrialsCollector()
+    raw_trials = collector.collect_all_trials(max_records=config.TARGET_RECORDS)
+    logger.info(f"Collected {len(raw_trials)} clinical trials")
     
-    logger.info("Dataset creation completed!")
+    # TODO: Step 2: Map drugs to SMILES
+    # TODO: Step 3: Create outcome labels
+    # TODO: Step 4: Engineer features
+    # TODO: Step 5: Quality control
+    # TODO: Step 6: Save final dataset
+    
+    logger.info("Step 1 completed!")
 
 if __name__ == "__main__":
     main()
