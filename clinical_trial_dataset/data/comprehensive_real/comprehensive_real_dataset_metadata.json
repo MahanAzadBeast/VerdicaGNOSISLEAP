@@ -1,0 +1,40 @@
+{
+  "dataset_info": {
+    "total_compounds": 27,
+    "train_compounds": 18,
+    "val_compounds": 4,
+    "test_compounds": 5,
+    "smiles_coverage": "100%",
+    "data_sources": [
+      "Real_Clinical_Trials",
+      "ChEMBL_Database",
+      "PubChem_Database"
+    ],
+    "collection_date": "2025-09-01T15:44:07.226660",
+    "dataset_type": "Comprehensive Real Pharmaceutical Dataset - Clinical Trials + Compound Databases"
+  },
+  "data_composition": {
+    "clinical_trial_compounds": 27,
+    "chembl_database_compounds": 0,
+    "total_real_compounds": 27,
+    "integration_method": "Multi-source drug name matching with SMILES lookup"
+  },
+  "data_quality": {
+    "duplicate_smiles_removed": true,
+    "all_compounds_have_smiles": true,
+    "molecular_properties_included": true,
+    "clinical_trial_data_included": true,
+    "real_api_sources_only": true,
+    "no_synthetic_data": true,
+    "no_demo_data": true,
+    "no_fake_phases": true,
+    "comprehensive_verification_passed": true
+  },
+  "verification_results": {
+    "fake_data_check": "PASSED",
+    "synthetic_data_check": "PASSED",
+    "demo_data_check": "PASSED",
+    "variant_drugs_check": "PASSED",
+    "smiles_coverage_check": "PASSED"
+  }
+}
