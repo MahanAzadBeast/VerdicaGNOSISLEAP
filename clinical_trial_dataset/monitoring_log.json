@@ -1,0 +1,31 @@
+{
+  "stages": [
+    {
+      "stage": "Clinical Trials Collection",
+      "status": "Completed/Stopped",
+      "timestamp": "2025-09-01T16:00:46.858835"
+    },
+    {
+      "stage": "ChEMBL Compounds Collection",
+      "status": "Completed/Stopped",
+      "timestamp": "2025-09-01T16:00:46.868803"
+    },
+    {
+      "stage": "PubChem Drugs Collection",
+      "status": "Completed/Stopped",
+      "timestamp": "2025-09-01T16:00:46.872928"
+    },
+    {
+      "stage": "SMILES Integration",
+      "status": "Completed/Stopped",
+      "timestamp": "2025-09-01T16:00:46.877148"
+    },
+    {
+      "stage": "ML Categorization",
+      "status": "Completed/Stopped",
+      "timestamp": "2025-09-01T16:00:46.881134"
+    }
+  ],
+  "collection_active": false,
+  "timestamp": "2025-09-01T16:00:46.885086"
+}
