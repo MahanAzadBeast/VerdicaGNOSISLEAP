@@ -1,0 +1,944 @@
+nct_id,title,primary_drug,all_drug_names,primary_condition,all_conditions,phases,primary_phase,study_type,allocation,intervention_model,masking,primary_purpose,enrollment_count,enrollment_type,eligibility_criteria,min_age,max_age,sex,healthy_volunteers,primary_outcomes,secondary_outcomes,start_date,completion_date,first_posted_date,overall_status,why_stopped,has_results,lead_sponsor,sponsor_class,collaborators,locations,collected_date,api_version
+NCT03691935,Erector Spinae Plane Block (ESPB): in Patients Undergoing Surgery Through a Flank or Anterior Subcostal Incision.,Ropivacaine,"['Ropivacaine', 'Normal saline']",,[],['PHASE4'],PHASE4,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,20,ACTUAL,"Inclusion Criteria:
+
+* Consenting adults age 18-85
+* American Society of Anesthesiologists (ASA) Physical Status classification I to III
+* Planned to be hospitalized for at least 24 hours post-op
+* Cognitive capacity to use the visual analogic scale (VAS) and complete the patient satisfaction survey
+
+Exclusion Criteria:
+
+* Patient refusal
+* Patients with allergies to local anesthetics or opiates (hydromorphone or oxycodone)
+* Scoliosis
+* Patients with chronic pain syndromes or who are on chronic pain medications/other neurologic medication of more than 3 months or whom have neuromodulators/stimulators
+* Concurrent surgeries requiring additional incisions on the body",18 Years,85 Years,ALL,False,"[{'measure': 'Pain Scores Using the Visual Analogue Pain Scale From Zero Pain to Level Ten Pain', 'description': 'Data will be collected via the electronic medical record and begin following patient randomization. The Visual Analogue Scale pain scales will be administered and collected on Post Operative Days 1, 2 and 3. Minimum value = 0 No Pain, Maximum value = 10 Worst possible, unbearable, excruciating pain', 'timeFrame': 'Aggregate pain scores for average length of hospital stay which is 3 days'}]",[],2018-09-28,2024-02-02,2018-10-02,TERMINATED,Slow enrollment related to global pandemic and changes to surgical practice.,False,Milton S. Hershey Medical Center,OTHER,[],"[{'facility': 'Milton S Hershey Medical Center', 'city': 'Hershey', 'state': 'Pennsylvania', 'zip': '17033', 'country': 'United States', 'geoPoint': {'lat': 40.28592, 'lon': -76.65025}}]",2025-09-01T07:32:00.968336,v2
+NCT05099835,Ultrasound-Guided Stellate Ganglion Block With Botulinum,Botox,"['Botox', 'triamcinolonacetonide']",,[],['NA'],NA,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,60,ACTUAL,"Inclusion Criteria:
+
+* Diagnosed by clinical and neurological assessment as one-sided idiopathic facial palsy
+* Age 18 to 60 •-ASA i-II
+
+Exclusion Criteria:
+
+* Exclusion Criteria:
+
+  * diabetic
+  * coagulation dysfunction
+  * mental or cognitive dysfunclion
+  * allergy to injected medication",18 Years,60 Years,ALL,False,"[{'measure': 'Change from Baseline House-Brackmann', 'description': 'Change from Baseline House-Brackmann', 'timeFrame': ': Baseline ,change from baseline House-Brackmann at 7th day,one month,two month, three month'}]",[],2021-11-01,2022-07-01,2021-10-29,COMPLETED,,False,Assiut University,OTHER,[],"[{'facility': 'Emad Zarief Kamel Said', 'city': 'Asyut', 'zip': '71111', 'country': 'Egypt', 'geoPoint': {'lat': 27.18096, 'lon': 31.18368}}]",2025-09-01T07:32:00.968401,v2
+NCT03535935,"Efficacy, Safety and Response Predictors of Adjuvant Astragalus Therapy for Diabetic Kidney Disease",Astragalus Powder,['Astragalus Powder'],,[],"['PHASE2', 'PHASE3']",PHASE2,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,118,ESTIMATED,"Inclusion Criteria:
+
+* diagnosed with type 2 diabetes for at least 5 years;
+* with an estimated glomerular filtration rate (GFR) ≥30 ˂90 mL/min/1.73m2 confirmed with repeat testing over three or more months calculated by the abbreviated MDRD study equation;
+* persistent macroalbuminuria with spot urine albumin-to-creatinine ratio (UACR) ≥ 300 mg/g confirmed by at least 2 out of 3 consecutive first morning void urine samples;
+* on stable dose of anti-diabetic drug including insulin for 12 weeks;
+* on stable dose of angiotensin-converting-enzyme inhibitor or angiotensin receptor blocker for 12 weeks; and
+* willing and able to give written informed consent
+
+Exclusion Criteria:
+
+* with known history of glomerulonephritis, polycystic kidney disease, systemic lupus erythematosus, any suggestive evidence of nondiabetic glomerulopathy;
+* with known history of kidney transplant;
+* with concurrent severe disorders of heart, brain, liver, and hematopoietic system, tumor and mental disorder;
+* with deranged liver function;
+* poorly controlled blood pressure;
+* with known history of intolerance or malabsorption of oral medications;
+* with uncontrollable urinary infection;
+* experiencing pregnancy; or
+* participating in other clinical trial within 30 days",35 Years,80 Years,ALL,False,"[{'measure': 'Change in estimated GFR', 'description': 'Efficacy and safety', 'timeFrame': 'From baseline to 48 weeks after treatment'}, {'measure': 'Change in spot urine albumin-to-creatinine ratio', 'description': 'Efficacy and safety', 'timeFrame': 'From baseline to 48 weeks after treatment'}]","[{'measure': 'Change in glycated haemoglobin (HbA1c)', 'timeFrame': 'From baseline to 48 weeks after treatment'}, {'measure': 'Change in urinary monocyte chemotactic protein 1 (MCP-1)', 'timeFrame': 'From baseline to 48 weeks after treatment'}, {'measure': 'Change in urinary Cystatin C', 'timeFrame': 'From baseline to 48 weeks after treatment'}, {'measure': 'Change in lipids', 'timeFrame': 'From baseline to 48 weeks after treatment'}]",2018-07-01,2022-12-31,2018-05-24,UNKNOWN,,False,The University of Hong Kong,OTHER,"['School of Chinese Medicine, The University of Hong Kong']","[{'facility': 'Queen Mary Hospital', 'status': 'RECRUITING', 'city': 'Hong Kong', 'country': 'Hong Kong', 'contacts': [{'name': 'Sydney CW TANG, MD, PhD', 'role': 'CONTACT', 'phone': '+852 22553879', 'email': 'scwtang@hku.hk'}, {'name': 'Kam Wa CHAN, BCM, MCM, MSc.(PH)', 'role': 'CONTACT', 'phone': '+852 22553207', 'email': 'chriskwcchan@hku.hk'}], 'geoPoint': {'lat': 22.27832, 'lon': 114.17469}}, {'facility': 'School of Chinese Medicine', 'status': 'NOT_YET_RECRUITING', 'city': 'Hong Kong', 'country': 'Hong Kong', 'contacts': [{'name': 'Lixing LAO, MD, PHD', 'role': 'CONTACT'}], 'geoPoint': {'lat': 22.27832, 'lon': 114.17469}}]",2025-09-01T07:32:00.968415,v2
+NCT04882735,Efficacy and Safety of Acoramidis (AG10) in Subjects with Transthyretin Amyloid Polyneurophathy (ATTRibute-PN),Acoramidis,['Acoramidis'],,[],['PHASE3'],PHASE3,INTERVENTIONAL,NA,SINGLE_GROUP,,TREATMENT,0,ACTUAL,"Inclusion Criteria:
+
+* Male or female ≥18 to ≤90 years of age;
+* Have Stage I or II symptoms (polyneuropathy disability \[PND\] ≤IIIb) of ATTR-PN and an established diagnosis of ATTR-PN as defined by physical examination findings and/or neurophysiological test findings consistent with the diagnosis of ATTR-PN;
+* Have an NIS of 5 to 130 (inclusive) during Screening;
+* Have a nerve conduction studies (NCS) score (sum of the sural sensory nerve action potential \[SNAP\], tibial compound muscle action potential (CMAP), ulnar SNAP, ulnar CMAP, and peroneal CMAP) of ≥2 points during Screening. NCS is a component of mNIS+7;
+* Have a mutation consistent with ATTR-PN either documented in medical history or confirmed by genotyping obtained at Screening prior to enrollment. No genetic testing is needed for subjects who are recipients of domino liver transplants;
+* Have an anticipated survival of \>2 years in the opinion of the investigator;
+* Have Karnofsky performance status ≥60 %.
+
+Exclusion Criteria:
+
+* Had a prior liver transplantation or is planning to undergo liver transplantation with a wild-type organ graft as treatment for symptomatic ATTR-PN during the study period. Note: Recipients of a ""domino"" liver transplant from an ATTR-PN donor who have developed ATTR-PN mediated by their graft are allowed under this protocol, as long as re-transplantation to treat ATTR-PN is not planned during the study period and meets all other eligibility criteria;
+* Has sensorimotor or autonomic neuropathy not related to ATTR-PN; for example, due to autoimmune disease or monoclonal gammopathy, malignancy, or alcohol abuse;
+* Has Vitamin B-12 levels below the lower limit of normal (LLN) at Screening;
+* Has clinical evidence of untreated hyperthyroidism or hypothyroidism;
+* Has leptomeningeal TTR amyloidosis;
+* Has Type 1 diabetes;
+* Has had Type 2 diabetes for ≥5 years;
+* Has a documented case of hepatitis B or C at Screening;
+* Known history of human immunodeficiency virus (HIV) infection;
+* Has NYHA heart failure classification \>Class II;
+* Had acute coronary syndrome, uncontrolled cardiac arrhythmia, or a stroke within 90 days prior to Screening;
+* Has estimated glomerular filtration rate (eGFR) by Modification of Diet for Renal Disease (MDRD) formula \<30 mL/min/1.73 m2 at Screening;
+* Has abnormal liver function tests at Screening, defined as alanine aminotransferase (ALT) or aspartate aminotransferase (AST) \>3 × upper limit of normal (ULN) or total bilirubin \>3 × ULN;
+* Had a malignancy within 2 years, except for basal or squamous cell carcinoma of the skin or carcinoma in situ of the cervix that has been successfully treated;
+* Has known hypersensitivity to acoramidis, its metabolites, or formulation excipients.
+* Is currently undergoing treatment for ATTR-PN with tafamidis, or patisiran, inotersen, or other knockdown agents, marketed drug products lacking a labeled indication for ATTR-PN (e.g., diflunisal, doxycycline), natural products or derivatives used as unproven therapies for ATTR-PN (e.g., green tea extract ,tauroursodeoxycholic acid \[TUDCA\]/ursodiol), within 14 days, or 14 days for tafamidis or 90days for patisiran and 180 days for inotersen prior to dosing.",18 Years,90 Years,ALL,False,"[{'measure': 'Change from baseline to Month 18 in mNIS+7', 'description': 'To determine the efficacy of acoramidis in subjects with symptomatic transthyretin amyloid polyneuropathy (ATTR-PN) by evaluating the change in Modified Neuropathy Impairment Score +7 (mNIS+7) from baseline to 18 months.', 'timeFrame': '18 Months'}, {'measure': 'Safety: TESAEs will be used to evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic polyneuropathy (ATTR-PN)', 'description': 'To evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic transthyretin amyloid polyneuropathy (ATTR-PN)', 'timeFrame': '60 Months'}, {'measure': 'Safety: Adverse Events leading to treatment discontinuation will be used to evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic polyneuropathy (ATTR-PN)', 'description': 'To evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic transthyretin amyloid polyneuropathy (ATTR-PN)', 'timeFrame': '60 Months'}, {'measure': 'Safety: Adverse Events will be used to evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic polyneuropathy (ATTR-PN)', 'description': 'To evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic transthyretin amyloid polyneuropathy (ATTR-PN)', 'timeFrame': '60 Months'}, {'measure': 'Safety: Incidence of abnormal physical exam will be used to evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic polyneuropathy (ATTR-PN)', 'description': 'To evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic transthyretin amyloid polyneuropathy (ATTR-PN)', 'timeFrame': '60 Months'}, {'measure': 'Safety: Incidence of abnormal vital signs will be used to evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic polyneuropathy (ATTR-PN)', 'description': 'To evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic transthyretin amyloid polyneuropathy (ATTR-PN)', 'timeFrame': '60 Months'}, {'measure': 'Safety: Columbia-Suicide Severity Rating Scale (C-SSRS) will be used to evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic polyneuropathy (ATTR-PN)', 'description': 'To evaluate the long-term safety and tolerability of acoramidis administered to subjects with symptomatic transthyretin amyloid polyneuropathy (ATTR-PN)', 'timeFrame': '60 Months'}]","[{'measure': 'Change from baseline to Month 18 in Norfolk QOL-DN', 'description': 'To evaluate the effects of acoramidis in subjects with symptomatic ATTR-PN on Norfolk Quality of Life Questionnaire-Diabetic Neuropathy (Norfolk QOL-DN)', 'timeFrame': '18 Months'}, {'measure': 'Change from baseline to Month 18 in mBMI', 'description': 'To evaluate the effects of acoramidis in subjects with symptomatic ATTR-PN on Modified body mass index (mBMI)', 'timeFrame': '18 Months'}, {'measure': 'Change from baseline to Month 18 in COMPASS-31', 'description': 'To evaluate the effects of acoramidis in subjects with symptomatic ATTR-PN on Composite Autonomic Score (COMPASS-31)', 'timeFrame': '18 Months'}]",2021-09-08,2026-10,2021-05-12,WITHDRAWN,Sponsor's decision to cancel study,False,"Eidos Therapeutics, a BridgeBio company",INDUSTRY,[],[],2025-09-01T07:32:00.968428,v2
+NCT02121535,Bioequivalence Study of Telmisartan Between T80/A5/H12.5 mg FDC Tablet and T80/A5 mg Tab and H12.5 mg Tab Concomitant Use,T80/A5 mg FDC tablet,"['T80/A5 mg FDC tablet', 'T80/A5 mg FDC tablet', 'H12.5 mg tablet', 'T80/A5/H12.5 ng FDC tablet', 'H12.5 mf tablet', 'T80/A5/H12.5 mg FDC tablet']",,[],['PHASE1'],PHASE1,INTERVENTIONAL,RANDOMIZED,CROSSOVER,,TREATMENT,72,ACTUAL,"Inclusion criteria:
+
+* Healthy male subjects age =20 and =35 years; body weight: =50 kg and =80 kg; body mass index: =18.0 and =25.0 kg/m2
+* Without any clinically significant findings and complications on the basis of a complete medical history, including the physical examination, vital signs (blood pressure (BP), pulse rate (PR), body temperature), 12-lead electrocardiograms (ECGs), clinical laboratory tests
+* Signed and dated written informed consent prior to admission to the trial in accordance with the Good Clinical Practice (GCP) and the local legislation.
+
+Exclusion criteria:
+
+\- Any finding of the medical examination (including BP, PR and ECGs) deviating from normal and of clinical relevance.",20 Years,35 Years,MALE,True,"[{'measure': 'Area Under the Concentration-time Curve of the Telmisartan in Plasma Over the Time Interval From 0 to the Time of the Last Quantifiable Data Point (AUC0-tz)', 'description': 'Area under the concentration-time curve of the telmisartan in plasma over the time interval from 0 to the time of the last quantifiable data point (AUC0-tz)', 'timeFrame': '3hours(h) before drug administration and 15minutes (m), 30m, 45m, 1h, 1h30m, 2h, 2h30m, 3h, 4h, 6h, 8h, 12h, 24h, 32h, 48h, 72h after drug administration'}, {'measure': 'Cmax for Telmisartan', 'description': 'Cmax (maximum measured concentration of the analyte in plasma)', 'timeFrame': '3hours(h) before drug administration and 15minutes (m), 30m, 45m, 1h, 1h30m, 2h, 2h30m, 3h, 4h, 6h, 8h, 12h, 24h, 32h, 48h, 72h after drug administration'}, {'measure': 'AUC0-tz for Amlodipine', 'description': 'AUC0-tz (area under the concentration-time curve of the analyte in plasma over the time interval from 0 to the time of the last quantifiable data point)', 'timeFrame': '3hours(h) before drug administration and 1h, 2h, 3h, 4h, 6h, 8h, 12h, 24h, 32h, 48h, 72h, 96h, 120h, 144h after drug administration'}, {'measure': 'Cmax for Amlodipine', 'description': 'Cmax (maximum measured concentration of the analyte in plasma)', 'timeFrame': '3hours(h) before drug administration and 1h, 2h, 3h, 4h, 6h, 8h, 12h, 24h, 32h, 48h, 72h, 96h, 120h, 144h after drug administration'}, {'measure': 'Cmax for Hydrochlorothiazide', 'description': 'Cmax (maximum measured concentration of the analyte in plasma)', 'timeFrame': '3hours(h) before drug administration and 15minutes (m), 30m, 45m, 1h, 1h30m, 2h, 2h30m, 3h, 4h, 6h, 8h, 12h, 24h, 32h, 48h after drug administration'}, {'measure': 'AUC0-tz for Hydrochlorothiazide', 'description': 'AUC0-tz (area under the concentration-time curve of the analyte in plasma over the time interval from 0 to the time of the last quantifiable data point)', 'timeFrame': '3hours(h) before drug administration and 15minutes (m), 30m, 45m, 1h, 1h30m, 2h, 2h30m, 3h, 4h, 6h, 8h, 12h, 24h, 32h, 48h after drug administration'}]","[{'measure': 'AUC0-∞ for Telmisartan', 'description': 'AUC0-∞ (area under the concentration-time curve of the analyte in plasma over the time interval from 0 extrapolated to infinity)', 'timeFrame': '3hours(h) before drug administration and 15minutes (m), 30m, 45m, 1h, 1h30m, 2h, 2h30m, 3h, 4h, 6h, 8h, 12h, 24h, 32h, 48h, 72h after drug administration'}, {'measure': 'AUC0-∞ for Amlodipine', 'description': 'AUC0-∞ (area under the concentration-time curve of the analyte in plasma over the time interval from 0 extrapolated to infinity)', 'timeFrame': '3hours(h) before drug administration and 1h, 2h, 3h, 4h, 6h, 8h, 12h, 24h, 32h, 48h, 72h, 96h, 120h, 144h after drug administration'}, {'measure': 'AUC0-∞ for Hydrochlorothiazide', 'description': 'AUC0-∞ (area under the concentration-time curve of the analyte in plasma over the time interval from 0 extrapolated to infinity)', 'timeFrame': '3hours(h) before drug administration and 15minutes (m), 30m, 45m, 1h, 1h30m, 2h, 2h30m, 3h, 4h, 6h, 8h, 12h, 24h, 32h, 48h after drug administration'}]",2014-04,2014-08,2014-04-23,COMPLETED,,False,Boehringer Ingelheim,INDUSTRY,[],"[{'facility': 'Boehringer Ingelheim Investigational Site', 'city': 'Kanagawa, Yokohama', 'country': 'Japan'}]",2025-09-01T07:32:00.968438,v2
+NCT06485635,Real-life-persistence to Antifibrotic Treatments,Nintedanib,"['Nintedanib', 'Pirfenidone']",,[],[],,OBSERVATIONAL,,,,,10646,ACTUAL,"Inclusion criteria:
+
+All patients with a reimbursement of AF treatment between 2018 and 2022 will be included for analysis.
+
+Exclusion criteria:
+
+No exclusion criteria will be applied.",,,ALL,False,"[{'measure': 'Persistence to antifibrotic (AF) treatment (measured as percentage of patients still treated up to 30 months after AF treatment initiation)', 'timeFrame': 'up to 30 months'}]","[{'measure': 'AF prevalence in French population', 'timeFrame': 'up to 5 years'}, {'measure': 'AF incidence in French population', 'timeFrame': 'up to 4 years'}, {'measure': 'Number of AF treated patients split by indication', 'description': 'Indications:\n\n* Idiopathic Pulmonary Fibrosis (IPF)\n* Interstitial Lung Disease associated with Systemic Sclerosis (SSc-ILD)\n* Progressive Pulmonary Fibrosis (PPF)', 'timeFrame': 'up to 2 years'}, {'measure': 'Number of patients adherent to AF treatment', 'description': 'In incident AF patients, percentage of days covered (PDC) will be calculated at different time point to measure the adherence to AF treatment for patients persistent to treatment at this time point.\n\nThe PDC is the ratio dividing the number of days exposed by the number of days in the period evaluated.\n\nA PDC≥ 80% is considered as a good adherence to medication.', 'timeFrame': 'up to 30 months'}, {'measure': 'Percentage of the target cumulative dose of treatment received by the patients', 'timeFrame': 'up to 30 months'}, {'measure': 'Influence of factors (yes/no) associated with persistence to AF treatments', 'description': 'For a pre-determined list of variables (as defined in the study protocol) in incident AF patients, a multivariate time-dependant Cox model will test several covariates to check if they are associated with persistence to AF treatment.', 'timeFrame': 'up to 30 months'}, {'measure': 'Number of patients with switch from one AF treatment to the another with no treatment stop', 'timeFrame': 'up to 5 years'}, {'measure': 'Number of patients at site of follow-up (identified as 2 lung function tests performed in the center)', 'timeFrame': 'up to 5 years'}, {'measure': 'Overall Survival (defined as time from index date (first reimbursement of AF treatment) to death from any cause)', 'timeFrame': 'up to5 years'}, {'measure': 'Event-free survival', 'description': 'Defined as the time from index date to\n\n* oxygenotherapy onset\n* hospitalisation for respiratory exacerbations\n* hospitalisation for other respiratory diseases\n* ath from any cause', 'timeFrame': 'up to 5 years'}]",2024-10-16,2025-09-01,2024-07-03,ACTIVE_NOT_RECRUITING,,False,Boehringer Ingelheim,INDUSTRY,[],"[{'facility': 'Clinityx', 'city': 'Boulogne-Billancourt', 'zip': '92100', 'country': 'France', 'geoPoint': {'lat': 48.83545, 'lon': 2.24128}}]",2025-09-01T07:32:00.968446,v2
+NCT00932035,Axillary Lymph Node Preservation Surgery in Reducing Lymphedema in Patients With Breast Cancer,isosulfan blue based lymphatic mapping,['isosulfan blue based lymphatic mapping'],,[],"['PHASE1', 'PHASE2']",PHASE1,INTERVENTIONAL,RANDOMIZED,PARALLEL,,SUPPORTIVE_CARE,39,ACTUAL,"Inclusion Criteria:
+
+\- Patients diagnosed with breast cancer with a planned axillary lymph node dissection planned for breast cancer
+
+Exclusion Criteria:
+
+* Prior lymphedema in either arm
+* Prior history of axillary surgery (except for sentinel node biopsies)
+* Prior history of chest/axillary radiation
+* Need for bilateral axillary node dissection surgery
+* Prior neurologic deficits (either motor or sensory) in ipsilateral arm
+* Known allergy to vital blue dyes
+* No prior diagnosis of inflammatory breast cancer
+* Cannot be pregnant or planning to continue breast-feeding immediately after surgery",,,FEMALE,False,"[{'measure': 'Percentage of Patients With Arm Lymphatics Above, at, or Below the Axillary Vein', 'description': ""A Fisher's exact test with a one-sided alpha of 0.05 will be used to determine if the percentage of patients with arm lymphatics above, around, or below the axillary vein in the standard dissection group is superior to the experimental dissection group."", 'timeFrame': 'Up to 4 years'}, {'measure': 'Percentage of Patients With Positive Axillary Reverse Mapping (ARM) Identified Nodes', 'description': ""A Fisher's exact test with a one-sided alpha of 0.05 will be used to determine if the percentage of patients with positive ARM identified nodes excised in the standard dissection group is superior to the experimental dissection group."", 'timeFrame': 'Up to 4 years'}, {'measure': 'Percentage of Patients With Lymphedema', 'description': 'Difference between arms in patients developing lymphedema at any point during the study will be evaluated using chi-squared tests.', 'timeFrame': 'Up to 4 years'}]",[],2009-06,2014-05,2009-07-02,TERMINATED,Loss of principal investigator,False,City of Hope Medical Center,OTHER,['National Cancer Institute (NCI)'],"[{'facility': 'City of Hope Medical Center', 'city': 'Duarte', 'state': 'California', 'zip': '91010', 'country': 'United States', 'geoPoint': {'lat': 34.13945, 'lon': -117.97729}}, {'facility': 'University of California, Davis Medical Center', 'city': 'Sacramento', 'state': 'California', 'zip': '95817', 'country': 'United States', 'geoPoint': {'lat': 38.58157, 'lon': -121.4944}}, {'facility': 'University of North Carolina', 'city': 'Chapel Hill', 'state': 'North Carolina', 'zip': '27599-1350', 'country': 'United States', 'geoPoint': {'lat': 35.9132, 'lon': -79.05584}}]",2025-09-01T07:32:00.968457,v2
+NCT01019408,Extended-dose Chloroquine (ECQ) for Resistant Falciparum Malaria Among Afghan Refugees in Pakistan,Chloroquine,['Chloroquine'],,[],['PHASE4'],PHASE4,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,163,ACTUAL,"Inclusion Criteria:
+
+* slide-confirmed infection with P. falciparum only
+* initial parasite density of 1000-100,000 asexual parasites/μl
+* absence of severe malnutrition
+* ability to attend stipulated follow-up visits and easy access to facility
+* informed consent provided by patient or parent/guardian
+* absence of history of hypersensitivity reactions to CQ
+
+Exclusion Criteria:
+
+* infants under six months old
+* pregnancy or lactation
+* underlying chronic severe illness
+* patients with other febrile illnesses
+* parasitaemia outside the range of 1000-100,000 asexual parasites/µl
+* severe malaria",6 Months,60 Years,ALL,False,"[{'measure': 'therapeutic and parasitological cure with no recrudescence', 'timeFrame': '60 days'}]","[{'measure': 'parasite clearance time', 'timeFrame': '28 days'}, {'measure': 'fever clearance time', 'timeFrame': '28 days'}, {'measure': 'gametocytaemia', 'timeFrame': '28 days'}]",1993-11,1995-01,2009-11-25,COMPLETED,,False,London School of Hygiene and Tropical Medicine,OTHER,"['European Union', 'United Nations High Commissioner for Refugees', 'World Health Organization']","[{'facility': 'Adezai Basic Health Unit', 'city': 'Adezai', 'state': 'Khyber Pakhtunkhwa', 'country': 'Pakistan', 'geoPoint': {'lat': 33.78666, 'lon': 71.57701}}, {'facility': 'Baghicha Basic Health Unit', 'city': 'Bāghīcha', 'state': 'Khyber Pakhtunkhwa', 'country': 'Pakistan', 'geoPoint': {'lat': 34.22852, 'lon': 72.21427}}, {'facility': 'Kagan Basic Health Unit', 'city': 'Kagan', 'state': 'Khyber Pakhtunkhwa', 'country': 'Pakistan', 'geoPoint': {'lat': 34.33238, 'lon': 71.76503}}]",2025-09-01T07:32:00.968469,v2
+NCT01328808,Metabolism and Toxicity of Acetaminophen,Acetaminophen/APAP,['Acetaminophen/APAP'],,[],"['PHASE2', 'PHASE3']",PHASE2,INTERVENTIONAL,NA,SINGLE_GROUP,,TREATMENT,31,ACTUAL,"Inclusion Criteria:
+
+* Preterm and term neonates of both genders and all races
+* a postnatal age of less than 28 days
+* GA's of from 22 to less than 37 weeks
+* an indwelling (peripheral or umbilical) arterial line
+* a clinical indication for intravenous administration of pain relief medication
+
+Exclusion Criteria:
+
+* Neonates with severe asphyxia
+* grade III or IV intraventricular hemorrhage, major congenital malformations/facial malformations (e.g., cleft lip and palate),
+* neurological disorders
+* those receiving continuous or intermittent neuromuscular blockers
+* clinical or biochemical evidence of hepatic renal failure (including systemic hypoperfusion)",22 Weeks,37 Weeks,ALL,False,"[{'measure': 'primary endpoint PK analysis', 'description': 'Blood and urine levels of APAP and metabolites', 'timeFrame': '48 hours'}]","[{'measure': 'Developmental stage', 'description': 'To assess both the magnitude and statistical significance of any evidence of relationship between developmental stage and toxicity-associated metabolite levels.\n\nThe analyses will also hold constant APAP dose, BID or TID and possible confounding variables such as birth order, maternal smoking status, and maternal age. We will plot the relationship between stage of development and measures of APAP Metabolism, taken at different gestational and postnatal ages. A hierarchical, cross sectional time series models will be used.', 'timeFrame': '48 hours'}]",2011-10,2022-12,2011-04-05,UNKNOWN,,False,John van den Anker,OTHER,[],"[{'facility': ""Children's National Medical Center"", 'city': 'Washington D.C.', 'state': 'District of Columbia', 'zip': '20010', 'country': 'United States', 'geoPoint': {'lat': 38.89511, 'lon': -77.03637}}, {'facility': 'Childrens Research Institute', 'city': 'Washington D.C.', 'state': 'District of Columbia', 'zip': '20010', 'country': 'United States', 'geoPoint': {'lat': 38.89511, 'lon': -77.03637}}]",2025-09-01T07:32:00.968476,v2
+NCT00725608,Acceptability and Safety of Switching From Subutex or Other Opioid Drug Dependence Therapy to Suboxone (NIS P05444),buprenorphine/naloxone,['buprenorphine/naloxone'],,[],[],,OBSERVATIONAL,,,,,339,ACTUAL,"Inclusion Criteria:
+
+* All patients on substitution therapy, that are willing to switch to Suboxone, can be included.
+* Therapeutic indications and contraindications for Suboxone® must be taken into consideration when selecting patients.
+
+Exclusion Criteria:
+
+* According to product information
+* In accordance with the product information pregnant women will be excluded.",15 Years,,ALL,False,"[{'measure': 'Retention Rate', 'description': 'The primary objective of this study was to determine the retention rate of patients after 6 and 12 months of treatment with buprenorphine/naloxone measured by the percentage of patients remaining in the study', 'timeFrame': 'month 6, month 12'}]","[{'measure': 'Dosing of Suboxone (Buprenorphine Plus Naloxone)', 'description': 'One of the secondary objectives was to evaluate the effect of the switch to buprenorphine/naloxone on medication dispensing measured by dose.', 'timeFrame': 'day 1, month 6, month 12'}, {'measure': 'Dispensing of Suboxone (Buprenorphine Plus Naloxone)', 'description': 'Another of the secondary objectives was to evaluate the effect of the switch to Suboxone (buprenorphine plus naloxone) on medication dispensing measured by frequency of visits to the treating physician or pharmacy to receive the medication (daily, biweekly, once weekly, monthly, other)', 'timeFrame': 'month 6, month 12'}]",2008-05,2011-04,2008-07-30,COMPLETED,,False,Indivior Inc.,INDUSTRY,[],"[{'facility': '(Multiple sites in Austria) => Coordinating CRO: H&P GmbH', 'city': 'Vienna', 'zip': '1070', 'country': 'Austria', 'geoPoint': {'lat': 48.20849, 'lon': 16.37208}}]",2025-09-01T07:32:00.968483,v2
+NCT01265108,Effects of Iron on Exercise Capacity During Hypoxia,Iron sucrose.,"['Iron sucrose.', 'Normal saline']",,[],['PHASE1'],PHASE1,INTERVENTIONAL,NON_RANDOMIZED,CROSSOVER,,BASIC_SCIENCE,12,ACTUAL,"Inclusion Criteria:
+
+* Age between 18 and 60 years
+* Sea level natives with no recent exposure to high altitude
+* Baseline iron indices within the normal range
+* Detectable tricuspid regurgitation on echocardiography
+
+Exclusion Criteria:
+
+* Significant cardiorespiratory disease
+* Known susceptibility to high altitude-related illness
+* Taking medications or iron supplementation
+* Pregnancy",18 Years,60 Years,ALL,True,"[{'measure': 'Maximal exercise capacity during hypoxia, assessed by maximal oxygen consumption.', 'description': 'Volunteers will receive either intravenous iron or saline placebo, before exposure to 8 hours of alveolar hypoxia. They will then undergo an exercise test while breathing an hypoxic gas mixture. The primary outcome measure will be exercise capacity as determined by maximal oxygen consumption during this test. Volunteers will receive both interventions, via a crossover design. Due to uncertainty about the duration of action of iron at a cellular level, all volunteers will receive saline infusion on the first study day, and iron sucrose infusion on a second study day, at least one week later.', 'timeFrame': 'After 8-h exposure to alveolar hypoxia.'}]","[{'measure': 'Maximal exercise capacity, assessed by peak power output.', 'timeFrame': 'After 8-h exposure to alveolar hypoxia.'}, {'measure': 'Pulmonary artery systolic pressure.', 'timeFrame': 'After 8-h exposure to alveolar hypoxia.'}, {'measure': 'Blood levels of oxygen-regulated proteins.', 'timeFrame': 'After 8-h exposure to alveolar hypoxia'}]",2010-11,2015-04,2010-12-22,COMPLETED,,False,University of Oxford,OTHER,[],"[{'facility': 'Department of Physiology, Anatomy & Genetics, University of Oxford', 'city': 'Oxford', 'zip': 'OX1 3PT', 'country': 'United Kingdom', 'geoPoint': {'lat': 51.75222, 'lon': -1.25596}}]",2025-09-01T07:32:00.968495,v2
+NCT00000208,Methadone/Buprenorphine Cross-Over Study - 4,Buprenorphine,['Buprenorphine'],,[],['PHASE2'],PHASE2,INTERVENTIONAL,,,,TREATMENT,0,,"Inclusion Criteria:
+
+M/F ages 21-50. Opiate dependence according to DSM-IV critera. Self-reported use within the last 30 days. Agreeable to conditions of study and signed informed consent.
+
+Exclusion Criteria:
+
+Psychiatric disorder that requires medication therapy. History of seizures. Pregnant and/or nursing women. Dependence on ETOH or benzodiazepines or other sedative-hynotics. Acute hepatitis. Other medical conditions that deem participation to be unsafe.",21 Years,50 Years,ALL,False,"[{'measure': 'Drug use'}, {'measure': 'Withdrawal symptoms'}, {'measure': 'Opiate craving'}]",[],1992-02,,1999-09-21,COMPLETED,,False,National Institute on Drug Abuse (NIDA),NIH,[],"[{'facility': 'Friends Research Institute', 'city': 'Los Angeles', 'state': 'California', 'zip': '90025', 'country': 'United States', 'geoPoint': {'lat': 34.05223, 'lon': -118.24368}}]",2025-09-01T07:32:00.968504,v2
+NCT04169308,Effects of Restylane-L® Filler Injection for Non-Surgical Rhinoplasty,Restylane-L® Filler injection,['Restylane-L® Filler injection'],,[],['PHASE1'],PHASE1,INTERVENTIONAL,NA,SINGLE_GROUP,,TREATMENT,10,ACTUAL,"Inclusion Criteria:
+
+1. Males and females of ages 21 and above.
+2. Subjects will be required not to have had previous filler injections, or other cosmetic treatments to the nose within the last 12 months.
+3. Subjects that understand the purpose and aspects of the study, freely sign the consent and complete the required treatment and follow up visit.
+
+Exclusion Criteria:
+
+1. Males and females below age of 21.
+2. Subjects who have had previous filler injections, or other cosmetic treatments to the nose within the last 12 months.
+3. Subjects who are pregnant or nursing.
+4. Subjects with a known allergy or sensitivity to any component of the study ingredients.
+5. Any history of bleeding disorders (iatrogenic or otherwise). This includes persons who have undergone therapy with thrombolytics, anticoagulants, or inhibitors of platelet aggregation in the preceding 3 weeks.
+6. Anyone taking aspirin, ibuprofen, St. John's Wort, or high doses of Vitamin E supplements in the last 3 weeks.
+7. Subjects with diseases, injuries, or disabilities of the nose, including those with autoimmune disease affecting the nose, implants, and previous surgical rhinoplasty.
+8. Subjects that do not understand the purpose and aspects of the study, do not sign the consent and do not complete the required treatment and follow up visit will also be excluded.",21 Years,,ALL,True,"[{'measure': 'To determine the effects of Restylane-L® Filler injection into the nose on first impressions and quality of life based on the validated questionnaires using FACE-Q scales.', 'description': 'We will measure changes in first impressions using a questionnaire with categories which include social skills, academic performance, dating success, occupational success, attractiveness, financial success, relationship success, and athletic skills. The 300 independent reviewers will grade each photo on a scale of 1(least favorable) to 10 (best). Evaluation of effects on quality of life will be reported through comparison of pre/post injection quality of life survey scores filled out by patients using the validated FACE-Q PRO survey measure (categories include appraisal of nasal appearance, psychological well-being, social function, and psychological distress). Maximal reported score is 4 (very satisfied) and lowest reported score is 1 (very dissatisfied).', 'timeFrame': '4 weeks'}]","[{'measure': 'To determine the efficacy of Restylane-L® Filler injection to the nose in reduction of convexity of the nasal dorsum as measured on pre/post injection 2D photographs.', 'description': 'Secondary assessment of this study is to determine the efficacy of Restylane-L® filler injection into the nose as defined by the reduction of the nasal dorsal convexity to 0mm (+/- 10% of pre injection value) as measured by differences in length of a line (from pre to post injection photos) from the highest tip of the nasal dorsum to a line drawn from the Radix to the supratip region on a lateral view 2D photograph. This will be performed through calculation of changes in nasal dorsal hump convexity for all patients. All measures will be performed in triplicate and the mean of the 3 measures will be used.', 'timeFrame': '4 weeks'}, {'measure': 'To measure changes in nasal projection and rotation after injection with Restylane-L® Filler in subset of patients who underwent nasal tip augmentation.', 'description': 'Subgroup analysis will be performed for the patients who also underwent augmentation of the nasal tip to measure changes in projection (in mm) and rotation (in degrees) achieved from injection of filler. We will be using the Goode method for measuring nasal projection. We will be reporting the following measurements:\n\nNasal projection is the perpendicular distance between the tip-defining point and a line passing through the nasion and alar crease.\n\nNasal length is the distance between the nasion and the tip-defining point. The ideal Goode ratio of 0.55 to 0.60 is the perpendicular distance between the tip-defining point and a line passing through the nasion and alar crease divided by nasal length.\n\nNasal tip rotation or the nasolabial angle (normal 90-120 degrees), is the angle defined by the columellar point-to-subnasale line intersecting with subnasale-to-labrale superius line.\n\nThe mean of the 3 measurements in (mm for distance) or (degrees for rotation) will be reported.', 'timeFrame': '4 weeks'}, {'measure': 'To determine the safety of Restylane-L® Filler injection to the nose for non-surgical rhinoplasty by recording the number of participants with treatment-related adverse events as assessed by CTCAE v4.0', 'description': 'The safety profile of injecting Restylane-L® into the nose will be measured by continually monitoring for AEs during the duration of the study and reporting the total number and description of events.', 'timeFrame': '4 weeks'}]",2019-01-01,2020-07-21,2019-11-19,COMPLETED,,False,DeNova Research,OTHER,['Galderma R&D'],"[{'facility': 'DeNova Research', 'city': 'Chicago', 'state': 'Illinois', 'zip': '60611', 'country': 'United States', 'geoPoint': {'lat': 41.85003, 'lon': -87.65005}}]",2025-09-01T07:32:00.968511,v2
+NCT06413108,"Safety, Pharmacokinetics, and Plasmodium Falciparum Transmission-reducing Activity of Monoclonal Antibody TB31F in Mali",TB31F,['TB31F'],,[],"['PHASE1', 'PHASE2']",PHASE1,INTERVENTIONAL,RANDOMIZED,SEQUENTIAL,,OTHER,165,ESTIMATED,"SAFETY COHORT (STUDY ARM 1-5)
+
+Inclusion Criteria:
+
+1. Written/signed informed consent
+2. Adult cohorts: 18-50 years of age
+3. School-age children cohorts: 10-15 years of age
+4. Haemoglobin ≥10 g/dL
+5. Non-lactating females of childbearing potential agree to the use of continuous adequate contraception for 28 days after having received investigational product
+6. Subject agrees to refrain from blood donation during the study and for 5 months after having received investigational product
+7. Subjects are available to attend all study visits
+8. In opinion of the investigator, the subject can and will comply with the requirements of the protocol
+
+Exclusion Criteria:
+
+1. Women who are pregnant (tested at baseline and at day 28 after administration of investigational product by urine and/or serum pregnancy testing (β-hCG)) or lactating
+2. Symptomatic malaria
+3. Current acute or chronic disease, including clinically significant pulmonary, cardiovascular, hepatic, or renal functional abnormality, as determined by history or physical examination
+4. Clinically significant abnormal blood chemistries and haematology
+5. History of malignancy of any organ system (other than localized basal cell carcinoma of the skin), treated or untreated, within the past 5 year
+6. History of adverse reactions to monoclonal antibodies
+7. Administration of immunoglobulin and/or blood products within the three months preceding the first dose of the investigational product or planned administration during the study period
+8. Any other condition or situation that would, in the opinion of the investigator, place the subject at an unacceptable risk of injury or render the subject unable to meet the requirements of the protocol
+
+EFFICACY COHORT (STUDY ARM 6)
+
+Inclusion Criteria:
+
+1. Written/signed informed consent
+2. 10-50 years of age
+3. Haemoglobin ≥10 g/dL
+4. Non-lactating females of childbearing potential agree to the use of continuous adequate contraception for 28 days after having received investigational product
+5. Subject agrees to refrain from blood donation during the study and for 5 months after having received investigational product
+6. Subjects are available to attend all study visits
+7. In opinion of the investigator, the subject can and will comply with the requirements of the protocol
+8. Asymptomatic P. falciparum mono-infection with asexual parasite densities \<3000 parasites/µL
+9. Presence of P. falciparum gametocytes on thick blood film at a density \>16 gametocytes/µL
+
+Exclusion Criteria:
+
+1. Women who are pregnant (tested at baseline and at day 28 after administration of investigational product by urine and/or serum pregnancy testing (β-hCG)) or lactating
+2. Symptomatic malaria
+3. Current acute or chronic disease, including clinically significant pulmonary, cardiovascular, hepatic, or renal functional abnormality, as determined by history or physical examination
+4. Clinically significant abnormal blood chemistries and haematology
+5. History of malignancy of any organ system (other than localized basal cell carcinoma of the skin), treated or untreated, within the past 5 years
+6. History of adverse reactions to monoclonal antibodies
+7. Administration of immunoglobulin and/or blood products within the three months preceding the first dose of the investigational product or planned administration during the study period
+8. Any other condition or situation that would, in the opinion of the investigator, place the subject at an unacceptable risk of injury or render the subject unable to meet the requirements of the protocol
+9. Use of anti-malarial drug treatment in the last 14 days
+10. Prior receipt of an antimalarial monoclonal antibody
+11. Prior receipt of a P. falciparum transmission-blocking vaccine",10 Years,50 Years,ALL,True,"[{'measure': 'Occurrence of at least possibly related solicited local and systemic adverse events', 'timeFrame': 'within 7 days of monoclonal antibody TB31F administration'}, {'measure': 'Occurrence of at least possibly related unsolicited adverse events', 'timeFrame': 'within 28 days of monoclonal antibody TB31F administration'}, {'measure': 'Occurrence of at least possibly related serious adverse events', 'timeFrame': 'from enrollment to the end of follow-up at 28 or 84 days'}, {'measure': 'Terminal serum half-life (t½) of monoclonal antibody TB31F in serum', 'timeFrame': 'day 0 [baseline], day 1, day 5, day 7, day 14, day 21, day 28, day 42, day 56, day 84.'}, {'measure': 'Maximum observed serum concentration (Cmax) of monoclonal antibody TB31F in serum', 'timeFrame': 'day 0 [baseline], day 1, day 5, day 7, day 14, day 21, day 28, day 42, day 56, day 84.'}, {'measure': 'Time to reach maximum serum concentration (tmax) of monoclonal antibody TB31F in serum', 'timeFrame': 'day 0 [baseline], day 1, day 5, day 7, day 14, day 21, day 28, day 42, day 56, day 84.'}, {'measure': 'Accumulation index (Racc) of monoclonal antibody TB31F in serum', 'timeFrame': 'day 0 [baseline], day 1, day 5, day 7, day 14, day 21, day 28, day 42, day 56, day 84.'}, {'measure': 'Area under the serum concentration-time curve (AUC0-τ, AUC0-t and AUC) of monoclonal antibody TB31F in serum', 'timeFrame': 'day 0 [baseline], day 1, day 5, day 7, day 14, day 21, day 28, day 42, day 56, day 84.'}, {'measure': 'Within-group percent reduction in the proportion of mosquitoes infected at day 5 post-treatment compared to baseline (day 0), assessed through direct membrane feeding assays and measured as oocyst prevalence', 'timeFrame': 'day 0 [baseline] & 5'}]","[{'measure': 'Within-group percent reduction in the proportion of mosquitoes infected in direct skin feeding assay (DSF), compared within groups between baseline and all feeding time points, and between groups at all feeding timepoints.', 'timeFrame': 'day 0 [baseline], 1, and 5'}, {'measure': 'Within-group percent reduction in the proportion of mosquitoes infected in direct membrane feeding assays (DMFA), compared within groups between baseline and all feeding time points, and between groups at all feeding timepoints.', 'timeFrame': 'day 0 [baseline], 1, 5, and 14'}, {'measure': 'Mosquito infection prevalence, assessed by direct skin feed and measured as the proportion dissected mosquitoes with any number of oocysts, compared within groups between baseline and all feeding time points, and between groups at all feeding timepoints.', 'timeFrame': 'day 0 [baseline], 1, and 5'}, {'measure': 'Mosquito infection prevalence, assessed by DMFA and measured as the proportion dissected with any number of oocysts, compared within groups between baseline and all feeding time points, and between groups at all feeding timepoints.', 'timeFrame': 'day 0 [baseline], 1, 5, and 14'}, {'measure': 'Mosquito infection intensity, assessed by direct skin feed and measured as the number of oocysts in dissected mosquitoes, compared within groups between baseline and all feeding time points, and between groups at all feeding timepoints.', 'timeFrame': 'day 0 [baseline], 1, and 5'}, {'measure': 'Mosquito infection intensity, assessed by DMFA and measured as the average number of oocysts in dissected mosquitoes, compared within groups between baseline and all feeding time points, and between groups at all feeding timepoints.', 'timeFrame': 'day 0 [baseline], 1, 5, and 14'}, {'measure': 'Participant infection prevalence, assessed by DSF as the proportion of individuals infectious to any number of mosquitoes, compared within groups between baseline and all feeding time points, and between groups at all feeding timepoints.', 'timeFrame': 'day 0 [baseline], 1, and 5'}, {'measure': 'Participant infection prevalence, assessed by DMFA as the proportion of individuals infectious to any number of mosquitoes, compared within groups between baseline and all feeding time points, and between groups at all feeding timepoints.', 'timeFrame': 'day 0 [baseline], 1, 5, and 14'}, {'measure': 'Transmission-reducing activity in school-age children and adults, measured as the percent reduction in mean oocyst intensity compared to experimental controls, compared within groups and between groups at all feeding timepoints.', 'timeFrame': 'day 0 [baseline], 5, 14, 28, 56, and 84'}]",2024-07-12,2026-01,2024-05-14,ACTIVE_NOT_RECRUITING,,False,Radboud University Medical Center,OTHER,"['Malaria Research and Training Center, Bamako, Mali', 'London School of Hygiene and Tropical Medicine']","[{'facility': 'Faculty of Pharmacy and Faculty of Medicine and Dentistry, University of Sciences Techniques and Technologies of Bamako', 'city': 'Bamako', 'state': 'Point G', 'zip': 'BP1805', 'country': 'Mali', 'geoPoint': {'lat': 12.60915, 'lon': -7.97522}}]",2025-09-01T07:32:00.968518,v2
+NCT06957808,Investigating the Effect of Diroximel Fumarate on Glutathione in Schizophrenia,Diroximel fumarate (DRF),"['Diroximel fumarate (DRF)', 'Placebo']",,[],['NA'],NA,INTERVENTIONAL,RANDOMIZED,SINGLE_GROUP,,BASIC_SCIENCE,30,ESTIMATED,"Inclusion Criteria:
+
+* 18 -65 years, diagnosis of schizophrenia (Diagnostic and Statistical Manual of Mental Disorders-5 (DSM-5)
+* Stable antipsychotic dose (no change for 1 month)
+* Currently stable with no evidence of relapse within the last 2 months prior to study enrolment
+* Minimum of 60 on the Positive and Negative Syndrome Scale (PANSS)
+* Capacity to provide informed consent
+
+Exclusion Criteria:
+
+* History of significant co-morbid medical or neurological disorder including but not limited to HIV, malignancies, Systemic Lupus Erythematosus, sarcoidosis, autoimmune vasculitis, bone marrow transplantation
+* Current use of medication that is known to interact with DRF, live vaccines given within the period of DRF treatment, nephrotoxic medication (including but not limited to aminoglycosides, diuretics, non-steroidal anti-inflammatory drugs, Lithium)
+* Contraindications to DRF (pregnancy, women of childbearing potential not currently using effective contraception (combined pill (oestrogen \& progesterone), progesterone -only with inhibition of ovulation, intrauterine device, intrauterine hormone-releasing system, bilateral tubal occlusion, vasectomised partner, sexual abstinence), breast feeding, severe hepatic impairment, moderate renal impairment, severe active gastrointestinal disease, lymphocyte count - below the Lower Limit of Normal (LLN) for the local laboratory (e.g 1.30 x109/L LLN for Viapath King's College London), suspected or confirmed progressive multifocal leukoencephalopathy (PML), presence of risk factors for PML (previous and/or current immunosuppressant or immunomodulatory treatment (including natalizumab, other fumaric esters including Dimethyl Fumarate (DMF) (topical or systemic)), serious infection, current or recent herpes virus infection)
+* Substance dependence/abuse other than to cigarettes
+* Current high suicide risk
+* Participation in a clinical study of unlicensed medicines within the previous 30 days
+* Presence/history of other acute or chronic illness that would make participating unsafe or unsuitable, any contraindication to MRI scanning (e.g. claustrophobia, metallic implants, pacemaker, vascular clips, metal in eyes, pregnancy)
+* Allergies to any of DRFs ingredients
+* Taking part in a research study involving an unlicensed medicine within the last 30 days",18 Years,65 Years,ALL,False,"[{'measure': 'MRS glutathione (GSH) levels in ACC', 'description': 'Glutathione levels in the Anterior Cingulate Cortex (ACC) measured by magnetic resonance spectroscopy (1HMRS)', 'timeFrame': 'Within one year of conclusion of the Research'}]","[{'measure': 'MMN Amplitude', 'description': 'Mismatch negativity Amplitude measured by electroencephalography (EEG)', 'timeFrame': 'Within one year of conclusion of the Research'}]",2025-01-10,2026-06,2025-05-05,RECRUITING,,False,King's College London,OTHER,['Rosetrees Trust'],"[{'facility': 'South London and Maudsley NHS Foundation Trust', 'status': 'RECRUITING', 'city': 'London', 'state': 'Greater London', 'zip': 'SE58AZ', 'country': 'United Kingdom', 'contacts': [{'name': 'Violeta Perez-Rodriguez, Clinical Research Associate', 'role': 'CONTACT', 'phone': '(+44)07871777185', 'email': 'violeta.perez_rodriguez@kcl.ac.uk'}, {'name': 'Zeryab Meyer, Clinical Research Associate', 'role': 'CONTACT', 'email': 'zeryab.meyer@kcl.ac.uk'}, {'name': 'Katherine Beck, Clinical Lecturer', 'role': 'PRINCIPAL_INVESTIGATOR'}, {'name': 'Violeta Perez-Rodriguez, Clinical Research Associate', 'role': 'SUB_INVESTIGATOR'}, {'name': 'Zeryab Meyer, Clinical Research Associate', 'role': 'SUB_INVESTIGATOR'}, {'name': 'Oliver Howes, Professor', 'role': 'SUB_INVESTIGATOR'}, {'name': 'Mitul Mehta, Professor', 'role': 'SUB_INVESTIGATOR'}, {'name': 'David Lythgoe, Senior Research Fellow', 'role': 'SUB_INVESTIGATOR'}], 'geoPoint': {'lat': 51.50853, 'lon': -0.12574}}, {'facility': 'Department of Computer Science, Faculty of Engineering Science, University College London', 'status': 'RECRUITING', 'city': 'London', 'state': 'Greater London', 'zip': 'WC1E 6BT', 'country': 'United Kingdom', 'contacts': [{'name': 'Rick Adams, Professor', 'role': 'CONTACT', 'email': 'rick.adams@ucl.ac.uk'}, {'name': 'Rick Adams, Professor', 'role': 'PRINCIPAL_INVESTIGATOR'}], 'geoPoint': {'lat': 51.50853, 'lon': -0.12574}}, {'facility': 'School of Psychology, University of birmingham', 'status': 'RECRUITING', 'city': 'Birmingham', 'zip': 'B15 2TT', 'country': 'United Kingdom', 'contacts': [{'name': 'Rachel Upthegrove, Professor', 'role': 'CONTACT', 'email': 'r.upthegrove@bham.ac.uk'}, {'name': 'Rachel Upthegrove, Professor', 'role': 'PRINCIPAL_INVESTIGATOR'}], 'geoPoint': {'lat': 52.48142, 'lon': -1.89983}}]",2025-09-01T07:32:00.968525,v2
+NCT02835508,Pharmacokinetic Study of JNJ-56021927 When Taken Orally as Tablet Formulation in Healthy Male Japanese Participants,JNJ-56021927 60 Milligram,"['JNJ-56021927 60 Milligram', 'JNJ-56021927 120 Milligram', 'JNJ-56021927 240 Milligram']",,[],['PHASE1'],PHASE1,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,18,ACTUAL,"Inclusion Criteria:
+
+* Participant must have a body mass index between 18.0 and 29.9 Kilogram per meter square (kg/m\^2), inclusive, and a body weight not less than 50 Kilogram (kg)
+* Participant must have a blood pressure between 90 and 140 Millimeters of Mercury (mm Hg) systolic, inclusive, and no higher than 90 mm Hg diastolic at screening
+* Participant must have a normal 12-lead Electrocardiogram (ECG) (based on the mean value of the triplicate parameters) consistent with normal cardiac conduction and function at screening, including: a) normal sinus rhythm (heart rate between 45 and 90 beats per minute, extremes included); b) QT interval corrected for heart rate according to Fridericia (QTcF) \<= 450 milliseconds (ms); c) QRS interval less than or equal (\<=)110 ms; d) PR interval \<200 ms; e) ECG morphology consistent with healthy cardiac conduction and function
+* Participant must be a healthy Japanese male
+* Participant must agree to use an adequate contraception method as deemed appropriate by the investigator; to always use a condom during intercourse and to not donate sperm during the study and for 3 months after study drug administration
+
+Exclusion Criteria:
+
+* Participant with a history of current clinically significant medical illness including (but not limited to) cardiac arrhythmias or other cardiac disease, hematologic disease, coagulation disorders (including any abnormal bleeding or blood dyscrasias), lipid abnormalities, significant pulmonary disease, including bronchospastic respiratory disease, diabetes mellitus, hepatic or renal insufficiency, thyroid disease, neurologic or psychiatric disease, infection, or any other illness that the investigator considers should exclude the participant or that could interfere with the interpretation of the study results
+* Participant has donated blood or blood product or had substantial loss of blood more than 200 milliliter (mL) within 1 month before study drug administration, or greater than equal (\>=) 400 mL within 3 months before study drug administration, or participant has donated a total volume of blood in the past one year exceeding 1200 mL, or participant has an intention to donate blood or blood products during the study and for at least 2 months after completion of the study
+* Participant has presence of sexual dysfunction (abnormal libido, erectile dysfunction, etc) or any medical condition that would affect sexual function
+* Participant has received an investigational drug including investigational vaccines or used an invasive investigational medical device within 3 months or within a period less than 10 times the drug's half-life, whichever is longer, before the planned study drug administration
+* Participant has a history of hepatitis B surface antigen (HBsAg) or hepatitis C antibody (anti-hepatitis C virus {HCV}) positive, or other clinically active liver disease, or tests positive for HBsAg or anti-HCV at screening",20 Years,55 Years,MALE,True,"[{'measure': 'Maximum Observed Plasma Concentration (Cmax)', 'description': 'Maximum observed plasma concentration (Cmax) will be assessed.', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Time to Reach Maximum Observed Plasma Concentration (Tmax)', 'description': 'Actual sampling time to reach maximum observed analyte concentration (Tmax) will be assessed.', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Area Under Concentration from time zero to the last quantifiable AUC (0-last)', 'description': 'AUC from time zero to the last quantifiable concentration will be assessed.', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Area Under the Plasma Concentration-Time Curve From Time Zero to Infinite Time (AUC [0-infinity])', 'description': 'The AUC (0-infinity) is the area under the plasma concentration-time curve from time zero to infinite time, calculated as the sum of AUC (0-last) and C (0-last)/lambda(z); wherein AUC (0-last) is area under the plasma concentration-time curve from time zero to last quantifiable time, C(last) is the last observed quantifiable concentration, and lambda (z) is elimination rate constant. AUC (0-infinity) will be assessed.', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Time to Last Quantifiable Plasma Concentration (Tlast)', 'description': 'The Tlast, time to last observed quantifiable plasma concentration will be assessed.', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Percentage of Area Under the Plasma Concentration-Time Curve Extrapolated From Last Measurable Concentration to Infinite Time (%AUC,ext)', 'description': 'Percentage of area under the plasma concentration-time curve extrapolated from last measurable concentration to infinite time (%AUC,ext) is calculated as (AUC \\[0-infinity\\] minus AUC \\[0-last\\])/ AUC \\[0-infinity\\])\\*100.', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Apparent Clearance (CL/F)', 'description': 'Clearance of a drug is a measure of the rate at which a drug is metabolized or eliminated by normal biological processes. Clearance obtained after oral dose (apparent oral clearance) is influenced by the fraction of the dose absorbed. Drug clearance is a quantitative measure of the rate at which a drug substance is removed from the blood. CL/F will be calculated as CL/F = Dose/AUC \\[0-infinity\\]', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Apparent Terminal Elimination Half-life (t1/2term)', 'description': 'Apparent terminal elimination half-life, calculated as 0.693/apparent terminal elimination rate constant (λz)', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Apparent Terminal Elimination Rate Constant (lambda z)', 'description': 'Apparent terminal elimination rate constant, estimated by linear regression using the terminal log-linear phase of the log transformed concentration vs time data', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Apparent Volume of Distribution (Vd/F)', 'description': 'Apparent volume of distribution based on the terminal phase following oral administration calculated as Vd/F = Dose/ apparent terminal elimination rate constant (λz)\\*AUC \\[0-infinity\\]', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Metabolite to Parent Drug Ratio for Maximum Observed Plasma Concentration (MPR Cmax)', 'description': 'Metabolite to parent drug ratio for Cmax will be assessed.', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Metabolite to Parent Drug Ratio for Area Under Concentration from time zero to the last quantifiable concentration (MPR AUC [0-last])', 'description': 'Metabolite to parent drug ratio for AUC \\[0-last\\] will be assessed.', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Metabolite to Parent Drug Ratio for Area Under Curve from time zero extrapolated to infinity (MPR AUC [0-infinity])', 'description': 'Metabolite to parent drug ratio for AUC \\[0-infinity\\] will be assessed.', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Area Under Curve from time of administration to 24 hours post dosing', 'description': 'AUC from time of administration to 24 hours post dosing will be assessed.', 'timeFrame': 'Predose, Up to Day 57'}, {'measure': 'Area Under Curve from time of administration to 168 hours post dosing', 'description': 'AUC from time of administration to 168 hours post dosing will be assessed.', 'timeFrame': 'Predose, Up to Day 57'}]","[{'measure': 'Number of Participants With Adverse Events as a Measure of Safety and Tolerability', 'timeFrame': 'Up to Day 57'}]",2016-06,2016-12,2016-07-18,COMPLETED,,False,Janssen Pharmaceutical K.K.,INDUSTRY,[],"[{'city': 'Kumamoto', 'country': 'Japan', 'geoPoint': {'lat': 32.80589, 'lon': 130.69181}}]",2025-09-01T07:32:00.968532,v2
+NCT06258408,A Phase 1 Study of BB102 in Participants With Advanced Solid Tumors,BB102 tablet,['BB102 tablet'],,[],['PHASE1'],PHASE1,INTERVENTIONAL,NA,SEQUENTIAL,,TREATMENT,78,ESTIMATED,"Inclusion Criteria:
+
+1. For the dose escalation trial, histologically, cytologically confirmed or clinically confirmed advanced solid tumors patients who without available standard treatment, have disease progression on standard treatment or cannot tolerate standard treatment.
+
+   For the expansion trial, histologically or cytologically confirmed FGF19 or FGFR4 positive advanced primary HCC or other advanced solid tumors patients who without available standard treatment, have disease progression on standard treatment or cannot tolerate standard treatment.
+2. For the dose escalation trial, at least one evaluable lesion as defined by RECIST v1.1.
+
+   For the expansion trial, at least one measurable lesion as defined by RECIST v1.1.
+3. Eastern Cooperative Oncology Group (ECOG) score ≤1.
+4. Expected survival ≥ 3 months.
+5. Adequate organ function.
+6. Female subjects of childbearing potential must have a negative pregnancy test prior to the first dose and are required to use effective contraception from signing the ICF until 6 months after the last dose of study treatment.
+7. Fully informed of the study and voluntarily signed the informed consent form (ICF), and willing to follow and have the ability to complete all trial procedures.
+
+Exclusion Criteria:
+
+1. Use of systemic immunosuppressive or systemic cortisol (≥10 mg prednisone or other equivalent hormones) within 4 weeks.
+2. Prior use of selective FGFR4 inhibitor and/or pan-FGFR inhibitor therapy.
+3. Use of cytotoxic chemotherapeutics within 4 weeks, OR use of state-approved Chinese traditional patent drugs/Chinese traditional drugs with an antitumor effect within 2 weeks.
+4. Anti-tumor endocrine therapy, radiotherapy, interventional embolization, radiofrequency, proton therapy, radioimmunotherapy, immunotherapy or other biotherapies within 4 weeks.
+5. Use of other clinical investigational drug or therapy that was not marketed within 4 weeks.
+6. The patient is receiving drugs or therapies prohibited in the protocol and cannot discontinue such use at least 2 weeks.
+7. Pregnant or lactating females.
+8. Presence of clinically significant gastrointestinal disorder that may affect the intake, transport, or absorption of the study drug at screening.
+9. Patient with dual-source cancer within 5 years.
+10. Presence of clinically symptomatic metastases to the central nervous system or meninges or other evidence showing that metastatic lesions in the central nervous system or meninges have not yet been controlled at screening, which, at the investigator's discretion, is not suitable for enrollment.
+11. History of severe neurological or psychiatric disorders, including epilepsy, dementia, moderate to severe depression, etc.
+12. Clinically significant and uncontrolled cardiovascular diseases.
+13. Pulmonary embolism within 6 months.
+14. Prior allogeneic stem cell transplantation, bone marrow transplantation or vital organ transplantation.
+15. Presence of uncontrollable infectious disease, congenital immunodeficiency disease,acquired immunodeficiency syndrome, syphilis, active hepatitis B, hepatitis C virus (HCV) infection.
+16. Severe active infection, including but not limited to bacteremia, severe pneumonia, etc., occurred within 2 weeks; an active infection that received therapeutic intravenous antibiotics within 2 weeks.",18 Years,78 Years,ALL,False,"[{'measure': 'Number of subjects with dose limiting toxicities (DLTs)', 'description': 'To assess the safety and tolerability of BB102 tablet as monotherapy in subjects with advanced solid tumors and to determine the maximum tolerated dose (MTD) of BB102 tablet, and to provide a basis for determination of the recommended dose (RP2D) for Phase II clinical trials.', 'timeFrame': 'Single dose to the end of Cycle 1 (each cycle is 21 days)'}, {'measure': 'Number of subjects with adverse events (AEs) and serious adverse events (SAEs)', 'description': 'AEs and SAEs will be characterized by type, seriousness, relationship to study treatment, severity (as graded by National Cancer Institute Common Terminology Criteria for Adverse Events \\[NCI CTCAE\\] version 5.0) and timing.\n\nFGF19 or FGFR4 positive advanced primary HCC or other advanced solid tumors.', 'timeFrame': 'From screening (Day -28 to Day -1) through up to 12 months or until disease progression'}]","[{'measure': 'Pharmacokinetic Assessments: Peak Plasma Concentration (Cmax)', 'description': 'Blood samples will be collected for PK analyses', 'timeFrame': 'Day 1, Day 8, Day 15 and at the end of Cycle 1 (each cycle is 21 days)'}, {'measure': 'Pharmacokinetic Assessments: Time to Peak Concentration (Tmax)', 'description': 'Blood samples will be collected for PK analyses', 'timeFrame': 'Day 1, Day 8, Day 15 and at the end of Cycle 1 (each cycle is 21 days)'}, {'measure': 'Pharmacokinetic Assessments: Area under the plasma concentration-time curve (AUC)', 'description': 'Blood samples will be collected for PK analyses', 'timeFrame': 'Day 1, Day 8, Day 15 and at the end of Cycle 1 (each cycle is 21 days)'}, {'measure': 'Pharmacokinetic Assessments: Elimination half-life (t½)', 'description': 'Blood samples will be collected for PK analyses', 'timeFrame': 'Day 1, Day 8, Day 15 and at the end of Cycle 1 (each cycle is 21 days)'}, {'measure': 'Objective response rate (ORR)', 'description': 'Tumor response measured by radiologic imaging techniques at baseline and throughout the study.', 'timeFrame': 'From date of screening until the date of first documented progression or date of death from any cause, whichever came first, assessed up to 24 months'}, {'measure': 'Duration of response (DOR)', 'description': 'Tumor response measured by radiologic imaging techniques at baseline and throughout the study.', 'timeFrame': 'From date of screening until the date of first documented progression or date of death from any cause, whichever came first, assessed up to 24 months'}, {'measure': 'Disease control rate (DCR)', 'description': 'Tumor response measured by radiologic imaging techniques at baseline and throughout the study.', 'timeFrame': 'From date of screening until the date of first documented progression or date of death from any cause, whichever came first, assessed up to 24 months'}, {'measure': 'Progression-free survival (PFS)', 'description': 'Tumor response measured by radiologic imaging techniques at baseline and throughout the study.', 'timeFrame': 'From date of screening until the date of first documented progression or date of death from any cause, whichever came first, assessed up to 24 months'}]",2022-12-29,2025-07,2024-02-14,RECRUITING,,False,"BrodenBio Co., Ltd.",INDUSTRY,[],"[{'facility': 'Nanfang Hospital', 'status': 'RECRUITING', 'city': 'Guangzhou', 'state': 'Guangdong', 'country': 'China', 'contacts': [{'name': 'Yabing Guo, MD', 'role': 'CONTACT', 'email': 'gyabing@126.com'}], 'geoPoint': {'lat': 23.11667, 'lon': 113.25}}, {'facility': 'Henan Cancer Hospital', 'status': 'RECRUITING', 'city': 'Zhengzhou', 'state': 'Henan', 'country': 'China', 'contacts': [{'name': 'Suxia Luo, MD', 'role': 'CONTACT', 'email': 'luosmrm@163.com'}], 'geoPoint': {'lat': 34.75778, 'lon': 113.64861}}]",2025-09-01T07:32:00.968539,v2
+NCT05145608,Comparative Bioavailability Study of Lamotrigine ER Tablets USP 50 mg,Lamotrigine ER tablet 50mg,['Lamotrigine ER tablet 50mg'],,[],['PHASE1'],PHASE1,INTERVENTIONAL,RANDOMIZED,CROSSOVER,,OTHER,22,ACTUAL,"Inclusion Criteria:
+
+1. Availability for the entire study period
+2. Motivated volunteer and absence of intellectual problems likely to limit the validity of consent to participate in the study or the compliance with protocol requirements; ability to cooperate adequately; ability to understand and observe the instructions of the physician or designee
+3. Male or female volunteer
+4. A female volunteer must meet one of the following criteria:
+
+   1. Participant is of childbearing potential and agrees to use one of the accepted contraceptive regimens from at least 28 days prior to the first administration of the study drug, during the study and for at least 30 days after the last dose of the study drug. An acceptable method of contraception includes one of the following:
+
+      * Abstinence from heterosexual intercourse
+      * Intrauterine device (without hormones)
+      * Condom with intra-vaginally applied spermicide or
+   2. Participant is of non-childbearing potential, defined as surgically sterile (i.e. has undergone complete hysterectomy, bilateral oophorectomy, or tubal ligation) or in a menopausal state (at least 1 year without menses)
+5. Volunteer aged of at least 18 years to 54 years of age, inclusively
+6. Volunteer with a BMI within 22.00 to 30.00 kg/m2, inclusively
+7. Minimum body weight of 60 kg
+8. Non- or ex-smokers; an ex-smoker being defined as someone who completely stopped smoking for at least 6 months before day 1 of this study
+9. Clinical laboratory values within the laboratory's stated normal range; if not within this range, must be without any clinical significance
+10. Have no clinically significant diseases captured in the medical history or evidence of clinically significant findings on physical examination and/or clinical laboratory evaluations (hematology, general biochemistry, ECG and urinalysis)
+11. Willingness to adhere to the protocol requirements as evidenced by the informed consent form (ICF) duly read, signed and dated by the volunteer The informed consent form must be signed by all volunteers prior to their participation in the study.
+
+Exclusion Criteria:
+
+1. Difficulty donating blood
+2. History of difficulty in swallowing or of any gastrointestinal disease which could affect drug absorption
+3. Volunteer who is associated to Algorithme Pharma (staff member or immediate family of a staff member)
+4. Females who are pregnant or are lactating
+5. History of significant hypersensitivity to lamotrigine or any related products (including excipients of the formulations) as well as severe hypersensitivity reactions (like angioedema) to any drugs
+6. History of any prior allergic drug rash
+7. Presence of significant gastrointestinal, liver or kidney disease, or any other conditions known to interfere with the absorption, distribution, metabolism or excretion of drugs or known to potentiate or predispose to undesired effects
+8. History of significant gastrointestinal, liver or kidney disease that may affect drug bioavailability
+9. Presence of significant cardiovascular, pulmonary, hematologic, neurological, psychiatric, endocrine, immunologic or dermatologic disease
+10. Showing suicidal tendency as per the Columbia Suicide Severity Rating Scale (C-SSRS) administered at screening
+11. Presence of out-of-range cardiac interval (PR \< 110 msec, PR \> 220 msec, QRS \< 60 msec, QRS \>119 msec and QTc \> 450 msec for males and \> 460 msec for females) on the screening ECG or other clinically significant ECG abnormalities
+12. Known presence of rare hereditary problems of galactose and /or lactose intolerance, lactase deficiency or glucose-galactose malabsorption
+13. Maintenance therapy with any drug or significant history of drug dependency or alcohol abuse (\> 3 units of alcohol per day, intake of excessive alcohol, acute or chronic)
+14. Any clinically significant illness in the previous 28 days before day 1 of this study
+15. Use of any enzyme-modifying drugs, including strong inhibitors of cytochrome P450 (CYP) enzymes (such as cimetidine, fluoxetine, quinidine, erythromycin, ciprofloxacin, fluconazole, ketoconazole, diltiazem and HIV antivirals) and strong inducers of CYP enzymes (such as barbiturates, carbamazepine, glucocorticoids, phenytoin, rifampin and St John's Wort), in the previous 28 days before day 1 of this study
+16. Any history of tuberculosis and/or prophylaxis for tuberculosis
+17. Positive screening of alcohol and/or drugs of abuse
+18. Positive results to HIV Ag/Ab Combo, Hepatitis B surface Antigen (HBsAG (B) (hepatitis B)) or Hepatitis C Virus (HCV (C)) tests
+19. Females who are pregnant according to a positive serum pregnancy test
+20. Volunteers who took an Investigational Product (in another clinical trial) in the previous 28 days before day 1 of this study
+21. Volunteers who took an Investigational Product (in another clinical trial) with a long half-life (≥120 hours) in the previous 3 months before day 1 of this study
+22. Volunteers who took lamotrigine in the previous 28 days before day 1 of this study
+23. Females who use the following systemic contraceptives: oral, patch or vaginal ring, in the 28 days before day 1 of this study
+24. Females who use hormone replacement therapy in the 28 days before day 1 of this study
+25. Females who use the following systemic contraceptives: injections or implant, or hormone-releasing intrauterine device in the previous 13 weeks before day 1 of this study
+26. Volunteers who donated 50 mL or more of blood in the previous 28 days before day 1 of this study
+27. Donation of 500 mL or more of blood (Canadian Blood Services, Hema-Quebec, clinical studies, etc.) in the previous 56 days before day 1 of this study",18 Years,54 Years,ALL,True,"[{'measure': 'Cmax', 'description': 'Peak Plasma Concentration (Cmax)', 'timeFrame': 'Up to 192 hours'}, {'measure': 'AUC0-T', 'description': 'Area under the plasma concentration versus time curve (AUC)', 'timeFrame': 'Up to 192 hours'}, {'measure': 'AUC0-∞', 'description': 'Area under the plasma concentration versus time curve (AUC)', 'timeFrame': 'Up to 192 hours'}]",[],2018-01-10,2018-02-21,2021-12-06,COMPLETED,,False,Alembic Pharmaceuticals Ltd.,INDUSTRY,[],"[{'facility': 'Algorithme Pharma', 'city': 'Mount Royal', 'state': 'Quebec', 'zip': 'H3P 3P1', 'country': 'Canada', 'geoPoint': {'lat': 45.51675, 'lon': -73.64918}}]",2025-09-01T07:32:00.968549,v2
+NCT05728008,Retrospective Observational Comparison Study Between Ustekinumab and Tofacitinib as Third Line Therapy in a Multicenter Cohort of Patients With Refractory Ulcerative Colitis.,Ustekinumab,"['Ustekinumab', 'Tofacitinib']",,[],[],,OBSERVATIONAL,,,,,100,ACTUAL,"Inclusion Criteria:
+
+* Age ≥18 years;
+* Established diagnosis of UC, defined according to ECCO standard of care
+* Documented failure to both anti-TNFα (irrespectively of the number) and vedolizumab
+* Ustekinumab or tofacitinib as third-line therapy
+* Last follow-up at 24 +/-4 weeks from the start of Ustekinumab or tofacitinib
+
+Exclusion Criteria:
+
+• Patients with unclassified colitis or Crohn disease",18 Years,,ALL,,"[{'measure': 'Determine which drug between ustekinumab and tofacitinib as a third-line treatment, in cases refractory to both anti-TNFα and vedolizumab, is the best option to achieve disease control in terms of hospitalization rate, surgery rate, drug optimization.', 'description': 'The aim of this retrospective multicentric observational study is to determine which between ustekinumab (anti-IL12-23) and tofacitinib (pan JAK inhibitor) as third-line therapy in UC cases refractory to both anti-TNFα and vedolizumab (inhibitor of α4β7 integrin) is the best compound to achieve disease control.The primary goal is to compare the hospitalization rate, surgery rate, drug optimization rate and the drug discontinuation rate, as a composite primary objective, in patients on either of the two drugs.\n\nThe induction phase of Ustekinumab consists of approximately 6mg/kg intravenous dose administration. After the induction, the maintenance phase consists of a 90mg subcutaneous dose every 8 weeks. The induction phase of Tofacitinib consists of 10mg twice daily for 8 to 16 weeks. After the induction, the maintenance phase consists of 5mg x twice daily.', 'timeFrame': '2 months'}]","[{'measure': 'IBD outcomes', 'description': '* hospitalization rate (e.g. hospitalization, admission to intensive care unit)\n* surgery rate (type of surgery, occurrence colorectal dysplasia and/or colorectal cancer)\n* drug optimization rate (start of systemic steroids, immunosuppressants, or biologics, dose optimization, interval optimization), switch to another drug, or swap to another drug\n* drug discontinuation rate alone (need to switch or to swap to another drug)', 'timeFrame': '2 months'}]",2022-04-05,2022-07-05,2023-02-14,COMPLETED,,False,IRCCS San Raffaele,OTHER,[],"[{'facility': 'Mariangela Allocca', 'city': 'Milan', 'zip': '20132', 'country': 'Italy', 'geoPoint': {'lat': 42.78235, 'lon': 12.59836}}]",2025-09-01T07:32:00.968557,v2
+NCT06265025,"GM103 Intratumoral Injection in Patients With Locally Advanced, Unresectable, Refractory and/or Metastatic Solid Tumors",GM103 (Part A),"['GM103 (Part A)', 'GM103 (Part B)', 'GM103 and Pembrolizumab (Part C)']",,[],"['PHASE1', 'PHASE2']",PHASE1,INTERVENTIONAL,NON_RANDOMIZED,SEQUENTIAL,,TREATMENT,125,ESTIMATED,"Inclusion Criteria:
+
+1. Patient must be 18 years of age or over, at the time of signing the informed consent.
+2. Have a diagnosis of locally advanced, unresectable, refractory and/or metastatic solid tumors
+3. Have a tumor that is accessible and is willing to consent to tumor biopsies during the study.
+4. Have at least one measurable site of disease according to RECIST 1.1 criteria; The lesions should be either previously non irradiated or progressive lesions after irradiation, that can be accurately measured at baseline (for measurable lesions) with computed tomography (CT) or magnetic resonance imaging (MRI).
+5. Part A, B and C: Have at least one intratumorally injectable lesion (measurable and/or non-measurable based on RECIST 1.1), that can be accurately measured at baseline (for measurable lesions) with computed tomography (CT) or magnetic resonance imaging (MRI) or positron emission tomography-computed tomography (PET-CT); or clinical examination and which is suitable for repeated measurement.
+6. Part B and C (only for dose expansion cohort): Have paired pre- and on treatment tumor biopsies for patients with metastases that are safely accessible as determined by the investigator.
+7. Patients with brain metastasis must have stable disease and must be neurologically asymptomatic and not requiring corticosteroid treatment.
+8. Eastern Cooperative Oncology Group (ECOG) performance status 0 or 1.
+9. Have a predicted life expectancy of 12 weeks or more.
+10. Able to comply with study procedures in the Investigator's opinion.
+11. Adequate organ function determined within 4 weeks prior to screening
+12. Patient is male or female.
+13. Contraceptive use by women must be consistent with local regulations regarding the methods of contraception for those participating in clinical studies.
+14. Patient is capable of giving signed informed consent.
+
+Exclusion Criteria:
+
+1. Known history or eiciency virus \[HIV\]/acquired immunodeficiency syndrome \[AIDS\]) and/or medication.
+2. Patients with a condition requiring systemic treatment with either corticosteroids (\>10 mg daily prednisolone equivalent) or other immunosuppressive medications within 14 days of the first dose of study treatment.
+3. Patients with a history of, or active, known or suspected auto-immune disease or a syndrome that requires systemic or immunosuppressive agents.
+4. Active infections requiring antibiotics, physician monitoring or recurrent fevers (\>38.0 ̊C) associated with a clinical diagnosis of active infection.
+5. Patient who has a history of seizures, central nervous system abnormalities, mental disorders, and heart disease.
+6. Patient who has a history of pleural effusion, pulmonary embolism, and intestinal obstruction.
+7. Treatment with any systemic anticancer therapies for locally advanced or metastatic within 4 weeks or 6 half-lives of prior anticancer therapy, whichever is shorter, prior to initiation of study treatment.
+8. Previous treated with GM103 or other oncolytic viruses.
+9. Radiation therapy within 2 weeks prior to enrollment.
+10. Use of the antiviral agents within 7 days prior to the first dose of study treatment; or pegylated interferon in the 14 days before the first dose of study treatment
+11. Patients who have received a live vaccine within 30 days of study enrollment.
+12. Any serious or uncontrolled medical disorder that, in the opinion of the Investigator or the Medical Monitor, may increase the risk associated with study participation or study treatment administration, impair the ability of the patient to receive protocol therapy or interfere with the interpretation of study results.
+13. Participation of any other clinical trials within 4 weeks prior to first administration of study treatment.
+14. Administration of an investigational drug in the 28 days before the first dose of study treatment.
+15. Has an ejection fraction (EF) of 50% or less, based on a multigated acquisition (MUGA) scan or echocardiogram (ECHO).
+16. Major surgery within 4 weeks prior to enrollment.
+17. Inability or unwillingness to follow study procedures including drug administration.
+18. Any serious medical condition or abnormality in clinical laboratory tests",18 Years,,ALL,False,"[{'measure': 'Percentage of patients with DLTs by cohorts', 'description': 'To determine the MTD and RP2D based on safety and tolerability of GM103 as monotherapy (Parts A, B).', 'timeFrame': 'during the first 28 days of treatment'}, {'measure': 'Percentage of patients with DLTs', 'description': 'To determine the MTD and RP2D based on safety and tolerability of GM103 in combination with pembrolizumab (Part C)', 'timeFrame': 'during the first 21 days of treatment'}, {'measure': 'Incidence of AEs, AESIs, SAEs, AEs leading to discontinuation, and AEs resulting in death', 'description': 'To evaluate overall safety profile of GM103 as monotherapy (Parts A, B) and in combination with pembrolizumab (Part C)', 'timeFrame': 'through study completion, and average 1 year'}]","[{'measure': 'ORR', 'description': '* To assess preliminary anti-tumor efficacy of GM103 at the RP2D, as monotherapy (Parts A and B)\n* To assess preliminary anti-tumor efficacy of GM103 at the RP2D, in combination with pembrolizumab (Part C)', 'timeFrame': 'through study completion, and average 1 year'}, {'measure': 'DCR defined as the proportion of patients whose BOR was CR, PR and SD', 'description': '* To assess preliminary anti-tumor efficacy of GM103 at the RP2D, as monotherapy (Parts A and B)\n* To assess preliminary anti-tumor efficacy of GM103 at the RP2D, in combination with pembrolizumab (Part C)', 'timeFrame': 'through study completion, an average of 1 year'}, {'measure': 'Median PFS defined as the time from the date of the first administration of study drug to the date of disease progression or death', 'description': '* To assess preliminary anti-tumor efficacy of GM103 at the RP2D, as monotherapy (Parts A and B)\n* To assess preliminary anti-tumor efficacy of GM103 at the RP2D, in combination with pembrolizumab (Part C)', 'timeFrame': 'through study completion, an average of 1 year'}, {'measure': 'Incidence of GM103 detection', 'description': '* To assess preliminary anti-tumor efficacy of GM103 at the RP2D, as monotherapy (Parts A and B)\n* To assess preliminary anti-tumor efficacy of GM103 at the RP2D, in combination with pembrolizumab (Part C)', 'timeFrame': 'every cycle, through study completion, an average of 1 year [up to 12 treatment cycles, Part A&B: each cycle will consist of 14 days(2 weeks) / Part C: each cycle will consist of 21 days(3 weeks)]'}, {'measure': 'Changes in the level of anti-adenovirus antibodies(ADA) in blood compared to baseline (ADA in genome copies/mL using qPCR)', 'description': '* To assess preliminary anti-tumor efficacy of GM103 at the RP2D, as monotherapy (Parts A and B)\n* To assess preliminary anti-tumor efficacy of GM103 at the RP2D, in combination with pembrolizumab (Part C)', 'timeFrame': 'every 2 cycles after the first cycle, through study completion, an average of 1 year [up to 12 treatment cycles, Part A&B: each cycle will consist of 14 days(2 weeks) / Part C: each cycle will consist of 21 days(3 weeks)]'}]",2024-02-20,2028-10-30,2024-02-20,RECRUITING,,False,"GeneMedicine Co., Ltd.",INDUSTRY,[],"[{'facility': 'National Cancer Center', 'status': 'NOT_YET_RECRUITING', 'city': 'Goyang-si', 'state': 'Gyeonggi-do', 'zip': '10408', 'country': 'South Korea', 'contacts': [{'name': 'WY Choi', 'role': 'CONTACT'}], 'geoPoint': {'lat': 37.65639, 'lon': 126.835}}, {'facility': 'Korea University Anam Hospital', 'status': 'NOT_YET_RECRUITING', 'city': 'Seoul', 'zip': '02841', 'country': 'South Korea', 'contacts': [{'name': 'SH Lee', 'role': 'CONTACT'}], 'geoPoint': {'lat': 37.566, 'lon': 126.9784}}, {'facility': 'Hanyang University Seoul Hospital', 'status': 'NOT_YET_RECRUITING', 'city': 'Seoul', 'zip': '04763', 'country': 'South Korea', 'contacts': [{'name': 'MS Chung', 'role': 'CONTACT'}], 'geoPoint': {'lat': 37.566, 'lon': 126.9784}}, {'facility': 'Severance Hospital, Yonsei University Health System', 'status': 'RECRUITING', 'city': 'Seoul', 'country': 'South Korea', 'contacts': [{'name': 'JY Lee', 'role': 'CONTACT'}], 'geoPoint': {'lat': 37.566, 'lon': 126.9784}}]",2025-09-01T07:32:00.968565,v2
+NCT03117725,Melatonin Study Between Diminished and Normal Responder in IVF,Melatonin adminstration,"['Melatonin adminstration', 'placebo administration']",,[],['NA'],NA,INTERVENTIONAL,RANDOMIZED,CROSSOVER,,SUPPORTIVE_CARE,100,ESTIMATED,"Inclusion Criteria:
+
+1. Infertility patients visiting Bundang CHA hospital between the age of 20 to 40.
+2. Currently, not being treated for any gynecological or medical diseases.
+
+Exclusion Criteria:
+
+1. Current untreated pelvic pathology (moderate-to-severe endometriosis, submucosal uterine fibroids/polyps assessed by the treating specialist to affect fertility, pelvic inflammatory disease,uterine malformations, and hydrosalpinx.)
+2. Currently enrolled in another interventional clinical trial.
+3. Concurrent use of other adjuvant therapies (e.g.Chinese herbs, acupuncture).
+4. Autoimmune disorders.
+5. Undergoing preimplantation genetic diagnosis.
+6. Concurrent use of any of the following medications (Fluvoxamine,Cimetidine, Quinolones, Carbamazepine, rifampicin,Zolpidem, zopiclone, and other non-benzodiazepine hypnotic, other CYP1A2 inducers.
+7. Genetic disorders regarding galactose intolerance, lactase deficiency, glucose-galactose malabsorption
+8. Inability to comply with trial protocol.",20 Years,40 Years,FEMALE,True,"[{'measure': 'IVF outcome - oocyte quality', 'description': 'Evaluate oocyte quality on morphological standard as following category- Mature oocyte, Intermediate oocyte, atretic oocyte, post mature oocyte', 'timeFrame': '3 days after oocyte retrieval'}, {'measure': 'IVF outcome - embryo quality', 'description': 'grade the embryos\\& blastocysts according to the Lucinda Veeck \\& Gardner', 'timeFrame': '3 to 5 days after oocyte retrieval'}, {'measure': 'IVF outcome -biochemical pregnancy rate', 'description': 'serum human chorionic gonadotropin level\\>10 IU', 'timeFrame': 'on day 12~14 after embryo transfer'}, {'measure': 'IVF outcome - clinical pregnancy rate', 'description': 'presence of G-sac in the uterine cavity', 'timeFrame': 'at 6-8 weeks of gestation'}]","[{'measure': 'acquired oocyte No', 'description': 'number', 'timeFrame': '20weeks'}, {'measure': 'fertilization rate', 'description': 'ratio of no. of fertilized egg/ no of total retrieved eggs', 'timeFrame': '20weeks'}, {'measure': 'Comparing Pittsburgh sleep quality index', 'description': 'questionaires to evaluate the participants quality of the sleep. cut off : 13 points This questionaire is to be asked to the participants twice, before and after the administration of the drug', 'timeFrame': '20weeks'}, {'measure': 'marker(melatonin level, receptor, 8-OHdg) in serum, follicular fluid and endometrium during IVF', 'description': ':pg/ml units are used', 'timeFrame': '20weeks'}]",2017-05-12,2019-10-31,2017-04-18,UNKNOWN,,False,Bundang CHA Hospital,OTHER,[],"[{'facility': 'Bundang CHA medical center', 'city': 'Seongnam-si', 'state': 'Gyeonggi-do', 'zip': '13496', 'country': 'South Korea', 'geoPoint': {'lat': 37.43861, 'lon': 127.13778}}]",2025-09-01T07:32:00.968572,v2
+NCT00862225,MOA Study of Ze 339 in Seasonal Allergic Rhinitis,Placebo,"['Placebo', 'Desloratadin', 'IG-RD-001 / Ze 339']",,[],['PHASE2'],PHASE2,INTERVENTIONAL,RANDOMIZED,CROSSOVER,,TREATMENT,18,ACTUAL,"Inclusion Criteria:
+
+* Allergic rhinitis since at least 2 years
+* Age: = \> 18 years
+* Consent in accordance with the AMG (=German Drug Law)
+* Positive skin test, skin prick test or positive RAST for grasses The skin prick test is positive if the wheal is \>= 3 mm greater than control; a skin test is positive if the wheal is \>= 7 mm greater than control
+* Women of childbearing potential have to use a highly effective method of birth control (according CPMP/ICH/286/95 Note 3) during the duration of the study. A highly effective method of birth control is defined as those which result in a low failure rate (i.e. less than 1% per year) when used consistently and correctly such as implants, injectables, combined oral contraceptives, some IUDs, sexual abstinence or vasectomised partner.
+
+Exclusion Criteria:
+
+* Past or current psychological disease or disorder which can impair the study participant's ability to understand the study requirements, t take part in the study or give consent after briefing
+* Past or current alcohol or medication dependency or abuse
+* Bronchial asthma (FEV \< 80 %)
+* Glaucoma, cataract or ocular herpes simplex
+* Clinically relevant deviations from normal laboratory parameters (if known)
+* Antihistamines with a long-term effect
+* Malignant diseases, including in the patient's case history
+* Parasites
+* Study participants who are taking part in another study or took an investigational product during the last 4 weeks before the start of treatment
+* Progressive systemic diseases such as tuberculosis, leukoses, collagenoses, multiple sclerosis, Aids, HIV infection and other autoimmune diseases
+* Other types of rhinitis with different causes, acute or chronic sinusitis
+* Pregnancy or lactation
+* Serious internal diseases, e.g. serious decompensated diseases of the heart, liver, kidneys or diabetes mellitus
+* Patients with rarely occurring hereditary problems galactose-intolerance, Lapp-lactase-deficiency or glucose-galactose-malabsorption
+* Pre-existing liver damage
+* The use of non-steroidal antirheumatic agents (NSAR)
+* Hypersensitivity towards one of the ingredients in the investigational product
+* Not adhering to the following periods of abstention before the nasal provocation test: 3 days for DNCG, nedocromil, nasal and oral antihistamines, and tricyclic psychotropic drugs, 1 months systemic treatment with glucocorticoids, 14 days for nasal and topical corticosteroids, 1 week for antihistamines, and 1 day for α-adrenergic drugs. The use of ACE inhibitors or ß-blockers
+* Previous organ transplants",18 Years,,ALL,False,"[{'measure': 'The time-dependent development of the nasal obstruction, measured via rhinomanometry before and after the allergen provocation, will be the effect parameter.', 'timeFrame': '0-24 hours post nasal provocation test'}]","[{'measure': 'Clinical symptom score (rhinorrhoea, nasal congestion, nasal itching and sneezing), assessment by the investigator (nasal secretion, irritation, occurrence of systemic symptoms), mediators in the serum, nasal secretion, nasal curettage and biopsy', 'timeFrame': '0-24h post nasal provocation test'}]",2008-01,2008-12,2009-03-16,COMPLETED,,False,Max Zeller Soehne AG,INDUSTRY,[],"[{'facility': 'Dept. of Otorhinolaryngology and Head and Neck Surgery', 'city': 'Düsseldorf', 'country': 'Germany', 'geoPoint': {'lat': 51.22172, 'lon': 6.77616}}]",2025-09-01T07:32:00.968578,v2
+NCT01132625,Dose Escalation Study of AUY922 in Advanced Solid Malignancies in Japan,AUY922,['AUY922'],,[],['PHASE1'],PHASE1,INTERVENTIONAL,NON_RANDOMIZED,SINGLE_GROUP,,TREATMENT,37,ACTUAL,"Inclusion Criteria:
+
+* Patients with advanced malignant solid tumors
+* ECOG Performance Status of ≤ 2
+* Patients must have the following laboratory values:
+* Absolute Neutrophil Count (ANC) ≥ 1.5 x 109/L, Hemoglobin (Hgb) ≥ 8.5 g/dl, Platelets (plt) ≥ 100 x 109/L
+* Potassium, Calcium, Magnesium, Phosphorus within normal limits or correctable with supplements
+* AST/SGOT and ALT/SGPT ≤ 2.5 x Upper Limit of Normal (ULN)
+* Serum bilirubin ≤ 1.5 x ULN, Serum albumin \> 2.5g/dl, Serum creatinine≤ 1.5 x ULN or 24-hour clearance ≥ 50 ml/min
+* Able to sign informed consent and to comply with the protocol
+
+Exclusion Criteria:
+
+* Patients with brain metastasis.
+* Prior treatment with any HSP90 or HDAC inhibitor compound.
+* Treatment with therapeutic doses of coumarin anticoagulants.
+* Pregnant and lactating women.
+* Severe and/or uncontrolled acute or chronic liver disease
+* Severe and/or uncontrolled acute or chronic renal disease
+* Chronically significant heart disease
+* History (or family history) of long QT syndrome. QTc ≥ 450 msec on screening ECG, ischemic heart disease, heart fail, ECG abnormalities, atrial fibrillation, atrial flutter or ventricular arrhythmias including ventricular tachycardia or Torsades de Pointes.
+* Patients who are currently receiving treatment with any medication which has a relative risk or prolonging the QTcF interval or inducing Torsades de Pointes
+* Patients with known disorders due to a deficiency in bilirubin glucuronidation (e.g Gilbert's syndrome).
+
+Other protocol-defined inclusion/exclusion criteria may apply",20 Years,,ALL,False,"[{'measure': 'establish maximum tolerate dose (safety and tolerability)', 'timeFrame': 'about 3 years'}]","[{'measure': 'Safety assessed by type, frequency and severity of adverse events', 'timeFrame': 'about 4 years'}, {'measure': 'Efficacy assessed by RECIST', 'timeFrame': 'about 4 years'}, {'measure': 'Pharmacokinetic assessed by Cmax, Tmax, AUC', 'timeFrame': 'about 3 years'}, {'measure': 'Pharmacodynamic assessed by blood and tumor biomarkers at baseline and post AUY922', 'timeFrame': 'about 4 years'}]",2008-11,2012-05,2010-05-28,COMPLETED,,False,Novartis Pharmaceuticals,INDUSTRY,[],"[{'facility': 'Novartis Investigative Site', 'city': 'Kashiwa', 'state': 'Chiba', 'zip': '277-8577', 'country': 'Japan', 'geoPoint': {'lat': 35.86224, 'lon': 139.97732}}, {'facility': 'Novartis Investigative Site', 'city': 'Sunto-gun', 'state': 'Shizuoka', 'zip': '411-8777', 'country': 'Japan'}]",2025-09-01T07:32:00.968585,v2
+NCT04097925,Doravirine Concentrations and Antiviral Activity in Genital Fluids in HIV-1 Infected Individuals,Doravirine,"['Doravirine', 'Descovy']",,[],['PHASE2'],PHASE2,INTERVENTIONAL,NA,SINGLE_GROUP,,TREATMENT,30,ACTUAL,"Inclusion Criteria:
+
+1. Asymptomatic, HIV-1 infected individuals ≥ 18 years of age.
+2. Be on a stable ART consisting of TAF/FTC, tenofovir disoproxil fumarate/emtricitabine or abacavir/lamivudine, plus an non-nucleoside reverse transcriptase inhibitor, a boosted protease inhibitor or an integrase inhibitor, continuously for at least 3 consecutive months preceding the screening visit.
+3. Plasma HIV-1 RNA \<40 copies/mL for at least 6 months at the Screening visit.
+4. Signed and dated written informed consent prior to inclusion.
+5. Female Subjects of Childbearing Potential must agree to utilize a highly effective method of contraception during heterosexual intercourse from the screening visit throughout the duration of the study.
+
+Exclusion Criteria:
+
+1. Severe hepatic impairment (Child-Pugh Class C)
+2. Ongoing malignancy
+3. Active opportunistic infection
+4. Resistance to any of the antiretroviral (ARV) included in the study or history of virologic failure with risk of resistance selection to any of the study drugs.
+5. Any verified Grade 4 laboratory abnormality
+6. ALT or AST ≥ 3xULN and/or bilirubin ≥ 1.5xULN
+7. Severe renal impairment (Estimated creatinine filtration rate \<50mL/min).
+8. Females who are pregnant (as confirmed by positive serum pregnancy test) or breastfeeding.",18 Years,,ALL,False,"[{'measure': 'Concentration of Doravirine in Seminal Plasma Fluid', 'description': 'Concentration of Doravirine in seminal plasma fluid in HIV-1 infected male individuals', 'timeFrame': '8 weeks after switching (from baseline visit) to Doravirine plus TAF/FTC'}, {'measure': 'Concentration of Doravirine in Cervicovaginal Fluid', 'description': 'Concentration of Doravirine in cervicovaginal fluid in HIV-1 infected female individuals', 'timeFrame': '8 weeks after switching to Doravirine plus TAF/FTC'}, {'measure': 'Number of Participants With HIV-1 RNA Seminal Plasma <40 Copies/mL', 'description': 'Number of participants with HIV-1 RNA seminal plasma \\<40 Copies / mL of HIV measured by real-Time Reverse Transcriptase Polymerase Chain Reaction Amplification', 'timeFrame': '8 weeks after switching (from baseline visit) to Doravirine plus TAF/FTC'}, {'measure': 'Quantification of Participants With HIV-1 RNA <40 Copies / mL in Cervicovaginal Fluid', 'description': 'Number of participants with HIV-1 RNA cervicovaginal fluid\\<40 Copies / mL of HIV measured by real-Time Reverse Transcriptase Polymerase Chain Reaction Amplification', 'timeFrame': '8 weeks after switching (from baseline visit) to Doravirine plus TAF/FTC'}]",[],2020-02-18,2020-08-24,2019-09-20,COMPLETED,,False,"Fundación FLS de Lucha Contra el Sida, las Enfermedades Infecciosas y la Promoción de la Salud y la Ciencia",OTHER,"[""Institut d'Investigació Biomèdica de Bellvitge"", 'Hospital Universitari de Bellvitge']","[{'facility': 'Hospital Universitari de Bellvitge', 'city': ""L'Hospitalet de Llobregat"", 'state': 'Barcelona', 'zip': '08907', 'country': 'Spain', 'geoPoint': {'lat': 41.35967, 'lon': 2.10028}}]",2025-09-01T07:32:00.968595,v2
+NCT00745225,Peroxisome Proliferator-Activated Receptor-Gamma Activation in Peritoneal Dialysis Patients,Pioglitazone,"['Pioglitazone', 'placebo comparator']",,[],['PHASE4'],PHASE4,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,160,ACTUAL,"Inclusion Criteria:
+
+* Both prevalent patients or patients newly started on continuous peritoneal dialysis, with or without diabetes mellitus will be considered eligible for study entry.
+* For patients newly started on chronic peritoneal dialysis, they will be suitable for recruitment into the study after one month on peritoneal dialysis.
+* Patients who provide informed consent for the study
+
+Exclusion Criteria:
+
+* Patients with underlying active malignancy
+* Patients with chronic liver disease or liver cirrhosis
+* Patients with active infections
+* Patients with other chronic active inflammatory disease such as systemic lupus erythematosus, rheumatoid arthritis
+* Patients who refuse study participation
+* Patients with underlying congenital heart disease or rheumatic heart disease
+* Patients with poor general condition
+* Patients with plans for living related kidney transplant within 2 years
+* Female patients with pregnancy
+* Patients with history of recurrent hypoglycemia
+* Patients with Class III and IV congestive heart failure
+* Patients already receiving glitazones treatment at the screening visit",20 Years,75 Years,ALL,False,"[{'measure': 'Change in carotid intima-media thickness', 'description': 'Change in carotid intima-media thickness', 'timeFrame': 'over 48 weeks'}, {'measure': 'change in flow mediated dilatation (marker of endothelial function)', 'description': 'change in flow mediated dilatation (marker of endothelial function)', 'timeFrame': 'over 48 weeks'}]","[{'measure': 'change in aortic pulse wave velocity', 'description': 'change in aortic pulse wave velocity', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in augmentation index-heart rate adjusted', 'description': 'change in augmentation index-heart rate adjusted', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in nitroglycerin-mediated dilatation', 'description': 'change in nitroglycerin-mediated dilatation', 'timeFrame': 'over 48 weeks'}, {'measure': 'change in coronary artery calcium score', 'description': 'change in coronary artery calcium score', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in heart valves calcium score', 'description': 'change in heart valves calcium score', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in carotid artery calcium score', 'description': 'change in carotid artery calcium score', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in abdominal visceral fat', 'description': 'change in abdominal visceral fat', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in subcutaneous fat', 'description': 'change in subcutaneous fat', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in blood pressure', 'description': 'change in blood pressure', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in C-reactive protein', 'description': 'change in C-reactive protein', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in residual kidney function', 'description': 'change in residual kidney function', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in HOMA index (among those not on insulin)', 'description': 'Change in insulin resistance index', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in D/P creatinine ratio', 'description': 'Change in peritoneal solute transport parameter', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in peritoneal ultrafiltration with 2.5% during PET', 'description': 'Change in peritoneal ultrafiltration volume', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in handgrip strength', 'description': 'change in handgrip strength', 'timeFrame': 'over 96 weeks'}, {'measure': 'Change in cardiac biomarkers', 'description': 'change in cardiac biomarkers', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in insulin dose (among those on insulin)', 'description': 'change in insulin dose', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in endothelial progenitor cells', 'description': 'change in endothelial progenitor cells', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in central systolic blood pressure', 'description': 'change in central systolic blood pressure', 'timeFrame': 'over 96 weeks'}, {'measure': 'Change in central diastolic blood pressure', 'description': 'change in central diastolic blood pressure', 'timeFrame': 'over 96 weeks'}, {'measure': 'change in glycemic control (fasting glucose, and glycosylated hemoglobin)', 'description': 'change in glycemic control', 'timeFrame': 'over 96 weeks'}]",2006-02,2014-12,2008-09-03,COMPLETED,,False,The University of Hong Kong,OTHER,['Baxter Healthcare Corporation'],"[{'facility': 'Queen Mary Hospital, Tung Wah Hospital', 'city': 'Hong Kong', 'zip': '0000', 'country': 'Hong Kong', 'geoPoint': {'lat': 22.27832, 'lon': 114.17469}}]",2025-09-01T07:32:00.968606,v2
+NCT00032825,Ketoconazole Plus Docetaxel to Treat Prostate Cancer,Ketaconazole,"['Ketaconazole', 'Docetaxel']",,[],['PHASE1'],PHASE1,INTERVENTIONAL,,,,TREATMENT,674,ACTUAL,"* INCLUSION CRITERIA:
+
+Patients must have histopathological documentation of prostate cancer confirmed in the Pathology Department of the Clinical Center at the National Institutes of Health or the National Naval Medical Center prior to starting this study. Patients whose pathology specimens are no longer available may be enrolled in the trial, if the patient has a clinical course consistent with prostate cancer and pathologic documentation of the diagnosis.
+
+Patients must have metastatic progressive androgen-independent prostate cancer (progressive prostate cancer while continuing to receive hormonal ablation, such as that of an LHRH agonist) documented prior to entry. Progression must be documented by at least one of the following parameters:
+
+1. Two consecutively rising PSA levels, separated by at least one week, with at least one measurement that is 50% above the nadir reached after the last therapeutic maneuver (as long as the measurement is 5 ng/ml or greater); and/or,
+2. At least one new metastatic deposit on Tc-99 bone scintigraphy; and/or,
+
+Progression of soft tissue metastases as measured by appropriate modalities (i.e., imaging, palpation):
+
+1. Development of new area of malignant disease (measurable or non-measurable);
+2. Measurable disease progression by RECIST criteria;
+3. At least 4 weeks off of flutamide and 6 weeks off of bicultamide and nilutamide.
+
+Patients who have not undergone surgical castration must continue treatment with an LHRH agonist. If for some reason the LHRH agonist has been discontinued prior to entry on the study, then it should be reinstituted and disease progression must be documented.
+
+Patients must have a life expectancy of more than 3 months.
+
+Patients must have a performance status of 0 to 2 according to the ECOG criteria.
+
+Patients must have recovered from any acute toxicity related to prior therapy, including surgery.
+
+Hematological eligibility parameters (within 2 weeks before starting therapy):
+
+1. Granulocyte count greater than or equal to 1,500/mm(3)
+2. Platelet count greater than or equal to 100,000/mm(3)
+
+Biochemical eligibility parameters (within 2 weeks before starting therapy):
+
+1. If the creatinine is greater than 1.5 mg/dl, a 24 hour urine collection must be obtained, and measured creatinine clearance must be at least 40 mL/min.
+2. Hepatic function: Hepatic: Bilirubin less than 1.0 mg/dl, AST and ALT less than 2.5 times upper limit of normal. If the alkaline phosphatase is greater than 2.5 times the upper limit of normal, it must be fractionated and the hepatic alkaline phosphatase should be less than 2.5 times the upper limit of normal.
+
+Hormonal profile for patients with prostate cancer
+
+1\. All patients who have not undergone surgical castration must have a serum testosterone under 50 ng/ml and continue on their GnRh agonist.
+
+Patients must not have other active malignancies (within the past two years with the exception of non-melanoma skin cancers or carcinoma in situ of the bladder).
+
+Patients with a history of unstable or newly diagnosed angina pectoris, recent myocardial infarction (within 6 months of enrollment), New York Heart Assoc. class II-IV congestive heart failure are not eligible.
+
+Patients must be able to understand and sign an informed consent form.
+
+Patients must be willing to travel from their home to the NIH for follow-up visits.
+
+Patients must be greater than or equal to 18 years of age.
+
+Must be able to ingest oral medications to be eligible.
+
+EXCLUSION CRITERIA:
+
+Patients with brain metastases will not be eligible.
+
+Patients who have received strontium or samarium will not be eligible.
+
+HIV-positive patients receiving combination anti-retroviral therapy will be excluded because of possible pharmacokinetic interactions with ketoconazole, docetaxel or other agents administered during the study. In fact, ketoconazole has been found to increase the toxic effects of several protease inhibitors by affecting CYP3A4 activity.
+
+Patients on theophylline will be excluded.
+
+Patients who are receiving cisapride will be excluded.
+
+Patients who are receiving HMG-CoA inhibitors (lovastatin, atorvastatin, simvastatin, pravastatin and cerivastatin)
+
+Patients currently taking known inhibitors and/or inducers of CYP3A4; patients taking known substrates of CYP3A4 will be evaluated by the primary investigator.
+
+Patients who are receiving terfenadine, midazolam, triazolam, alprazolam, astemizole, loratadine, rifampin, isoniazid, dofetilide, pimozide, sirolimus or erythromycin will be excluded.
+
+Because gastric acidity is necessary for the dissolution and absorption of ketoconazole, concomitant administration of drugs which decrease gastric acid output or increase gastric pH (e.g., antacids, cimetidine, ranitidine, antimuscarinics, omeprazole, and lansoprazole) may decrease absorption and thus will be prohibited.
+
+Patients requiring warfarin will be excluded.",18 Years,,MALE,False,[],[],2002-03-19,2011-06-13,2002-04-04,COMPLETED,,False,National Cancer Institute (NCI),NIH,[],"[{'facility': 'National Institutes of Health Clinical Center, 9000 Rockville Pike', 'city': 'Bethesda', 'state': 'Maryland', 'zip': '20892', 'country': 'United States', 'geoPoint': {'lat': 38.98067, 'lon': -77.10026}}]",2025-09-01T07:32:00.968616,v2
+NCT02016625,Investigation of Potential Drug-drug Interactions Between Faldaprevir and the Immunosuppressant Drugs Cyclosporine or Tacrolimus,Faldaprevir,"['Faldaprevir', 'Faldaprevir', 'Cyclosporine', 'Tacrolimus']",,[],['PHASE1'],PHASE1,INTERVENTIONAL,NON_RANDOMIZED,SINGLE_GROUP,,TREATMENT,32,ACTUAL,"Inclusion criteria:
+
+* Healthy males or females subjects
+* Age 18 to 50 years (incl.)
+* Body mass index (BMI) 18.5 to 29.9 kg/m2 (incl.)
+* Signed and dated written informed consent prior to admission to the study
+
+Exclusion criteria:
+
+* Any finding in the medical examination (including blood pressure, pulse rate or ECG) deviating from normal and judged clinically relevant by the investigator.
+* Systolic blood pressure (BP) less than 100 mmHg and more than 140 mmHg.
+* Diastolic BP less than 60 mmHg and more than 90 mmHg.
+* Pulse rate (PR) less than 50 bpm and more than 90 bpm.
+* Any laboratory value outside the reference range that the investigator considers to be of clinical relevance
+* Any evidence of a concomitant disease judged clinically relevant by the investigator
+* Positive QuantiFERON-TB Gold In-Tube",18 Years,50 Years,ALL,True,"[{'measure': 'AUC 0-infinity (Area Under the Concentration-time Curve of the Cyclo in Plasma Over the Time Interval From 0 Extrapolated to Infinity)', 'description': 'AUC 0-infinity (area under the concentration-time curve of the cyclo in plasma over the time interval from 0 extrapolated to infinity).\n\nPK sampling (relative to the first cyclo administration \\[h:min\\])\n\nPeriod 1:\n\nfor cyclo 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h.\n\nperiod 2 for cyclo 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h.', 'timeFrame': 'up to 168 hours (details in description)'}, {'measure': 'AUC 0-tz (Area Under the Concentration-time Curve of the Cyclo in Plasma Over the Time Interval From 0 to the Last Quantifiable Point)', 'description': 'AUC 0-tz (area under the concentration-time curve of the cyclo in plasma over the time interval from 0 to the last quantifiable point).\n\nPK sampling (relative to the first cyclo administration \\[h:min\\]):\n\nPeriod 1:\n\nfor cyclo 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h period 2 for cyclo 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h.', 'timeFrame': 'up to 168 hours (details in description)'}, {'measure': 'Cmax (Maximum Measured Concentration of the Cyclo in Plasma)', 'description': 'Cmax (maximum measured concentration of the cyclo in plasma).\n\nPK sampling (relative to the first cyclo administration \\[h:min\\]):\n\nPeriod 1: for cyclo 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h period 2 for cyclo 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h', 'timeFrame': 'up to 168 hours (details in description)'}, {'measure': 'Cmax,ss (Maximum Measured Concentration of the FDV [Followed by Cyclo Treatment] in Plasma at Steady State Over a Uniform Dosing Interval τ)', 'description': 'Cmax,ss (maximum measured concentration of the FDV \\[followed by cyclo treatment\\] in plasma at steady state over a uniform dosing interval τ).\n\nPK sampling (relative to the first cyclo administration \\[h:min\\]):\n\nperiod 2 For FDV\n\n-144:00h, -120:00h, -96:00h, -72:00h, -48:00h, -24:00h, -23:30h, -23:00h, -22:30h, -22:00h, -21:00h, -20:00h, -18:00h, -16:00h, -14:00h, -12:00h, -8:00h, 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h', 'timeFrame': 'up to 168 hours (details in description)'}, {'measure': 'C24,ss (Maximum Measured Concentration of the FDV in Plasma at Steady State Over a 24 Hour Dosing Interval)', 'description': 'PK sampling (relative to the first cyclo administration \\[h:min\\]):\n\nperiod 2 For FDV\n\n-144:00h, -120:00h, -96:00h, -72:00h, -48:00h, -24:00h, -23:30h, -23:00h, -22:30h, -22:00h, -21:00h, -20:00h, -18:00h, -16:00h, -14:00h, -12:00h, -8:00h, 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h', 'timeFrame': 'up to 168 hours (details in description)'}, {'measure': 'AUC τ,ss (Area Under the Concentration-time Curve of the Analyte in Plasma at Steady State Over a Uniform Dosing Interval τ)', 'description': 'AUC τ,ss (area under the concentration-time curve of the FDV in plasma at steady state over a uniform dosing interval τ).\n\nPK sampling (relative to the first cyclo administration \\[h:min\\]):\n\nperiod 2 For FDV\n\n-144:00h, -120:00h, -96:00h, -72:00h, -48:00h, -24:00h, -23:30h, -23:00h, -22:30h, -22:00h, -21:00h, -20:00h, -18:00h, -16:00h, -14:00h, -12:00h, -8:00h, 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h', 'timeFrame': 'up to 168 hours (details in description)'}, {'measure': 'AUC 0-infinity (Area Under the Concentration-time Curve of the Tac in Plasma Over the Time Interval From 0 Extrapolated to Infinity)', 'description': 'AUC 0-infinity (area under the concentration-time curve of the tac in plasma over the time interval from 0 extrapolated to infinity).\n\nPK sampling (relative to the first tac administration):\n\nPeriod 1: for tac 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 144:00h, 168:00h, 192:00h period 2 for tac\n\n-192:00h, -168:00h, 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h', 'timeFrame': 'up to 192 hours (details in description)'}, {'measure': 'AUC 0-tz (Area Under the Concentration-time Curve of the Tac in Plasma Over the Time Interval From 0 to the Last Quantifiable Point)', 'description': 'AUC 0-tz (area under the concentration-time curve of the tac in plasma over the time interval from 0 to the last quantifiable point).\n\nPK sampling (relative to the first tac administration \\[h:min\\]):\n\nPeriod 1: for tac\n\n0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 144:00h, 168:00h, 192:00h\n\nPeriod 2 For tac\n\n-192:00h, -168:00h, 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h', 'timeFrame': 'up to 192 hours (details in description)'}, {'measure': 'Cmax (Maximum Measured Concentration of the Tac in Plasma)', 'description': 'Cmax (maximum measured concentration of the tac in plasma).\n\nPK sampling (relative to the first tac administration \\[h:min\\]):\n\nPeriod 1:\n\nfor tac 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 144:00h, 168:00h, 192:00h Period 2 For tac\n\n-192:00h, -168:00h, 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h', 'timeFrame': 'up to 192 hours (details in description)'}, {'measure': 'Cmax,ss (Maximum Measured Concentration of the FDV [Followed by Tac Treatment] in Plasma at Steady State Over a Uniform Dosing Interval τ)', 'description': 'Cmax,ss (maximum measured concentration of the FDV \\[followed by tac treatment\\] in plasma at steady state over a uniform dosing interval τ).\n\nPK sampling (relative to the first tac administration \\[h:min\\]):\n\nperiod 2 For FDV\n\n-144:00h, -120:00h, -96:00h, -72:00h, -48:00h, -24:00h, -23:30h, -23:00h, -22:30h, -22:00h, -21:00h, -20:00h, -18:00h, -16:00h, -14:00h, -12:00h, -8:00h, 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h.', 'timeFrame': 'up to 168 hours (details in description)'}, {'measure': 'C24,ss (Maximum Measured Concentration of the FDV [Followed by Tac Treatment] in Plasma at Steady State Over a 24 Hour Dosing Interval)', 'description': 'PK sampling (relative to the first tac administration \\[h:min\\]):\n\nperiod 2 For FDV\n\n-144:00h, -120:00h, -96:00h, -72:00h, -48:00h, -24:00h, -23:30h, -23:00h, -22:30h, -22:00h, -21:00h, -20:00h, -18:00h, -16:00h, -14:00h, -12:00h, -8:00h, 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h.', 'timeFrame': 'up to 168 hours (details in description)'}, {'measure': 'AUC τ,ss (Area Under the Concentration-time Curve of the FDV [Followed by Tac Treatment] in Plasma at Steady State Over a Uniform Dosing Interval τ)', 'description': 'AUC τ,ss (area under the concentration-time curve of the FDV \\[followed by tac treatment\\] in plasma at steady state over a uniform dosing interval τ).\n\nPK sampling (relative to the first cyclo administration \\[h:min\\]):\n\nperiod 2 For FDV\n\n-144:00h, -120:00h, -96:00h, -72:00h, -48:00h, -24:00h, -23:30h, -23:00h, -22:30h, -22:00h, -21:00h, -20:00h, -18:00h, -16:00h, -14:00h, -12:00h, -8:00h, 0:00h, 0:30h, 1:00h, 1:30h, 2:00h, 3:00h, 4:00h, 6:00h, 8:00h, 10:00h, 12:00h, 16:00h, 24:00h, 48:00h, 72:00h, 96:00h, 120:00h, 144:00h, 168:00h.', 'timeFrame': 'up to 168 hours (details in description)'}]",[],2013-12,2014-04,2013-12-20,COMPLETED,,False,Boehringer Ingelheim,INDUSTRY,[],"[{'facility': '1241.61.1 Boehringer Ingelheim Investigational Site', 'city': 'Mannheim', 'country': 'Germany', 'geoPoint': {'lat': 49.4891, 'lon': 8.46694}}]",2025-09-01T07:32:00.968625,v2
+NCT05552625,The Efficacy and Safety of TADIOS as an Adjuvant Therapy in Patients Diagnosed With Mild to Moderate COVID-19,TADIOS,"['TADIOS', 'Placebo']",,[],"['PHASE2', 'PHASE3']",PHASE2,INTERVENTIONAL,RANDOMIZED,PARALLEL,,SUPPORTIVE_CARE,0,ACTUAL,"Inclusion Criteria:
+
+1. Male or Female, aged between 18 to 65 years (both inclusive)
+2. Confirmed Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) first infection by a reverse transcription polymerase chain reaction (RT-PCR) assay in nasal swab or oropharyngeal swab samples.
+3. Patients who are hospitalized into designated hospital for COVID-19 treatment
+4. Patients who can be treated within 24 hours after confirmed diagnosis with COVID-19
+5. Patients with mild COVID-19 or moderate COVID-19 according to clinical management guideline of Government of India.
+
+   * Mild Illness: Patients with uncomplicated upper respiratory tract viral infection, may have non-specific symptoms such as fever, cough, sore throat, nasal congestion, malaise, and headache. The elderly may present with atypical symptoms. These patients do not have any signs of dehydration, sepsis or shortness of breath.
+   * Moderate Illness: Patient with pneumonia and no signs of severe pneumonia (Chest X-ray will be performed to rule out pneumonia in the suspected subjects).
+6. Patients who have signed the written informed consent form approved by Ethics Committee to participate after understanding explanations regarding the study
+7. Those who can comply with the requirements and processes in the clinical study
+8. Women of childbearing age must be negative to urine pregnancy test during screening
+
+Exclusion Criteria:
+
+1. Patients with severe COVID-19
+2. Self-reported history of meaningful circulatory, renal, gastrointestinal, liver, endocrinal, hematological, or mental disease, or other serious diseases or alcohol or drug addiction that may cause safety issues or confusion in the interpretation of clinical research results by the principal investigator's judgment
+3. Female patients who are pregnant (confirmed through urine pregnancy test) or breastfeeding
+4. Patients with cardiovascular, liver, cancer and kidney disease.
+5. Self-reported patients being a recipient of immunosuppressive therapy
+6. Self-reported patients who are allergic to this dietary supplements
+7. Patients taking a health functional food or medicine that may affect the body's antioxidant, anti-inflammatory activity, and lungs within 6 weeks of the first visit
+8. Patients who participated in another clinical trial within 1 month before screening
+9. Patients have any condition that in the judgement of investigator make the subject inappropriate for entry into this study
+10. Patients consuming any herbal medicine
+11. Self-reported patients with cases of surgical menopause (hysterectomy, oophorectomy of both ovaries) or sterilization procedures (tubal ligation or tubectomy of both fallopian tubes). Menopause refers to 1 year of no menstruation.",18 Years,65 Years,ALL,False,"[{'measure': 'Evaluation of antioxidative and inflammatory Biomarkers', 'description': 'Change from baseline in Antioxidative and inflamatory biomarkers: TNF-α, CRP, IL-6, IL-1ra, Hb, and ferritin.', 'timeFrame': 'Day 1, Maximum Day 10 (The date of discharge or early termination, from Day 1 to Day 10) and Day 14 after last IP administration'}, {'measure': 'Clinical measurements - Ordinal Scale for COVID-19 Assessment', 'description': 'Change from baseline in Covid-19 8-point Ordinal Scale: 0 = Uninfected, 1 = Ambulatory without limitation of activity, 2 = Ambulatory with limitation of activity, 3 = Hospitalized mild disease, no oxygen, 4 = Hospitalized mild disease, supplemental oxygen, 5 = Hospitalized severe disease, non-invasive ventilation or high-flow oxygen, 6 = Hospitalized severe disease, intubation and mechanical ventilation, 7 = Hospitalized severe disease, ventilation plus additional organ support, 8 = Death.', 'timeFrame': 'Day 1, Maximum Day 10 (The date of discharge or early termination, from Day 1 to Day 10) and Day 14 after last IP administration'}, {'measure': 'Clinical measurements - Clinical Recovery Scale for COVID-19 Assessment', 'description': 'Time to clinical recovery in COVID-19 Clinical Symptom Scale: The clinical symptom scale has been designed for this study to access the clinical state and time taken to relieve the clinical symptoms of COVID-19 (fever, dry cough, tiredness, aches and pains, sore throat, diarrhea, headache, loss of taste, loss of smell, difficulty in breathing or shortness of breath and chest pain or pressure).', 'timeFrame': 'Every day from screening till discharge and Day 14 after last IP administration'}, {'measure': 'Clinical measurements Clinical Improvement Scale for COVID-19 Assessment', 'description': 'Proportion of Clinical Improvement in Clinical Symptom Scale (Count of subjects with and without a symptom by treatment group on each day with the previous day counts during the study period).', 'timeFrame': 'Daily from screening to discharge or Day 14 after last IP administration'}, {'measure': 'Assessment of Quality of life - WHO-5 Well-Being Index', 'description': 'Change from baseline in WHO-5 Well-Being Index: The total raw score, ranging from 0 to 25, will be multiplied by 4 to give the final score, with 0 representing the worst imaginable well-being and 100 representing the best imaginable well-being.', 'timeFrame': 'Day 1, Maximum Day 10 (The date of discharge or early termination, from Day 1 to Day 10) and Day 14 after last IP administration'}, {'measure': 'Assessment of Quality of life - Fatigue Severity Score', 'description': ""Change from baseline in Fatigue Severity Score: Minimum total score possible is nine and the maximum is 63. The higher the score, the more severe the fatigue is and the more it affects the person's activities."", 'timeFrame': 'Day 1, Maximum Day 10 (The date of discharge or early termination, from Day 1 to Day 10) and Day 14 after last IP administration'}, {'measure': 'Hospitalization - Time to discharge', 'description': '1. Duration of hospitalization\n2. Time to discharge', 'timeFrame': 'Day 1, Maximum Day 10 (The date of discharge or early termination, from Day 1 to Day 10)'}]","[{'measure': 'Safety and tolerability assessment after administration of TADIOS 1', 'description': 'Subject incidence of Treatment-Emergent Adverse Events (TEAEs) and total number of unique TEAEs.', 'timeFrame': 'Screening, Maximum Day 10 (The date of discharge or early termination, from Day 1 to Day 10) and Day 14 after last IP administration'}, {'measure': 'Safety and tolerability assessment after administration of TADIOS - Hematology', 'description': 'Change from baseline in Hematology, Complete Blood Count results WBC, RBC, Hb, HCT, MCV, MCH, MCHC, PLT, MPV, differential count of WBC (Neutrophil, Lymphocyte, Monocyte, Eosinophil, Basophil), and ESR.', 'timeFrame': 'Screening, Maximum Day 10 (The date of discharge or early termination, from Day 1 to Day 10) and Day 14 after last IP administration'}, {'measure': 'Safety and tolerability assessment after administration of TADIOS - Serum Chemistry', 'description': 'Change from baseline in Serum Chemistry results: total protein, albumin, globulin, A/G ratio, total bilirubin, AST, ALT, GGT, Random glucose, BUN, creatinine, estimated GFR, Ca2+, phosphate, Na+, K+, Cl-, CRP, triglyceride, cholesterol, HDL-cholesterol, and LDL-cholesterol.', 'timeFrame': 'Screening, Maximum Day 10 (The date of discharge or early termination, from Day 1 to Day 10) and Day 14 after last IP administration'}, {'measure': 'Safety and tolerability assessment after administration of TADIOS - Urinalysis', 'description': 'Change from baseline in Urinalysis results: Color, pH, Specific gravity, albumin, bilirubin, glucose, urobilinogen, ketone, nitrite, hematuria, leukocyte and microscopy.', 'timeFrame': 'Screening, Maximum Day 10 (The date of discharge or early termination, from Day 1 to Day 10) and Day 14 after last IP administration'}, {'measure': 'Safety and tolerability assessment after administration of TADIOS - Blood Pressure', 'description': 'Change from baseline in Blood Pressure in mm Hg.', 'timeFrame': 'Screening, Maximum Day 10 (The date of discharge or early termination, at Day 1, 2, 4, 7, 10) and Day 14 after last IP administration'}, {'measure': 'Safety and tolerability assessment after administration of TADIOS - Body Temperature', 'description': 'Change from baseline in Body Temperature ℃.', 'timeFrame': 'Screening, Maximum Day 10 (The date of discharge or early termination, at Day 1, 2, 4, 7, 10) and Day 14 after last IP administration'}, {'measure': 'Safety and tolerability assessment after administration of TADIOS - Pulse Rate', 'description': 'Change from baseline in Pulse Rate in beats per minute.', 'timeFrame': 'Screening, Maximum Day 10 (The date of discharge or early termination, at Day 1, 2, 4, 7, 10) and Day 14 after last IP administration'}, {'measure': 'Safety and tolerability assessment after administration of TADIOS - Respiration Rate', 'description': 'Change from baseline in Respiration Rate in breaths per minute.', 'timeFrame': 'Screening, Maximum Day 10 (The date of discharge or early termination, at Day 1, 2, 4, 7, 10) and Day 14 after last IP administration'}]",2021-05-06,2022-02-24,2022-09-23,WITHDRAWN,This Phase I study was conducted in India and no subject data was provided to sponsor.,False,"Helixmith Co., Ltd.",INDUSTRY,[],"[{'facility': 'Vagus Super Specialty Hospital', 'city': 'Bangalore', 'state': 'Karnataka', 'zip': '560003', 'country': 'India', 'geoPoint': {'lat': 12.97194, 'lon': 77.59369}}, {'facility': 'Sparsh Superspeciality Hospital', 'city': 'Bangalore', 'state': 'Karnataka', 'zip': '560022', 'country': 'India', 'geoPoint': {'lat': 12.97194, 'lon': 77.59369}}, {'facility': 'Lakshmi Nursing Home', 'city': 'Kochi', 'state': 'Kerala', 'zip': '683101', 'country': 'India', 'geoPoint': {'lat': 9.93988, 'lon': 76.26022}}, {'facility': 'Chaitanya Hospital', 'city': 'Paravūr', 'state': 'Kerala', 'zip': '683513', 'country': 'India', 'geoPoint': {'lat': 9.44833, 'lon': 76.34575}}, {'facility': 'Gunjkar Multispeciality Hospital', 'city': 'Pune', 'state': 'Maharashtra', 'zip': '4110019', 'country': 'India', 'geoPoint': {'lat': 18.51957, 'lon': 73.85535}}, {'facility': 'Oxycare Multispecialty Hospital', 'city': 'Pune', 'state': 'Maharashtra', 'zip': '411033', 'country': 'India', 'geoPoint': {'lat': 18.51957, 'lon': 73.85535}}]",2025-09-01T07:32:00.968633,v2
+NCT00247325,RECOVER:Comparison of Renal Toxicity Between Visipaque(Iodixanol)and Hexabrix(Ioxaglate)in Renal Insufficiency Undergoing Coronary Angiography,Iodixanol(Drug),['Iodixanol(Drug)'],,[],['PHASE4'],PHASE4,INTERVENTIONAL,RANDOMIZED,PARALLEL,,PREVENTION,0,,"Inclusion Criteria:
+
+* creatinine clearance rates ≤60 mL/min using the Cockcroft-Gault formula
+* Patients who undergo coronary catheterization
+* Age of 19 or over 19.
+
+Exclusion Criteria:
+
+* pregnancy
+* lactation
+* having received contrast media within 7 days of study entry
+* emergent coronary angiography
+* acute renal failure
+* end-stage renal disease requiring dialysis
+* history of hypersensitivity reaction to contrast media
+* cardiogenic shock
+* pulmonary edema
+* multiple myeloma
+* mechanical ventilation
+* parenteral use of diuretics
+* use of N-acetylcysteine
+* use of metformin or nonsteroidal anti-inflammatory drugs within 48 hours of the procedure.",19 Years,,ALL,False,"[{'measure': 'Incidence of contrast induced nephropathy, defined as either a relative increase in serum creatinine from baseline of >=25% or an absolute increase of >=0.5mg/dL(44.2µmol/L) during days 1 and 2'}]","[{'measure': 'proportion of patients exhibiting an increase in serum creatinine of >=0.5mg/dL(44.2µmol/L), the proportion with a >=1.0 mg/dL(88.4µmol/L) increase in serum creatinine, and the mean peak increase in serum creatinine'}]",2004-01,2004-12,2005-11-01,COMPLETED,,False,Seoul National University Hospital,OTHER,[],"[{'facility': 'Seoul National University Hospital , Cardiovascular Center', 'city': 'Seoul', 'country': 'South Korea', 'geoPoint': {'lat': 37.566, 'lon': 126.9784}}]",2025-09-01T07:32:00.968639,v2
+NCT05156125,VTX002 Versus Placebo for the Treatment of Moderately to Severely Active Ulcerative Colitis,VTX002,"['VTX002', 'VTX002', 'Placebo']",,[],['PHASE2'],PHASE2,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,213,ACTUAL,"Inclusion Criteria:
+
+* Diagnosed with UC ≥ 3 months prior to Screening.
+* Active UC confirmed by endoscopy
+
+Exclusion Criteria:
+
+* Severe extensive colitis
+* Diagnosis of Crohn's disease (CD) or indeterminate colitis or the presence or history of a fistula consistent with CD
+* Diagnosis of microscopic colitis, ischemic colitis, or infectious colitis",18 Years,80 Years,ALL,False,"[{'measure': 'Clinical Remission at 13 Weeks', 'description': 'The percentage of participants with clinical remission at Week 13. Clinical remission was based on the modified Mayo score (MMS), which is a composite score of participant-reported symptoms and endoscopies which were assessed by a central reader. Clinical remission was defined as stool frequency (SF) subscore = 0 or 1, rectal bleeding (RB) subscore = 0, and endoscopic subscore (ES) ≤ 1 (excluding friability). Each component subscore ranged from 0 to 3 and total score range of the MMS was from 0 to 9, with higher scores indicating more severe disease.', 'timeFrame': 'Day 1 of Induction treatment period to Week 13'}]","[{'measure': 'Endoscopic Improvement at Week 13', 'description': 'The percentage of participants with endoscopic improvement at Week 13. Endoscopic improvement was assessed from endoscopies assessed by a central reader. Endoscopic improvement was defined as ES ≤ 1 (excluding friability). The ES ranged from 0 to 3 (where 0 = normal/inactive disease and 3 = severe disease).', 'timeFrame': 'Day 1 of Induction Treatment Period to Week 13'}, {'measure': 'Symptomatic Remission at Week 13', 'description': 'The percentage of participants with symptomatic remission at Week 13. Symptomatic remission was measured using participant-reported symptoms and was defined as SF subscore = 0 or 1 and RB subscore = 0. The SF subscore ranged from 0 to 3 (where 0 = normal number of stools and 3 = at least 5 stools more than normal) and RB subscore ranged from 0 to 3 (where 0 = no blood and 3 = blood alone passes). Higher scores indicate more severe disease.', 'timeFrame': 'Day 1 of Induction Treatment Period to Week 13'}, {'measure': 'Histologic Remission at Week 13', 'description': 'The percentage of participants with histologic remission at Week 13. Histologic remission was assessed using the Geboes Index score and defined for this outcome measure as a Geboes score \\< 2.0. The Geboes score grading system is a validated score for evaluating histologic disease activity in ulcerative colitis and is graded on a scale of 0 to 5. A higher Geboes score indicates more severe disease.', 'timeFrame': 'Day 1 of Induction Treatment Period to Week 13'}, {'measure': 'Endoscopic Improvement-Histologic Remission at Week 13', 'description': 'The percentage of participants with endoscopic improvement-histologic remission at Week 13. This outcome measure was assessed by endoscopic histologic scores and defined as ES ≤ 1 (excluding friability) and a Geboes Index score \\< 2.0. The ES ranged from 0 to 3 (where 0 = normal/inactive disease and 3 = severe disease). The Geboes score grading system is a validated score for evaluating histologic disease activity in ulcerative colitis and is graded on a scale of 0 to 5. A higher Geboes score indicates more severe disease.', 'timeFrame': 'Day 1 of Induction Treatment Period to Week 13'}, {'measure': 'PK of VTX002', 'description': 'Plasma concentrations of VTX002 in samples obtained predose at Weeks 1, 4, 8, and 13 in the Induction Treatment Period', 'timeFrame': 'Weeks 1, 4, 8, and 13 of the Induction Treatment Period'}]",2021-11-30,2026-08-31,2021-12-14,ACTIVE_NOT_RECRUITING,,False,Oppilan Pharma Ltd,INDUSTRY,[],"[{'facility': 'Local Site # 840030', 'city': 'Garden Grove', 'state': 'California', 'zip': '92845', 'country': 'United States', 'geoPoint': {'lat': 33.77391, 'lon': -117.94145}}, {'facility': 'Local Site # 840026', 'city': 'Lancaster', 'state': 'California', 'zip': '93534', 'country': 'United States', 'geoPoint': {'lat': 34.69804, 'lon': -118.13674}}, {'facility': 'Local Site # 840040', 'city': 'San Diego', 'state': 'California', 'zip': '92123', 'country': 'United States', 'geoPoint': {'lat': 32.71571, 'lon': -117.16472}}, {'facility': 'Local Site # 840001', 'city': 'Ventura', 'state': 'California', 'zip': '93003', 'country': 'United States', 'geoPoint': {'lat': 34.27834, 'lon': -119.29317}}, {'facility': 'Local Site # 840049', 'city': 'Kissimmee', 'state': 'Florida', 'zip': '34744', 'country': 'United States', 'geoPoint': {'lat': 28.30468, 'lon': -81.41667}}, {'facility': 'Local Site # 840006', 'city': 'Miami', 'state': 'Florida', 'zip': '33165', 'country': 'United States', 'geoPoint': {'lat': 25.77427, 'lon': -80.19366}}, {'facility': 'Local Site # 840018', 'city': 'Atlanta', 'state': 'Georgia', 'zip': '30342', 'country': 'United States', 'geoPoint': {'lat': 33.749, 'lon': -84.38798}}, {'facility': 'Local Site # 840046', 'city': 'New Albany', 'state': 'Indiana', 'zip': '47150', 'country': 'United States', 'geoPoint': {'lat': 38.28562, 'lon': -85.82413}}, {'facility': 'Local Site # 840042', 'city': 'Shreveport', 'state': 'Louisiana', 'zip': '71105', 'country': 'United States', 'geoPoint': {'lat': 32.52515, 'lon': -93.75018}}, {'facility': 'Local Site # 840044', 'city': 'Ypsilanti', 'state': 'Michigan', 'zip': '48197', 'country': 'United States', 'geoPoint': {'lat': 42.24115, 'lon': -83.61299}}, {'facility': 'Local Site # 840043', 'city': 'Dayton', 'state': 'Ohio', 'zip': '45415', 'country': 'United States', 'geoPoint': {'lat': 39.75895, 'lon': -84.19161}}, {'facility': 'Local Site # 840010', 'city': 'Oklahoma City', 'state': 'Oklahoma', 'zip': '73101', 'country': 'United States', 'geoPoint': {'lat': 35.46756, 'lon': -97.51643}}, {'facility': 'Local Site # 840045', 'city': 'Myrtle Beach', 'state': 'South Carolina', 'zip': '29572', 'country': 'United States', 'geoPoint': {'lat': 33.68906, 'lon': -78.88669}}, {'facility': 'Local Site # 840013', 'city': 'Garland', 'state': 'Texas', 'zip': '75044', 'country': 'United States', 'geoPoint': {'lat': 32.91262, 'lon': -96.63888}}, {'facility': 'Local Site # 8400039', 'city': 'Lubbock', 'state': 'Texas', 'zip': '79424', 'country': 'United States', 'geoPoint': {'lat': 33.57786, 'lon': -101.85517}}, {'facility': 'Local Site # 840033', 'city': 'McAllen', 'state': 'Texas', 'zip': '78503', 'country': 'United States', 'geoPoint': {'lat': 26.20341, 'lon': -98.23001}}, {'facility': 'Local Site # 840007', 'city': 'San Marcos', 'state': 'Texas', 'zip': '78666', 'country': 'United States', 'geoPoint': {'lat': 29.88327, 'lon': -97.94139}}, {'facility': 'Local Site # 840016', 'city': 'Southlake', 'state': 'Texas', 'zip': '76092', 'country': 'United States', 'geoPoint': {'lat': 32.94124, 'lon': -97.13418}}, {'facility': 'Local Site # 840028', 'city': 'Tyler', 'state': 'Texas', 'zip': '75701', 'country': 'United States', 'geoPoint': {'lat': 32.35126, 'lon': -95.30106}}, {'facility': 'Local Site # 100002', 'city': 'Rousse', 'country': 'Bulgaria', 'geoPoint': {'lat': 43.84872, 'lon': 25.9534}}, {'facility': 'Local Site # 100005', 'city': 'Rousse', 'country': 'Bulgaria', 'geoPoint': {'lat': 43.84872, 'lon': 25.9534}}, {'facility': 'Local Site # 203002', 'city': 'Hradec Králové', 'country': 'Czechia', 'geoPoint': {'lat': 50.20923, 'lon': 15.83277}}, {'facility': 'Local Site # 203001', 'city': 'Slaný', 'country': 'Czechia', 'geoPoint': {'lat': 50.23046, 'lon': 14.08693}}, {'facility': 'Local Site # 203004', 'city': 'Ústí nad Labem', 'country': 'Czechia', 'geoPoint': {'lat': 50.6607, 'lon': 14.03227}}, {'facility': 'Local Site # 250004', 'city': 'Caen', 'country': 'France', 'geoPoint': {'lat': 49.18585, 'lon': -0.35912}}, {'facility': 'Local Site # 250001', 'city': 'Nantes', 'country': 'France', 'geoPoint': {'lat': 47.21725, 'lon': -1.55336}}, {'facility': 'Local Site # 250003', 'city': 'Vandœuvre-lès-Nancy', 'country': 'France', 'geoPoint': {'lat': 48.66115, 'lon': 6.17114}}, {'facility': 'Local Site # 268001', 'city': 'Tbilisi', 'country': 'Georgia', 'geoPoint': {'lat': 41.69143, 'lon': 44.83412}}, {'facility': 'Local Site # 268002', 'city': 'Tbilisi', 'country': 'Georgia', 'geoPoint': {'lat': 41.69143, 'lon': 44.83412}}, {'facility': 'Local Site # 268003', 'city': 'Tbilisi', 'country': 'Georgia', 'geoPoint': {'lat': 41.69143, 'lon': 44.83412}}, {'facility': 'Local Site # 268004', 'city': 'Tbilisi', 'country': 'Georgia', 'geoPoint': {'lat': 41.69143, 'lon': 44.83412}}, {'facility': 'Local Site # 268005', 'city': 'Tbilisi', 'country': 'Georgia', 'geoPoint': {'lat': 41.69143, 'lon': 44.83412}}, {'facility': 'Local Site # 268006', 'city': 'Tbilisi', 'country': 'Georgia', 'geoPoint': {'lat': 41.69143, 'lon': 44.83412}}, {'facility': 'Local Site # 276005', 'city': 'Berlin', 'country': 'Germany', 'geoPoint': {'lat': 52.52437, 'lon': 13.41053}}, {'facility': 'Local Site # 276008', 'city': 'Brandenburg', 'country': 'Germany', 'geoPoint': {'lat': 52.41667, 'lon': 12.55}}, {'facility': 'Local Site # 276007', 'city': 'Duisburg', 'country': 'Germany', 'geoPoint': {'lat': 51.43247, 'lon': 6.76516}}, {'facility': 'Local Site # 276009', 'city': 'Halle', 'country': 'Germany', 'geoPoint': {'lat': 51.48158, 'lon': 11.97947}}, {'facility': 'Local Site # 276003', 'city': 'Nordhausen', 'country': 'Germany', 'geoPoint': {'lat': 51.5018, 'lon': 10.7957}}, {'facility': 'Local Site # 348004', 'city': 'Békéscsaba', 'country': 'Hungary', 'geoPoint': {'lat': 46.68333, 'lon': 21.1}}, {'facility': 'Local Site # 348001', 'city': 'Budapest', 'country': 'Hungary', 'geoPoint': {'lat': 47.49835, 'lon': 19.04045}}, {'facility': 'Local Site # 348003', 'city': 'Budapest', 'country': 'Hungary', 'geoPoint': {'lat': 47.49835, 'lon': 19.04045}}, {'facility': 'Local Site # 348002', 'city': 'Székesfehérvár', 'country': 'Hungary', 'geoPoint': {'lat': 47.18995, 'lon': 18.41034}}, {'facility': 'Local Site # 356001', 'city': 'Ahmedabad', 'country': 'India', 'geoPoint': {'lat': 23.02579, 'lon': 72.58727}}, {'facility': 'Local Site # 356003', 'city': 'Jaipur', 'country': 'India', 'geoPoint': {'lat': 26.91962, 'lon': 75.78781}}, {'facility': 'Local Site # 356005', 'city': 'Sūrat', 'country': 'India', 'geoPoint': {'lat': 31.39868, 'lon': 77.14969}}, {'facility': 'Local Site # 380009', 'city': 'Milan', 'country': 'Italy', 'geoPoint': {'lat': 45.46427, 'lon': 9.18951}}, {'facility': 'Local Site # 380001', 'city': 'Negrar', 'country': 'Italy', 'geoPoint': {'lat': 45.52918, 'lon': 10.93899}}, {'facility': 'Local Site # 380004', 'city': 'Pavia', 'country': 'Italy', 'geoPoint': {'lat': 45.19205, 'lon': 9.15917}}, {'facility': 'Local Site # 380008', 'city': 'Rome', 'country': 'Italy', 'geoPoint': {'lat': 41.89193, 'lon': 12.51133}}, {'facility': 'Local Site # 380002', 'city': 'San Giovanni Rotondo', 'country': 'Italy', 'geoPoint': {'lat': 41.70643, 'lon': 15.7277}}, {'facility': 'Local Site # 440002', 'city': 'Panevezys', 'country': 'Lithuania', 'geoPoint': {'lat': 55.73186, 'lon': 24.35983}}, {'facility': 'Local Site # 440001', 'city': 'Vilnius', 'country': 'Lithuania', 'geoPoint': {'lat': 54.68916, 'lon': 25.2798}}, {'facility': 'Local Site # 616010', 'city': 'Bydgoszcz', 'country': 'Poland', 'geoPoint': {'lat': 53.1235, 'lon': 18.00762}}, {'facility': 'Local Site # 616012', 'city': 'Jelenia Góra', 'country': 'Poland', 'geoPoint': {'lat': 50.89973, 'lon': 15.72899}}, {'facility': 'Local Site # 616001', 'city': 'Lodz', 'country': 'Poland', 'geoPoint': {'lat': 51.77058, 'lon': 19.47395}}, {'facility': 'Local Site # 616017', 'city': 'Lodz', 'country': 'Poland', 'geoPoint': {'lat': 51.77058, 'lon': 19.47395}}, {'facility': 'Local Site # 616015', 'city': 'Lublin', 'country': 'Poland', 'geoPoint': {'lat': 51.25, 'lon': 22.56667}}, {'facility': 'Local Site # 616004', 'city': 'Oświęcim', 'country': 'Poland', 'geoPoint': {'lat': 50.03437, 'lon': 19.21037}}, {'facility': 'Local Site # 616011', 'city': 'Piotrkow Trybunalski', 'country': 'Poland', 'geoPoint': {'lat': 51.40547, 'lon': 19.70321}}, {'facility': 'Local Site # 616008', 'city': 'Poznan', 'country': 'Poland', 'geoPoint': {'lat': 52.40692, 'lon': 16.92993}}, {'facility': 'Local Site # 616014', 'city': 'Rzeszów', 'country': 'Poland', 'geoPoint': {'lat': 50.04132, 'lon': 21.99901}}, {'facility': 'Local Site # 616007', 'city': 'Sosnowiec', 'country': 'Poland', 'geoPoint': {'lat': 50.28682, 'lon': 19.10385}}, {'facility': 'Local Site # 616003', 'city': 'Warsaw', 'country': 'Poland', 'geoPoint': {'lat': 52.22977, 'lon': 21.01178}}, {'facility': 'Local Site # 616006', 'city': 'Warsaw', 'country': 'Poland', 'geoPoint': {'lat': 52.22977, 'lon': 21.01178}}, {'facility': 'Local Site # 616002', 'city': 'Wroclaw', 'country': 'Poland', 'geoPoint': {'lat': 51.1, 'lon': 17.03333}}, {'facility': 'Local Site # 616009', 'city': 'Wroclaw', 'country': 'Poland', 'geoPoint': {'lat': 51.1, 'lon': 17.03333}}, {'facility': 'Local Site # 616013', 'city': 'Wroclaw', 'country': 'Poland', 'geoPoint': {'lat': 51.1, 'lon': 17.03333}}, {'facility': 'Local Site # 688002', 'city': 'Belgrade', 'country': 'Serbia', 'geoPoint': {'lat': 44.80401, 'lon': 20.46513}}, {'facility': 'Local Site # 688003', 'city': 'Belgrade', 'country': 'Serbia', 'geoPoint': {'lat': 44.80401, 'lon': 20.46513}}, {'facility': 'Local Site # 688004', 'city': 'Belgrade', 'country': 'Serbia', 'geoPoint': {'lat': 44.80401, 'lon': 20.46513}}, {'facility': 'Local Site # 688001', 'city': 'Zrenjanin', 'country': 'Serbia', 'geoPoint': {'lat': 45.38361, 'lon': 20.38194}}, {'facility': 'Local Site # 703001', 'city': 'Košice', 'country': 'Slovakia', 'geoPoint': {'lat': 48.71395, 'lon': 21.25808}}, {'facility': 'Local Site # 703003', 'city': 'Prešov', 'country': 'Slovakia', 'geoPoint': {'lat': 48.99839, 'lon': 21.23393}}, {'facility': 'Local Site # 703002', 'city': 'Šahy', 'country': 'Slovakia', 'geoPoint': {'lat': 48.07408, 'lon': 18.94946}}, {'facility': 'Local Site # 410003', 'city': 'Daegu', 'country': 'South Korea', 'geoPoint': {'lat': 35.87028, 'lon': 128.59111}}, {'facility': 'Local Site # 410002', 'city': 'Seoul', 'country': 'South Korea', 'geoPoint': {'lat': 37.566, 'lon': 126.9784}}, {'facility': 'Local Site # 410004', 'city': 'Wŏnju', 'country': 'South Korea', 'geoPoint': {'lat': 37.35139, 'lon': 127.94528}}]",2025-09-01T07:32:00.968647,v2
+NCT00334425,The Effect of LH-Priming During Early Follicular Phase in IVF Treatment.,MENOPUR; GONAL-F,['MENOPUR; GONAL-F'],,[],['PHASE4'],PHASE4,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,150,,"Inclusion Criteria:
+
+* Females between the ages of 18- 38 years (both included) at the time of randomisation
+* Patients for whom treatment with gonadotrophins and GnRH agonist (long protocol) in IVF setting is considered appropriate according to the criteria of the participating centre
+* Infertility for at least 1 year before randomisation (except for tubal infertility)
+* A maximum of two previous consecutive unsuccessful IVF cycles (i.e. not resulting in an ongoing pregnancy
+* 25- 34 days of menstruation cycle
+* Body mass index (BMI) \< 29 kg/m2
+
+Exclusion Criteria:
+
+* Any clinically significant systemic disease (e.g., insulin dependent diabetes)
+* Endocrine or metabolic abnormalities (pituitary, adrenal, thyroid, pancreas, liver, or kidney) which can compromise participation in the study
+* Any concomitant medications that would interfere with evaluation of study medications. Specifically, any non-study hormonal therapy (except for thyroid medication), prostaglandin inhibitors (NSAIDs, including aspirin) and psychotropic agents (phenothiazine's, major tranquillisers) at the time of study entry. Note: these medications are disallowed for the study duration.
+* Presence of clinically significant uterine fibroids
+* Undiagnosed vaginal bleeding
+* Tumours of the ovary, breast, uterus, adrenal gland, pituitary or hypothalamus
+* Pregnancy, lactation or contraindication to pregnancy - must be confirmed by negative urinary pregnancy test at randomisation",18 Years,38 Years,FEMALE,False,[{'measure': 'Circulatory levels of Estradiol on the day of hCG'}],"[{'measure': 'Total number of follicles as well as the numbers of follicles <10mm, 10-14 mm, >14mm day during gonadotrophin treatment and at the end of stimulation prior to hCG injection'}, {'measure': 'E2 per follicle >14 mm'}, {'measure': 'Total number of oocytes retrieved'}, {'measure': 'fertilization rate'}, {'measure': 'serum hCG > 10 IU/l on day 12-14 after embryo transfer'}, {'measure': 'implantation rate'}, {'measure': 'transferable embryos'}, {'measure': 'Clinical pregnancy rate'}, {'measure': 'Ongoing pregnancy rate'}, {'measure': 'embryo quality'}, {'measure': 'Serum; LH, FSH, Androstenedione, Progesterone, hCG and Inhibin-B. Progesterone seven days after ET day'}, {'measure': 'Intra follicular levels of; endocrine parameters'}, {'measure': 'Endometrial thickness; hCG day (minus 0-2 days)'}, {'measure': 'Total gonadotrophin dose administered'}]",2006-04,,2006-06-07,UNKNOWN,,False,Central Jutland Regional Hospital,OTHER,[],"[{'facility': 'Fertilitetsklinikken Sygehus Viborg', 'status': 'RECRUITING', 'city': 'Skive', 'zip': '7800', 'country': 'Denmark', 'contacts': [{'name': 'Peter Humaidan, M.D.', 'role': 'CONTACT', 'phone': '+ 45 89 27 40 11', 'email': 'peter.humaidan@sygehusviborg.dk'}, {'name': 'Peter Humaidan, M.D.', 'role': 'PRINCIPAL_INVESTIGATOR'}], 'geoPoint': {'lat': 56.56699, 'lon': 9.02707}}]",2025-09-01T07:32:00.968654,v2
+NCT00093925,Clevidipine in the Postoperative Treatment of Hypertension (ECLIPSE-NIC),clevidipine,"['clevidipine', 'nicardipine']",,[],['PHASE3'],PHASE3,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,739,ACTUAL,"Prerandomization Inclusion Criteria:
+
+* Provide written informed consent before initiation of any study related procedures.
+* Be at least 18 years of age
+* Be scheduled for Coronary Artery Bypass Grafting (CABG), Off Pump Coronary Artery Bypass (OPCAB), Minimally Invasive Direct Coronary Artery Bypass (MIDCAB) surgery, and/or valve replacement/repair surgery
+
+Prerandomization Exclusion Criteria:
+
+* Women of child-bearing potential (unless they have a negative pregnancy test)
+* Recent cerebrovascular accident (within 3 months before randomization)
+* Known intolerance to calcium channel blockers
+* Known or suspected hypersensitivity to nicardipine
+* Allergy to soybean oil or egg lecithin (components of the lipid vehicle)
+* Pre-existing permanent ventricular pacing
+* Any other disease or condition, which, in the judgment of the investigator would place a patient at undue risk by being enrolled in the trial
+* Participation in another therapeutic drug or therapeutic device trial within 30 days of starting study
+
+Postrandomization Inclusion Criteria:
+
+* Expected to survive beyond 24 hours post-surgical procedure
+* No surgical complications or conditions, present or anticipated, that preclude them from inclusion in the study
+* Determined to be hypertensive postoperatively as determined by the investigator",18 Years,,ALL,False,"[{'measure': 'Incidence of death, stroke, MI, and renal dysfunction', 'timeFrame': 'Initiation of study drug infusion through post-operative Day 30'}]",[],2004-05,2006-09,2004-10-08,COMPLETED,,False,The Medicines Company,INDUSTRY,[],"[{'facility': 'Mobile Infirmary Medical Center', 'city': 'Mobile', 'state': 'Alabama', 'zip': '36607', 'country': 'United States', 'geoPoint': {'lat': 30.69436, 'lon': -88.04305}}, {'facility': 'Wesley Medical Center', 'city': 'Wichita', 'state': 'Kansas', 'zip': '67214', 'country': 'United States', 'geoPoint': {'lat': 37.69224, 'lon': -97.33754}}, {'facility': 'Touro Infirmary', 'city': 'New Orleans', 'state': 'Louisiana', 'zip': '70115', 'country': 'United States', 'geoPoint': {'lat': 29.95465, 'lon': -90.07507}}, {'facility': 'Ochsner Clinic Foundation', 'city': 'New Orleans', 'state': 'Louisiana', 'zip': '70121', 'country': 'United States', 'geoPoint': {'lat': 29.95465, 'lon': -90.07507}}, {'facility': 'Columbia University - College of Physicians and Surgeons', 'city': 'New York', 'state': 'New York', 'zip': '10032', 'country': 'United States', 'geoPoint': {'lat': 40.71427, 'lon': -74.00597}}, {'facility': 'Jack D. Weller Hospital', 'city': 'The Bronx', 'state': 'New York', 'zip': '10461', 'country': 'United States', 'geoPoint': {'lat': 40.84985, 'lon': -73.86641}}, {'facility': 'Montefiore Medical Center', 'city': 'The Bronx', 'state': 'New York', 'zip': '10467', 'country': 'United States', 'geoPoint': {'lat': 40.84985, 'lon': -73.86641}}, {'facility': 'Hospital of the University of Pennsylvania', 'city': 'Philadelphia', 'state': 'Pennsylvania', 'zip': '19104', 'country': 'United States', 'geoPoint': {'lat': 39.95238, 'lon': -75.16362}}, {'facility': 'VA Medical Center McGuire', 'city': 'Richmond', 'state': 'Virginia', 'zip': '23249', 'country': 'United States', 'geoPoint': {'lat': 37.55376, 'lon': -77.46026}}]",2025-09-01T07:32:00.968662,v2
+NCT01245725,Aggrastat Truncated Length Against Standard Therapies in Percutaneous Coronary Intervention,Tirofiban (Aggrastat),"['Tirofiban (Aggrastat)', 'Placebo']",,[],['PHASE3'],PHASE3,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,0,ACTUAL,"Inclusion Criteria:
+
+1. Age \>18 years of age
+2. Scheduled to undergo PCI with an approved device
+3. Written informed consent
+
+Exclusion Criteria:
+
+1. Primary PCI for ST-elevation myocardial infarction (STEMI)
+2. Prior PCI within 30 days
+3. Prior GPIIb/IIIa use within 14 days
+4. Prior enoxaparin use within 4 days
+5. Prior STEMI within 30 days
+6. In non-elective subjects, a rising troponin defined as a most recent pre-PCI sample greater than the sample immediately preceding it, as long as the two samples are separated by four or more hours and have been analyzed in the same hospital laboratory.",18 Years,,ALL,False,"[{'measure': 'A composite incidence of death, myocardial infarction and urgent target vessel revascularization.', 'timeFrame': '48 hours'}]","[{'measure': 'The occurrence of myocardial infarction.', 'timeFrame': '48 hours'}]",,,2010-11-22,WITHDRAWN,"Study was not initiated, change in clinical development",False,Medicure,INDUSTRY,"['SCRI Development Innovations, LLC']",[],2025-09-01T07:32:00.968668,v2
+NCT01652625,Efficacy and Safety Study of Yunnan Baiyao on Minor Recurrent Aphthous Stomatitis,Yunnan Baiyao toothpaste,"['Yunnan Baiyao toothpaste', 'Placebo toothpaste']",,[],['PHASE2'],PHASE2,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,227,ACTUAL,"Inclusion Criteria:
+
+1. Both male and female aged 18 to 65 years old;
+2. Patients diagnosed as minor recurrent aphthous stomatitis with the duration of each ulcer in excess of 5 days;
+3. Fresh ulcers available with less than 72 hours eruption.
+
+Exclusion Criteria:
+
+1. Hypersensitive to various medical agents;
+2. Concurrent acute infectious disease;
+3. Pregnancy or lactation;
+4. Concurrent other immunology disorders;
+5. Accepting systemic administration of corticosteroids or immunosuppressive agents within 3 months;
+6. Aphthous-like ulcers related to certain systemic disorders such as ulcerative colitis, Crohn's disease, Behcet's syndrome, serious anemia;
+7. Aphthous-like ulcers related to drug such as non-steroidal anti-inflammatory drugs (NSAIDs) and anti-histamines;
+8. Accepting anaesthetic therapy within 24 hours, or systemic antibiotics within 2 weeks, or other management for oral ulcers within 72 hours prior to the study;
+9. Neoplasm patients;
+10. Volunteers of other clinical trials on medical agents or toothpaste within one month.",18 Years,65 Years,ALL,False,"[{'measure': 'Ulcer size', 'description': 'The assessment of the surface area of the ulcer was measured in millimeters by a dental probe. Ulcer size was assessed as the product of maximum diameter and its vertical diameter.', 'timeFrame': 'one year'}]","[{'measure': 'Pain Scores with Visual Analog Scale', 'description': 'Pain intensity was measured using a VAS, where the amount of pain recorded ranged from 0 (no pain) to 10 (unbearable pain). Pain was assessed by irritating the ulcer with the periodontal probe. The values were collected by the assigned investigators.', 'timeFrame': 'one year'}, {'measure': 'Number of the participants with adverse events', 'description': 'Any noted adverse reactions were recorded.', 'timeFrame': 'one year'}]",2010-03,2011-03,2012-07-30,COMPLETED,,False,Peking University,OTHER,[],[],2025-09-01T07:32:00.968677,v2
+NCT03578276,Prophylactic Treatment: Lessdrops™ vs Standard Drops Regimen,Pred-Gati-Brom,"['Pred-Gati-Brom', 'Prednisolone acetate 1% ophthalmic suspension', 'Gatifloxacin Ophthalmic', 'Bromfenac 0.075% Oph Solution']",,[],['PHASE4'],PHASE4,INTERVENTIONAL,RANDOMIZED,PARALLEL,,PREVENTION,35,ACTUAL,"Inclusion Criteria:
+
+* Subject is undergoing bilateral cataract extraction or refractive lens exchange with intraocular lens implantation.
+* Willing and able to provide written informed consent for participation in the study.
+* Willing and able to comply with scheduled visits and other study procedures.
+* Willing and able to administer eye drops and record the times the drops were instilled.
+* Scheduled to undergo standard cataract surgery with topical anesthesia in both eyes within 6-15 days between surgeries.
+* Potential postoperative best-corrected visual acuity of 20/30 or better.
+
+Exclusion Criteria:
+
+* Severe preoperative ocular pathology: amblyopia, rubella cataract, proliferative diabetic retinopathy, shallow anterior chamber, macular edema, aniridia or iris atrophy, uveitis, history of iritis, iris neovascularization, medically uncontrolled glaucoma, microphthalmos or macrophthalmos, optic nerve atrophy, advanced macular degeneration, advanced glaucomatous damage, etc.
+* Uncontrolled diabetes.
+* Use of any systemic or topical drug known to interfere with visual performance.
+* Contact lens use during the active treatment portion of the trial.
+* Any concurrent infectious/noninfectious conjunctivitis, keratitis or uveitis.
+* History of chronic intraocular inflammation.
+* History of retinal detachment.
+* Pseudoexfoliation syndrome or any other condition that has the potential to weaken the zonules.
+* Any additional ocular surgical procedures at time of cataract extraction (i.e. iStent) except corneal incisions for the correction of astigmatism.
+* Anesthesia other than topical anesthesia (i.e. retrobulbar, general, etc).
+* Any clinically significant, serious or severe medical or psychiatric condition that may increase the risk associated with study participation or may interfere with the interpretation of study results.
+* Participation in (or current participation) any ophthalmic investigational drug or device trial within the previous 30 days prior to the start date of this trial.
+* Intraocular conventional surgery within the past three months or intraocular laser surgery within one month.",50 Years,99 Years,ALL,False,"[{'measure': 'Change From Baseline (Preoperative Exam) in Macular Thickness', 'description': 'Thickness of the macula measured in microns, recorded as the change from baseline.', 'timeFrame': 'Month 1'}]","[{'measure': 'Change From Baseline (Preoperative Exam) in Pachymetry (Corneal Thickness)', 'description': 'Thickness of the cornea measured in microns, measured as the change from baseline', 'timeFrame': 'Month 1'}, {'measure': 'Change From Baseline (Preoperative Exam) in Intraocular Pressure (IOP)', 'description': 'Measurement of the pressure inside the eye in mmHg, recorded as the change from baseline', 'timeFrame': 'Month 1'}]",2018-06-22,2019-12-04,2018-07-06,COMPLETED,,False,"Carolina Eyecare Physicians, LLC",OTHER,"['Science in Vision', 'Imprimis Pharmaceuticals, Inc.']","[{'facility': 'Carolina Eyecare Physicians, LLC', 'city': 'Mt. Pleasant', 'state': 'South Carolina', 'zip': '29464', 'country': 'United States', 'geoPoint': {'lat': 32.79407, 'lon': -79.86259}}]",2025-09-01T07:32:00.968690,v2
+NCT02117076,"Blinded, Randomized Study of Gabapentin (Neurontin®) and Gabapentin Enacarbil (Horizant™) in Restless Leg Syndrome",Gabapentin immediate release,"['Gabapentin immediate release', 'Gabapentin enacarbil extended release']",,[],['PHASE4'],PHASE4,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,5,ACTUAL,"Inclusion Criteria:
+
+1. Outpatients with a diagnosis of primary restless leg syndrome using the International Restless Legs Syndrome Study Group (IRLSSG) diagnostic criteria8.
+2. RLS symptoms ≥ 15 nights of the month prior to study enrollment and for ≥ 4 of 7 consecutive nights in the week prior to study enrollment (if untreated).
+3. Age 18 years to 80 years.
+4. International Restless Legs Scale (IRLS) Total severity score of ≥ 15 (moderate to severe severity). 8
+5. Had significant sleep disturbance on item 4 of IRLS.8
+6. Women of child-bearing potential must use a reliable method of contraception.
+7. Informed consent. Subject must be willing and able to complete all study procedures.
+
+Exclusion Criteria:
+
+1. Any illness that in the investigator's opinion preclude participation in this study.
+2. Subjects with non-RLS-related sleep disorders (e.g., sleep apnea)
+3. Subjects with neurological diseases or movement disorders other than RLS (e.g., diabetic neuropathy, Parkinson's disease, multiple sclerosis, dyskinesias, and dystonias)
+4. Pregnancy or lactation.
+5. Concurrent participation in another clinical study.
+6. Dementia or other psychiatric illness that prevents the patient from giving informed consent (Mini-Mental State Examination scores less than 27).
+7. Legal incapacity or limited legal capacity.
+8. History of RLS symptom augmentation or early-morning rebound with previous dopamine-agonist treatment.
+9. Clinically significant abnormalities in renal function. 3,8,10
+10. Presence of severe cardiovascular or pulmonary disease, bronchial asthma, renal, hepatic or endocrine disease.
+11. Concomitant treatment with drugs known to affect sleep/wake, RLS or periodic limb movements, including antidepressants. Subjects receiving treatment for RLS at screening will be required to discontinue and wash out for a minimum of 5 half-lives.
+12. Body mass index greater than 34 kg/m2.",18 Years,80 Years,ALL,False,"[{'measure': 'International Restless Leg Syndrome Rating Scale (IRLS)', 'description': 'The IRLS is a measure of severity of Restless Legs Syndrome. It includes 10 items, measured on a scale of 0-4. A score of 1-10 indicates mild severity, 11-20 indicates moderate severity, 21-30 is severe and 31-40 is very severe. Primary outcome is the difference in IRLS scores for each of the treatment regimens.\n\nfrom 0 to 4.', 'timeFrame': '10 weeks'}]","[{'measure': 'Restless Leg Syndrome Quality of Life Scale (RLSQoL)', 'description': 'The Restless Legs Syndrome Quality of Life questionnaire (RLSQoL) assesses the impact of RLS on daily life, emotional well-being, social life, and work life.', 'timeFrame': 'Baseline, day 35, day 54.'}]",2014-04,2016-06,2014-04-17,TERMINATED,Recruitment unsuccessful due to overly restrictive inclusion/exclusion criteria.,False,"Theresa Zesiewicz, MD",OTHER,[],"[{'facility': 'University of South Florida', 'city': 'Tampa', 'state': 'Florida', 'zip': '33612', 'country': 'United States', 'geoPoint': {'lat': 27.94752, 'lon': -82.45843}}]",2025-09-01T07:32:00.968697,v2
+NCT06182176,Effectiveness and Cost-effectiveness of Integrated Model for Malaria and Helminth Control,Sulphadoxine-pyrimethamine and Amodiaquine,['Sulphadoxine-pyrimethamine and Amodiaquine'],,[],['NA'],NA,INTERVENTIONAL,RANDOMIZED,PARALLEL,,PREVENTION,1200,ESTIMATED,"Inclusion Criteria:
+
+* Male and female children aged 1-14 years;
+* Provision of written informed consent by the parent/caregiver and a positive assent by children aged ≥ 7 years (in line with legal regulations in Ghana);
+* Willingness to provide finger prick blood samples, urine, and stool samples;
+* Residence in the study area for at least the past six months and willingness to be available in the study area for follow-up about 6 months after enrolment
+
+Exclusion Criteria:
+
+* Acutely ill child at the time of the drug administration;
+* A child whose parents/caregivers decline to provide consent;
+* A known HIV-positive child receiving co-trimoxazole prophylaxis;
+* A child who has received a dose of either Sulphadoxine-pyrimethamine (SP), amodiaquine (AQ), albendazole (ALB) or praziquantel (PZQ) during the previous six months.
+* A child with a known allergy to any of SP, AQ, ALB or PZQ.",1 Year,14 Years,ALL,True,"[{'measure': 'Change in Haemoglobin (Hb) concentration measured by HemoCue®', 'description': 'Comparison of the pre- and post-intervention values of Hb concentration of study children', 'timeFrame': 'On the day of inclusion, and post-intervention at the end of malaria transmission season i.e. one month after the last SMC cycle.'}]","[{'measure': 'Incidence of clinical malaria, defined as fever of >37.5C', 'description': 'History of fever in the preceding 48 hours, and a positive malaria blood film with a parasite density of \\>0 per µl', 'timeFrame': 'Detected by passive case detection during the surveillance period, an average of 5 months after co-administration of the study medications'}, {'measure': 'Change in prevalence of anaemia on the day of inclusion, and post-intervention at the end of malaria transmission season; anaemia will be defined as Hb less than 11 g/dL', 'description': 'Comparison of the pre- and post-intervention values of Hb concentration of study children', 'timeFrame': 'On the day of inclusion, and post-intervention at the end of malaria transmission season i.e. one month after the last SMC cycle.'}, {'measure': 'Incidence of solicited adverse events and adverse drug reactions', 'description': 'Safety assessment to be related to the study medications', 'timeFrame': 'During a period of six consecutive days after co-administration of study medications'}, {'measure': 'Prevalence of P.falciparum and helminth co-infection', 'description': 'Prevalence of malaria-helminth co-infection', 'timeFrame': 'On the day of inclusion, and post-intervention at the end of malaria transmission season i.e. one month after the last SMC cycle.'}, {'measure': 'Density of P.falciparum and helminth co-infection', 'description': 'Density of malaria-helminth co-infection', 'timeFrame': 'On the day of inclusion, and post-intervention at the end of malaria transmission season i.e. one month after the last SMC cycle.'}]",2024-05-27,2026-01-12,2023-12-26,NOT_YET_RECRUITING,,False,London School of Hygiene and Tropical Medicine,OTHER,"['Kintampo Health Research Centre, Ghana']",[],2025-09-01T07:32:00.968703,v2
+NCT03979976,"Ramipril, Endothelial Function and Endothelial Progenitor Cells in Patients With Systemic Lupus Erythematosus",Ramipril,['Ramipril'],,[],"['PHASE2', 'PHASE3']",PHASE2,INTERVENTIONAL,RANDOMIZED,PARALLEL,,PREVENTION,37,ACTUAL,"Inclusion Criteria:
+
+* SLE according 1997 modified American College Rheumatology criteria
+* age older than 18 years
+* stable treatment for lupus for at least 3 months
+
+Exclusion Criteria:
+
+* previous coronary artery disease
+* hypertension
+* dyslipidemia (LDL\>149 mg/dL)
+* renal insufficiency (creatinine ≥1.4 mg/dL)
+* diabetes
+* smoking
+* obesity (BMI≥30)
+* pregnancy
+* menopause
+* patients taking statins or angiotensin convertor enzyme inhibitor within the last 6 months",18 Years,,FEMALE,False,"[{'measure': 'Endothelial function - Variation of Flow mediated dilation percentage', 'description': 'Patients were evaluated at baseline and after 12 weeks by high-resolution ultrasound of brachial artery in resting conditions, after reactive hyperaemia (flow-mediated dilation-FMD) and after oral glyceryl trinitrate to assess endothelial function', 'timeFrame': '12 weeks'}, {'measure': 'Number of endothelial progenitor cells (EPC)', 'description': 'Patients were evaluated at baseline and after 12 weeks. EPCs were evaluated by flow cytometry using anti-CD34 (cluster of differentiation 34) (FITC), anti-CD133 (PE) and anti-kinase domain receptor (KDR) (APC) and by cell culture with quantification of colony formation units (CFUs).', 'timeFrame': '12 weeks'}]",[],2011-03,2013-09,2019-06-10,COMPLETED,,False,Federal University of São Paulo,OTHER,['Fundação de Amparo à Pesquisa do Estado de São Paulo'],"[{'facility': 'Federal University of São Paulo', 'city': 'São Paulo', 'zip': '04021051', 'country': 'Brazil', 'geoPoint': {'lat': -23.5475, 'lon': -46.63611}}]",2025-09-01T07:32:00.968710,v2
+NCT00303576,A Safety and Tolerability Study of Dapivirine (TMC120) Vaginal Microbicide Gel,dapivirine (TMC120) vaginal gel,['dapivirine (TMC120) vaginal gel'],,[],"['PHASE1', 'PHASE2']",PHASE1,INTERVENTIONAL,RANDOMIZED,PARALLEL,,PREVENTION,112,,"Inclusion Criteria:
+
+* HIV-negative
+* Willing to participate and sign an informed consent
+* Willing to be tested for HIV, use an experimental vaginal gel, and to be randomized to a study group that includes the possibility of being assigned to a placebo group.
+* Willing to use two forms of contraception during the study.
+* Willing to undergo pelvic examinations with colposcopy and photographic documentation according to the protocol throughout the study.
+* Have a regular menstrual cycle defined as having a minimum of 21 days and a maximum of 36 days between menses.
+* Willing to abstain from using any vaginal product (other than the study product or placebo).
+* Willing to be sexually abstinent from randomization until completion of Day 7 evaluations.
+
+Exclusion Criteria:
+
+* Currently pregnant or breast-feeding.
+* Clinically detectable genital abnormality on the vulva, vaginal walls or cervix.
+* Laboratory confirmed gonorrhea, chlamydia, trichomonas, syphilis, or vaginal candidiasis or clinically diagnosed genital ulcer disease or active HSV-2 lesions.
+* Breakthrough bleeding or gynecologic surgery within 60 days prior to randomization.
+* Symptomatic bacterial vaginosis and unwilling to undergo treatment.
+* Women who require treatment for tuberculosis (TB) within 21 days prior to randomization.",18 Years,50 Years,FEMALE,True,[{'measure': 'Local and systemic safety and tolerability.'}],[],2005-10,2006-07,2006-03-17,COMPLETED,,False,"International Partnership for Microbicides, Inc.",INDUSTRY,[],"[{'facility': 'Projet Ubuzima', 'city': 'Kigali', 'country': 'Rwanda', 'geoPoint': {'lat': -1.94995, 'lon': 30.05885}}, {'facility': 'Reproductive Health Research Unit - Sheshisani IPM Clinic', 'city': 'Yeoville', 'state': 'Johannesburg', 'country': 'South Africa', 'geoPoint': {'lat': -26.18299, 'lon': 28.06501}}, {'facility': 'Farmovs-Parexel', 'city': 'Bloemfontein', 'country': 'South Africa', 'geoPoint': {'lat': -29.12107, 'lon': 26.214}}, {'facility': 'Kilimanjaro Reproductive Health Program', 'city': 'Moshi', 'country': 'Tanzania', 'geoPoint': {'lat': -3.35, 'lon': 37.33333}}]",2025-09-01T07:32:00.968719,v2
+NCT02596776,Cold Induced Changes in White Adipose,Propranolol and fat biopsy,['Propranolol and fat biopsy'],,[],['EARLY_PHASE1'],EARLY_PHASE1,INTERVENTIONAL,NON_RANDOMIZED,PARALLEL,,BASIC_SCIENCE,26,ACTUAL,"Inclusion Criteria:
+
+* the lean subjects body mass index (BMI) \< 27
+* subjects with obesity/MetS (BMI 27-45 with IGT, IFG, or 3 features of MetS)
+* Insulin resistance Fasting blood sugar \>126, or 2 hr glu \>200, but with A1C\<7.5 (i.e. we will include subjects with T2DM on no meds and with good glycemic control)
+* adequate platelet count (\>100,000)
+* hematocrit of \>32
+* stable weight
+
+Exclusion Criteria:
+
+* obese subjects (BMI \> 45)
+* anti-inflammatory drugs, β-blockers, any diabetes drugs or drugs known to affect adipose tissue
+* an unstable medical condition
+* coronary artery disease
+* congestive heart failure
+* heart block or a history of or any contraindication to a β-blocker.
+* asthma
+* previous stroke
+* use of anticoagulants or aspirin
+* pregnant or breastfeeding
+* lifestyles involving absent or extreme temperature exposure (eg. homebound or institutionalized subjects, outdoor workers).",35 Years,60 Years,FEMALE,True,"[{'measure': 'WAT changes during repeated exposure to cold temperatures', 'description': 'Adipose biopsies will be performed', 'timeFrame': '28 Weeks (Summer and Winter Seasons)'}, {'measure': 'WAT changes following Propranolol dosing', 'description': 'Subjects will be prescribed propranolol and adipose biopsies will be obtained.', 'timeFrame': '17 days in the summer season'}, {'measure': 'In vivo measurement of adipose lipolysis and triglyceride (TG) turnover', 'description': 'The heavy water will be given to and adipose biopsies will be obtained.', 'timeFrame': '5 weeks per season (summer and winter)'}]",[],2016-03,2018-08-20,2015-11-04,COMPLETED,,False,Philip Kern,OTHER,['National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK)'],"[{'facility': 'University of Kentucky Medical Center Center for Clinical and Translational Science', 'city': 'Lexington', 'state': 'Kentucky', 'zip': '40536', 'country': 'United States', 'geoPoint': {'lat': 37.98869, 'lon': -84.47772}}]",2025-09-01T07:32:00.968725,v2
+NCT00343876,Clopidogrel and Aspirin Together: The Effect on C-Reactive Protein Trial,aspirin,"['aspirin', 'clopidogrel']",,[],['PHASE4'],PHASE4,INTERVENTIONAL,RANDOMIZED,PARALLEL,,TREATMENT,100,ESTIMATED,"Inclusion Criteria:
+
+* Either gender \> 18 years of age
+* Documented coronary artery disease (CAD) of\~ 70% documented lesion
+* Must be taking 325 mg/day of aspirin (preferably Ecotrin)and a statin at least 4 weeks prior to enrollment
+* The patient or legally authorized representative must sign a written informed consent, prior to the any procedure, using a form that is approved by the local Institutional Review Board
+* Able to give informed consent
+
+Exclusion Criteria:
+
+* Documented sensitivity to aspirin or clopidogrel
+* Uncontrolled hypertension as determined by the investigator
+* Known bleeding disorder or increased risk of bleeding such as: severe hepatic, insufficiency, current peptic ulceration, proliferative diabetic retinopathy, history of bleeding diathesis or coagulopathy
+* History of severe systemic bleeding such as: gastrointestinal bleeding, gross hematuria, intraocular bleeding, hemorrhagic stroke, intracranial hemorrhage
+* Hospitalization for any MI or unstable angina in last 90 days
+* Scheduled for a major surgery requiring prolonged study drug cessation (more than 4 weeks)
+* Currently taking a thienopyridine agent (clopidogrel or ticlopidine), oral GP IIb/IIIa inhibitor, oral anticoagulant, or dipyridamole
+* Pregnant and/or lactating women, and women of child bearing potential not using acceptable means of contraception. Women of childbearing potential must be using adequate measures of contraception (as determined by the investigator) to avoid pregnancy and should be highly unlikely to conceive during the study period. Women of childbearing potential must have a negative pregnancy test at screen.
+* Participation in any other clinical trials involving investigational or marketed products within 30 days prior to entry in the study.",18 Years,,ALL,False,"[{'measure': 'The primary endpoint is the observation of the effect of aspirin + clopidogrel vs.'}, {'measure': 'aspirin + placebo on CRP levels.'}]",[],2005-07,2006-11,2006-06-23,COMPLETED,,False,"Intermountain Health Care, Inc.",OTHER,"['Bristol-Myers Squibb', 'Sanofi-Synthelabo']","[{'facility': 'LDS Hospital', 'city': 'Salt Lake City', 'state': 'Utah', 'zip': '84143', 'country': 'United States', 'geoPoint': {'lat': 40.76078, 'lon': -111.89105}}]",2025-09-01T07:32:00.968736,v2
+NCT04776876,Retifanlimab (INCMGA00012) and Telotristat Ethyl for the Treatment of Advanced Neuroendocrine Tumors and Carcinoid Syndrome,Telotristat Ethyl,['Telotristat Ethyl'],,[],['PHASE2'],PHASE2,INTERVENTIONAL,NA,SINGLE_GROUP,,TREATMENT,0,ACTUAL,"Inclusion Criteria:
+
+* Grade 1, 2, or 3 (or described as low grade, intermediate grade, well differentiated, or moderately differentiated) neuroendocrine tumor, according to reviewing pathologist or documented interpretation of report by the investigator
+* Progressive disease over the preceding 12 months
+* Prior therapy with any number of anticancer therapies, but a somatostatin analogue (such as octreotide, lanreotide, or pasireotide) must be one of the prior therapies
+* Carcinoid syndrome, as documented by the investigator
+* Patients using a somatostatin analogue for symptom control must be on stable doses for 56 days prior to enrollment
+* Signed informed consent form
+* Age \>= 18 years
+* Ability to comply with the study protocol, in the investigator's judgment
+* Measurable disease according to Response Evaluation Criteria in Solid Tumors (RECIST) version (v)1.1
+
+  * Previously irradiated lesions can be considered as measurable disease only if progressive disease has been unequivocally documented at that site since radiation
+* Eastern Cooperative Oncology Group (ECOG) performance status of 0 or 1
+* Absolute neutrophil count \>= 1,500/mm\^3 without granulocyte colony-stimulating factor support (obtained within 28 days prior to initiation of study treatment)
+* Lymphocyte count \>= 500/mm\^3 (obtained within 28 days prior to initiation of study treatment)
+* Platelet count \>= 100,000/mm\^3 without transfusion (obtained within 28 days prior to initiation of study treatment)
+* White blood cell count \>= 2,500/mm\^3 (obtained within 28 days prior to initiation of study treatment)
+* Hemoglobin \>= 9.0 g/dL (obtained within 28 days prior to initiation of study treatment)
+
+  * Patients may be transfused to meet this criterion
+* Aspartate transaminase (AST), alanine transaminase (ALT), and alkaline phosphatase =\< 2.5 x upper limit of normal (ULN) (obtained within 28 days prior to initiation of study treatment), with the following exceptions:
+
+  * Patients with documented liver metastases: AST and ALT =\< 5 x ULN
+  * Patients with documented liver or bone metastases: alkaline phosphatase =\< 5 x ULN
+* Serum bilirubin =\< 1.5 x ULN (obtained within 28 days prior to initiation of study treatment) with the following exception:
+
+  * Patients with known Gilbert disease: serum bilirubin level =\< 3 x ULN
+* Serum creatinine =\< 1.5 x ULN (obtained within 28 days prior to initiation of study treatment)
+* Serum albumin \>= 2.5 g/dL (obtained within 28 days prior to initiation of study treatment)
+* For patients not receiving therapeutic anticoagulation: international normalized ratio (INR) or activated partial thromboplastin time (aPTT) =\< 1.5 x ULN (obtained within 28 days prior to initiation of study treatment)
+* For patients receiving therapeutic anticoagulation: stable anticoagulant regimen
+* For men: agreement to remain abstinent (refrain from heterosexual intercourse) or use a barrier contraceptive method with a failure rate of \< 1% per year during the treatment period and for 6 months after the last dose of study treatment
+* For women of childbearing potential: agreement to remain abstinent (refrain from heterosexual intercourse) or use a contraceptive method with a failure rate of \< 1% per year during the treatment period and for 6 months after the last dose of study treatment
+
+  * A woman is considered to be of childbearing potential if she is postmenarcheal, has not reached a postmenopausal state (\>= 12 continuous months of amenorrhea with no identified cause other than menopause), and has not undergone surgical sterilization (removal of ovaries and/or uterus)
+  * Examples of contraceptive methods with a failure rate of \< 1% per year include bilateral tubal ligation, male sterilization, hormonal contraceptives that inhibit ovulation, hormone-releasing intrauterine devices, and copper intrauterine devices
+  * The reliability of sexual abstinence should be evaluated in relation to the duration of the clinical trial and the preferred and usual lifestyle of the patient. Periodic abstinence (e.g., calendar, ovulation, symptothermal, or postovulation methods) and withdrawal are not acceptable methods of contraception
+
+Exclusion Criteria:
+
+* Grade 3, poorly differentiated neuroendocrine carcinoma
+* Large cell or small cell histology
+* Treatment for the studied cancer within 28 days prior to initiation of study treatment
+* Treatment with investigational therapy within 28 days prior to initiation of study treatment
+* Palliative radiation therapy administered within 1 week of first dose of study treatment or radiation therapy in the thoracic region that is \> 30 Gy within 6 months of the first dose of study treatment. Note: Participants must have recovered from all radiation-related toxicities, not require corticosteroids for this purpose, and not have had radiation pneumonitis
+* Toxicity of prior therapy that has not recovered to =\< grade 1 or baseline (with the exception of any grade of alopecia and anemia not requiring transfusion support)
+* Known hypersensitivity to another monoclonal antibody that cannot be controlled with standard measures (e.g., antihistamines and corticosteroids)
+* Known allergy or hypersensitivity to any component of the INCMGA00012 formulation
+* Known allergy or hypersensitivity to any component of the telotristat formulation
+* Active autoimmune disease requiring systemic immunosuppression in excess of physiologic maintenance doses of corticosteroids (\> 10 mg/day of prednisone or equivalent)
+
+  * Physiologic corticosteroid replacement therapy at doses \> 10 mg/day of prednisone or equivalent for adrenal or pituitary insufficiency and in the absence of active autoimmune disease is permitted
+  * Participants with asthma that requires intermittent use of bronchodilators, inhaled steroids, or local steroid injections may participate
+  * Brief courses of corticosteroids for prophylaxis (e.g., contrast dye allergy) or study treatment-related standard premedication are permitted
+  * Participants using topical, ocular, intra-articular, or intranasal steroids (with minimal systemic absorption) may participate
+* Prior allogeneic stem cell or solid organ transplantation
+* Evidence of interstitial lung disease, history of interstitial lung disease, or active, noninfectious pneumonitis
+* Positive human immunodeficiency virus (HIV) test at screening with CD4+ T-cell count \< 350 cells/mcL
+* Known HIV infection and opportunistic infection within the past 12 months
+* Active hepatitis B virus (HBV) infection (chronic or acute), defined as having a positive hepatitis B surface antigen (HBsAg) test at screening
+
+  * Patients with a past or resolved HBV infection, defined as having a negative HBsAg test and a positive total hepatitis B core antibody (HBcAb) test and negative HBV deoxyribonucleic acid (DNA) test at screening, are eligible for the study
+* Active hepatitis C virus (HCV) infection, defined as having a positive HCV antibody test followed by a positive HCV ribonucleic acid (RNA) test at screening
+
+  * The HCV RNA test will be performed only for patients who have a positive HCV antibody test
+* Known diagnosis of active tuberculosis
+* Treatment with therapeutic oral or IV antibiotics within 7 days prior to initiation of study treatment
+
+  * Patients receiving prophylactic antibiotics (e.g., to prevent a urinary tract infection or chronic obstructive pulmonary disease exacerbation) are eligible for the study
+* Treatment with a live, attenuated vaccine within 4 weeks prior to initiation of study treatment, or anticipation of need for such a vaccine during the course of the study, or up to 5 months following the anticipated last dose of INCMGA00012
+* Malignancies other than the disease under study within 3 years prior to cycle 1, day 1, with the exception of those with a negligible risk of metastasis or death and with expected curative outcome (such as adequately treated carcinoma in situ of the cervix, basal or squamous cell skin cancer, or ductal carcinoma in situ treated surgically with curative intent) or undergoing active surveillance per standard-of-care management (e.g., chronic lymphocytic leukemia Rai stage 0)
+* Any other disease, metabolic dysfunction, physical examination finding, or clinical laboratory finding that contraindicates the use of an investigational drug, may affect the interpretation of the results, or may render the patient at high risk from treatment complications
+* Prior treatment with CD137 agonists or immune checkpoint blockade therapies, including anti-CTLA-4, anti-PD-1, and anti-PD-L1 therapeutic antibodies
+* Treatment with systemic immunostimulatory agents (including, but not limited to, interferon and interleukin 2) within 4 weeks or five half-lives of the drug (whichever is longer) prior to initiation of study treatment
+* Treatment with systemic immunosuppressive medication (including, but not limited to, corticosteroids, cyclophosphamide, azathioprine, methotrexate, thalidomide, and anti-TNF-alpha agents) within 2 weeks prior to initiation of study treatment, or anticipation of need for systemic immunosuppressive medication during the course of the study, with the following exceptions:
+
+  * Patients who received low-dose immunosuppressant medication are eligible for the study
+  * Patients who received mineralocorticoids (e.g., fludrocortisone), corticosteroids for chronic obstructive pulmonary disease or asthma, or low-dose corticosteroids for orthostatic hypotension or adrenal insufficiency are eligible for the study
+* Pregnant or breastfeeding, or intending to become pregnant during the study
+
+  * Women of childbearing potential must have a negative serum pregnancy test result within 14 days prior to initiation of study treatment",18 Years,,ALL,False,"[{'measure': 'Overall best response rate (partial response or complete response)', 'description': 'Will estimate the best response rate and its 95% exact confidence interval using the Clopper and Pearson method.', 'timeFrame': 'Up to 2 years'}]","[{'measure': 'Objective response', 'description': 'Will be determined by an independent radiologist according to immune-modified RECIST.', 'timeFrame': 'Up to 2 years'}, {'measure': 'Progression free survival', 'description': 'Will be determined by an independent radiologist according to RECIST v1.1. Will be estimated using the Kaplan-Meier method. The log-rank test will be performed to test the difference in time-to-event distributions between patient groups. Cox proportional hazards model may be utilized to include multiple covariates in the time-to-event analysis.', 'timeFrame': 'Time from enrollment to the first occurrence of disease progression or death from any cause, whichever occurs first, assessed up to 2 years'}, {'measure': 'Duration of response', 'description': 'Will be determined by an independent radiologist according to RECIST v1.1. Will be estimated using the Kaplan-Meier method. The log-rank test will be performed to test the difference in time-to-event distributions between patient groups. Cox proportional hazards model may be utilized to include multiple covariates in the time-to-event analysis.', 'timeFrame': 'Time from the first occurrence of a documented objective response to disease progression or death from any cause, whichever occurs first, assessed up to 2 years'}, {'measure': 'Disease control', 'description': 'Will be determined by an independent radiologist according to RECIST v1.1.', 'timeFrame': 'Up to 2 years'}, {'measure': 'Overall survival', 'description': 'Will be estimated using the Kaplan-Meier method. The log-rank test will be performed to test the difference in time-to-event distributions between patient groups. Cox proportional hazards model may be utilized to include multiple covariates in the time-to-event analysis.', 'timeFrame': 'Time from enrollment to death from any cause, assessed up to 2 years'}, {'measure': 'Occurrence and severity of adverse events', 'description': 'Will be determined according to National Cancer Institute Common Terminology Criteria for Adverse Events, version 5.0. Toxicity data will be summarized by frequency tables.', 'timeFrame': 'Up to 30 days post-intervention'}]",2021-03-01,2021-09-02,2021-03-02,WITHDRAWN,The study will not be opening. Support was withdrawn.,False,M.D. Anderson Cancer Center,OTHER,[],[],2025-09-01T07:32:00.968743,v2

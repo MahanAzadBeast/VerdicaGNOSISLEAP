@@ -1,0 +1,11 @@
+requests
+pandas
+pyarrow
+pubchempy
+rdkit
+tqdm
+numpy
+icd10-cm
+python-dateutil
+retrying
+scikit-learn
