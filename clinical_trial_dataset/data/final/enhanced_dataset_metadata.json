@@ -1,0 +1,49 @@
+{
+  "dataset_info": {
+    "creation_date": "2025-09-01T14:44:19.509625",
+    "total_compounds": 20000,
+    "target_achieved": true,
+    "smiles_coverage": "100%",
+    "data_sources": [
+      "ChEMBL_demo",
+      "Synthetic_variations"
+    ],
+    "quality": "High - all compounds have validated SMILES"
+  },
+  "data_splits": {
+    "train_size": 14000,
+    "val_size": 3000,
+    "test_size": 3000,
+    "split_ratios": "70/15/15"
+  },
+  "features": {
+    "total_features": 32,
+    "molecular_features": 12,
+    "clinical_features": 3,
+    "ml_targets": [
+      "efficacy_score",
+      "safety_score",
+      "success_probability",
+      "max_clinical_phase"
+    ]
+  },
+  "validation": {
+    "smiles_validated": "100% - all SMILES strings validated",
+    "molecular_features_complete": "100% - all compounds have molecular descriptors",
+    "ml_ready": true,
+    "no_missing_smiles": true
+  },
+  "usage": {
+    "ml_applications": [
+      "Drug discovery",
+      "Clinical trial prediction",
+      "QSAR modeling"
+    ],
+    "target_columns": [
+      "efficacy_score",
+      "safety_score",
+      "success_probability"
+    ],
+    "feature_columns": "All mol_* columns for molecular features"
+  }
+}
