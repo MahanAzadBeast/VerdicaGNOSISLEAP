@@ -1,0 +1,28 @@
+{
+  "dataset_info": {
+    "total_compounds": 3490,
+    "train_compounds": 2443,
+    "val_compounds": 523,
+    "test_compounds": 524,
+    "smiles_coverage": "100%",
+    "data_sources": [
+      "Clinical_Trials_+_ChEMBL",
+      "Clinical_Trials_+_PubChem",
+      "ChEMBL_API"
+    ],
+    "collection_date": "2025-09-01T15:24:51.920125",
+    "dataset_type": "Integrated Real Clinical Trials + Pharmaceutical Compounds"
+  },
+  "data_composition": {
+    "clinical_trial_compounds": 30,
+    "chembl_only_compounds": 3460,
+    "integration_method": "Drug name matching with SMILES lookup"
+  },
+  "data_quality": {
+    "duplicate_smiles_removed": true,
+    "all_compounds_have_smiles": true,
+    "molecular_properties_included": true,
+    "clinical_trial_data_included": true,
+    "real_api_sources_only": true
+  }
+}
