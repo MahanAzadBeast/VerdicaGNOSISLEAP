@@ -262,5 +262,266 @@
     "smiles": null,
     "source": "not_found",
     "search_method": "comprehensive_search_failed"
+  },
+  "2% chlorhexidine gluconate in 70% alcohol": {
+    "smiles": "N=C(NCCCCCCNC(=N)NC(=N)Nc1ccc(Cl)cc1)NC(=N)Nc1ccc(Cl)cc1.O=C(O)[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO.O=C(O)[C@H](O)[C@@H](O)[C@H](O)[C@H](O)CO",
+    "source": "chembl",
+    "chembl_id": "CHEMBL4297088",
+    "search_method": "chembl_api"
+  },
+  "2-methoxyestradiol": {
+    "smiles": "COc1cc2c(cc1O)CC[C@@H]1[C@@H]2CC[C@]2(C)[C@@H](O)CC[C@@H]12",
+    "source": "chembl",
+    "chembl_id": "CHEMBL299613",
+    "search_method": "chembl_api"
+  },
+  "2.5mg/d Hetrombopag": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "20 mg VEC-162": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "20 mg baclofen vaginal suppository daily per vagina": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "20 million Allogeneic Mesenchymal Human Stem Cells": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "20% betulinic acid ointment": {
+    "smiles": "C=C(C)[C@@H]1CC[C@]2(C(=O)O)CC[C@]3(C)[C@H](CC[C@@H]4[C@@]5(C)CC[C@H](O)C(C)(C)[C@@H]5CC[C@]43C)[C@@H]12",
+    "source": "chembl",
+    "chembl_id": "CHEMBL269277",
+    "search_method": "chembl_api"
+  },
+  "200 mg emtricitabine and": {
+    "smiles": "Nc1nc(=O)n([C@@H]2CS[C@H](CO)O2)cc1F",
+    "source": "chembl",
+    "chembl_id": "CHEMBL885",
+    "search_method": "chembl_api"
+  },
+  "200mg Cannabidiol by capsules twice daily": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "20mg daily citalopram": {
+    "smiles": "CN(C)CCCC1(c2ccc(F)cc2)OCc2cc(C#N)ccc21",
+    "source": "chembl",
+    "chembl_id": "CHEMBL549",
+    "search_method": "chembl_api"
+  },
+  "250 mg SRT2104 Suspension": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "2LVERU or 2LVERU JUNIOR": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "3,4-methylenedioxymethamphetamine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "3.70 GBq of 177Lu-JH04": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "30 ml %0.25 bupivacaine": {
+    "smiles": "CCCCN1CCCCC1C(=O)Nc1c(C)cccc1C",
+    "source": "chembl",
+    "chembl_id": "CHEMBL1098",
+    "search_method": "chembl_api"
+  },
+  "30% oral glucose": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "300 mg Cannabidiol oil": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "3BNC117-LS": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "3L PEG + Linaclotide": {
+    "smiles": "C[C@@H]1NC(=O)[C@@H]2CCCN2C(=O)[C@H](CC(N)=O)NC(=O)[C@@H]2CSSC[C@H](N)C(=O)N[C@H]3CSSC[C@H](NC1=O)C(=O)N[C@@H]([C@@H](C)O)C(=O)NCC(=O)N[C@H](C(=O)N[C@@H](Cc1ccc(O)cc1)C(=O)O)CSSC[C@H](NC(=O)[C@H](Cc1ccc(O)cc1)NC(=O)[C@H](CCC(=O)O)NC3=O)C(=O)N2",
+    "source": "chembl",
+    "chembl_id": "CHEMBL3301675",
+    "search_method": "chembl_api"
+  },
+  "4% Topical Lidocaine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "40mg lurasidone": {
+    "smiles": "O=C1[C@@H]2[C@H]3CC[C@H](C3)[C@@H]2C(=O)N1C[C@@H]1CCCC[C@H]1CN1CCN(c2nsc3ccccc23)CC1",
+    "source": "chembl",
+    "chembl_id": "CHEMBL1237021",
+    "search_method": "chembl_api"
+  },
+  "4cycles(Toripalimab IV": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "5 Fluorouracil with hyaluronic acid": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "5 mg Serlopitant Tablets": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "5-Fluorouracil": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "5-aminolevulinic acid": {
+    "smiles": "NCC(=O)CCC(=O)O",
+    "source": "chembl",
+    "chembl_id": "CHEMBL601",
+    "search_method": "chembl_api"
+  },
+  "50 mg AVL-292": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "50mcg estradiol": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "56mg esketamine (2x Spravato": {
+    "smiles": "CN[C@]1(c2ccccc2Cl)CCCCC1=O",
+    "source": "chembl",
+    "chembl_id": "CHEMBL395091",
+    "search_method": "chembl_api"
+  },
+  "5mg/kg omalizumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "6% Hydroxy-ethyl starch": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "64Cu-FBP8": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "68Ga-DOTATATE": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "68Ga-Dotatate": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "68Ga-FAPI": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "68Ga-ICAM-1pep": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "68Ga-PSMA-11": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "68Ga-PSMA-617 PET/CT": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "68Ga-Pentixather": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "7-hydroxystaurosporine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "744": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "75 mg linzagolix": {
+    "smiles": "COc1cc(F)c(-n2c(=O)[nH]c3csc(C(=O)O)c3c2=O)cc1OCc1c(OC)ccc(F)c1F",
+    "source": "chembl",
+    "chembl_id": "CHEMBL3668014",
+    "search_method": "chembl_api"
+  },
+  "89Zr-bevacizumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "99mTc-PYP": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "A MENOPUR": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "A-101 Vehicle": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "A006 DPI": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "A:JNJ-39758979/Placebo #1": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "ABBV-383": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "ABBV-722": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
   }
 }
