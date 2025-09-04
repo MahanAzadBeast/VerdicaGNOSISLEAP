@@ -1,0 +1,7 @@
+{
+  "integrated_dataset_info": {
+    "total_trials": 5588,
+    "trials_with_smiles": 1173,
+    "smiles_coverage_percentage": 20.99,
+    "nct02688101_included": true,
+    "nct02688101_has_smiles": 
