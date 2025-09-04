@@ -1,0 +1,266 @@
+{
+  "\"Endostar\"": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "-9bMS": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "0.0ng/ml Dexmedetomidine": {
+    "smiles": "Cc1cccc([C@H](C)c2c[nH]cn2)c1C",
+    "source": "chembl",
+    "chembl_id": "CHEMBL778",
+    "search_method": "chembl_api"
+  },
+  "0.1% or 0.2% ropivacaine nerve blocks": {
+    "smiles": "CCCN1CCCC[C@H]1C(=O)Nc1c(C)cccc1C",
+    "source": "chembl",
+    "chembl_id": "CHEMBL1077896",
+    "search_method": "chembl_api"
+  },
+  "0.5% bupivacaine": {
+    "smiles": "CCCCN1CCCCC1C(=O)Nc1c(C)cccc1C",
+    "source": "chembl",
+    "chembl_id": "CHEMBL1098",
+    "search_method": "chembl_api"
+  },
+  "0.5% ropivacaine": {
+    "smiles": "CCCN1CCCC[C@H]1C(=O)Nc1c(C)cccc1C",
+    "source": "chembl",
+    "chembl_id": "CHEMBL1077896",
+    "search_method": "chembl_api"
+  },
+  "0.75% Ropivacaine": {
+    "smiles": "CCCN1CCCC[C@H]1C(=O)Nc1c(C)cccc1C",
+    "source": "chembl",
+    "chembl_id": "CHEMBL1077896",
+    "search_method": "chembl_api"
+  },
+  "0.9% NaCl": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "0.9% Sodium Chloride": {
+    "smiles": "[Cl-].[Na+]",
+    "source": "chembl",
+    "chembl_id": "CHEMBL1200574",
+    "search_method": "chembl_api"
+  },
+  "0.9% Sodiun Chloride": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "009-1": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "0417": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "0444": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "1% Clascoterone": {
+    "smiles": "CCC(=O)O[C@]1(C(=O)CO)CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@]4(C)[C@H]3CC[C@@]21C",
+    "source": "chembl",
+    "chembl_id": "CHEMBL3590187",
+    "search_method": "chembl_api"
+  },
+  "1% Lidocaine": {
+    "smiles": "CCN(CC)CC(=O)Nc1c(C)cccc1C",
+    "source": "chembl",
+    "chembl_id": "CHEMBL79",
+    "search_method": "chembl_api"
+  },
+  "1% Lidocaine with Epinephrine": {
+    "smiles": "CCN(CC)CC(=O)Nc1c(C)cccc1C",
+    "source": "chembl",
+    "chembl_id": "CHEMBL79",
+    "search_method": "chembl_api"
+  },
+  "1% SPL7013": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "1- -L-Tryptophan": {
+    "smiles": "N[C@@H](Cc1c[nH]c2ccccc12)C(=O)O",
+    "source": "chembl",
+    "chembl_id": "CHEMBL54976",
+    "search_method": "chembl_api"
+  },
+  "1. amyloid PET\uff1b2. T807 PET": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "1.5g intravenous Exacyl": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "10 mg OPC-167832": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "100 mg AP1189": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "100 mg Delamanid": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "100 mg GRT0151Y": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "100% Oxygen": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "10ppm Oral Silver Particle": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "11.2 mg/m2 Purinostat Mesylate": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "111In-XYIMSR-01": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "11C-PBR28": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "122-0551": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "13-cis retinoic acid": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "140/100 \u03bcg Azelastine hydrochloride/Beclomethasone Dipropionate)": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "14C Tirzepatide": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "14C-JNJ26489112": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "15N Nitrate": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "17 hydroxyprogesterone caproate intramuscular injections": {
+    "smiles": "CCCCCC(=O)O[C@]1(C(C)=O)CC[C@H]2[C@@H]3CCC4=CC(=O)CC[C@]4(C)[C@H]3CC[C@@]21C",
+    "source": "chembl",
+    "chembl_id": "CHEMBL1200848",
+    "search_method": "chembl_api"
+  },
+  "177Lu-DOTATATE": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "177Lu-LNC1004": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "17beta Estradiol": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "18 F-FP-DTBZ": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "18F DCFBC": {
+    "smiles": "O=C(O)CC[C@H](NC(=O)N[C@@H](CSCc1ccc(F)cc1)C(=O)O)C(=O)O",
+    "source": "chembl",
+    "chembl_id": "CHEMBL1232667",
+    "search_method": "chembl_api"
+  },
+  "18F-DCFPyl": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "18F-FAPI": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "18F-FDG": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "18F-OP-801": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "18F-T807": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "18F-fluorofuranylnorprogesterone": {
+    "smiles": "C[C@]12CC[C@H]3[C@@H](CCC4=CC(=O)CC[C@@H]43)[C@@H]1C[C@H]1O[C@@H](c3ccco3)O[C@]12C(=O)CF",
+    "source": "chembl",
+    "chembl_id": "CHEMBL378031",
+    "search_method": "chembl_api"
+  },
+  "19 28z1xx CAR T cells": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  },
+  "1L PEG + ASCORBIC ACID": {
+    "smiles": "O=C1O[C@H]([C@@H](O)CO)C(O)=C1O",
+    "source": "chembl",
+    "chembl_id": "CHEMBL196",
+    "search_method": "chembl_api"
+  },
+  "2% Mepivacaine with 1:100,000 epinephrine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed"
+  }
+}
