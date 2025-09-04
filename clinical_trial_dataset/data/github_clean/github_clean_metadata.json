@@ -1,0 +1,31 @@
+{
+  "github_clean_datasets": {
+    "creation_date": "2025-09-04T01:06:28.126373",
+    "purpose": "Clean datasets for GitHub without large file history",
+    "clinical_trials": {
+      "total_trials": 50112,
+      "parts": 6,
+      "nct02688101_location": "clinical_trials_part_1.csv",
+      "dpc_smiles": "S=C(N/N=C(C1=NC=CC=C1)\\C2=NC=CC=C2)N(C3CCCCC3)C"
+    },
+    "safety_trials": {
+      "total_trials": 25156,
+      "parts": 3
+    },
+    "compounds": {
+      "total_compounds": 23970,
+      "includes_dpc": true
+    }
+  },
+  "reconstruction": {
+    "clinical_trials": "Load all clinical_trials_part_*.csv and concatenate",
+    "safety_trials": "Load all safety_trials_part_*.csv and concatenate",
+    "verification": "Check for NCT02688101 in reconstructed clinical trials"
+  },
+  "data_quality": {
+    "no_synthetic_data": true,
+    "real_nct_ids_only": true,
+    "real_chembl_ids_only": true,
+    "comprehensive_verification": true
+  }
+}
