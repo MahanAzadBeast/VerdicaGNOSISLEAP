@@ -262,5 +262,1949 @@
     "source": "not_found",
     "search_method": "comprehensive_search_failed",
     "confidence": "none"
+  },
+  "18F-FAPI": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "18F-FDG": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "18F-OP-801": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "18F-T807": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "18F-fluorofuranylnorprogesterone": {
+    "smiles": "C[C@]12CC[C@H]3[C@@H](CCC4=CC(=O)CC[C@@H]43)[C@@H]1C[C@H]1O[C@@H](c3ccco3)O[C@]12C(=O)CF",
+    "chembl_id": "CHEMBL378031",
+    "molecular_weight": 428.5,
+    "logp": 4.72,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "19 28z1xx CAR T cells": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "1L PEG + ASCORBIC ACID": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "2% Mepivacaine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "2% chlorhexidine gluconate in 70% alcohol": {
+    "smiles": "Cl.Cl.N=C(NCCCCCCNC(=N)NC(=N)Nc1ccc(Cl)cc1)NC(=N)Nc1ccc(Cl)cc1",
+    "chembl_id": "CHEMBL1484251",
+    "molecular_weight": 578.38,
+    "logp": 4.18,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "2-methoxyestradiol": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "2.5mg/d Hetrombopag": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "20 mg VEC-162": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "20 mg baclofen": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "20 million Allogeneic Mesenchymal Human Stem Cells": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "20% betulinic acid ointment": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "200 mg emtricitabine and": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "200mg Cannabidiol by capsules twice daily": {
+    "smiles": "C=C(C)[C@@H]1CCC(C)=C[C@H]1c1c(O)cc(CCCCC)cc1O",
+    "chembl_id": "CHEMBL190461",
+    "molecular_weight": 314.47,
+    "logp": 5.85,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "20mg daily citalopram": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "250 mg SRT2104": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "2LVERU or 2LVERU JUNIOR": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "3,4-methylenedioxymethamphetamine": {
+    "smiles": "CC(N)Cc1ccccc1",
+    "chembl_id": "CHEMBL405",
+    "molecular_weight": 135.21,
+    "logp": 1.58,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "3.70 GBq of 177Lu-JH04": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "30 ml %0.25 bupivacaine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "30%": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "300 mg Cannabidiol oil": {
+    "smiles": "C=C(C)[C@@H]1CCC(C)=C[C@H]1c1c(O)cc(CCCCC)cc1O",
+    "chembl_id": "CHEMBL190461",
+    "molecular_weight": 314.47,
+    "logp": 5.85,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "3BNC117-LS": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "3L PEG + Linaclotide": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "40mg lurasidone": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "4cycles(Toripalimab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "5 Fluorouracil": {
+    "smiles": "O=c1cc[nH]c(=O)[nH]1",
+    "chembl_id": "CHEMBL566",
+    "molecular_weight": 112.09,
+    "logp": -0.94,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "5 mg Serlopitant Tablets": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "5-Fluorouracil": {
+    "smiles": "O=c1cc[nH]c(=O)[nH]1",
+    "chembl_id": "CHEMBL566",
+    "molecular_weight": 112.09,
+    "logp": -0.94,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "5-aminolevulinic acid": {
+    "smiles": "O=C(O)c1ccccc1O",
+    "chembl_id": "CHEMBL424",
+    "molecular_weight": 138.12,
+    "logp": 1.09,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "50 mg AVL-292": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "50mcg estradiol": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "56mg esketamine (2x Spravato": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "5mg/kg omalizumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "6% Hydroxy-ethyl starch": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "64Cu-FBP8": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "68Ga-DOTATATE": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "68Ga-Dotatate": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "68Ga-FAPI": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "68Ga-ICAM-1pep": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "68Ga-PSMA-11": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "68Ga-PSMA-617 PET/CT": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "68Ga-Pentixather": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "7-hydroxystaurosporine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "744": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "75 mg linzagolix": {
+    "smiles": "COc1cc(F)c(-n2c(=O)[nH]c3csc(C(=O)[O-])c3c2=O)cc1OCc1c(OC)ccc(F)c1F.C[N+](C)(C)CCO",
+    "chembl_id": "CHEMBL4298171",
+    "molecular_weight": 611.6,
+    "logp": 3.45,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "89Zr-bevacizumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "99mTc-PYP": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "9bMS": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "A MENOPUR": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "A-101 Vehicle": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "A006 DPI": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "A:JNJ-39758979/Placebo #1": {
+    "smiles": "CC(C)c1cc(N2CC[C@@H](N)C2)nc(N)n1",
+    "chembl_id": "CHEMBL3236549",
+    "molecular_weight": 221.31,
+    "logp": 0.72,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "ABBV-383": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABBV-722": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABI-007": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABI-009": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABI-1968": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABL503": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABP 501": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABT-143": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABT-199": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABT-263": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABT-335": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABT-450": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABT-719": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABT-751": {
+    "smiles": "COc1ccc(S(=O)(=O)Nc2cccnc2Nc2ccc(O)cc2)cc1",
+    "chembl_id": "CHEMBL20684",
+    "molecular_weight": 371.42,
+    "logp": 3.34,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "ABT-869": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABT-894": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABVD regimen": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ABX, cisplatin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AC-1204 mixed in water": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AC0058TA": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ACEI/CCB": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ACETAZOLAMIDE": {
+    "smiles": "CC(=O)Nc1nnc(S(N)(=O)=O)s1",
+    "chembl_id": "CHEMBL20",
+    "molecular_weight": 222.25,
+    "logp": -0.86,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "ACEi / ARB, SGLT2i, finerenone, semaglutide, pentoxifylline, hydrochlorthiazide, baricitinib": {
+    "smiles": "CCOc1ncc(C)c2c1[C@H](c1ccc(C#N)cc1OC)C(C(N)=O)=C(C)N2",
+    "chembl_id": "CHEMBL2181927",
+    "molecular_weight": 378.43,
+    "logp": 2.99,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "ACP-104": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ACT-129968": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ACT-389949": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ACTH": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ACTHAR": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ACZ885": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AD-214 10/600mg": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ADC-189": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ADH-1": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ADJUVANT ENDOCRINE THERAPY": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ADS-5102": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ADT": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ADU-1805": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AEONTM Repair": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AFLIBERCEPT": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AFP464": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AG-920": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AGN-229666": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AIN457": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AK104": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AK104+anlotinib": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AK105\uff0cAnrotinib hydrochloride": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AK111": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AK117 in combination": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AK135": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AK3280": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AL-12182 0.003% Ophthalmic": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AL-335": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AL2846 Capsules": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AL8326 tablets": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ALIMTA": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ALK HDM": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ALKS 2680": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ALKS 3831": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ALKS 5461": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ALN-SOD": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ALRN-6924": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ALS-008176": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ALXN2080": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ALXN2420": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AM-111 0.4 mg/ml": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AMC303": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AMG 162": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AMG 256": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AMG 333": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AMG 745 0.3 mg/kg": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AMG 954/Panitumumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AMN107": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AMP945 ascending doses": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AMR101": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AMZ001": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AN2690, 2.5%": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ANEB-001": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ANS-6637": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ANS014004": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ANT3310": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AP01": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AP1903": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AP306": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "APG-2449": {
+    "smiles": "Cc1cc(Nc2ncc(Cl)c(Nc3ccccc3S(=O)(=O)C(C)C)n2)c(OC(C)C)cc1C1=CCN(C2CCOCC2)CC1",
+    "chembl_id": "CHEMBL5095166",
+    "molecular_weight": 640.25,
+    "logp": 7.16,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "APX001": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "APX001 single": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AQW051": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AR-13324 Ophthalmic": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AR-42": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AR/101": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ARC-520": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ARD-0403": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ARQ-151": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ARRY-334543, EGFR/ErbB2 inhibitor;": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ARRY-371797, p38 inhibitor;": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ARRY-382": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ARX517": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASC22 group": {
+    "smiles": "CCOC=O",
+    "chembl_id": "CHEMBL44215",
+    "molecular_weight": 74.08,
+    "logp": 0.18,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "ASC41": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASC42": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASC47 +Semaglutide": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASLAN003 ACTIVE": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASM-024": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASN002": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASP-1001 nasal": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASP0598": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASP1707 single dose of dose levels 1 -7": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASP1941": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASP3662": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASP4345": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASP8062": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ASTX727 + Day 2 Food": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AT-1501": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AT1001": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ATB-320": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ATG-008": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ATG-Fresenius S": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ATRA": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "ATTO-1310": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AUY922": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AV 101": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AV5080": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AV650": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AVE5530": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AVI-7100": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AXR-159": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AXR-270 Low Dose": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD0486": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD1940": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD2014": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD2014 3 on/4 off & weekly paclitaxel": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD3043": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD4547": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD4635": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD4831": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD5055": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD5718": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD7325": {
+    "smiles": "CCCNC(=O)c1nnc2c(-c3c(F)cccc3OC)cccc2c1N",
+    "chembl_id": "CHEMBL1783282",
+    "molecular_weight": 354.39,
+    "logp": 3.17,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "AZD8309": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD8330": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD8566": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD9150, Durvalumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD9550": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZD9819": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZLI": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "AZR-MD-001 Active": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Abacavir/Lamivudine": {
+    "smiles": "Nc1nc(NC2CC2)c2ncn([C@H]3C=C[C@@H](CO)C3)c2n1",
+    "chembl_id": "CHEMBL1380",
+    "molecular_weight": 286.34,
+    "logp": 1.09,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Abatacept": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Abatacept Active Treatment": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Abediterol": {
+    "smiles": "O=c1ccc2c([C@@H](O)CNCCCCCCOCC(F)(F)c3ccccc3)ccc(O)c2[nH]1",
+    "chembl_id": "CHEMBL3039530",
+    "molecular_weight": 460.52,
+    "logp": 4.23,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Abilify": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Abiraterone Acetate": {
+    "smiles": "COc1cccc([C@H]2O[C@H](CC(=O)N3CCC(CC(=O)O)CC3)C(=O)N(CC(C)(C)COC(C)=O)c3ccc(Cl)cc32)c1OC",
+    "chembl_id": "CHEMBL435224",
+    "molecular_weight": 645.15,
+    "logp": 4.87,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Abiraterone acetate: participants": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Ablavar": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Abraxane": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Abxicimab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Ac-AKY-1189": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Acalabrutinib": {
+    "smiles": "C[C@@H]1O[C@@H](OC[C@H]2O[C@@H](Oc3c(-c4ccc(O)c(O)c4)oc4cc(O)cc(O)c4c3=O)[C@H](O)[C@@H](O)[C@@H]2O)[C@H](O)[C@H](O)[C@H]1O",
+    "chembl_id": "CHEMBL226335",
+    "molecular_weight": 610.52,
+    "logp": -1.69,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Acamprosate calcium": {
+    "smiles": "CC(=O)NCCCS(=O)(=O)[O-].CC(=O)NCCCS(=O)(=O)[O-].[Ca+2]",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL2068724",
+    "molecular_weight": "400.49",
+    "logp": "-0.60",
+    "search_method": "chembl_api_Acamprosate calcium",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Acarbose": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Acetaminophen": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Acetaminophen/APAP": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Acetazolamide": {
+    "smiles": "CC(=O)Nc1nnc(S(N)(=O)=O)s1",
+    "chembl_id": "CHEMBL20",
+    "molecular_weight": 222.25,
+    "logp": -0.86,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Acetylcholine": {
+    "smiles": "CC(=O)OCC[N+](C)(C)C",
+    "chembl_id": "CHEMBL667",
+    "molecular_weight": 146.21,
+    "logp": 0.26,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Acetylcysteine": {
+    "smiles": "N[C@@H](CS)C(=O)O",
+    "chembl_id": "CHEMBL863",
+    "molecular_weight": 121.16,
+    "logp": -0.67,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Acetylsalicylic Acid": {
+    "smiles": "O=C(O)c1ccccc1O",
+    "chembl_id": "CHEMBL424",
+    "molecular_weight": 138.12,
+    "logp": 1.09,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Acipimox": {
+    "smiles": "Cc1cnc(C(=O)O)c[n+]1[O-]",
+    "chembl_id": "CHEMBL345714",
+    "molecular_weight": 154.12,
+    "logp": -0.28,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Acoramidis": {
+    "smiles": "Cc1n[nH]c(C)c1CCCOc1cc(C(=O)O)ccc1F",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL3940890",
+    "molecular_weight": "292.31",
+    "logp": "2.88",
+    "search_method": "chembl_api_Acoramidis",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Acoziborole": {
+    "smiles": "CC1(C)OB(O)c2cc(NC(=O)c3ccc(F)cc3C(F)(F)F)ccc21",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL2347704",
+    "molecular_weight": "367.11",
+    "logp": null,
+    "search_method": "chembl_api_Acoziborole",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Acthrel": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Active comparator: Modafinil + placebo": {
+    "smiles": "NC(=O)C[S+]([O-])C(c1ccccc1)c1ccccc1",
+    "chembl_id": "CHEMBL1373",
+    "molecular_weight": 273.36,
+    "logp": 2.01,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Active drug for chronic migraine treatment": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Actos": {
+    "smiles": "Cc1cccc(-c2[nH]c(CNc3ccccc3F)nc2-c2ccc3ncnn3c2)n1",
+    "chembl_id": "CHEMBL3260567",
+    "molecular_weight": 399.43,
+    "logp": 4.24,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Acular LS": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Acyclovir": {
+    "smiles": "CC(C)[C@H](N)C(=O)OCCOCn1cnc2c(=O)nc(N)[nH]c21",
+    "chembl_id": "CHEMBL1349",
+    "molecular_weight": 324.34,
+    "logp": -0.8,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Acyline": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adavosertib": {
+    "smiles": "C=CCn1c(=O)c2cnc(Nc3ccc(N4CCN(C)CC4)cc3)nc2n1-c1cccc(C(C)(C)O)n1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL1976040",
+    "molecular_weight": "500.61",
+    "logp": "2.89",
+    "search_method": "chembl_api_Adavosertib",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Adderall": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adding": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Addition of anti-GD2 immunotherapy at the stage of induction chemotherapy": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adebrelimab, Irinotecan Liposome": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adhansia XR": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adipose Derived Mesenchymal Stem Cells": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adjuvant analgesia": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Administration of METHOXYFLURANE": {
+    "smiles": "COC(F)(F)C(Cl)Cl",
+    "chembl_id": "CHEMBL1341",
+    "molecular_weight": 164.97,
+    "logp": 2.03,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Administration of T4P1001 capsules": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adoptive TIL-TCM transfer therapy": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adrenaline": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adriamycin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adriamycin, cyclophosphamide, vindesine, valproic acid": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Adult patients diagnosed": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Advagraf": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aerosolized iloprost": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aerosoltherapy": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Afatinib": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Afimkibart": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aflibercept": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Akt Inhibitor MK2206": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Al18F-NOTA-FAPI": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alanyl-glutamine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Albaconazole": {
+    "smiles": "C[C@@H](n1cnc2cc(Cl)ccc2c1=O)[C@](O)(Cn1cncn1)c1ccc(F)cc1F",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL298817",
+    "molecular_weight": "431.83",
+    "logp": "3.07",
+    "search_method": "chembl_api_Albaconazole",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Albendazole": {
+    "smiles": "CCCSc1ccc2[nH]c(NC(=O)OC)nc2c1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL1483",
+    "molecular_weight": "265.34",
+    "logp": "3.24",
+    "search_method": "chembl_api_Albendazole",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Albuterol": {
+    "smiles": "CC(C)(C)NCC(O)c1ccc(O)c(CO)c1.CC(C)(C)NCC(O)c1ccc(O)c(CO)c1.O=S(=O)(O)O",
+    "chembl_id": "CHEMBL1441059",
+    "molecular_weight": 576.71,
+    "logp": 1.31,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Albuterol Sulfate inhalation aerosol": {
+    "smiles": "CC(CC(C(N)=O)(c1ccccc1)c1ccccc1)N(C)C",
+    "chembl_id": "CHEMBL92915",
+    "molecular_weight": 296.41,
+    "logp": 2.8,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Albuterol sulfate metered-dose inhaler 180 \u03bcg": {
+    "smiles": "CC(C)(C)NCC(O)c1ccc(O)c(CO)c1.CC(C)(C)NCC(O)c1ccc(O)c(CO)c1.O=S(=O)(O)O",
+    "chembl_id": "CHEMBL1441059",
+    "molecular_weight": 576.71,
+    "logp": 1.31,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Albuterol-sulphate": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alcohol": {
+    "smiles": "C=C(C)[C@@H]1CC=C(CO)CC1",
+    "chembl_id": "CHEMBL236687",
+    "molecular_weight": 152.24,
+    "logp": 2.28,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Alcohol 30%": {
+    "smiles": "C=C(C)[C@@H]1CC=C(CO)CC1",
+    "chembl_id": "CHEMBL236687",
+    "molecular_weight": 152.24,
+    "logp": 2.28,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Aldesleukin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alectinib": {
+    "smiles": "CCc1cc2c(cc1N1CCC(N3CCOCC3)CC1)C(C)(C)c1[nH]c3cc(C#N)ccc3c1C2=O",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL1738797",
+    "molecular_weight": "482.63",
+    "logp": "4.77",
+    "search_method": "chembl_api_Alectinib",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Alemtuzumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alemtuzumab 0.3 mg": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alendronate": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alendronate sodium": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alglucosidase Alfa": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alirocumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alirocumab SAR236553": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aliskiren": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aliviador": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "All Subjects": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Allergy immunotherapy": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Allocetra": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Allogeneic Cell Therapy w/ Tumor-derived Lypho": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Allopurinol": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Almonertinib": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aloe vera": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alogliptin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alpelisib": {
+    "smiles": "Cc1nc(NC(=O)N2CCC[C@H]2C(N)=O)sc1-c1ccnc(C(C)(C)C(F)(F)F)c1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL2396661",
+    "molecular_weight": "441.48",
+    "logp": "3.84",
+    "search_method": "chembl_api_Alpelisib",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Alpha-Agonist": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alprostadil": {
+    "smiles": "CCCCC[C@H](O)/C=C/[C@H]1[C@H](O)CC(=O)[C@@H]1CCCCCCC(=O)O",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL495",
+    "molecular_weight": "354.49",
+    "logp": "3.48",
+    "search_method": "chembl_api_Alprostadil",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Altabax": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alteplase": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alteplase /Actilyse": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Alvesco Inhalant Product": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amantadine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amantadine Hydrochloride": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amantadine as add on therapy": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amifostine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amino Acids": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amino acid": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amiodarone": {
+    "smiles": "CCCCc1oc2ccccc2c1C(=O)c1cc(I)c(OCCN(CC)CC)c(I)c1",
+    "chembl_id": "CHEMBL633",
+    "molecular_weight": 645.32,
+    "logp": 6.94,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Amivantamab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amlitelimab DP1": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amlodipine": {
+    "smiles": "CCOC(=O)C1=C(COCCN)NC(C)=C(C(=O)OC)[C@@H]1c1ccccc1Cl",
+    "chembl_id": "CHEMBL2111097",
+    "molecular_weight": 408.88,
+    "logp": 2.27,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Amlodipine, Losartan": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
   }
 }
