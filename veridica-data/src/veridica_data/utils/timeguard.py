@@ -5,7 +5,7 @@ Prevents information leakage by filtering data based on temporal constraints
 
 import pandas as pd
 from datetime import datetime
-from typing import Union, Optional
+from typing import Union, Optional, Tuple
 import logging
 
 logger = logging.getLogger(__name__)

@@ -4,7 +4,7 @@ Defines the structure for the master compound index
 """
 
 from pydantic import BaseModel, Field, validator
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from datetime import datetime
 
 
