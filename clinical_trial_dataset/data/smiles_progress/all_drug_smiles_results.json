@@ -2338,5 +2338,1999 @@
     "source": "not_found",
     "search_method": "comprehensive_search_failed",
     "confidence": "none"
+  },
+  "Anthracycline": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anti-BCMA": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anti-Bacterial Agents": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anti-CD19/BCMA CAR gene vector": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anti-Inflammatory Agents, Non-Steroidal": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anti-PD-1 antibody drug named Serplulimab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anti-Thymocyte Globulin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anti-aromatase inhibitor": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anti-hypertensive drugs": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Antiandrogen Therapy": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Antiarrhythmic medications": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Antibiotic": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Antibiotics": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Antibody-Drug Conjugate": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anticoagulants": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Antidepressant": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Antineoplaston therapy": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Antithrombin III": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Any platinum-based doublet chemotherapy": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Apalutamide": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Apatinib": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Apelin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Apixaban": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Apremilast": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aprepitant": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Arab children": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aramchol": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aranesp": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Arbaclofen placarbil,": {
+    "smiles": "CC(C)C(=O)O[C@@H](OC(=O)NC[C@H](CC(=O)O)c1ccc(Cl)cc1)C(C)C",
+    "chembl_id": "CHEMBL2107312",
+    "molecular_weight": 399.87,
+    "logp": 3.81,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Arginine hydrochloride": {
+    "smiles": "CN[C@@]1(C)[C@@H]2CC[C@@H](C2)C1(C)C.Cl",
+    "chembl_id": "CHEMBL2105753",
+    "molecular_weight": 203.76,
+    "logp": 2.42,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Aricept": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aripiprazole": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Arm #1 :Oral": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Arm I": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Armodafinil": {
+    "smiles": "NC(=O)C[S+]([O-])C(c1ccccc1)c1ccccc1",
+    "chembl_id": "CHEMBL1373",
+    "molecular_weight": 273.36,
+    "logp": 2.01,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Arsenic trioxide": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Artemether-lumefantrine combination": {
+    "smiles": "CCCCN(CCCC)CC(O)c1cc(Cl)cc2c1-c1ccc(Cl)cc1/C2=C/c1ccc(Cl)cc1",
+    "chembl_id": "CHEMBL38827",
+    "molecular_weight": 528.95,
+    "logp": 9.15,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Artesunate": {
+    "smiles": "C[C@H]1[C@H](OC(=O)CCC(=O)O)O[C@@H]2O[C@@]3(C)CC[C@H]4[C@H](C)CC[C@@H]1[C@@]24OO3",
+    "chembl_id": "CHEMBL361497",
+    "molecular_weight": 384.43,
+    "logp": 2.6,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Artesunate Suppositories": {
+    "smiles": "C[C@H]1[C@H](OC(=O)CCC(=O)O)O[C@@H]2O[C@@]3(C)CC[C@H]4[C@H](C)CC[C@@H]1[C@@]24OO3",
+    "chembl_id": "CHEMBL361497",
+    "molecular_weight": 384.43,
+    "logp": 2.6,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Asacol": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Ascorbic acid": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Asenapine": {
+    "smiles": "CN1CC2c3ccccc3Oc3ccc(Cl)cc3C2C1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL3187365",
+    "molecular_weight": "285.77",
+    "logp": "4.26",
+    "search_method": "chembl_api_Asenapine",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Asenapine 2.5 mg": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Asparaginase": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aspirin": {
+    "smiles": "CC(=O)Oc1ccccc1C(=O)O",
+    "chembl_id": "CHEMBL25",
+    "molecular_weight": 180.16,
+    "logp": 1.31,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Aspirin + clopidogrel": {
+    "smiles": "CC(=O)Oc1ccccc1C(=O)O",
+    "chembl_id": "CHEMBL25",
+    "molecular_weight": 180.16,
+    "logp": 1.31,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Assigned pulmonary hypertension medication": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Astragalus": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Atacicept": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Ataluren": {
+    "smiles": "O=C(O)c1cccc(-c2noc(-c3ccccc3F)n2)c1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL256997",
+    "molecular_weight": "284.25",
+    "logp": "3.24",
+    "search_method": "chembl_api_Ataluren",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Atazanavir": {
+    "smiles": "COC(=O)N[C@H](C(=O)N[C@@H](Cc1ccccc1)[C@@H](O)CN(Cc1ccc(-c2ccccn2)cc1)NC(=O)[C@@H](NC(=O)OC)C(C)(C)C)C(C)(C)C",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL1163",
+    "molecular_weight": "704.87",
+    "logp": "4.21",
+    "search_method": "chembl_api_Atazanavir",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Atazanvir/ritonavir + efavirenz": {
+    "smiles": "CC(C)c1nc(CN(C)C(=O)N[C@H](C(=O)N[C@@H](Cc2ccccc2)C[C@H](O)[C@H](Cc2ccccc2)NC(=O)OCc2cncs2)C(C)C)cs1",
+    "chembl_id": "CHEMBL163",
+    "molecular_weight": 720.96,
+    "logp": 5.91,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Atenolol": {
+    "smiles": "CC(C)NCC(O)COc1ccc(CC(N)=O)cc1",
+    "chembl_id": "CHEMBL24",
+    "molecular_weight": 266.34,
+    "logp": 0.45,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Atezolizumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Atezolizumab , an engineered anti-PD-L1 antibody": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Aticaprant": {
+    "smiles": "Cc1cc(C)cc([C@@H]2CCCN2Cc2ccc(Oc3ccc(C(N)=O)cc3F)cc2)c1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL1921847",
+    "molecular_weight": "418.51",
+    "logp": "5.67",
+    "search_method": "chembl_api_Aticaprant",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Atogepant": {
+    "smiles": "C[C@@H]1[C@H](c2c(F)ccc(F)c2F)C[C@H](NC(=O)c2cnc3c(c2)C[C@@]2(C3)C(=O)Nc3ncccc32)C(=O)N1CC(F)(F)F",
+    "chembl_id": "CHEMBL3991065",
+    "molecular_weight": 603.52,
+    "logp": 3.95,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Atomoxetine": {
+    "smiles": "CNCC[C@@H](Oc1ccccc1C)c1ccccc1.Cl",
+    "chembl_id": "CHEMBL1702",
+    "molecular_weight": 291.82,
+    "logp": 3.72,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Atomoxetine, then Placebo": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Atorvastatin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Atorvastatin Calcium Tablets,": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Atorvastatin treatment": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Atrasentan": {
+    "smiles": "CCCCN(CCCC)C(=O)CN1C[C@H](c2ccc3c(c2)OCO3)[C@@H](C(=O)O)[C@@H]1c1ccc(OC)cc1.Cl",
+    "chembl_id": "CHEMBL2106068",
+    "molecular_weight": 547.09,
+    "logp": 4.69,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Atropine Eye drops": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Autogene cevumeran": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Avatrombopag": {
+    "smiles": "O=C(Nc1nc(-c2cc(Cl)cs2)c(N2CCN(C3CCCCC3)CC2)s1)c1cnc(N2CCC(C(=O)O)CC2)c(Cl)c1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL2103883",
+    "molecular_weight": "649.67",
+    "logp": "6.58",
+    "search_method": "chembl_api_Avatrombopag",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Avelumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Avenciguat": {
+    "smiles": "CCOc1c(C(=O)O)cnn1-c1cccc(-c2cccc(C)c2OCc2ccc3c(c2C)CCN(C2CCOCC2)C3)n1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL5314503",
+    "molecular_weight": "582.70",
+    "logp": "5.76",
+    "search_method": "chembl_api_Avenciguat",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Avenciguat )": {
+    "smiles": "CCOc1c(C(=O)O)cnn1-c1cccc(-c2cccc(C)c2OCc2ccc3c(c2C)CCN(C2CCOCC2)C3)n1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL5314503",
+    "molecular_weight": "582.70",
+    "logp": "5.76",
+    "search_method": "chembl_api_Avenciguat )",
+    "confidence": "medium",
+    "match_score": 0.8333333333333334
+  },
+  "Avotermin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Axatilimab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Axitinib": {
+    "smiles": "CNC(=O)c1ccccc1Sc1ccc2c(/C=C/c3ccccn3)n[nH]c2c1",
+    "chembl_id": "CHEMBL1289926",
+    "molecular_weight": 386.48,
+    "logp": 4.64,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Azacitidine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Azathioprine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Azathioprine + infliximab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Azelaic acid": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Azeliragon": {
+    "smiles": "CCCCc1nc(-c2ccc(OCCCN(CC)CC)cc2)cn1-c1ccc(Oc2ccc(Cl)cc2)cc1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL3989929",
+    "molecular_weight": "532.13",
+    "logp": "8.44",
+    "search_method": "chembl_api_Azeliragon",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Azilsartan medoxomil": {
+    "smiles": "CCOc1nc2cccc(C(=O)O)c2n1Cc1ccc(-c2ccccc2-c2noc(=O)[nH]2)cc1",
+    "chembl_id": "CHEMBL57242",
+    "molecular_weight": 456.46,
+    "logp": 4.19,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Azithromycin": {
+    "smiles": "CC[C@H]1OC(=O)[C@H](C)[C@@H](O[C@H]2C[C@@](C)(OC)[C@@H](O)[C@H](C)O2)[C@H](C)[C@@H](O[C@@H]2O[C@H](C)C[C@H](N(C)C)[C@H]2O)[C@](C)(O)C[C@@H](C)CN(C)[C@H](C)[C@@H](O)[C@]1(C)O.O",
+    "chembl_id": "CHEMBL1200502",
+    "molecular_weight": 767.01,
+    "logp": 1.9,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Azithromycin SR": {
+    "smiles": "CC[C@H]1OC(=O)[C@H](C)[C@@H](O[C@H]2C[C@@](C)(OC)[C@@H](O)[C@H](C)O2)[C@H](C)[C@@H](O[C@@H]2O[C@H](C)C[C@H](N(C)C)[C@H]2O)[C@](C)(O)C[C@@H](C)CN(C)[C@H](C)[C@@H](O)[C@]1(C)O.O",
+    "chembl_id": "CHEMBL1200502",
+    "molecular_weight": 767.01,
+    "logp": 1.9,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "B-type Natriuretic Peptide": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "B013+Nab-Paclitaxel": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "B7H3 Affibody-BCH": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BAF312": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BAT1406": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BAT2306": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BAVU": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BAY1841788": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BAY1841788 / darolutamide": {
+    "smiles": "CC(O)c1cc(C(=O)N[C@@H](C)Cn2ccc(-c3ccc(C#N)c(Cl)c3)n2)n[nH]1",
+    "chembl_id": "CHEMBL4297185",
+    "molecular_weight": 398.85,
+    "logp": 2.67,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "BAY2395840": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BAY86-5300": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BAY86-9766": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BAY94-9343": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BB102": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BBI-355": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BBI-825": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BBI503": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BBI608": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BCA101": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BCD-063": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BCG Vaccine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BCX-1777": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BDP/formoterol NEXT DPI": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BEA 2180 BR": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BEET IT - Concentrate Beet root juice": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BET Bromodomain Inhibitor ZEN-3694": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BEZ235": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BG9418": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BGB-11417": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BGJ398": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 1015550": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 10773": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 10773 Placebo": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 10773 low dose": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 1265162": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 1291583": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 135585": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 1356": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 1569912": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 1744 CL": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 201335 NA": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 300202": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 409306": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 685509": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 754091": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 764198": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BI 770371": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIA 2-093": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIA 5-1058": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIA 9-1067": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIBF 1120 M + docetaxel M": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIBR 1048 MS": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIBW 2992": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIBW 2992 MA2 - single rising dose": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIIB 722 CL": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIIB017": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIIB021": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BIII 890 CL": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BISMUTH TETRACYCLINE METRONIDAZOLE OMEPRAZOLE": {
+    "smiles": "Cc1ncc([N+](=O)[O-])n1CCO.Cl",
+    "chembl_id": "CHEMBL1200869",
+    "molecular_weight": 207.62,
+    "logp": 0.09,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "BKM120": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BL-8040": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BL-8040 1.25 mg/kg + G-CSF": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BL-B01D1": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BL-M02D1": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BL0006": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BLI800": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BLI801": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMF-219": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMN 673": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMS-663068": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMS-791325": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMS-820836": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMS-824393": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMS-936559": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMS-955176": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMS-986090": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMS-986141": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMS-986368": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BMS747158": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BN83495": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BORTEZOMIB": {
+    "smiles": "CC(C)C[C@H](NC(=O)[C@H](Cc1ccccc1)NC(=O)c1cnccn1)B(O)O",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL325041",
+    "molecular_weight": "384.25",
+    "logp": null,
+    "search_method": "chembl_api_BORTEZOMIB",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "BOTOX": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BPI-7711": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BR+OR": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BR55": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BRIMOCHOL PF": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BSF 208075": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BVAC-C": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BYM338 active drug": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BZ371A": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "BZL101": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bacillus Calmette-Guerin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bacillus Calmette-Gu\u00e9rin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Baclofen": {
+    "smiles": "CC(C)C(=O)O[C@@H](OC(=O)NC[C@H](CC(=O)O)c1ccc(Cl)cc1)C(C)C",
+    "chembl_id": "CHEMBL2107312",
+    "molecular_weight": 399.87,
+    "logp": 3.81,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Balance": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Balovaptan": {
+    "smiles": "CN1Cc2cc(Cl)ccc2-n2c(nnc2[C@H]2CC[C@H](Oc3ccccn3)CC2)C1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL4297183",
+    "molecular_weight": "409.92",
+    "logp": "4.37",
+    "search_method": "chembl_api_Balovaptan",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Baracle Tab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Baricitinib": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Basic treatment: sulperazone + ursodeoxycholic acid + compound glycyrrhizin + methylprednisolone + vitamin AD , D , E , K + imipenem or meropenem": {
+    "smiles": "CC1(C)[C@@H](O[C@H]2O[C@H](C(=O)O)[C@@H](O)[C@H](O)[C@H]2O[C@@H]2O[C@H](C(=O)O)[C@@H](O)[C@H](O)[C@H]2O)CC[C@]2(C)[C@H]3C(=O)C=C4[C@@H]5C[C@@](C)(C(=O)O)CC[C@]5(C)CC[C@@]4(C)[C@]3(C)CC[C@@H]12",
+    "chembl_id": "CHEMBL441687",
+    "molecular_weight": 822.94,
+    "logp": 2.25,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Basiliximab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Baxdrostat": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bazedoxifene/Conjugated Estrogen": {
+    "smiles": "Cc1c(-c2ccc(O)cc2)n(Cc2ccc(OCCN3CCCCCC3)cc2)c2ccc(O)cc12",
+    "chembl_id": "CHEMBL46740",
+    "molecular_weight": 470.61,
+    "logp": 6.33,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Bazedoxifene/conjugated estrogens": {
+    "smiles": "Cc1c(-c2ccc(O)cc2)n(Cc2ccc(OCCN3CCCCCC3)cc2)c2ccc(O)cc12",
+    "chembl_id": "CHEMBL46740",
+    "molecular_weight": 470.61,
+    "logp": 6.33,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Beetroot juice": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Belantamab mafodotin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Belantamab mafodotin frozen liquid": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Belatacept": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Belimumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Belimumab for": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bellis perennis": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Belumosudil": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Belzutifan": {
+    "smiles": "CS(=O)(=O)c1ccc(Oc2cc(F)cc(C#N)c2)c2c1[C@H](O)[C@H](F)[C@@H]2F",
+    "chembl_id": "CHEMBL4585668",
+    "molecular_weight": 383.35,
+    "logp": 3.29,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Bemcentinib": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bemcentinib; pembrolizumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bempedoic Acid": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Benapenem": {
+    "smiles": "C[C@@H](O)[C@H]1C(=O)N2C(C(=O)O)=C(S[C@@H]3CN[C@H](C(=O)NCc4ccc(S(N)(=O)=O)cc4)C3)[C@H](C)[C@H]12",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL5095168",
+    "molecular_weight": "524.62",
+    "logp": "-0.43",
+    "search_method": "chembl_api_Benapenem",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Bendamustine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bendamustine Hydrochloride": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bendavia": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Benralizumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Benzathine Penicillin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Benzydamine Hydrochloride 0.15%": {
+    "smiles": "CN(C)CCCOc1nn(Cc2ccccc2)c2ccccc12.Cl",
+    "chembl_id": "CHEMBL1528134",
+    "molecular_weight": 345.87,
+    "logp": 3.42,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Bepotastine besilate": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Berberine": {
+    "smiles": "COc1ccc2c(c1OC)CN1CCc3cc4c(cc3C1=C2)OCO4",
+    "chembl_id": "CHEMBL11848",
+    "molecular_weight": 337.38,
+    "logp": 3.3,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Berberine hydrochloride": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Berzosertib": {
+    "smiles": "CNCc1ccc(-c2cc(-c3nc(-c4ccc(S(=O)(=O)C(C)C)cc4)cnc3N)on2)cc1",
+    "chembl_id": "CHEMBL3989870",
+    "molecular_weight": 463.56,
+    "logp": 3.95,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Beta-blockers including Carvedilol": {
+    "smiles": "COc1ccccc1OCCNCC(O)COc1cccc2[nH]c3ccccc3c12",
+    "chembl_id": "CHEMBL723",
+    "molecular_weight": 406.48,
+    "logp": 3.74,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Betamethasone-Calcipotriene": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Betanis": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bevacizumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bevacizumab-Pfizer": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bicalutamide": {
+    "smiles": "CC(O)(CS(=O)(=O)c1ccc(F)cc1)C(=O)Nc1ccc(C#N)c(C(F)(F)F)c1",
+    "chembl_id": "CHEMBL409",
+    "molecular_weight": 430.38,
+    "logp": 2.88,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Bictegravir": {
+    "smiles": "O=C(NCc1c(F)cc(F)cc1F)c1cn2c(c(O)c1=O)C(=O)N1[C@H]3CC[C@H](C3)O[C@@H]1C2",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL3989866",
+    "molecular_weight": "449.39",
+    "logp": "1.63",
+    "search_method": "chembl_api_Bictegravir",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Biejia-Ruangan compound": {
+    "smiles": "CO[C@@H]1C[C@H](O[C@@H]2C=C(C)C[C@@]3(O)[C@H](OC(C)=O)[C@H](O)C4=C(C(=O)c5ccc([C@H]6C[C@@H](O[C@H]7C[C@](C)(O)[C@H](O[C@H]8CC[C@H](NC(N)=O)[C@@H](C)O8)[C@@H](C)O7)[C@H](O)[C@@H](C)O6)c(O)c5C4=O)[C@@]23O)O[C@@H](C)[C@H]1O",
+    "chembl_id": "CHEMBL409302",
+    "molecular_weight": 991.05,
+    "logp": 0.51,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Bilastine": {
+    "smiles": "CCOCCn1c(C2CCN(CCc3ccc(C(C)(C)C(=O)O)cc3)CC2)nc2ccccc21",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL1742423",
+    "molecular_weight": "463.62",
+    "logp": "4.86",
+    "search_method": "chembl_api_Bilastine",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Bimatoprost": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bimekizumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Binimetinib": {
+    "smiles": "Cn1cnc2c(F)c(Nc3ccc(Br)cc3F)c(C(=O)NOCCO)cc21",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL3187723",
+    "molecular_weight": "441.23",
+    "logp": "3.01",
+    "search_method": "chembl_api_Binimetinib",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Bismuth Subsalicylate": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bivalent COVID-19 Booster": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bivalirudin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bladder instillation": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bleomycin": {
+    "smiles": "Cc1c(N)nc([C@H](CC(N)=O)NC[C@H](N)C(N)=O)nc1C(=O)N[C@H](C(=O)N[C@H](C)[C@@H](O)[C@H](C)C(=O)N[C@H](C(=O)NCCc1nc(-c2nc(C(=O)NCCCNCCCCNCCCN)cs2)cs1)[C@@H](C)O)[C@@H](O[C@@H]1O[C@@H](CO)[C@@H](O)[C@H](O)[C@@H]1O[C@H]1O[C@H](CO)[C@@H](O)[C@H](OC(N)=O)[C@@H]1O)c1cnc[nH]1",
+    "chembl_id": "CHEMBL1231529",
+    "molecular_weight": 1497.68,
+    "logp": NaN,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Blinatumomab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Blood Stopper": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bococizumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bone morphogenetic protein 7": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bortezomib": {
+    "smiles": "CC(C)C[C@H](NC(=O)[C@H](Cc1ccccc1)NC(=O)c1cnccn1)B(O)O",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL325041",
+    "molecular_weight": "384.25",
+    "logp": null,
+    "search_method": "chembl_api_Bortezomib",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Bosutinib": {
+    "smiles": "COc1cc(Nc2c(C#N)cnc3cc(OCCCN4CCN(C)CC4)c(OC)cc23)c(Cl)cc1Cl",
+    "chembl_id": "CHEMBL288441",
+    "molecular_weight": 530.46,
+    "logp": 5.19,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Boswellia serrata extract": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Botox": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Botox Injectable Product": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Botulinum Toxin A": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Botulinum Toxin Type A": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Botulinum Toxin Type-A": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Botulinum Type B": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Botulinum toxin A": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Botulinum toxin type A": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Brand Name Levothyroxine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bravamax": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Brentuximab Vedotin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Brexpiprazole": {
+    "smiles": "O=c1ccc2ccc(OCCCCN3CCN(c4cccc5sccc45)CC3)cc2[nH]1",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL2105760",
+    "molecular_weight": "433.58",
+    "logp": "4.72",
+    "search_method": "chembl_api_Brexpiprazole",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Brigatinib": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Brodalumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bromfenac Sodium": {
+    "smiles": "Nc1c(CC(=O)[O-])cccc1C(=O)c1ccc(Br)cc1.Nc1c(CC(=O)[O-])cccc1C(=O)c1ccc(Br)cc1.O.O.O.[Na+].[Na+]",
+    "source": "chembl_api",
+    "chembl_id": "CHEMBL3181947",
+    "molecular_weight": "766.35",
+    "logp": "2.89",
+    "search_method": "chembl_api_Bromfenac Sodium",
+    "confidence": "high",
+    "match_score": 1.0
+  },
+  "Brontictuzumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bryophyllum pinnatum 50 %, tablets into capsules": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bucillamine": {
+    "smiles": "CC(C)(S)C(=O)N[C@@H](CS)C(=O)O",
+    "chembl_id": "CHEMBL80830",
+    "molecular_weight": 223.32,
+    "logp": 0.19,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Budesonide": {
+    "smiles": "CCCC1O[C@@H]2C[C@H]3[C@@H]4CCC5=CC(=O)C=C[C@]5(C)[C@H]4[C@@H](O)C[C@]3(C)[C@]2(C(=O)CO)O1",
+    "chembl_id": "CHEMBL1370",
+    "molecular_weight": 430.54,
+    "logp": 2.72,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "Budesonide/formoterol": {
+    "smiles": "CCCC1O[C@@H]2C[C@H]3[C@@H]4CCC5=CC(=O)C=C[C@]5(C)[C@H]4[C@@H](O)C[C@]3(C)[C@]2(C(=O)CO)O1",
+    "chembl_id": "CHEMBL1370",
+    "molecular_weight": 430.54,
+    "logp": 2.72,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Budesonide/formoterol Turbuhaler": {
+    "smiles": "CCCC1O[C@@H]2C[C@H]3[C@@H]4CCC5=CC(=O)C=C[C@]5(C)[C@H]4[C@@H](O)C[C@]3(C)[C@]2(C(=O)CO)O1",
+    "chembl_id": "CHEMBL1370",
+    "molecular_weight": 430.54,
+    "logp": 2.72,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Budesonide/formoterol pMDI": {
+    "smiles": "CCCC1O[C@@H]2C[C@H]3[C@@H]4CCC5=CC(=O)C=C[C@]5(C)[C@H]4[C@@H](O)C[C@]3(C)[C@]2(C(=O)CO)O1",
+    "chembl_id": "CHEMBL1370",
+    "molecular_weight": 430.54,
+    "logp": 2.72,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Budoprutug": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bulkamid bulking agent": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bupivacain 2.5 mg/ml": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bupivacaine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bupivacaine 0.25% Injectable": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bupivacaine Collagen Sponge": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bupivacaine Hydrochloride": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bupivacaine TTS (Bupivacaine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bupivacaine epidural": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bupivacaine liposome": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bupivacaine, Dexmedetomidine, Caffeine, Tylenol": {
+    "smiles": "Cc1cccc(C(C)c2c[nH]cn2)c1C",
+    "chembl_id": "CHEMBL77921",
+    "molecular_weight": 200.28,
+    "logp": 3.18,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Bupivacaine-fentanyl-morphine elective group": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Buprenorphine": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Bupropion": {
+    "smiles": "CC(NC(C)(C)C)C(=O)c1cccc(Cl)c1.Cl",
+    "chembl_id": "CHEMBL1698",
+    "molecular_weight": 276.21,
+    "logp": 3.3,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Burosumab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Buspirone": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Buspirone Hydrochloride": {
+    "smiles": "CN[C@@]1(C)[C@@H]2CC[C@@H](C2)C1(C)C.Cl",
+    "chembl_id": "CHEMBL2105753",
+    "molecular_weight": 203.76,
+    "logp": 2.42,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Busulfan": {
+    "smiles": "CS(=O)(=O)OCCCCOS(C)(=O)=O",
+    "chembl_id": "CHEMBL820",
+    "molecular_weight": 246.31,
+    "logp": -0.28,
+    "source": "local_chembl",
+    "search_method": "local_chembl_exact",
+    "confidence": "high"
+  },
+  "C-1-esterase": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "C-BEAM Regimen": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "C52R1H Tab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CAD-Empagliflozin": {
+    "smiles": "OC[C@H]1O[C@@H](c2ccc(Cl)c(Cc3ccc(O[C@H]4CCOC4)cc3)c2)[C@H](O)[C@@H](O)[C@@H]1O",
+    "chembl_id": "CHEMBL2107830",
+    "molecular_weight": 450.92,
+    "logp": 1.61,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "CAM2038": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CAN2109": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CAPECITABINE, CELECOXIB": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CASAD": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CAZ-AVI": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CB-839": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CBT-006": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CC-1": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CC-122": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CC-5013": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CC-93538": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CCX872-B": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CD0271 0.1%/CD1579 2.5%": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CD19/CD20/BCMA CAR-T": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CD34+ cells transduced": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CD5789 25 \u00b5g/g": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CDB 2914": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CDK Inhibitor AT7519": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CDK4/6 + Endocrine therapy": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CDK4/6 Inhibitor": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CEND-1": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CEP-9722": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CERC-301": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CETEG": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CG-P5 peptide": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "CGB-400": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
   }
 }
