@@ -2206,5 +2206,137 @@
     "source": "not_found",
     "search_method": "comprehensive_search_failed",
     "confidence": "none"
+  },
+  "Amosartan": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amoxi Clavulanate": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amoxicillin": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amphetamine Extended Release": {
+    "smiles": "CC(N)Cc1ccccc1",
+    "chembl_id": "CHEMBL405",
+    "molecular_weight": 135.21,
+    "logp": 1.58,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Amphotericin B": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amphotericin B Liposomal": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Ampligen": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Amprenavir/ritonavir": {
+    "smiles": "CC(C)c1nc(CN(C)C(=O)N[C@H](C(=O)N[C@@H](Cc2ccccc2)C[C@H](O)[C@H](Cc2ccccc2)NC(=O)OCc2cncs2)C(C)C)cs1",
+    "chembl_id": "CHEMBL163",
+    "molecular_weight": 720.96,
+    "logp": 5.91,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Anakinra": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Analgesia": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Analgesia plan for Anes. Group": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anastrazole": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anastrozole": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Androgen Ablation": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Androxal": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anlotinib": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anlotinib ,": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
+  },
+  "Anlotinib Hydrochloride": {
+    "smiles": "Cl.NCc1ccc2c(c1)nc(CN1C(=O)C3(CC3)c3ccc(F)cc31)n2CCCC(F)(F)F",
+    "chembl_id": "CHEMBL4802253",
+    "molecular_weight": 482.91,
+    "logp": 4.56,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Anlotinib Hydrochloride Capsules": {
+    "smiles": "Cl.NCc1ccc2c(c1)nc(CN1C(=O)C3(CC3)c3ccc(F)cc31)n2CCCC(F)(F)F",
+    "chembl_id": "CHEMBL4802253",
+    "molecular_weight": 482.91,
+    "logp": 4.56,
+    "source": "local_chembl",
+    "search_method": "local_chembl_fuzzy",
+    "confidence": "medium"
+  },
+  "Anlotinib hydrochloride capsules, Penpulimab": {
+    "smiles": null,
+    "source": "not_found",
+    "search_method": "comprehensive_search_failed",
+    "confidence": "none"
   }
 }
